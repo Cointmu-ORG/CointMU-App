@@ -25,7 +25,7 @@
     "boring-avatars": "^2.0.4",
     "crypto": "^1.0.1",
     "date-fns": "^4.4.0",
-    "dotenv": "^18.0.1",
+    "dotenv": "^18.0.2",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.8.9",
     "ethers": "^6.17.0",
@@ -35,7 +35,7 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-i18next": "^17.0.14",
+    "react-i18next": "^17.0.15",
     "react-router-dom": "^7.18.4",
     "ws": "^8.21.3",
     "zustand": "^5.0.15"
