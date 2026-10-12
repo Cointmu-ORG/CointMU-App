@@ -1,7 +1,7 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.6.15",
+  "version": "1.6.16",
   "codename": "Kitsune",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
