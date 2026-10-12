@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 13
-EXTRAVERSION = Rhea
+SUBLEVEL = 15
+EXTRAVERSION = Kitsune
 
 help:
 	@echo "============================================="

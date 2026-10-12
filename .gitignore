@@ -10,4 +10,4 @@ data/
 resources/bin/geth
 resources/bin/geth.exe
 .claude/
-.vscode/
+.vscode/graphify-out
