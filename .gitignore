@@ -11,3 +11,4 @@ resources/bin/geth
 resources/bin/geth.exe
 .claude/
 .vscode/
+graphify-out/
