@@ -509,13 +509,20 @@ async function spawnGethProcess(store: any): Promise<void> {
      * @returns {void}
      */
     const checkCorruption = (output: string): void => {
-      const lower = output.toLowerCase();
-      if (
-        lower.includes("corrupt") ||
-        lower.includes("missing or corrupted snapshot") ||
-        lower.includes("leveldb: not found") ||
-        lower.includes("fatal")
-      ) {
+      const isCorrupted = output
+        .toLowerCase()
+        .split("\n")
+        // INFO/WARN lines are benign (e.g. missing snapshot or shutdown markers on a
+        // fresh genesis); real corruption surfaces as Fatal/ERROR/CRIT. Purging on
+        // a warning wipes the fresh DB, which warns again and loops forever.
+        .filter((line) => !/^\s*(info|warn)\b/.test(line))
+        .some(
+          (line) =>
+            line.includes("corrupt") ||
+            line.includes("leveldb: not found") ||
+            line.includes("fatal"),
+        );
+      if (isCorrupted) {
         void handleGethCorruption(store);
       }
     };
