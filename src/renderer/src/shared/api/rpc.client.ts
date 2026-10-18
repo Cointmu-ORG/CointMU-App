@@ -187,12 +187,42 @@ async function fetchDifficulty(): Promise<number | null> {
   return parseInt(result.difficulty, HEX_RADIX);
 }
 
+interface SyncingDto {
+  startingBlock: number;
+  currentBlock: number;
+  highestBlock: number;
+}
+
 /**
- * Queries the node to check whether it is currently synchronizing with the network.
- * @returns An object if syncing, false if fully synced, or null on failure.
+ * Parses one hex quantity field of an eth_syncing result.
+ * @param value - The raw field value from the node.
+ * @returns The decimal number, or null when the field is missing or malformed.
  */
-async function fetchSyncingStatus(): Promise<any | boolean | null> {
-  return await call("eth_syncing");
+function parseHexQuantity(value: unknown): number | null {
+  if (typeof value !== "string") return null;
+  const parsed = parseInt(value, HEX_RADIX);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+/**
+ * Queries the node to check whether it is currently synchronizing with the
+ * network, converting the hex block fields of the progress object to numbers.
+ * @returns The sync progress if syncing, false if not syncing, or null on
+ * failure or a malformed response.
+ */
+async function fetchSyncingStatus(): Promise<SyncingDto | false | null> {
+  const result: unknown = await call("eth_syncing");
+  if (result === false) return false;
+  if (typeof result !== "object" || result === null) return null;
+
+  const raw = result as Record<string, unknown>;
+  const startingBlock = parseHexQuantity(raw.startingBlock);
+  const currentBlock = parseHexQuantity(raw.currentBlock);
+  const highestBlock = parseHexQuantity(raw.highestBlock);
+  if (startingBlock === null || currentBlock === null || highestBlock === null) {
+    return null;
+  }
+  return { startingBlock, currentBlock, highestBlock };
 }
 
 /**
@@ -358,3 +388,4 @@ export {
   startMiner,
   stopMiner,
 };
+export type { SyncingDto };

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui";
 import { Play, Square } from "lucide-react";
 import { NonceCounter } from "./nonce-counter.component";
+import { SyncProgress } from "./sync-progress.component";
+import type { SyncStatus } from "../model/sync-status.types";
 
 interface MiningHeroCardProps {
   isMining: boolean;
@@ -15,7 +17,7 @@ interface MiningHeroCardProps {
   formattedRewards: string;
   difficultyLabel: string;
   toggling: boolean;
-  isSyncing: boolean;
+  sync: SyncStatus;
   onToggle: (enabled: boolean) => void;
 }
 
@@ -104,10 +106,15 @@ function MiningHeroCard({
   formattedRewards,
   difficultyLabel,
   toggling,
-  isSyncing,
+  sync,
   onToggle,
 }: MiningHeroCardProps): JSX.Element {
   const { t } = useTranslation();
+  const isSynced = sync.status === "synced";
+  const startBlockedTooltip =
+    sync.status === "no-peers"
+      ? t("mining:hero.noPeersTooltip")
+      : t("mining:hero.nodeSyncingTooltip");
 
   if (isMining) {
     return (
@@ -227,23 +234,21 @@ function MiningHeroCard({
             </span>
             <span className="text-xl font-semibold text-white/40">MH/s</span>
           </div>
-          <p className="text-sm text-white/50 mt-2">
-            {isConnected ? (
-              isSyncing ? (
-                <span className="text-yellow-400">
-                  {t("mining:hero.syncingNetwork")}
-                </span>
-              ) : (
+          {isConnected && !isSynced ? (
+            <SyncProgress sync={sync} />
+          ) : (
+            <p className="text-sm text-white/50 mt-2">
+              {isConnected ? (
                 <>
                   {t("mining:hero.pressStart")}{" "}
                   <span className="font-semibold text-white/70">2 CMU</span>{" "}
                   {t("mining:hero.perBlock")}
                 </>
-              )
-            ) : (
-              <>{t("mining:hero.waitingForNode")}</>
-            )}
-          </p>
+              ) : (
+                <>{t("mining:hero.waitingForNode")}</>
+              )}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center gap-4">
@@ -253,12 +258,12 @@ function MiningHeroCard({
             variant="success"
             size="lg"
             onClick={() => onToggle(true)}
-            disabled={toggling || !isConnected || isSyncing}
+            disabled={toggling || !isConnected || !isSynced}
             title={
               !isConnected
                 ? t("mining:hero.waitingForNodeTooltip")
-                : isSyncing
-                  ? t("mining:hero.nodeSyncingTooltip")
+                : !isSynced
+                  ? startBlockedTooltip
                   : ""
             }
             leftIcon={<Play width={14} height={14} />}

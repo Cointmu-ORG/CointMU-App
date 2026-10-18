@@ -18,7 +18,8 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux",
-    "i18n:audit": "npx tsx scripts/sync-i18n.ts"
+    "i18n:audit": "npx tsx scripts/sync-i18n.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "archiver": "^8.0.0",
@@ -58,6 +59,7 @@
     "electron-builder": "^26.15.3",
     "electron-vite": "^5.0.0",
     "tailwindcss": "^4.3.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   }
 }

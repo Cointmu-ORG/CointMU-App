@@ -40,6 +40,10 @@
     "waitingForNode": "Waiting for node connection...",
     "waitingForNodeTooltip": "Waiting for node connection",
     "nodeSyncingTooltip": "Node is syncing blocks",
+    "syncingBlocks": "Syncing block {{current}} / {{highest}} ({{percent}}%)",
+    "syncEta": "~{{time}} remaining",
+    "noPeers": "No peers connected. Check your network or VPN.",
+    "noPeersTooltip": "No peers connected",
     "starting": "Starting...",
     "startMiningBtn": "Start mining",
     "stopMiningbtn": "Stop mining"

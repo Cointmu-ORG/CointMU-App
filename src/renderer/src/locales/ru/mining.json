@@ -40,6 +40,10 @@
     "waitingForNode": "Ожидание подключения узла...",
     "waitingForNodeTooltip": "Ожидание подключения узла",
     "nodeSyncingTooltip": "Узел синхронизирует блоки",
+    "syncingBlocks": "Синхронизация блока {{current}} / {{highest}} ({{percent}}%)",
+    "syncEta": "Осталось ~{{time}}",
+    "noPeers": "Нет подключённых пиров. Проверьте сеть или VPN.",
+    "noPeersTooltip": "Нет подключённых пиров",
     "starting": "Запуск...",
     "startMiningBtn": "Начать майнинг",
     "stopMiningbtn": "Остановить майнинг"

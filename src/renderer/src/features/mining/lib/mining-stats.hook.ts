@@ -12,9 +12,10 @@ import {
   subscribeDagProgress,
   subscribeMiningStatus,
 } from "../api/mining.service";
-import { getCpuUsage } from "@/shared/api";
-import { fetchHashrate, fetchSyncingStatus } from "@/shared/api/rpc.client";
+import { getCpuUsage, fetchHashrate } from "@/shared/api";
 import { useMiningStore } from "../model/mining.store";
+import { useSyncStatus } from "./sync-status.hook";
+import type { SyncStatus } from "../model/sync-status.types";
 
 interface MiningTelemetry {
   hashrateMhs: number;
@@ -24,10 +25,10 @@ interface MiningTelemetry {
   dagProgress: number;
   isGeneratingDag: boolean;
   powerStatus: string;
-  isSyncing: boolean;
+  sync: SyncStatus;
 }
 
-type PolledTelemetry = Omit<MiningTelemetry, "hashrateMhs">;
+type PolledTelemetry = Omit<MiningTelemetry, "hashrateMhs" | "sync">;
 
 const INITIAL_TELEMETRY: PolledTelemetry = {
   isMining: false,
@@ -36,7 +37,6 @@ const INITIAL_TELEMETRY: PolledTelemetry = {
   dagProgress: 0,
   isGeneratingDag: false,
   powerStatus: "",
-  isSyncing: false,
 };
 
 /**
@@ -56,6 +56,7 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
   const [telemetry, setTelemetry] =
     useState<PolledTelemetry>(INITIAL_TELEMETRY);
   const hashrateMhs = useMiningStore((state) => state.hashrateMhs);
+  const sync = useSyncStatus();
 
   useEffect(() => {
     let mounted = true;
@@ -66,15 +67,11 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
         return;
       }
 
-      const isSyncingRaw = await fetchSyncingStatus();
-      const isSyncing = isSyncingRaw !== null && isSyncingRaw !== false;
-
       setTelemetry((prev) => ({
         ...prev,
         isMining: stats.isMining,
         difficulty: stats.difficulty || 0,
         blockNumber: stats.blockNumber || prev.blockNumber,
-        isSyncing,
       }));
     };
 
@@ -150,7 +147,7 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
     };
   }, [telemetry.isMining, telemetry.blockNumber]);
 
-  return { ...telemetry, hashrateMhs };
+  return { ...telemetry, hashrateMhs, sync };
 }
 
 export { useMiningStats };
