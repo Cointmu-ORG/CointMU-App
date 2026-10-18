@@ -12,7 +12,6 @@
     "resolveJsonModule": true,
     "outDir": "./out/renderer",
     "rootDir": "./src/renderer/src",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/renderer/src/*"]
     }
