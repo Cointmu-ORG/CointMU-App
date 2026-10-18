@@ -40,6 +40,10 @@
     "waitingForNode": "Menunggu koneksi node...",
     "waitingForNodeTooltip": "Menunggu koneksi node",
     "nodeSyncingTooltip": "Node sedang menyinkronkan blok",
+    "syncingBlocks": "Menyinkronkan blok {{current}} / {{highest}} ({{percent}}%)",
+    "syncEta": "Sisa ~{{time}}",
+    "noPeers": "Tidak ada peer yang terhubung. Periksa jaringan atau VPN Anda.",
+    "noPeersTooltip": "Tidak ada peer yang terhubung",
     "starting": "Memulai...",
     "startMiningBtn": "Mulai menambang",
     "stopMiningbtn": "Berhenti menambang"

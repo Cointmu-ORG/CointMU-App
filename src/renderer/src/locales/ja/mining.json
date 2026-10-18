@@ -40,6 +40,10 @@
     "waitingForNode": "ノード接続を待機しています...",
     "waitingForNodeTooltip": "ノード接続を待機しています",
     "nodeSyncingTooltip": "ノードがブロックを同期しています",
+    "syncingBlocks": "ブロックを同期中 {{current}} / {{highest}} ({{percent}}%)",
+    "syncEta": "残り約{{time}}",
+    "noPeers": "ピアに接続されていません。ネットワークまたはVPNを確認してください。",
+    "noPeersTooltip": "ピアに接続されていません",
     "starting": "開始中...",
     "startMiningBtn": "マイニングを開始",
     "stopMiningbtn": "マイニングを停止"

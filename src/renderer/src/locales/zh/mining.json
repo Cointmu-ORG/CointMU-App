@@ -40,6 +40,10 @@
     "waitingForNode": "等待节点连接...",
     "waitingForNodeTooltip": "等待节点连接",
     "nodeSyncingTooltip": "节点正在同步区块",
+    "syncingBlocks": "正在同步区块 {{current}} / {{highest}} ({{percent}}%)",
+    "syncEta": "剩余约 {{time}}",
+    "noPeers": "未连接到任何节点。请检查网络或 VPN。",
+    "noPeersTooltip": "未连接到任何节点",
     "starting": "正在启动...",
     "startMiningBtn": "开始挖矿",
     "stopMiningbtn": "停止挖矿"

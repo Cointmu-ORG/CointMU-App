@@ -6,6 +6,7 @@ export { useMiningStats } from "./lib/mining-stats.hook";
 export { useMiningControls } from "./lib/mining-controls.hook";
 export { useMiningActivity } from "./lib/mining-activity.hook";
 export { useMiningLogStream } from "./lib/mining-log-stream.hook";
+export { useSyncStatus } from "./lib/sync-status.hook";
 export {
   getSafeConcurrency,
   formatRewards,
@@ -16,6 +17,10 @@ export * from "./lib/miner-distribution.util";
 // Model
 export { useMiningStore } from "./model/mining.store";
 export type { FoundBlock } from "./model/mining.store";
+export type {
+  SyncStatus,
+  SyncStatusKind,
+} from "./model/sync-status.types";
 
 // UI
 export { MiningHeader } from "./ui/mining-header.component";
