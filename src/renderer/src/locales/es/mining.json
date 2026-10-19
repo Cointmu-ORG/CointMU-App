@@ -72,5 +72,23 @@
     "rewardAddressTitle": "Dirección de recompensa",
     "blockRewardsCreditedHere": "Las recompensas de bloque se acreditan aquí",
     "setInMiningSettings": "Establecido en Ajustes de Minería"
+  },
+  "recovery": {
+    "stage": {
+      "retrying": "Se detectó un error en la base de datos del nodo. Reiniciando el nodo (intento {{attempt}} de {{maxAttempts}})...",
+      "verifying": "Comprobando que el nodo funciona correctamente...",
+      "quarantined": "Los datos de cadena dañados se apartaron como copia de seguridad ({{backupName}}).",
+      "resyncing": "Reconstruyendo los datos de cadena y resincronizando desde la red...",
+      "recovered": "El nodo se ha recuperado.",
+      "blocked": "No se pudo iniciar el nodo.",
+      "failed": "La recuperación automática se detuvo. El nodo requiere tu atención."
+    },
+    "hint": {
+      "PORT_IN_USE": "Otro programa está usando el puerto de red del nodo. Ciérralo o cambia el Puerto de escucha en Ajustes → Red y vuelve a intentarlo.",
+      "DB_LOCKED": "Otro proceso está usando la base de datos del nodo, por ejemplo otra instancia de CointMU o geth. Ciérralo y vuelve a intentarlo.",
+      "failed": "El almacén de claves de tu billetera no se modificó. Vuelve a intentarlo o reinicia la aplicación; si sigue fallando, reporta un problema con los registros."
+    },
+    "retry": "Reintentar",
+    "retrying": "Reintentando..."
   }
 }

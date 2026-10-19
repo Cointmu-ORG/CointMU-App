@@ -1,4 +1,5 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
+import type { NodeRecoveryEvent } from "../bridge/types";
 
 interface UpdaterProgress {
   percent: number;
@@ -93,9 +94,7 @@ interface CointmuAPI {
     encrypt: (secret: string, password: string) => Promise<string>;
     decrypt: (payload: string, password: string) => Promise<string>;
     verify: (payload: string, password: string) => Promise<boolean>;
-    getActivity: (
-      addresses: string[],
-    ) => Promise<
+    getActivity: (addresses: string[]) => Promise<
       {
         id: string;
         type: "mining" | "send" | "receive" | "contract";
@@ -156,6 +155,11 @@ interface CointmuAPI {
   window: {
     minimize: () => void;
     close: () => void;
+  };
+  node: {
+    onRecovery: (callback: (event: NodeRecoveryEvent) => void) => () => void;
+    getRecoveryState: () => Promise<NodeRecoveryEvent | null>;
+    retry: () => Promise<void>;
   };
   extension: {
     unlink: () => void;

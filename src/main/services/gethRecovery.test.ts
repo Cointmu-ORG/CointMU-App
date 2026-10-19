@@ -1,0 +1,93 @@
+import { describe, expect, it, vi } from "vitest";
+import { NodeRecoveryStage, type NodeRecoveryEvent } from "../../bridge/types";
+import { GethRecovery, type GethRecoveryDeps } from "./gethRecovery";
+
+// captured: geth prints every Fatal line to both stdout and stderr
+const CAPTURED_UNKNOWN_FATAL =
+  "Fatal: Error starting protocol stack: listen unix /tmp/x/geth.ipc: bind: invalid argument";
+const CAPTURED_PORT_FATAL =
+  "Fatal: Error starting protocol stack: listen tcp :30399: bind: address already in use";
+const UNKNOWN_FATAL_MAX_RESTARTS = 5;
+
+/**
+ * Builds a recovery instance with inert dependencies that records broadcasts.
+ * @returns The instance and the list of broadcast events.
+ */
+function createRecovery(): {
+  recovery: GethRecovery;
+  events: NodeRecoveryEvent[];
+} {
+  const events: NodeRecoveryEvent[] = [];
+  const deps: GethRecoveryDeps = {
+    spawnGeth: vi.fn(async () => {}),
+    stopGeth: vi.fn(async () => {}),
+    hasGethExited: () => true,
+    initGenesis: vi.fn(async () => {}),
+    resolveDataDir: () => "/data",
+    resolveRpcPort: () => null,
+    broadcast: (event) => events.push(event),
+  };
+  return { recovery: new GethRecovery(deps), events };
+}
+
+/**
+ * Simulates one geth run that dies on a Fatal line echoed to both streams.
+ * @param recovery - The recovery instance under test.
+ * @param line - The Fatal line geth prints before exiting.
+ */
+function crashOnce(recovery: GethRecovery, line: string): void {
+  recovery.handleLogLine(line);
+  recovery.handleLogLine(line);
+  recovery.handleUnexpectedExit();
+}
+
+describe("GethRecovery unknown fatal cap", () => {
+  it("counts a duplicated Fatal line once per exit", () => {
+    const { recovery } = createRecovery();
+
+    for (let run = 0; run < UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+    }
+
+    expect(recovery.isRestartSuppressed()).toBe(false);
+  });
+
+  it("fails and suppresses restarts past the cap", () => {
+    const { recovery, events } = createRecovery();
+
+    for (let run = 0; run <= UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+    }
+
+    expect(recovery.isRestartSuppressed()).toBe(true);
+    expect(events.at(-1)).toEqual({
+      stage: NodeRecoveryStage.FAILED,
+      needsAttention: true,
+    });
+  });
+
+  it("resets the counter on resume", () => {
+    const { recovery } = createRecovery();
+    for (let run = 0; run <= UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+    }
+
+    expect(recovery.resume()).toBe(true);
+    crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+
+    expect(recovery.isRestartSuppressed()).toBe(false);
+  });
+});
+
+describe("GethRecovery blocking", () => {
+  it("blocks once on a port conflict without touching data", () => {
+    const { recovery, events } = createRecovery();
+
+    crashOnce(recovery, CAPTURED_PORT_FATAL);
+
+    expect(recovery.isRestartSuppressed()).toBe(true);
+    expect(events).toEqual([
+      { stage: NodeRecoveryStage.BLOCKED, reason: "PORT_IN_USE" },
+    ]);
+  });
+});

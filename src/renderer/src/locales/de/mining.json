@@ -72,5 +72,23 @@
     "rewardAddressTitle": "Belohnungsadresse",
     "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
     "setInMiningSettings": "In Mining-Einstellungen festgelegt"
+  },
+  "recovery": {
+    "stage": {
+      "retrying": "Datenbankfehler des Knotens erkannt. Knoten wird neu gestartet (Versuch {{attempt}} von {{maxAttempts}})...",
+      "verifying": "Zustand des Knotens wird geprüft...",
+      "quarantined": "Beschädigte Chain-Daten wurden als Backup beiseitegelegt ({{backupName}}).",
+      "resyncing": "Chain-Daten werden neu aufgebaut und vom Netzwerk synchronisiert...",
+      "recovered": "Der Knoten wurde wiederhergestellt.",
+      "blocked": "Der Knoten konnte nicht gestartet werden.",
+      "failed": "Die automatische Wiederherstellung wurde beendet. Der Knoten benötigt Ihre Aufmerksamkeit."
+    },
+    "hint": {
+      "PORT_IN_USE": "Ein anderes Programm verwendet den Netzwerk-Port des Knotens. Schließen Sie es oder ändern Sie den Listen-Port unter Einstellungen → Netzwerk und versuchen Sie es erneut.",
+      "DB_LOCKED": "Die Knotendatenbank wird von einem anderen Prozess verwendet, z. B. einer weiteren CointMU- oder geth-Instanz. Schließen Sie diesen und versuchen Sie es erneut.",
+      "failed": "Ihr Wallet-Keystore wurde nicht verändert. Versuchen Sie es erneut oder starten Sie die App neu; tritt der Fehler weiter auf, melden Sie ein Problem mit den Logs."
+    },
+    "retry": "Erneut versuchen",
+    "retrying": "Wird erneut versucht..."
   }
 }
