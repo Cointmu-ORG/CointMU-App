@@ -7,8 +7,17 @@ interface MiningLog {
   message: string;
 }
 
+// Level tokens are padded to five columns, so ERROR/DEBUG/TRACE sit directly
+// against '[' while INFO/WARN/CRIT get a space; some core-geth builds emit the
+// four-letter EROR/DBUG/TRCE forms instead.
 const GETH_LINE_PATTERN =
-  /^(INFO|WARN|ERROR|CRIT|DEBUG|TRACE)\s+\[[^\]]*\]\s+(.*)$/;
+  /^(TRACE|TRCE|DEBUG|DBUG|INFO|WARN|ERROR|EROR|CRIT)\s*\[[^\]]*\]\s+(.*)$/;
+
+const LEVEL_ALIASES: Readonly<Record<string, string>> = {
+  TRCE: "TRACE",
+  DBUG: "DEBUG",
+  EROR: "ERROR",
+};
 
 interface EventRule {
   pattern: RegExp;
@@ -95,7 +104,7 @@ function parseGethLogChunk(chunk: string): MiningLog[] {
       continue;
     }
 
-    const gethLevel = match[1];
+    const gethLevel = LEVEL_ALIASES[match[1]] ?? match[1];
     const rawMessage = match[2].replace(/\s{2,}/g, " ").trim();
     const level = resolveLevel(gethLevel, rawMessage);
     if (level === null) {
