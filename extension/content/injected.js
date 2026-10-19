@@ -1,8 +1,22 @@
 "use strict";
 
 (function () {
+  // Kept in sync with extension/shared/protocol.js. This script runs in the
+  // page's world, so it cannot share the content script's global.
   const PROVIDER_MESSAGE_SOURCE = "cointmu-injected";
   const PAGE_MESSAGE_SOURCE = "cointmu-page";
+  const PageEvent = {
+    ACCOUNTS_CHANGED: "COINTMU_ACCOUNTS_CHANGED",
+    REVOKE_SITE: "COINTMU_REVOKE_SITE",
+  };
+  const UNAUTHORIZED_CODE = 4100;
+  const INTERNAL_ERROR_CODE = -32603;
+  const OPAQUE_ORIGIN = "null";
+  const FILE_PROTOCOL = "file:";
+
+  const PAGE_ORIGIN = window.location.origin;
+  const IS_OPAQUE_PAGE =
+    PAGE_ORIGIN === OPAQUE_ORIGIN || window.location.protocol === FILE_PROTOCOL;
 
   let nextRequestId = 1;
 
@@ -18,59 +32,64 @@
   const pending = new Map();
 
   /**
-   * Handles incoming messages from the content script layer. Messages must carry
-   * the cointmu-injected source tag and a valid id field that maps to a pending
-   * request. On receipt the corresponding promise is settled and the entry removed.
+   * Builds an EIP-1193 provider error: an Error carrying a numeric code.
+   * @param {{ code?: number, message?: string, data?: unknown }} error
+   * @returns {Error & { code: number, data?: unknown }}
+   */
+  function providerError(error) {
+    const err = new Error(error.message || "RPC error");
+    err.code =
+      typeof error.code === "number" ? error.code : INTERNAL_ERROR_CODE;
+    if (error.data !== undefined) err.data = error.data;
+    return err;
+  }
+
+  /**
+   * Accepts only messages the content script posted to this same window, so
+   * other frames cannot settle requests or fake account events.
+   * @param {MessageEvent} event
+   * @returns {boolean}
+   */
+  function isFromContentScript(event) {
+    return (
+      event.source === window &&
+      event.origin === PAGE_ORIGIN &&
+      typeof event.data === "object" &&
+      event.data !== null &&
+      event.data.source === PROVIDER_MESSAGE_SOURCE
+    );
+  }
+
+  /**
+   * Handles incoming messages from the content script layer. Account events
+   * update the provider; responses settle the matching pending request.
    * @param {MessageEvent} event - The message event dispatched on the window.
    * @returns {void}
    */
   function handleResponse(event) {
-    if (!event.data) return;
+    if (!isFromContentScript(event)) return;
 
-    if (
-      event.data.source === PROVIDER_MESSAGE_SOURCE &&
-      event.data.type === "COINTMU_REVOKE_SITE"
-    ) {
+    if (event.data.type === PageEvent.REVOKE_SITE) {
       provider.selectedAddress = null;
-      if (provider._listeners && provider._listeners["accountsChanged"]) {
-        provider._listeners["accountsChanged"].forEach(function (listener) {
-          try {
-            listener([]);
-          } catch (e) {
-            console.error("Error executing accountsChanged listener", e);
-          }
-        });
-      }
+      provider.emit("accountsChanged", []);
       return;
     }
 
-    if (
-      event.data.source === PROVIDER_MESSAGE_SOURCE &&
-      event.data.type === "COINTMU_ACCOUNTS_CHANGED"
-    ) {
+    if (event.data.type === PageEvent.ACCOUNTS_CHANGED) {
       const accounts = Array.isArray(event.data.accounts)
         ? event.data.accounts
         : [];
       provider.selectedAddress = accounts[0] || null;
-      if (provider._listeners && provider._listeners["accountsChanged"]) {
-        provider._listeners["accountsChanged"].forEach(function (listener) {
-          try {
-            listener(accounts);
-          } catch (e) {
-            console.error("Error executing accountsChanged listener", e);
-          }
-        });
-      }
+      provider.emit("accountsChanged", accounts);
       return;
     }
 
-    if (event.data.source !== PROVIDER_MESSAGE_SOURCE) return;
     const { id, result, error } = event.data;
     const entry = pending.get(id);
     if (!entry) return;
     pending.delete(id);
     if (error) {
-      entry.reject(new Error(error.message || "RPC error"));
+      entry.reject(providerError(error));
     } else {
       entry.resolve(result);
     }
@@ -92,12 +111,24 @@
 
     /**
      * Forwards a JSON-RPC request to the content script and returns a promise
-     * that resolves or rejects once the Electron desktop wallet responds.
+     * that resolves or rejects once the wallet responds. On opaque pages
+     * (sandboxed frames, about:blank, file:) the request is rejected here and
+     * nothing is posted.
      * @param {{ method: string, params?: unknown[] }} args - The JSON-RPC request arguments.
      * @returns {Promise<unknown>} A promise resolving to the JSON-RPC result.
      */
     request(args) {
       return new Promise(function (resolve, reject) {
+        if (IS_OPAQUE_PAGE) {
+          reject(
+            providerError({
+              code: UNAUTHORIZED_CODE,
+              message:
+                "CointMU is not available on sandboxed, about:blank or file: pages.",
+            }),
+          );
+          return;
+        }
         const id = nextRequestId++;
         pending.set(id, { resolve, reject });
         window.postMessage(
@@ -107,7 +138,7 @@
             method: args.method,
             params: args.params || [],
           },
-          "*",
+          PAGE_ORIGIN,
         );
       });
     },

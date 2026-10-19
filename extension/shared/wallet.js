@@ -7,9 +7,57 @@ import {
   clearHeartbeat,
   startHeartbeat,
 } from "./socket.js";
-import { removeConnectedOrigin } from "./site-permissions.js";
+import "./protocol.js";
+import {
+  getConnectedOrigins,
+  removeConnectedOrigin,
+  selectConnectedTabIds,
+} from "./site-permissions.js";
+
+const { RuntimeMessage } = globalThis.CointMUProtocol;
 
 export const JSON_RPC_VERSION = "2.0";
+
+/**
+ * Sends a runtime message to the content script of each tab. Tabs without
+ * the content script (e.g. chrome:// pages) reject; that is expected.
+ * @param {number[]} tabIds
+ * @param {Object} message
+ */
+function sendToTabs(tabIds, message) {
+  for (const tabId of tabIds) {
+    chrome.tabs.sendMessage(tabId, message).catch(() => {});
+  }
+}
+
+/**
+ * Delivers an account change only to tabs of connected sites.
+ * @param {string[]} accounts - The new account list.
+ * @returns {Promise<void>}
+ */
+async function notifyConnectedTabs(accounts) {
+  const [tabs, origins] = await Promise.all([
+    chrome.tabs.query({}),
+    getConnectedOrigins(),
+  ]);
+  sendToTabs(selectConnectedTabIds(tabs, origins), {
+    type: RuntimeMessage.ACCOUNTS_CHANGED,
+    accounts,
+  });
+}
+
+/**
+ * Forgets a site revoked in the desktop app and tells its open tabs.
+ * @param {string} origin - The revoked origin.
+ * @returns {Promise<void>}
+ */
+async function revokeSite(origin) {
+  await removeConnectedOrigin(origin);
+  const tabs = await chrome.tabs.query({});
+  sendToTabs(selectConnectedTabIds(tabs, [origin]), {
+    type: RuntimeMessage.REVOKE_SITE,
+  });
+}
 
 /** @type {'desktop' | 'standalone'} */
 export let connectionMode = "desktop";
@@ -91,32 +139,14 @@ export function handleSocketMessage(event) {
     return;
   } else if (payload.type === "REVOKE_SITE") {
     if (payload.origin) {
-      removeConnectedOrigin(payload.origin).catch((err) => {
+      revokeSite(payload.origin).catch((err) => {
         console.error("[CointMU-bg] Failed to revoke site:", err);
-      });
-      chrome.tabs.query({ url: payload.origin + "/*" }, (tabs) => {
-        for (const tab of tabs) {
-          if (tab.id) {
-            chrome.tabs
-              .sendMessage(tab.id, { type: "REVOKE_SITE" })
-              .catch(() => {});
-          }
-        }
       });
     }
     return;
   } else if (payload.type === "ACCOUNTS_CHANGED") {
-    chrome.tabs.query({}, (tabs) => {
-      for (const tab of tabs) {
-        if (tab.id) {
-          chrome.tabs
-            .sendMessage(tab.id, {
-              type: "ACCOUNTS_CHANGED",
-              accounts: payload.accounts,
-            })
-            .catch(() => {});
-        }
-      }
+    notifyConnectedTabs(payload.accounts).catch((err) => {
+      console.error("[CointMU-bg] Failed to deliver account change:", err);
     });
     return;
   }

@@ -33,7 +33,10 @@ import { JSON_RPC_VERSION, pendingCallbacks, pendingKey } from "./wallet.js";
  * approval; signing additionally needs a connected origin.
  */
 
-const { CONNECT_METHOD, ErrorCode } = globalThis.CointMUProtocol;
+const { ACCOUNTS_METHOD, CONNECT_METHOD, ErrorCode } =
+  globalThis.CointMUProtocol;
+/** Methods that reveal the user's address; desktop mining uses it as coinbase. */
+const ACCOUNT_LOOKUP_METHODS = [ACCOUNTS_METHOD, "eth_coinbase"];
 
 const TOP_FRAME_ID = 0;
 const STATE_KEYS = [
@@ -94,7 +97,7 @@ function forwardToDesktop(request, sendResponse) {
 }
 
 async function forwardToCustomRpc(request, state, sendResponse) {
-  if (request.method === "eth_accounts") {
+  if (request.method === ACCOUNTS_METHOD) {
     const address = state.activeStandaloneAddress;
     replyResult(sendResponse, address ? [address] : []);
     return;
@@ -182,12 +185,36 @@ async function handleStandaloneSigning(request, state, sendResponse) {
   });
 }
 
+/**
+ * Answers account lookups from sites the user has not connected without
+ * revealing an address: EIP-1193 says such sites see no accounts.
+ * @returns {Promise<boolean>} True when the request was answered here.
+ */
+async function answerUnconnectedAccountLookup(request, sendResponse) {
+  if (!ACCOUNT_LOOKUP_METHODS.includes(request.method)) return false;
+  if (isOriginConnected(await getConnectedOrigins(), request.origin)) {
+    return false;
+  }
+  if (request.method === ACCOUNTS_METHOD) {
+    replyResult(sendResponse, []);
+  } else {
+    replyError(
+      sendResponse,
+      ErrorCode.UNAUTHORIZED,
+      "Connect this site to CointMU first (eth_requestAccounts).",
+    );
+  }
+  return true;
+}
+
 async function routeContentRequest(request, sendResponse) {
   const state = await chrome.storage.local.get(STATE_KEYS);
   const isStandalone = state.connectionMode === STANDALONE_MODE;
 
   if (request.method === CONNECT_METHOD) {
     await handleConnect(request, state, sendResponse);
+  } else if (await answerUnconnectedAccountLookup(request, sendResponse)) {
+    return;
   } else if (isSigningMethod(request.method)) {
     if (isStandalone) {
       await handleStandaloneSigning(request, state, sendResponse);

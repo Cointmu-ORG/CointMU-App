@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   isOriginConnected,
   isValidOrigin,
+  selectConnectedTabIds,
   withOrigin,
   withoutOrigin,
 } from "./site-permissions.js";
@@ -51,5 +52,25 @@ describe("withOrigin / withoutOrigin", () => {
     expect(withoutOrigin([DAPP, "https://b.example"], DAPP)).toEqual([
       "https://b.example",
     ]);
+  });
+});
+
+describe("selectConnectedTabIds", () => {
+  it("keeps only tabs whose page origin is connected", () => {
+    const tabs = [
+      { id: 1, url: `${DAPP}/swap?x=1` },
+      { id: 2, url: "https://other.example/" },
+      { id: 3, url: "http://localhost:3000/app" },
+      { id: 4, url: "chrome://extensions" },
+      { id: 5 },
+      { url: `${DAPP}/no-id` },
+    ];
+    expect(
+      selectConnectedTabIds(tabs, [DAPP, "http://localhost:3000"]),
+    ).toEqual([1, 3]);
+  });
+
+  it("returns nothing when no site is connected", () => {
+    expect(selectConnectedTabIds([{ id: 1, url: `${DAPP}/` }], [])).toEqual([]);
   });
 });

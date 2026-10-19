@@ -240,6 +240,38 @@ describe("dapp-requests (standalone)", () => {
   });
 });
 
+describe("dapp-requests (account lookups)", () => {
+  let stub;
+  let mod;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    stub = createChromeStub(standaloneState());
+    vi.stubGlobal("chrome", stub.chrome);
+    mod = await import("./dapp-requests.js");
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("returns no accounts to a site that is not connected", async () => {
+    const reply = await sendFromPage(mod, { id: 1, method: "eth_accounts" });
+    expect(reply.result).toEqual([]);
+  });
+
+  it("returns the account to a connected site", async () => {
+    stub.storage.connectedOrigins = [DAPP];
+    const reply = await sendFromPage(mod, { id: 1, method: "eth_accounts" });
+    expect(reply.result).toEqual([signer.address]);
+  });
+
+  it("refuses eth_coinbase from a site that is not connected", async () => {
+    const reply = await sendFromPage(mod, { id: 1, method: "eth_coinbase" });
+    expect(reply.error.code).toBe(ErrorCode.UNAUTHORIZED);
+  });
+});
+
 describe("dapp-requests (desktop)", () => {
   afterEach(() => {
     vi.unstubAllGlobals();

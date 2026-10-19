@@ -1,7 +1,17 @@
 "use strict";
 
-const PAGE_MESSAGE_SOURCE = "cointmu-page";
-const INJECTED_MESSAGE_SOURCE = "cointmu-injected";
+// shared/protocol.js runs first (see manifest content_scripts) and defines this.
+const { MessageSource, PageEvent, RuntimeMessage, ErrorCode } =
+  globalThis.CointMUProtocol;
+
+const PAGE_ORIGIN = window.location.origin;
+// Opaque pages (sandboxed, about:blank, file:) cannot be targeted by origin,
+// so nothing is relayed or posted there; the provider rejects requests itself.
+const IS_OPAQUE_PAGE = globalThis.CointMUProtocol.isOpaqueOrigin(
+  PAGE_ORIGIN,
+  window.location.protocol,
+);
+const CONTEXT_INVALIDATED = "Extension context invalidated";
 
 /**
  * Injects the injected.js provider script into the page's MAIN world by
@@ -24,92 +34,100 @@ function injectProvider() {
 }
 
 /**
- * Listens for EIP-1193 JSON-RPC request messages posted by the injected
- * provider script running in the MAIN world and relays them to the background
- * service worker via chrome.runtime.sendMessage. Responses from the background
- * script are forwarded back to the page via postMessage so the injected
- * provider can settle the correct pending promise.
- * @param {MessageEvent} event - The message event posted by the injected provider.
+ * Posts a message to the provider in this window only. The target origin is
+ * the page's own origin, never "*", so nothing reaches another document even
+ * if the window navigates before delivery.
+ * @param {Object} message - The payload; the content source tag is added.
+ * @returns {void}
+ */
+function postToPage(message) {
+  if (IS_OPAQUE_PAGE) return;
+  window.postMessage(
+    { ...message, source: MessageSource.CONTENT },
+    PAGE_ORIGIN,
+  );
+}
+
+/**
+ * @param {number} id - The provider request id.
+ * @param {{ code?: number, message?: string }} error - The error to report.
+ * @returns {void}
+ */
+function postError(id, error) {
+  postToPage({
+    id,
+    error: {
+      code: error.code ?? ErrorCode.INTERNAL_ERROR,
+      message: error.message || "Unknown extension error",
+    },
+  });
+}
+
+/**
+ * Relays a JSON-RPC request from the page provider to the background service
+ * worker and posts the answer back. Only messages this window posted to
+ * itself are accepted, so other frames cannot inject requests. The origin is
+ * not sent: the background takes it from the browser-reported sender.
+ * @param {MessageEvent} event - The message event posted by the provider.
  * @returns {void}
  */
 function handlePageMessage(event) {
-  if (!event.data || event.data.source !== PAGE_MESSAGE_SOURCE) return;
+  if (
+    !globalThis.CointMUProtocol.isTrustedPageMessage(
+      event,
+      window,
+      MessageSource.PAGE,
+    )
+  ) {
+    return;
+  }
 
   const { id, method, params } = event.data;
 
   try {
-    chrome.runtime.sendMessage(
-      { id, method, params, origin: window.location.origin },
-      function (response) {
-        if (chrome.runtime.lastError) {
-          window.postMessage(
-            {
-              source: INJECTED_MESSAGE_SOURCE,
-              id,
-              error: {
-                message:
-                  chrome.runtime.lastError.message || "Extension relay error",
-              },
-            },
-            "*",
-          );
-          return;
-        }
-
-        window.postMessage(
-          {
-            source: INJECTED_MESSAGE_SOURCE,
-            id,
-            result: response.result,
-            error: response.error || null,
-          },
-          "*",
-        );
-      },
-    );
+    chrome.runtime.sendMessage({ id, method, params }, function (response) {
+      if (chrome.runtime.lastError) {
+        postError(id, {
+          message: chrome.runtime.lastError.message || "Extension relay error",
+        });
+        return;
+      }
+      postToPage({
+        id,
+        result: response.result,
+        error: response.error || null,
+      });
+    });
   } catch (err) {
-    if (err.message && err.message.includes("Extension context invalidated")) {
-      window.postMessage(
-        {
-          source: INJECTED_MESSAGE_SOURCE,
-          id,
-          error: {
-            message: "Extension context invalidated. Please refresh the page.",
-          },
-        },
-        "*",
-      );
-    } else {
-      window.postMessage(
-        {
-          source: INJECTED_MESSAGE_SOURCE,
-          id,
-          error: { message: err.message || "Unknown extension error" },
-        },
-        "*",
-      );
-    }
+    postError(id, {
+      message: err.message?.includes(CONTEXT_INVALIDATED)
+        ? "Extension context invalidated. Please refresh the page."
+        : err.message,
+    });
+  }
+}
+
+/**
+ * Forwards account events from the background to the page provider.
+ * @param {{ type?: string, accounts?: string[] }} message - The runtime message.
+ * @param {chrome.runtime.MessageSender} sender - The sender.
+ * @returns {void}
+ */
+function handleRuntimeMessage(message, sender) {
+  if (sender.id !== chrome.runtime.id || !message) return;
+  if (message.type === RuntimeMessage.REVOKE_SITE) {
+    postToPage({ type: PageEvent.REVOKE_SITE });
+  } else if (message.type === RuntimeMessage.ACCOUNTS_CHANGED) {
+    postToPage({
+      type: PageEvent.ACCOUNTS_CHANGED,
+      accounts: message.accounts,
+    });
   }
 }
 
 injectProvider();
 
-window.addEventListener("message", handlePageMessage);
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message && message.type === "REVOKE_SITE") {
-    window.postMessage(
-      { type: "COINTMU_REVOKE_SITE", source: INJECTED_MESSAGE_SOURCE },
-      "*",
-    );
-  } else if (message && message.type === "ACCOUNTS_CHANGED") {
-    window.postMessage(
-      {
-        type: "COINTMU_ACCOUNTS_CHANGED",
-        accounts: message.accounts,
-        source: INJECTED_MESSAGE_SOURCE,
-      },
-      "*",
-    );
-  }
-});
+if (!IS_OPAQUE_PAGE) {
+  window.addEventListener("message", handlePageMessage);
+  chrome.runtime.onMessage.addListener(handleRuntimeMessage);
+}
