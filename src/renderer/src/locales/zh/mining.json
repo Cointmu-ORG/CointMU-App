@@ -72,5 +72,23 @@
     "rewardAddressTitle": "奖励地址",
     "blockRewardsCreditedHere": "区块奖励将发送到此地址",
     "setInMiningSettings": "在挖矿设置中配置"
+  },
+  "recovery": {
+    "stage": {
+      "retrying": "检测到节点数据库错误。正在重启节点（第 {{attempt}} 次，共 {{maxAttempts}} 次）...",
+      "verifying": "正在检查节点运行状态...",
+      "quarantined": "已将损坏的链数据移至备份（{{backupName}}）。",
+      "resyncing": "正在重建链数据并从网络重新同步...",
+      "recovered": "节点已恢复。",
+      "blocked": "节点无法启动。",
+      "failed": "自动恢复已停止，节点需要您处理。"
+    },
+    "hint": {
+      "PORT_IN_USE": "节点的网络端口正被其他程序占用。请关闭该程序，或在 设置 → 网络 中更改监听端口，然后重试。",
+      "DB_LOCKED": "节点数据库正被其他进程使用（例如另一个 CointMU 或 geth 实例）。请关闭该进程后重试。",
+      "failed": "您的钱包密钥库未被改动。请重试或重启应用；如果仍然失败，请附上日志报告问题。"
+    },
+    "retry": "重试",
+    "retrying": "正在重试..."
   }
 }

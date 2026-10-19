@@ -18,6 +18,9 @@ export const FALLBACK_BASE_LOAD = 0.2;
 
 export const CONFIG_SYNC_INTERVAL_MS = ms("1s");
 
+// Node recovery banner
+export const RECOVERED_BANNER_VISIBLE_MS = ms("5s");
+
 // Node sync progress
 export const SYNC_STABLE_POLLS = 3;
 export const SYNC_RATE_WINDOW_SAMPLES = 10;

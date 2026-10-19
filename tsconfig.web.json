@@ -4,16 +4,18 @@
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.tsx",
     "src/renderer/src/**/*.json",
-    "src/preload/*.d.ts"
+    "src/preload/*.d.ts",
+    "src/bridge/**/*"
   ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "outDir": "./out/renderer",
-    "rootDir": "./src/renderer/src",
+    "rootDir": "./src",
     "paths": {
-      "@/*": ["./src/renderer/src/*"]
+      "@/*": ["./src/renderer/src/*"],
+      "@bridge/*": ["./src/bridge/*"]
     }
   }
 }

@@ -72,5 +72,23 @@
     "rewardAddressTitle": "Reward address",
     "blockRewardsCreditedHere": "Block rewards are credited here",
     "setInMiningSettings": "Set in Mining Settings"
+  },
+  "recovery": {
+    "stage": {
+      "retrying": "Node database error detected. Restarting the node (attempt {{attempt}} of {{maxAttempts}})...",
+      "verifying": "Checking that the node is healthy...",
+      "quarantined": "Damaged chain data was moved aside as a backup ({{backupName}}).",
+      "resyncing": "Rebuilding chain data and resyncing from the network...",
+      "recovered": "The node has recovered.",
+      "blocked": "The node could not start.",
+      "failed": "Automatic recovery stopped. The node needs your attention."
+    },
+    "hint": {
+      "PORT_IN_USE": "Another program is using the node's network port. Close it or change the Listen port in Settings → Network, then retry.",
+      "DB_LOCKED": "The node database is in use by another process, such as another CointMU or geth instance. Close it, then retry.",
+      "failed": "Your wallet keystore was not touched. Retry, or restart the app; if it keeps failing, report an issue with the logs."
+    },
+    "retry": "Retry",
+    "retrying": "Retrying..."
   }
 }

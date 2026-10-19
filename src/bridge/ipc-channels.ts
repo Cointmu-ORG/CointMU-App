@@ -1,0 +1,5 @@
+export const NODE_CHANNELS = {
+  RECOVERY: "node:recovery",
+  RETRY: "node:retry",
+  GET_RECOVERY_STATE: "node:get-recovery-state",
+} as const;

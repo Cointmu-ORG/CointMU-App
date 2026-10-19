@@ -7,7 +7,7 @@ import {
   dialog,
 } from "electron";
 import { join } from "path";
-import { existsSync, writeFileSync, rmSync } from "fs";
+import { existsSync, writeFileSync } from "fs";
 import {
   readdir,
   stat,
@@ -30,6 +30,8 @@ import { parseGethLogChunk } from "./utils/gethLogParser";
 import { GENESIS_BLOCK, type GenesisBlock } from "./services/genesis";
 import ms from "ms";
 import { callGethRpc } from "./utils/rpcUtils";
+import { GethRecovery } from "./services/gethRecovery";
+import { NODE_CHANNELS } from "../bridge/ipc-channels";
 import {
   scanWalletActivity,
   fetchNetworkInsights,
@@ -140,6 +142,9 @@ const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT;
 let gethProcess: ChildProcess | null = null;
+// Kept after gethProcess is cleared so recovery can confirm the exit event fired.
+let lastSpawnedGeth: ChildProcess | null = null;
+let nodeRecovery: GethRecovery | null = null;
 let sessionStartTimestamp: number = Date.now();
 
 /**
@@ -349,7 +354,7 @@ function startBootnodeWatcher(): void {
  * @returns {void}
  */
 function scheduleGethRestart(store: any): void {
-  if (gethRestartTimer) {
+  if (gethRestartTimer || nodeRecovery?.isRestartSuppressed()) {
     return;
   }
   console.warn("[geth] Unexpected exit; scheduling automatic restart");
@@ -357,59 +362,6 @@ function scheduleGethRestart(store: any): void {
     gethRestartTimer = null;
     void spawnGethProcess(store);
   }, GETH_RESTART_DELAY_MS);
-}
-
-let isRecoveringFromCorruption = false;
-
-/**
- * Handles automatic recovery from a corrupted Geth LevelDB ('chaindata').
- * Immediately kills the corrupted process, purges the damaged state directory,
- * re-initializes the genesis block, and natively respawns the node.
- * Uses a global lock to prevent concurrent or infinite recovery loops.
- * @param {any} store - The electron-store instance.
- * @returns {Promise<void>}
- */
-async function handleGethCorruption(store: any): Promise<void> {
-  if (isRecoveringFromCorruption) return;
-  isRecoveringFromCorruption = true;
-
-  console.warn(
-    "[geth:recovery] Corruption detected. Initiating self-healing protocol...",
-  );
-
-  BrowserWindow.getAllWindows().forEach((win) => {
-    win.webContents.send(
-      "node:recovery-started",
-      "Data recovery is in progress...",
-    );
-  });
-
-  if (gethRestartTimer) {
-    clearTimeout(gethRestartTimer);
-    gethRestartTimer = null;
-  }
-  intentionalGethShutdown = true;
-
-  await killGethProcess();
-
-  try {
-    const dataDir = resolveDataDir();
-    const chainDataPath = join(dataDir, "geth", "chaindata");
-    if (existsSync(chainDataPath)) {
-      console.log(
-        `[geth:recovery] Deleting corrupted chaindata at ${chainDataPath}`,
-      );
-      rmSync(chainDataPath, { recursive: true, force: true });
-    }
-
-    await initGethIfNeeded(dataDir);
-  } catch (error) {
-    console.error("[geth:recovery] Failed during recovery process:", error);
-  } finally {
-    isRecoveringFromCorruption = false;
-    intentionalGethShutdown = false;
-    void spawnGethProcess(store);
-  }
 }
 
 /**
@@ -485,6 +437,7 @@ async function spawnGethProcess(store: any): Promise<void> {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false,
     });
+    lastSpawnedGeth = gethProcess;
 
     /**
      * Broadcasts a parsed mining log object to every renderer window.
@@ -503,34 +456,9 @@ async function spawnGethProcess(store: any): Promise<void> {
     let stderrBuffer = "";
 
     /**
-     * Scans incoming log chunks for known LevelDB corruption signatures and
-     * asynchronously triggers the self-healing routine if detected.
-     * @param {string} output - The raw log chunk to scan.
-     * @returns {void}
-     */
-    const checkCorruption = (output: string): void => {
-      const isCorrupted = output
-        .toLowerCase()
-        .split("\n")
-        // INFO/WARN lines are benign (e.g. missing snapshot or shutdown markers on a
-        // fresh genesis); real corruption surfaces as Fatal/ERROR/CRIT. Purging on
-        // a warning wipes the fresh DB, which warns again and loops forever.
-        .filter((line) => !/^\s*(info|warn)\b/.test(line))
-        .some(
-          (line) =>
-            line.includes("corrupt") ||
-            line.includes("leveldb: not found") ||
-            line.includes("fatal"),
-        );
-      if (isCorrupted) {
-        void handleGethCorruption(store);
-      }
-    };
-
-    /**
      * Accumulates a raw output chunk, parses only the complete lines into mining
-     * log events, and retains any trailing partial line so a regex match is never
-     * broken across chunk boundaries.
+     * log events and the recovery classifier, and retains any trailing partial
+     * line so a regex match is never broken across chunk boundaries.
      * @param {string} buffer - The current residual buffer for the stream.
      * @param {Buffer} data - The newly received raw output chunk.
      * @returns {string} The updated residual buffer after parsing complete lines.
@@ -542,6 +470,7 @@ async function spawnGethProcess(store: any): Promise<void> {
         return combined;
       }
       const complete = combined.slice(0, newlineIndex);
+      complete.split("\n").forEach((line) => nodeRecovery?.handleLogLine(line));
       parseGethLogChunk(complete).forEach(broadcastMiningLog);
       return combined.slice(newlineIndex + 1);
     };
@@ -549,7 +478,6 @@ async function spawnGethProcess(store: any): Promise<void> {
     gethProcess.stdout?.on("data", (data: Buffer) => {
       const output = data.toString();
       console.log("[Geth Log]", output);
-      checkCorruption(output);
       stdoutBuffer = consumeStream(stdoutBuffer, data);
     });
 
@@ -562,7 +490,6 @@ async function spawnGethProcess(store: any): Promise<void> {
     const handleGethStderr = (data: Buffer): void => {
       const output = data.toString();
       console.log("[Geth Log]", output);
-      checkCorruption(output);
       const dagMatch = output.match(/percentage=(\d+)/);
       if (dagMatch && dagMatch[1]) {
         BrowserWindow.getAllWindows().forEach((win) => {
@@ -593,6 +520,7 @@ async function spawnGethProcess(store: any): Promise<void> {
         intentionalGethShutdown = false;
         return;
       }
+      nodeRecovery?.handleUnexpectedExit();
       scheduleGethRestart(store);
     });
   } catch (err) {
@@ -652,6 +580,21 @@ function killGethProcess(): Promise<void> {
       onExit();
     }
   });
+}
+
+/**
+ * Reports whether the most recently spawned geth has emitted its exit event (or
+ * never started). Recovery relies on this before touching chaindata on disk.
+ * @returns {boolean} True when no geth process can still hold the database.
+ */
+function hasGethExited(): boolean {
+  const proc = lastSpawnedGeth;
+  return (
+    !proc ||
+    proc.pid === undefined ||
+    proc.exitCode !== null ||
+    proc.signalCode !== null
+  );
 }
 
 /**
@@ -1110,14 +1053,27 @@ app.whenReady().then(async () => {
     }
   });
 
-  ipcMain.on("network:restartNode", () => {
+  /**
+   * Restarts geth on a user action, clearing any blocked or failed recovery
+   * state first. Skipped while a recovery owns the node lifecycle.
+   * @returns {void}
+   */
+  const restartNodeByUser = (): void => {
+    if (nodeRecovery && !nodeRecovery.resume()) return;
     console.log("[network] Restarting node with new configurations...");
     killGethProcess().then(() => {
       setTimeout(() => {
         void spawnGethProcess(store);
       }, NODE_RESTART_DELAY_MS);
     });
-  });
+  };
+
+  ipcMain.on("network:restartNode", restartNodeByUser);
+  ipcMain.handle(NODE_CHANNELS.RETRY, restartNodeByUser);
+  ipcMain.handle(
+    NODE_CHANNELS.GET_RECOVERY_STATE,
+    () => nodeRecovery?.getActiveEvent() ?? null,
+  );
 
   ipcMain.on("window-minimize", (event) => {
     const webContents = event.sender;
@@ -1138,6 +1094,21 @@ app.whenReady().then(async () => {
   resolvedRpcPort = await findAvailablePort();
 
   loadNetworkId(store);
+
+  nodeRecovery = new GethRecovery({
+    spawnGeth: () => spawnGethProcess(store),
+    stopGeth: killGethProcess,
+    hasGethExited,
+    initGenesis: initGethIfNeeded,
+    resolveDataDir,
+    resolveRpcPort: () =>
+      (store.get("advanced.httpRpc") ?? true) ? resolvedRpcPort : null,
+    broadcast: (event) => {
+      BrowserWindow.getAllWindows().forEach((win) => {
+        win.webContents.send(NODE_CHANNELS.RECOVERY, event);
+      });
+    },
+  });
 
   try {
     await initGethIfNeeded(resolveDataDir());

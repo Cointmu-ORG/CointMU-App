@@ -2,6 +2,8 @@ import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { NODE_CHANNELS } from "../bridge/ipc-channels";
+import type { NodeRecoveryEvent } from "../bridge/types";
 
 const pkg = JSON.parse(
   readFileSync(join(__dirname, "../../package.json"), "utf-8"),
@@ -216,6 +218,17 @@ const api = {
   window: {
     minimize: (): void => ipcRenderer.send("window-minimize"),
     close: (): void => ipcRenderer.send("window-close"),
+  },
+  node: {
+    onRecovery: (callback: (event: NodeRecoveryEvent) => void) => {
+      const handler = (_: any, event: NodeRecoveryEvent): void =>
+        callback(event);
+      ipcRenderer.on(NODE_CHANNELS.RECOVERY, handler);
+      return () => ipcRenderer.removeListener(NODE_CHANNELS.RECOVERY, handler);
+    },
+    getRecoveryState: (): Promise<NodeRecoveryEvent | null> =>
+      ipcRenderer.invoke(NODE_CHANNELS.GET_RECOVERY_STATE),
+    retry: (): Promise<void> => ipcRenderer.invoke(NODE_CHANNELS.RETRY),
   },
   extension: {
     unlink: () => {

@@ -72,5 +72,23 @@
     "rewardAddressTitle": "Alamat hadiah",
     "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
     "setInMiningSettings": "Atur di Pengaturan Penambangan"
+  },
+  "recovery": {
+    "stage": {
+      "retrying": "Terdeteksi error database node. Menjalankan ulang node (percobaan {{attempt}} dari {{maxAttempts}})...",
+      "verifying": "Memeriksa kesehatan node...",
+      "quarantined": "Data chain yang rusak dipindahkan sebagai cadangan ({{backupName}}).",
+      "resyncing": "Membangun ulang data chain dan sinkronisasi ulang dari jaringan...",
+      "recovered": "Node sudah pulih.",
+      "blocked": "Node tidak dapat dijalankan.",
+      "failed": "Pemulihan otomatis dihentikan. Node memerlukan perhatian Anda."
+    },
+    "hint": {
+      "PORT_IN_USE": "Port jaringan node sedang dipakai program lain. Tutup program tersebut atau ubah Port dengar di Pengaturan → Jaringan, lalu coba lagi.",
+      "DB_LOCKED": "Database node sedang dipakai proses lain, misalnya instance CointMU atau geth lain. Tutup proses tersebut, lalu coba lagi.",
+      "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."
+    },
+    "retry": "Coba lagi",
+    "retrying": "Mencoba lagi..."
   }
 }

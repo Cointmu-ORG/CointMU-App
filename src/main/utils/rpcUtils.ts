@@ -9,18 +9,22 @@ const SECONDS_PER_DAY = 86400;
  * @param {number} rpcPort - The resolved RPC port of the running Geth node.
  * @param {string} method - The JSON-RPC method name.
  * @param {unknown[]} params - The ordered parameter array for the method.
+ * @param {number} [timeoutMs] - Optional deadline; an elapsed timeout yields null.
  * @returns {Promise<any>} The raw result from the RPC response, or null on failure.
  */
 export async function callGethRpc(
   rpcPort: number,
   method: string,
   params: unknown[] = [],
+  timeoutMs?: number,
 ): Promise<any> {
   try {
     const response = await fetch(`http://127.0.0.1:${rpcPort}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", method, params, id: Date.now() }),
+      signal:
+        timeoutMs === undefined ? undefined : AbortSignal.timeout(timeoutMs),
     });
     const json = await response.json();
     if (json.error) {

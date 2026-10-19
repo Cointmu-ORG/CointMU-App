@@ -30,7 +30,8 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        '@': resolve('src/renderer/src')
+        '@': resolve('src/renderer/src'),
+        '@bridge': resolve('src/bridge')
       }
     },
     plugins: [react(), tailwindcss()]

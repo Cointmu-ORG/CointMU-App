@@ -11,11 +11,11 @@ import {
   useConnectedSitesStore,
 } from "@/features/settings";
 import { useUpdater } from "@/shared/lib";
-import { useMiningLogStream } from "@/features/mining";
+import { useMiningLogStream, NodeRecoveryBanner } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
 
-import { Sidebar, CustomTitleBar } from "@/widgets/layout";
+import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport, useNotificationStore } from "@/features/notifications";
 import { useDappRequestHandler } from "@/features/dapp";
@@ -168,6 +168,9 @@ function App(): JSX.Element {
           </div>
         }
       >
+        <div className="fixed inset-x-0 top-0 z-50">
+          <NodeRecoveryBanner />
+        </div>
         <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
       </Suspense>
     );
@@ -175,7 +178,7 @@ function App(): JSX.Element {
 
   return (
     <div className="flex flex-col h-full bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-gray-100 overflow-hidden">
-      <CustomTitleBar />
+      <AppHeader />
       <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
         <ToastViewport />
