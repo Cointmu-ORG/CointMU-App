@@ -45,7 +45,9 @@ function NFTCard({
         </div>
       </div>
       <div className="px-4 pt-2 pb-2 bg-white dark:bg-transparent flex flex-col">
-        <span className="text-black dark:text-gray-100 font-bold text-base truncate">{name}</span>
+        <span className="text-black dark:text-gray-100 font-bold text-base truncate">
+          {name}
+        </span>
         <span className="text-gray-500 dark:text-gray-400 text-sm font-medium truncate">
           {subtitle}
         </span>

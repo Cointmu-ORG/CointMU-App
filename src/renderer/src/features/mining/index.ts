@@ -17,10 +17,7 @@ export * from "./lib/miner-distribution.util";
 // Model
 export { useMiningStore } from "./model/mining.store";
 export type { FoundBlock } from "./model/mining.store";
-export type {
-  SyncStatus,
-  SyncStatusKind,
-} from "./model/sync-status.types";
+export type { SyncStatus, SyncStatusKind } from "./model/sync-status.types";
 
 // UI
 export { MiningHeader } from "./ui/mining-header.component";

@@ -39,51 +39,51 @@ async function getAllSettings(): Promise<Record<string, any>> {
  */
 async function resetAllSettings(): Promise<void> {
   await Promise.all([
-    setSetting('general', {
+    setSetting("general", {
       launchAtLogin: true,
       openInBackground: false,
       pushNotifications: true,
       notificationSound: false,
-      language: 'English',
-      currency: 'CMU (native)',
+      language: "English",
+      currency: "CMU (native)",
     }),
-    setSetting('appearance', {
-      theme: 'Light',
-      accentColor: '#3b82f6',
-      density: 'Comfortable',
+    setSetting("appearance", {
+      theme: "Light",
+      accentColor: "#3b82f6",
+      density: "Comfortable",
       showSidebarColors: true,
       animatedTransitions: true,
     }),
-    setSetting('network', {
-      network: 'CointMU Mainnet',
-      rpcEndpoint: 'https://rpc.cointmu.net',
+    setSetting("network", {
+      network: "CointMU Mainnet",
+      rpcEndpoint: "https://rpc.cointmu.net",
       maxPeers: 14,
       discovery: true,
       listenPort: 30303,
-      syncMode: 'Snap (recommended)',
+      syncMode: "Snap (recommended)",
       pruneOldState: true,
     }),
-    setSetting('mining', {
+    setSetting("mining", {
       isMiningEnabled: false,
       startAtLaunch: false,
       cpuThreads: 4,
-      intensity: 'Balanced',
+      intensity: "Balanced",
       pauseOnBattery: true,
-      miningMode: 'Solo',
-      poolAddress: '',
+      miningMode: "Solo",
+      poolAddress: "",
     }),
-    setSetting('security', {
+    setSetting("security", {
       autoLock: true,
       requireBiometrics: false,
     }),
-    setSetting('advanced', {
+    setSetting("advanced", {
       httpRpc: true,
       wsRpc: false,
-      corsOrigins: 'https://*.cointmu.net',
-      logLevel: 'Info',
+      corsOrigins: "https://*.cointmu.net",
+      logLevel: "Info",
       analytics: false,
     }),
-    setSetting('notifications', {
+    setSetting("notifications", {
       global: true,
       transactions: true,
       mining: true,
@@ -91,7 +91,7 @@ async function resetAllSettings(): Promise<void> {
       desktopOs: true,
       sound: false,
     }),
-    setSetting('notificationHistory', []),
+    setSetting("notificationHistory", []),
   ]);
 }
 

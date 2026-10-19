@@ -4,11 +4,11 @@ icon: resources/icon.png
 directories:
   buildResources: build
 files:
-  - '!**/.vscode/*'
-  - '!src/*'
-  - '!electron.vite.config.*'
-  - '!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!electron.vite.config.*"
+  - "!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
+  - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
 asarUnpack:
   - resources/**
 win:
@@ -21,7 +21,7 @@ win:
     - from: resources/bin/win/
       to: bin/win/
       filter:
-        - '**/*'
+        - "**/*"
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
@@ -50,7 +50,7 @@ linux:
     - from: resources/bin/linux/
       to: bin/linux/
       filter:
-        - '**/*'
+        - "**/*"
 publish:
   provider: github
   releaseType: release

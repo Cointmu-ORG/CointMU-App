@@ -19,7 +19,7 @@ function DashboardHeader({
   onReceive,
   onSend,
 }: DashboardHeaderProps): JSX.Element {
-  const { t } = useTranslation(['common', 'dashboard']);
+  const { t } = useTranslation(["common", "dashboard"]);
   const syncLabel = isConnected
     ? t("dashboard:header.synced")
     : t("dashboard:header.offline");

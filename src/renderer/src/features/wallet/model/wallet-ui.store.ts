@@ -1,11 +1,7 @@
 import { create } from "zustand";
 
 type WalletModalState =
-  | "NONE"
-  | "RECEIVE"
-  | "SEND"
-  | "ADD_ACCOUNT"
-  | "MANAGE_HIDDEN";
+  "NONE" | "RECEIVE" | "SEND" | "ADD_ACCOUNT" | "MANAGE_HIDDEN";
 type AddAccountType = "SELECT" | "CREATE" | "IMPORT_SEED" | "IMPORT_PK";
 
 interface WalletUiStore {

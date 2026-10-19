@@ -4,8 +4,8 @@ import {
   handleSocketMessage,
   setConnectionMode,
   connectionMode,
-  pendingCallbacks
-} from './wallet.js';
+  pendingCallbacks,
+} from "./wallet.js";
 
 export const WS_URL = "ws://127.0.0.1:8765";
 export const RECONNECT_DELAY_MS = 3000;
@@ -76,7 +76,7 @@ export function connect() {
     pendingCallbacks.forEach(function (callback) {
       callback({
         result: null,
-        error: { message: 'CointMU desktop wallet disconnected.' },
+        error: { message: "CointMU desktop wallet disconnected." },
       });
     });
     pendingCallbacks.clear();

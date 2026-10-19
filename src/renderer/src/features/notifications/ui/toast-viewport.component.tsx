@@ -28,19 +28,21 @@ function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
   }, [toast.id, onDismiss]);
 
   return (
-    <div className='flex items-start gap-3 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 dark:text-white rounded-xl shadow-lg p-4 animate-in fade-in slide-in-from-right-4 duration-200'>
+    <div className="flex items-start gap-3 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 dark:text-white rounded-xl shadow-lg p-4 animate-in fade-in slide-in-from-right-4 duration-200">
       <span
         className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[toast.type]}`}
       />
-      <div className='flex-1 min-w-0'>
-        <p className='text-sm font-bold text-slate-800 dark:text-white'>{toast.title}</p>
-        <p className='text-xs text-slate-500 dark:text-gray-400 mt-0.5 break-words'>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-bold text-slate-800 dark:text-white">
+          {toast.title}
+        </p>
+        <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5 break-words">
           {toast.message}
         </p>
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className='text-slate-400 hover:text-slate-600 dark:hover:text-gray-300 transition-colors shrink-0'
+        className="text-slate-400 hover:text-slate-600 dark:hover:text-gray-300 transition-colors shrink-0"
       >
         <X width={16} height={16} strokeWidth={2.5} />
       </button>

@@ -219,7 +219,11 @@ async function fetchSyncingStatus(): Promise<SyncingDto | false | null> {
   const startingBlock = parseHexQuantity(raw.startingBlock);
   const currentBlock = parseHexQuantity(raw.currentBlock);
   const highestBlock = parseHexQuantity(raw.highestBlock);
-  if (startingBlock === null || currentBlock === null || highestBlock === null) {
+  if (
+    startingBlock === null ||
+    currentBlock === null ||
+    highestBlock === null
+  ) {
     return null;
   }
   return { startingBlock, currentBlock, highestBlock };

@@ -11,8 +11,11 @@ export {
   EXPLORER_VIEW_TICK_INTERVAL_MS,
 } from "./config/explorer.constants";
 
-export { ExplorerSearch } from './ui/explorer-search.component';
-export { ExplorerDataTabs, type TabState } from './ui/explorer-data-tabs.component';
-export { BlockDetail } from './ui/block-detail.component';
-export { TransactionDetail } from './ui/transaction-detail.component';
-export { AddressDetail } from './ui/address-detail.component';
+export { ExplorerSearch } from "./ui/explorer-search.component";
+export {
+  ExplorerDataTabs,
+  type TabState,
+} from "./ui/explorer-data-tabs.component";
+export { BlockDetail } from "./ui/block-detail.component";
+export { TransactionDetail } from "./ui/transaction-detail.component";
+export { AddressDetail } from "./ui/address-detail.component";

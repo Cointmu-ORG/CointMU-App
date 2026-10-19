@@ -11,7 +11,11 @@ import { ExternalSourceSettings } from "@/features/settings";
 import { AdvancedSettings } from "@/features/settings";
 import { AboutSettings } from "@/features/settings";
 import { NotificationSettings } from "@/features/settings";
-import { getAllSettings, setSetting, resetAllSettings } from "@/features/settings";
+import {
+  getAllSettings,
+  setSetting,
+  resetAllSettings,
+} from "@/features/settings";
 import { useAppearanceStore } from "@/features/settings";
 import { useNotificationStore } from "@/features/notifications";
 import {
@@ -112,7 +116,7 @@ function SettingsPage({
   const [settings, setSettings] = useState<SettingsStore | null>(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [resetVersion, setResetVersion] = useState(0);
-  const { t, i18n } = useTranslation(['common', 'settings']);
+  const { t, i18n } = useTranslation(["common", "settings"]);
 
   useEffect(() => {
     // Load initial settings from the Electron main process via preload bridge
@@ -174,7 +178,7 @@ function SettingsPage({
           </span>
         </div>
 
-        <button 
+        <button
           onClick={() => setIsResetModalOpen(true)}
           className="text-xs font-semibold text-slate-700 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 transition-colors"
         >
@@ -241,28 +245,28 @@ function SettingsPage({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-gray-800 max-w-sm w-full mx-4">
             <h3 className="text-lg font-bold text-slate-800 dark:text-gray-100 mb-2">
-              {t('settings:resetModal.title')}
+              {t("settings:resetModal.title")}
             </h3>
             <p className="text-sm text-slate-600 dark:text-gray-400 mb-6 leading-relaxed">
-              {t('settings:resetModal.description')}
+              {t("settings:resetModal.description")}
             </p>
             <div className="flex items-center gap-3 justify-end">
               <button
                 onClick={() => setIsResetModalOpen(false)}
                 className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
-                {t('settings:resetModal.cancel')}
+                {t("settings:resetModal.cancel")}
               </button>
               <button
                 onClick={async () => {
                   await resetAllSettings();
                   useAppearanceStore.getState().resetToDefaults();
-                  
+
                   useNotificationStore.getState().clearAll();
                   useNotificationStore.setState({ hydrated: false });
                   await useNotificationStore.getState().hydrate();
-                  localStorage.removeItem('appLanguage');
-                  i18n.changeLanguage('en');
+                  localStorage.removeItem("appLanguage");
+                  i18n.changeLanguage("en");
                   const freshSettings = await getAllSettings();
                   setSettings(freshSettings as SettingsStore);
                   setResetVersion((v) => v + 1);
@@ -270,7 +274,7 @@ function SettingsPage({
                 }}
                 className="px-4 py-2 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-sm shadow-red-500/20"
               >
-                {t('settings:resetModal.confirm')}
+                {t("settings:resetModal.confirm")}
               </button>
             </div>
           </div>

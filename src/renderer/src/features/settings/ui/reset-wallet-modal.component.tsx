@@ -73,7 +73,9 @@ export function ResetWalletModal({
             <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/30 flex items-center justify-center text-red-600 dark:text-red-400">
               <AlertTriangle width={20} height={20} />
             </div>
-            <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">Reset wallet</h3>
+            <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
+              Reset wallet
+            </h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
             This permanently removes all accounts and keys from this device.

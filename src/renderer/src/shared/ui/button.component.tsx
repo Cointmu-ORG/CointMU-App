@@ -14,7 +14,8 @@ const BASE_CLASSES =
   "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-white hover:brightness-110 shadow-sm shadow-accent/20",
+  primary:
+    "bg-accent text-white hover:brightness-110 shadow-sm shadow-accent/20",
   danger: "bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/30",
   success:
     "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/30",

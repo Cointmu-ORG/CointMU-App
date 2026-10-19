@@ -21,7 +21,7 @@ function WalletOverviewCard({
   activeWalletAddress,
   walletLabel,
 }: WalletOverviewCardProps): JSX.Element {
-  const { t } = useTranslation(['common', 'dashboard']);
+  const { t } = useTranslation(["common", "dashboard"]);
 
   return (
     <div className="rounded-2xl bg-accent p-7 text-white relative overflow-hidden flex flex-col h-full">

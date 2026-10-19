@@ -122,7 +122,9 @@ export function MinerDistribution({
 
   return (
     <div className="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm flex flex-col">
-      <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">Miner distribution</h3>
+      <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
+        Miner distribution
+      </h3>
       <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5 mb-5">
         Share of blocks mined · past 24 hours
       </p>

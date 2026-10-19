@@ -7,7 +7,8 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: CardPadding;
 }
 
-const BASE_CLASSES = "rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800";
+const BASE_CLASSES =
+  "rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800";
 
 const PADDING_CLASSES: Record<CardPadding, string> = {
   none: "",

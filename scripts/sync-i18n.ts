@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
-const LOCALES_DIR = path.join(__dirname, '../src/renderer/src/locales');
-const SOURCE_LANG = 'en';
+const LOCALES_DIR = path.join(__dirname, "../src/renderer/src/locales");
+const SOURCE_LANG = "en";
 
 /**
  * Recursively diffs an object against a source object to find missing keys.
@@ -11,7 +11,7 @@ const SOURCE_LANG = 'en';
  * @param prefix - The current object path prefix.
  * @returns An array of missing key paths.
  */
-function findMissingKeys(source: any, target: any, prefix = ''): string[] {
+function findMissingKeys(source: any, target: any, prefix = ""): string[] {
   let missing: string[] = [];
 
   for (const key in source) {
@@ -20,10 +20,10 @@ function findMissingKeys(source: any, target: any, prefix = ''): string[] {
 
       if (target[key] === undefined) {
         missing.push(currentPath);
-      } else if (typeof source[key] === 'object' && source[key] !== null) {
-        if (typeof target[key] === 'object' && target[key] !== null) {
+      } else if (typeof source[key] === "object" && source[key] !== null) {
+        if (typeof target[key] === "object" && target[key] !== null) {
           missing = missing.concat(
-            findMissingKeys(source[key], target[key], currentPath)
+            findMissingKeys(source[key], target[key], currentPath),
           );
         } else {
           missing.push(currentPath);
@@ -49,7 +49,7 @@ function auditLocales(): void {
 
   const namespaces = fs
     .readdirSync(sourceDir)
-    .filter((file) => file.endsWith('.json'));
+    .filter((file) => file.endsWith(".json"));
 
   const allLangs = fs
     .readdirSync(LOCALES_DIR)
@@ -68,19 +68,23 @@ function auditLocales(): void {
       const sourcePath = path.join(sourceDir, namespaceFile);
       const targetPath = path.join(targetDir, namespaceFile);
 
-      const sourceData = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
-      
+      const sourceData = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
+
       let targetData = {};
       if (fs.existsSync(targetPath)) {
-        targetData = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+        targetData = JSON.parse(fs.readFileSync(targetPath, "utf8"));
       } else {
-        console.warn(`\n[${targetLang}/${namespaceFile}] File is completely missing.`);
+        console.warn(
+          `\n[${targetLang}/${namespaceFile}] File is completely missing.`,
+        );
       }
 
       const missingKeys = findMissingKeys(sourceData, targetData);
 
       if (missingKeys.length > 0) {
-        console.log(`\n[${targetLang}/${namespaceFile}] Missing ${missingKeys.length} keys:`);
+        console.log(
+          `\n[${targetLang}/${namespaceFile}] Missing ${missingKeys.length} keys:`,
+        );
         missingKeys.forEach((key) => console.log(`  - ${key}`));
         totalMissing += missingKeys.length;
       }
@@ -88,10 +92,12 @@ function auditLocales(): void {
   });
 
   if (totalMissing > 0) {
-    console.log(`\nAudit complete. Found ${totalMissing} missing translations total.`);
+    console.log(
+      `\nAudit complete. Found ${totalMissing} missing translations total.`,
+    );
     process.exit(1);
   } else {
-    console.log('\nAudit complete. 100% translation coverage!');
+    console.log("\nAudit complete. 100% translation coverage!");
     process.exit(0);
   }
 }
