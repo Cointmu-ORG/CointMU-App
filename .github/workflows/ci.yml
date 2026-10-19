@@ -24,6 +24,12 @@ jobs:
           node-version: "22"
           cache: npm
 
+      # Same npm as Dependabot and local: package.json "packageManager".
+      - name: Use pinned npm
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+
       # Skips the ~100MB Electron binary download and electron-builder's
       # install-app-deps; none of the steps below launch Electron and the
       # tree has no native modules to rebuild.
@@ -49,6 +55,12 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+
+      # Same npm as Dependabot and local: package.json "packageManager".
+      - name: Use pinned npm
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
 
       - run: npm ci --ignore-scripts
 
