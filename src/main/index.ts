@@ -62,6 +62,7 @@ const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
 // Geth always opens the engine (auth) RPC; its fixed default 8551 collides
 // with any other node on the machine, so it is scanned like the HTTP port.
 const DEFAULT_AUTH_RPC_PORT = 8551;
+const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
 let GETH_NETWORK_ID =
   process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
@@ -391,7 +392,15 @@ async function spawnGethProcess(store: any): Promise<void> {
   }
 
   const isRpcEnabled = store.get("advanced.httpRpc") ?? true;
-  const listenPort = store.get("network.listenPort") || 30303;
+  const configuredListenPort =
+    store.get("network.listenPort") || DEFAULT_P2P_PORT;
+  // detect-port probes TCP only; a UDP-only clash still ends in PORT_IN_USE.
+  const listenPort = await findAvailablePort(configuredListenPort);
+  if (listenPort !== configuredListenPort) {
+    console.warn(
+      `[geth:spawn] P2P port ${configuredListenPort} is in use; listening on ${listenPort}`,
+    );
+  }
 
   const args = [
     "--networkid",
