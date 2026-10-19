@@ -283,20 +283,12 @@
       </div>
 
       <div class="tx-content">
-        <div class="tx-details">
-          <div class="tx-row">
-            <span class="tx-label">To</span>
-            <span id="tx-to" class="tx-value"></span>
-          </div>
-          <div class="tx-row">
-            <span class="tx-label">Value</span>
-            <span id="tx-value" class="tx-value"></span>
-          </div>
-          <div class="tx-row tx-row--data">
-            <span class="tx-label">Data</span>
-            <span id="tx-data" class="tx-value"></span>
-          </div>
-        </div>
+        <p
+          id="approval-warning"
+          class="approval-warning hidden"
+          role="alert"
+        ></p>
+        <div id="approval-rows" class="tx-details"></div>
       </div>
 
       <div class="action-footer">

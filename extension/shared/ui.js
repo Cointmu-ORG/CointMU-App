@@ -1,6 +1,7 @@
 "use strict";
 
 import { loadTranslations } from "./locale.js";
+import { renderApprovalView } from "./approval-popup.js";
 
 /** Translation keys for bridge refusal codes sent by the desktop app. */
 const BRIDGE_NOTICE_KEYS = {
@@ -115,22 +116,22 @@ export async function initPopup() {
     defaultView.classList.add("hidden");
     approvalView.classList.remove("hidden");
 
+    const approvalElements = {
+      title: document.getElementById("extension.wallet.approveTx"),
+      rows: document.getElementById("approval-rows"),
+      warning: document.getElementById("approval-warning"),
+      approve: btnApproveConfirm,
+    };
+    // Stays disabled until the request details are shown.
+    btnApproveConfirm.disabled = true;
     chrome.runtime.sendMessage(
       { action: "GET_PENDING_REQ", reqId },
       (response) => {
-        if (response && response.success && response.data) {
-          const { method, params, origin } = response.data;
-          document.getElementById("tx-to").textContent =
-            origin || "Unknown Origin";
-          document.getElementById("tx-value").textContent =
-            method === "eth_requestAccounts"
-              ? "Connection Request"
-              : params[0]?.value || "0x0";
-          document.getElementById("tx-data").textContent =
-            method === "eth_requestAccounts"
-              ? "Allow access to your wallet address"
-              : params[0]?.data || "0x";
-        }
+        renderApprovalView(
+          approvalElements,
+          translations,
+          response && response.success ? response.view : null,
+        );
       },
     );
 
