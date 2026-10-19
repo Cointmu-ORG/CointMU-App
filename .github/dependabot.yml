@@ -6,13 +6,15 @@ updates:
       interval: weekly
     open-pull-requests-limit: 10
     # electron-vite 5 only supports vite <=7, and @vitejs/plugin-react 6 needs
-    # vite 8 (a grouped bump broke npm install and the build on main). Drop
-    # these ignores together with the upgrade to electron-vite >=6, the first
-    # release that supports vite 8.
+    # vite 8 (a grouped bump broke npm install and the build on main).
+    # electron-vite 6, vite 8 and plugin-react 6 must move together in one
+    # dedicated PR; drop all three ignores in that PR.
     ignore:
       - dependency-name: vite
         update-types: ["version-update:semver-major"]
       - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: electron-vite
         update-types: ["version-update:semver-major"]
     groups:
       dev-dependencies:

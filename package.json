@@ -7,6 +7,19 @@
   "main": "./out/main/index.js",
   "author": "CointMU",
   "license": "MIT",
+  "packageManager": "npm@10.9.9",
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "^10.9.0",
+      "onFail": "error"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^22.12.0",
+      "onFail": "warn"
+    }
+  },
   "scripts": {
     "dev": "electron-vite dev",
     "prebuild": "node update-build.js",

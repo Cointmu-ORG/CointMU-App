@@ -6,11 +6,14 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    # electron-builder creates the release and uploads the installers.
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
@@ -24,6 +27,14 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
+
+      # Same npm as Dependabot and local: package.json "packageManager".
+      # bash so the same script runs on the Windows runner.
+      - name: Use pinned npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
 
       - name: Install System Dependencies (Linux)
         if: runner.os == 'Linux'
@@ -48,3 +59,30 @@ jobs:
           GETH_HTTP_API: ${{ secrets.GETH_HTTP_API }}
           GETH_P2P_PORT: ${{ secrets.GETH_P2P_PORT }}
           GETH_LOG_VERBOSITY: ${{ secrets.GETH_LOG_VERBOSITY }}
+
+  # electron-builder creates a published release with an empty body and
+  # never edits the body afterwards, so filling it after every OS build
+  # has finished cannot be overwritten. The release title is left as is.
+  release-notes:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+
+      - name: Generate release notes
+        run: node scripts/release-notes.js "$GITHUB_REF_NAME" > release-notes.md
+
+      - name: Update release body
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
