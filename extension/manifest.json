@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CointMU Wallet",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "default_locale": "en",
   "description": "Connects dApps to the CointMU desktop wallet via a local WebSocket relay or custom RPC.",
   "permissions": ["storage", "activeTab", "scripting"],
