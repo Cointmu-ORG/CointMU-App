@@ -32,3 +32,16 @@ export interface NodeRecoveryEvent {
   readonly backupName?: string;
   readonly needsAttention?: boolean;
 }
+
+export interface JsonRpcErrorObject {
+  readonly code: number;
+  readonly message: string;
+  readonly data?: unknown;
+}
+
+/**
+ * Outcome of one node JSON-RPC call relayed by the main process: the raw
+ * result, or the node's error object so callers keep the real error message.
+ */
+export type JsonRpcEnvelope =
+  { readonly result: unknown } | { readonly error: JsonRpcErrorObject };

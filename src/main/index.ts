@@ -30,6 +30,7 @@ import { parseGethLogChunk } from "./utils/gethLogParser";
 import { GENESIS_BLOCK, type GenesisBlock } from "./services/genesis";
 import ms from "ms";
 import { callGethRpc } from "./utils/rpcUtils";
+import { registerRendererRpcHandler } from "./services/rendererRpc";
 import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
 import {
@@ -1159,6 +1160,9 @@ app.whenReady().then(async () => {
   await spawnGethProcess(store);
 
   const miningController = new MiningController(resolvedRpcPort, store);
+  const removeRendererRpcHandler = registerRendererRpcHandler(
+    () => resolvedRpcPort,
+  );
 
   const win = createWindow();
   initUpdater(win);
@@ -1176,6 +1180,7 @@ app.whenReady().then(async () => {
   app.on("before-quit", () => {
     dappServer.close();
     extSyncServer.close();
+    removeRendererRpcHandler();
   });
 });
 

@@ -1,9 +1,56 @@
+import type { JsonRpcEnvelope } from "../../bridge/types";
+
 const SECONDS_PER_MINUTE = 60;
 const SECONDS_PER_HOUR = 3600;
 const SECONDS_PER_DAY = 86400;
+const JSON_RPC_INTERNAL_ERROR = -32603;
+
+async function callGethHttp(
+  rpcPort: number,
+  method: string,
+  params: unknown[],
+  timeoutMs?: number,
+): Promise<JsonRpcEnvelope> {
+  try {
+    const response = await fetch(`http://127.0.0.1:${rpcPort}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method, params, id: Date.now() }),
+      signal:
+        timeoutMs === undefined ? undefined : AbortSignal.timeout(timeoutMs),
+    });
+    const json = await response.json();
+    return json.error ? { error: json.error } : { result: json.result ?? null };
+  } catch (err) {
+    return {
+      error: {
+        code: JSON_RPC_INTERNAL_ERROR,
+        message: `geth HTTP unreachable: ${(err as Error).message}`,
+      },
+    };
+  }
+}
 
 /**
- * Dispatches a JSON-RPC 2.0 call to the locally running Core-geth HTTP endpoint.
+ * Dispatches a JSON-RPC 2.0 call to the local node and keeps the node's error
+ * object.
+ * @param rpcPort - The resolved RPC port of the running Geth node.
+ * @param method - The JSON-RPC method name.
+ * @param params - The ordered parameter array for the method.
+ * @param timeoutMs - Optional deadline.
+ * @returns The result or error envelope; never rejects.
+ */
+export async function callGethRpcRaw(
+  rpcPort: number,
+  method: string,
+  params: unknown[] = [],
+  timeoutMs?: number,
+): Promise<JsonRpcEnvelope> {
+  return callGethHttp(rpcPort, method, params, timeoutMs);
+}
+
+/**
+ * Dispatches a JSON-RPC 2.0 call to the locally running Core-geth node.
  * Returns null on any network or RPC-level failure so callers can treat null as
  * the offline sentinel without wrapping every call in a try/catch.
  * @param {number} rpcPort - The resolved RPC port of the running Geth node.
@@ -18,24 +65,12 @@ export async function callGethRpc(
   params: unknown[] = [],
   timeoutMs?: number,
 ): Promise<any> {
-  try {
-    const response = await fetch(`http://127.0.0.1:${rpcPort}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", method, params, id: Date.now() }),
-      signal:
-        timeoutMs === undefined ? undefined : AbortSignal.timeout(timeoutMs),
-    });
-    const json = await response.json();
-    if (json.error) {
-      console.warn(`[geth:rpc] ${method} error:`, json.error.message);
-      return null;
-    }
-    return json.result;
-  } catch (err) {
-    console.warn(`[geth:rpc] ${method} unreachable:`, (err as Error).message);
+  const envelope = await callGethRpcRaw(rpcPort, method, params, timeoutMs);
+  if ("error" in envelope) {
+    console.warn(`[geth:rpc] ${method} error:`, envelope.error.message);
     return null;
   }
+  return envelope.result;
 }
 
 /**
