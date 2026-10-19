@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
  * @returns The CustomTitleBar component.
  */
 export function CustomTitleBar(): JSX.Element {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(["common"]);
 
   const handleMinimize = (): void => {
     window.api.window.minimize();

@@ -262,7 +262,9 @@ body {
   font-size: 14px;
   line-height: 1;
   padding: 0;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
 .kebab-trigger:hover {
@@ -291,7 +293,9 @@ body {
   white-space: nowrap;
   font-family: inherit;
   border-radius: 6px;
-  transition: background-color 0.12s, border-color 0.12s;
+  transition:
+    background-color 0.12s,
+    border-color 0.12s;
 }
 
 .kebab-actions button:hover {

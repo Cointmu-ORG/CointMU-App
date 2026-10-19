@@ -43,7 +43,7 @@ export function Sidebar({
   const peerCount = useAppStore((s) => s.peerCount);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(["common"]);
 
   const activeAccount =
     accounts.find((a) => a.address === activeWalletAddress) || accounts[0];
@@ -72,7 +72,9 @@ export function Sidebar({
             <Zap color="white" width={16} height={16} strokeWidth={2.5} />
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-800 dark:text-gray-100">CointMU</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
+              CointMU
+            </p>
             <p className="text-[10px] text-slate-400 tracking-wide">
               v{window.systemInfo?.version || "0.0.1"} - {APP_NETWORK}
             </p>
@@ -227,14 +229,20 @@ export function Sidebar({
           className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors focus:outline-none"
         >
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-gray-800 dark:to-gray-800 dark:border dark:border-gray-700 flex items-center justify-center">
-            <Wallet className="text-slate-500 dark:text-gray-300" width={16} height={16} />
+            <Wallet
+              className="text-slate-500 dark:text-gray-300"
+              width={16}
+              height={16}
+            />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-slate-700 dark:text-gray-100 truncate">
                 {activeAccount?.label || "Wallet"}
               </p>
-              <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2">{balance}</p>
+              <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2">
+                {balance}
+              </p>
             </div>
             <div className="flex items-center justify-between mt-0.5">
               <p

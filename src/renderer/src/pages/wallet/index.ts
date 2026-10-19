@@ -1,1 +1,1 @@
-export { WalletPage } from './ui/wallet-page';
+export { WalletPage } from "./ui/wallet-page";

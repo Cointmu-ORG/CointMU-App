@@ -11,7 +11,8 @@ const BASE_CLASSES =
   "inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full border";
 
 const TONE_CLASSES: Record<BadgeTone, string> = {
-  neutral: "text-slate-500 dark:text-gray-300 bg-slate-100 dark:bg-gray-800 border-slate-200 dark:border-gray-700",
+  neutral:
+    "text-slate-500 dark:text-gray-300 bg-slate-100 dark:bg-gray-800 border-slate-200 dark:border-gray-700",
   success: "text-emerald-600 bg-emerald-50 border-emerald-200",
   warning: "text-amber-700 bg-amber-50 border-amber-200",
   danger: "text-red-600 bg-red-50 border-red-200",

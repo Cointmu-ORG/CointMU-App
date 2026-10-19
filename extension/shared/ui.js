@@ -67,9 +67,12 @@ export async function initPopup() {
 
   // Toggle Dropdowns
   document.addEventListener("click", (e) => {
-    if (!e.target.closest('.kebab-trigger') && !e.target.closest('.kebab-actions')) {
-      document.querySelectorAll('.kebab-actions').forEach((el) => {
-        el.classList.add('hidden');
+    if (
+      !e.target.closest(".kebab-trigger") &&
+      !e.target.closest(".kebab-actions")
+    ) {
+      document.querySelectorAll(".kebab-actions").forEach((el) => {
+        el.classList.add("hidden");
       });
     }
     if (networkDropdown && networkDropdown.contains(e.target)) {
@@ -210,64 +213,64 @@ export async function initPopup() {
         activeNetName = net.name;
       }
 
-      if (net.id === 'desktop_connection') {
+      if (net.id === "desktop_connection") {
         li.textContent = net.name;
-        li.addEventListener('click', () => {
+        li.addEventListener("click", () => {
           networkSelectedText.textContent = net.name;
           currentNetworkId = net.id;
           chrome.runtime.sendMessage({
-            action: 'SWITCH_NETWORK',
+            action: "SWITCH_NETWORK",
             networkId: net.id,
           });
         });
       } else {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'net-item';
+        const wrapper = document.createElement("div");
+        wrapper.className = "net-item";
 
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'net-item-name';
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "net-item-name";
         nameSpan.textContent = net.name;
 
-        const kebabBtn = document.createElement('button');
-        kebabBtn.className = 'kebab-trigger';
-        kebabBtn.innerHTML = '&#8942;';
-        kebabBtn.title = 'Options';
+        const kebabBtn = document.createElement("button");
+        kebabBtn.className = "kebab-trigger";
+        kebabBtn.innerHTML = "&#8942;";
+        kebabBtn.title = "Options";
 
         wrapper.appendChild(nameSpan);
         wrapper.appendChild(kebabBtn);
         li.appendChild(wrapper);
 
-        const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'kebab-actions hidden';
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "kebab-actions hidden";
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.addEventListener('click', (e) => {
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          actionsDiv.classList.add('hidden');
-          const nameInput = document.getElementById('network-name-input');
-          const rpcInput = document.getElementById('rpc-url-input');
-          const chainInput = document.getElementById('chain-id-input');
-          if (nameInput) nameInput.value = net.name || '';
-          if (rpcInput) rpcInput.value = net.rpcUrl || '';
-          if (chainInput) chainInput.value = net.chainId || '';
-          defaultView.classList.add('hidden');
-          addNetworkView.classList.remove('hidden');
+          actionsDiv.classList.add("hidden");
+          const nameInput = document.getElementById("network-name-input");
+          const rpcInput = document.getElementById("rpc-url-input");
+          const chainInput = document.getElementById("chain-id-input");
+          if (nameInput) nameInput.value = net.name || "";
+          if (rpcInput) rpcInput.value = net.rpcUrl || "";
+          if (chainInput) chainInput.value = net.chainId || "";
+          defaultView.classList.add("hidden");
+          addNetworkView.classList.remove("hidden");
         });
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'kebab-delete';
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', async (e) => {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "kebab-delete";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
-          actionsDiv.classList.add('hidden');
+          actionsDiv.classList.add("hidden");
           const confirmed = await showConfirmModal(
-            'Are you sure you want to delete this network?',
-            'Delete Network',
+            "Are you sure you want to delete this network?",
+            "Delete Network",
           );
           if (confirmed) {
             chrome.runtime.sendMessage({
-              action: 'DELETE_NETWORK',
+              action: "DELETE_NETWORK",
               networkId: net.id,
             });
           }
@@ -277,19 +280,19 @@ export async function initPopup() {
         actionsDiv.appendChild(deleteBtn);
         li.appendChild(actionsDiv);
 
-        kebabBtn.addEventListener('click', (e) => {
+        kebabBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          document.querySelectorAll('.kebab-actions').forEach((el) => {
-            if (el !== actionsDiv) el.classList.add('hidden');
+          document.querySelectorAll(".kebab-actions").forEach((el) => {
+            if (el !== actionsDiv) el.classList.add("hidden");
           });
-          actionsDiv.classList.toggle('hidden');
+          actionsDiv.classList.toggle("hidden");
         });
 
-        nameSpan.addEventListener('click', () => {
+        nameSpan.addEventListener("click", () => {
           networkSelectedText.textContent = net.name;
           currentNetworkId = net.id;
           chrome.runtime.sendMessage({
-            action: 'SWITCH_NETWORK',
+            action: "SWITCH_NETWORK",
             networkId: net.id,
           });
         });
@@ -441,15 +444,15 @@ export async function initPopup() {
       (n) => n.id === res.activeNetworkId,
     );
 
-
-
     if (customNet && currentAddress) {
       renderAssets("--", "ETH");
       let rpcUrl = customNet.rpcUrl;
       if (!rpcUrl.startsWith("http")) {
         rpcUrl = "http://" + rpcUrl;
       }
-      if (rpcUrl === 'http://localhost') { rpcUrl = 'http://127.0.0.1:8545'; }
+      if (rpcUrl === "http://localhost") {
+        rpcUrl = "http://127.0.0.1:8545";
+      }
       try {
         const parsedChainId = Number(customNet.chainId);
         const validChainId =
@@ -610,7 +613,8 @@ export async function initPopup() {
     const parsedChainId = Number(chainId);
     if (!chainId || isNaN(parsedChainId) || parsedChainId <= 0) {
       if (networkErrorMsg) {
-        networkErrorMsg.textContent = 'Chain ID must be a valid positive number.';
+        networkErrorMsg.textContent =
+          "Chain ID must be a valid positive number.";
         networkErrorMsg.classList.remove("hidden");
       }
       return;
@@ -633,8 +637,6 @@ export async function initPopup() {
       },
     );
   });
-
-
 
   if (actionSendBtn) {
     actionSendBtn.addEventListener("click", () => {

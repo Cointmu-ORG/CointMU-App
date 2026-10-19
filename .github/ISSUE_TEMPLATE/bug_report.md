@@ -1,9 +1,9 @@
 ---
-name: 'Bug report'
-about: 'Report a problem to help us improve CointMU'
-title: '[Bug]: '
-labels: 'bug'
-assignees: ''
+name: "Bug report"
+about: "Report a problem to help us improve CointMU"
+title: "[Bug]: "
+labels: "bug"
+assignees: ""
 ---
 
 ## Describe the Bug

@@ -10,7 +10,11 @@ export function Skeleton({
 }: {
   className?: string;
 }): JSX.Element {
-  return <div className={`animate-pulse bg-slate-200 dark:bg-gray-800 rounded ${className}`} />;
+  return (
+    <div
+      className={`animate-pulse bg-slate-200 dark:bg-gray-800 rounded ${className}`}
+    />
+  );
 }
 
 /**
@@ -44,9 +48,12 @@ export function SkeletonList({
   itemCount?: number;
 }): JSX.Element {
   return (
-    <div className='divide-y divide-slate-100 dark:divide-gray-800'>
+    <div className="divide-y divide-slate-100 dark:divide-gray-800">
       {Array.from({ length: itemCount }).map((_, i) => (
-        <div key={i} className='flex items-center justify-between p-4 bg-white dark:bg-transparent'>
+        <div
+          key={i}
+          className="flex items-center justify-between p-4 bg-white dark:bg-transparent"
+        >
           <div className="flex items-center gap-4">
             <Skeleton className="w-10 h-10 rounded-full" />
             <div>

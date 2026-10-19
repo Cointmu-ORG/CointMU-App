@@ -1,9 +1,9 @@
 ---
-name: 'Feature request'
-about: 'Suggest an idea or enhancement for CointMU'
-title: '[Feature]: '
-labels: 'enhancement'
-assignees: ''
+name: "Feature request"
+about: "Suggest an idea or enhancement for CointMU"
+title: "[Feature]: "
+labels: "enhancement"
+assignees: ""
 ---
 
 ## Problem Description

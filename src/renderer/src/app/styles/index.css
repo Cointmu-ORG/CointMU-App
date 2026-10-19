@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -19,8 +19,8 @@
   --color-text-secondary: #64748b;
   --color-text-muted: #94a3b8;
   --color-accent: var(--color-accent);
-  --font-family-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+  --font-family-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-family-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
 }
 
 @layer base {
@@ -46,7 +46,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .dark body, .dark html, .dark #root {
+  .dark body,
+  .dark html,
+  .dark #root {
     background-color: #030712;
   }
 
@@ -86,7 +88,9 @@
     background: var(--color-surface-elevated);
     border: 1px solid var(--color-border-subtle);
     border-radius: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   .card-glass:hover {
@@ -117,7 +121,11 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-primary),
+      var(--color-accent-secondary)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -129,7 +137,7 @@
   }
 
   .shimmer-border::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -152,7 +160,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

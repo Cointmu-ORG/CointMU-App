@@ -63,7 +63,9 @@ export function ChainTimeline({
     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-base font-bold text-slate-800 dark:text-gray-100">Chain timeline</h3>
+          <h3 className="text-base font-bold text-slate-800 dark:text-gray-100">
+            Chain timeline
+          </h3>
           <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
             Latest 12 blocks — newest on the right
           </p>

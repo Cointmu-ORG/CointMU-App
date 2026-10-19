@@ -1,1 +1,1 @@
-export { MiningPage } from './ui/mining-page';
+export { MiningPage } from "./ui/mining-page";

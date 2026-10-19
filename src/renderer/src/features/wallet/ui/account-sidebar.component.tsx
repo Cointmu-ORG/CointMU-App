@@ -40,12 +40,12 @@ function AccountSidebar({
     <div className="w-64 flex-shrink-0 space-y-5">
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className='text-[10px] font-semibold tracking-[0.15em] uppercase text-gray-400'>
-            {t('wallet:sidebar.accounts')}
+          <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gray-400">
+            {t("wallet:sidebar.accounts")}
           </h3>
           <button
             onClick={onDeriveAccount}
-            className='w-5 h-5 rounded flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors'
+            className="w-5 h-5 rounded flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
           >
             <Plus width={14} height={14} strokeWidth={2.5} />
           </button>
@@ -96,8 +96,8 @@ function AccountSidebar({
                   {!isSelected && (
                     <div
                       onClick={(e) => onHideAccount(e, acc.address)}
-                      className='absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:text-gray-300 dark:hover:text-white bg-white/80 dark:bg-gray-800/50 dark:hover:bg-gray-700/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm'
-                      title={t('wallet:sidebar.hideAccount')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:text-gray-300 dark:hover:text-white bg-white/80 dark:bg-gray-800/50 dark:hover:bg-gray-700/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
+                      title={t("wallet:sidebar.hideAccount")}
                     >
                       <EyeOff width={14} height={14} strokeWidth={2.5} />
                     </div>

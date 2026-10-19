@@ -63,7 +63,7 @@ function DashboardPage({
   const loading = useAppStore((s) => s.loading);
   const balance = useAppStore((s) => s.balance);
   const recentBlocks = useRecentBlocks(blockHeight, isConnected);
-  const { t } = useTranslation(['common', 'dashboard']);
+  const { t } = useTranslation(["common", "dashboard"]);
 
   const { config } = useMiningControls();
   const telemetry = useMiningStats(config.cpuThreads);

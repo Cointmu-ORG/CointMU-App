@@ -7,12 +7,14 @@ It runs on Windows, Linux, and macOS.
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js (v22 or higher recommended)
 - npm (bundled with Node.js)
 - Git
 - A `geth` binary placed in the `resources/bin/` directory (`geth.exe` on Windows, `geth` on Linux and macOS)
 
 ### Installation (from source)
+
 1. Clone the repository and navigate to the project directory:
    ```bash
    git clone https://github.com/kakonoomoidee/CointMU.git
@@ -42,21 +44,27 @@ the host operating system. Build Windows artifacts on Windows, Linux artifacts o
 and macOS artifacts on macOS.
 
 ### Windows
+
 ```bash
 npm run build:win
 ```
+
 Produces a Windows installer in the `dist/` directory.
 
 ### Linux
+
 ```bash
 npm run build:linux
 ```
+
 Produces Linux packages (such as AppImage or deb) in the `dist/` directory.
 
 ### macOS
+
 ```bash
 npm run build:mac
 ```
+
 Produces a macOS application and DMG in the `dist/` directory.
 
 Continuous integration builds all three platforms automatically through the GitHub Actions
@@ -65,6 +73,7 @@ release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed
 ## Development Workflow
 
 ### Using the Makefile
+
 We provide a professional build system via `Makefile` to streamline development tasks. The available commands are:
 
 - `make dev`: Starts the development server with hot-module reloading for both the main process and the React renderer.
@@ -73,14 +82,17 @@ We provide a professional build system via `Makefile` to streamline development 
 - `make help` (default): Displays the list of available commands.
 
 ### Release Workflow
+
 Releasing a new version is fully automated using our custom bump-version script. This script synchronizes the version string across both `package.json` and the `Makefile`, installs dependencies, creates a versioned git commit, applies an annotated git tag, and pushes the updates to the remote repository.
 
 **Usage:**
+
 ```bash
 node scripts/bump-version.js <major|minor|patch> [prerelease-tag]
 ```
 
 **Examples:**
+
 - Bump the minor version (e.g., from 1.1.0 to 1.2.0):
   ```bash
   node scripts/bump-version.js minor
