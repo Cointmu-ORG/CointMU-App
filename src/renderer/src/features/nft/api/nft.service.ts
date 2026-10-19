@@ -1,4 +1,5 @@
 import { call } from "@/shared/api/rpc.client";
+import { createNodeProvider } from "@/shared/api";
 
 const ERC721_TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -338,14 +339,14 @@ export async function discoverUserNFTs(
  * @param {string} contractAddress - The NFT contract address.
  * @param {string} tokenId - The decimal token ID string.
  * @param {'ERC-721' | 'ERC-1155'} standard - The token standard.
- * @param {import('ethers').JsonRpcProvider} provider - The ethers provider instance.
+ * @param {import('ethers').JsonRpcApiProvider} provider - The ethers provider instance.
  * @returns {Promise<NFTMetadata>} The resolved metadata, with fallback values for missing fields.
  */
 export async function resolveNFTMetadata(
   contractAddress: string,
   tokenId: string,
   standard: "ERC-721" | "ERC-1155",
-  provider: import("ethers").JsonRpcProvider,
+  provider: import("ethers").JsonRpcApiProvider,
 ): Promise<NFTMetadata> {
   const { ethers } = await import("ethers");
 
@@ -406,19 +407,12 @@ export async function resolveNFTMetadata(
 }
 
 /**
- * Builds an ethers JsonRpcProvider connected to the local Core-geth node.
- * The port is resolved from the Electron IPC bridge with a fallback to 8585.
- * @returns {Promise<import('ethers').JsonRpcProvider>} A configured provider instance.
+ * Builds an ethers provider connected to the local Core-geth node through the
+ * main process.
+ * @returns {Promise<import('ethers').JsonRpcApiProvider>} A configured provider instance.
  */
 export async function buildProvider(): Promise<
-  import("ethers").JsonRpcProvider
+  import("ethers").JsonRpcApiProvider
 > {
-  const { ethers } = await import("ethers");
-  try {
-    const port = await window.api.getRpcPort();
-    const url = `http://127.0.0.1:${typeof port === "number" && port > 0 ? port : 8585}`;
-    return new ethers.JsonRpcProvider(url);
-  } catch {
-    return new ethers.JsonRpcProvider("http://127.0.0.1:8585");
-  }
+  return createNodeProvider();
 }

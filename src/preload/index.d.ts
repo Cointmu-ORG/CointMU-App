@@ -1,5 +1,5 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
-import type { NodeRecoveryEvent } from "../bridge/types";
+import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
 
 interface UpdaterProgress {
   percent: number;
@@ -25,16 +25,11 @@ interface UpdaterEvent {
   error?: string;
 }
 
-interface DappRequest {
-  id: number;
-  method: string;
-  params: unknown[];
-  tabId: number;
-  origin: string;
-}
-
 interface CointmuAPI {
   getRpcPort: () => Promise<number>;
+  rpc: {
+    call: (method: string, params?: unknown[]) => Promise<JsonRpcEnvelope>;
+  };
   getCpuUsage: () => Promise<number>;
   getNodeStatus: () => Promise<{
     running: boolean;
@@ -138,13 +133,6 @@ interface CointmuAPI {
     ) => () => void;
   };
   dapp: {
-    onDappRequest: (callback: (payload: DappRequest) => void) => () => void;
-    sendDappResponse: (payload: {
-      id: number;
-      tabId: number;
-      approved: boolean;
-      result?: unknown;
-    }) => void;
     onSiteConnected: (callback: (origin: string) => void) => () => void;
     revokeSite: (origin: string) => void;
   };

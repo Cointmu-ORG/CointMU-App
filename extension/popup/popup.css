@@ -626,6 +626,17 @@ body {
   margin-bottom: 12px;
 }
 
+.bridge-notice {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--warning-color);
+  border-radius: var(--radius-sm);
+  background: var(--warning-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .input-group {
   margin-bottom: 14px;
   display: flex;
@@ -815,10 +826,26 @@ body {
   font-size: 13px;
   font-family: "SFMono-Regular", Consolas, monospace;
   color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .tx-row--data .tx-value {
   word-break: break-all;
+  white-space: pre-wrap;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.approval-warning {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--danger-color);
+  border-radius: var(--radius-sm);
+  background: var(--danger-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .action-footer {

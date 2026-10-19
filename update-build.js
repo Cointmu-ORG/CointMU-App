@@ -49,6 +49,9 @@ function updateBuildId() {
   return buildId;
 }
 
+// Unit tests live next to the extension sources but must not ship.
+const TEST_FILE_PATTERN = /\.test\.js$/;
+
 /**
  * Creates ZIP archive.
  * @param {string} sourceDir
@@ -83,7 +86,9 @@ function zipDirectory(sourceDir, outFile) {
 
     archive.pipe(output);
 
-    archive.directory(sourceDir, false);
+    archive.directory(sourceDir, false, (entry) =>
+      TEST_FILE_PATTERN.test(entry.name) ? false : entry,
+    );
 
     archive.finalize();
   });
