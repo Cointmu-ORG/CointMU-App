@@ -51,6 +51,36 @@ export function withoutOrigin(origins, origin) {
 }
 
 /**
+ * @param {string | undefined} url - A tab URL.
+ * @returns {string | null} Its origin, or null when it has no usable URL.
+ */
+function originOfUrl(url) {
+  if (typeof url !== "string") return null;
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Picks the tabs whose page belongs to a connected origin, e.g. to deliver
+ * account changes only to sites the user connected.
+ * @param {Array<{ id?: number, url?: string }>} tabs - From chrome.tabs.query.
+ * @param {string[]} origins - The connected origins.
+ * @returns {number[]} The ids of the matching tabs.
+ */
+export function selectConnectedTabIds(tabs, origins) {
+  return tabs
+    .filter(
+      (tab) =>
+        tab.id !== undefined &&
+        isOriginConnected(origins, originOfUrl(tab.url)),
+    )
+    .map((tab) => tab.id);
+}
+
+/**
  * @returns {Promise<string[]>} The stored connected origins.
  */
 export async function getConnectedOrigins() {
