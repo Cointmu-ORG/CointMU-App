@@ -18,8 +18,9 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux",
-    "i18n:audit": "npx tsx scripts/sync-i18n.ts",
+    "i18n:audit": "tsx scripts/sync-i18n.ts",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -62,6 +63,7 @@
     "electron-vite": "^5.0.0",
     "prettier": "3.9.10",
     "tailwindcss": "^4.3.0",
+    "tsx": "4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   }
