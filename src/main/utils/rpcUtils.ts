@@ -1,9 +1,22 @@
 import type { JsonRpcEnvelope } from "../../bridge/types";
+import { isPrivilegedNodeMethod } from "../security/rpcMethodPolicy";
+import { callGethIpc, internalErrorEnvelope } from "./gethIpcClient";
 
 const SECONDS_PER_MINUTE = 60;
 const SECONDS_PER_HOUR = 3600;
 const SECONDS_PER_DAY = 86400;
-const JSON_RPC_INTERNAL_ERROR = -32603;
+const GETH_IPC_DEFAULT_TIMEOUT_MS = 10_000;
+
+let gethIpcPath: string | null = null;
+
+/**
+ * Sets the geth --ipcpath endpoint used for admin and miner methods, which the
+ * HTTP endpoint no longer serves.
+ * @param path - The IPC endpoint, or null when geth is not running.
+ */
+export function configureGethIpcPath(path: string | null): void {
+  gethIpcPath = path;
+}
 
 async function callGethHttp(
   rpcPort: number,
@@ -22,18 +35,16 @@ async function callGethHttp(
     const json = await response.json();
     return json.error ? { error: json.error } : { result: json.result ?? null };
   } catch (err) {
-    return {
-      error: {
-        code: JSON_RPC_INTERNAL_ERROR,
-        message: `geth HTTP unreachable: ${(err as Error).message}`,
-      },
-    };
+    return internalErrorEnvelope(
+      `geth HTTP unreachable: ${(err as Error).message}`,
+    );
   }
 }
 
 /**
  * Dispatches a JSON-RPC 2.0 call to the local node and keeps the node's error
- * object.
+ * object. admin_* and miner_* go over the private IPC socket; everything else
+ * goes to the HTTP endpoint.
  * @param rpcPort - The resolved RPC port of the running Geth node.
  * @param method - The JSON-RPC method name.
  * @param params - The ordered parameter array for the method.
@@ -46,7 +57,18 @@ export async function callGethRpcRaw(
   params: unknown[] = [],
   timeoutMs?: number,
 ): Promise<JsonRpcEnvelope> {
-  return callGethHttp(rpcPort, method, params, timeoutMs);
+  if (!isPrivilegedNodeMethod(method)) {
+    return callGethHttp(rpcPort, method, params, timeoutMs);
+  }
+  if (gethIpcPath === null) {
+    return internalErrorEnvelope("geth IPC endpoint is not configured");
+  }
+  return callGethIpc(
+    gethIpcPath,
+    method,
+    params,
+    timeoutMs ?? GETH_IPC_DEFAULT_TIMEOUT_MS,
+  );
 }
 
 /**

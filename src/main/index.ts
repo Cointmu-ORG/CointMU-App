@@ -29,7 +29,13 @@ import { initUpdater } from "./services/updater";
 import { parseGethLogChunk } from "./utils/gethLogParser";
 import { GENESIS_BLOCK, type GenesisBlock } from "./services/genesis";
 import ms from "ms";
-import { callGethRpc } from "./utils/rpcUtils";
+import { callGethRpc, configureGethIpcPath } from "./utils/rpcUtils";
+import { buildGethHttpArgs, buildGethIpcArgs } from "./geth/gethArgs";
+import {
+  getOrCreateInstallId,
+  resolveGethIpcEndpoint,
+  type GethIpcEndpoint,
+} from "./geth/ipcEndpoint";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
 import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
@@ -153,6 +159,38 @@ let gethProcess: ChildProcess | null = null;
 let lastSpawnedGeth: ChildProcess | null = null;
 let nodeRecovery: GethRecovery | null = null;
 let sessionStartTimestamp: number = Date.now();
+let gethIpcEndpoint: GethIpcEndpoint | null = null;
+
+/**
+ * Prepares the private geth IPC endpoint. On failure geth starts with IPC
+ * disabled, so mining controls fail visibly instead of using an unsafe path.
+ * @param {any} store - The electron-store instance holding the install id.
+ * @returns {Promise<void>}
+ */
+async function prepareGethIpcEndpoint(store: any): Promise<void> {
+  try {
+    gethIpcEndpoint = await resolveGethIpcEndpoint({
+      userDataDir: app.getPath("userData"),
+      installId: getOrCreateInstallId(store),
+    });
+  } catch (err) {
+    console.error("[geth:ipc] Could not prepare a private IPC endpoint:", err);
+    gethIpcEndpoint = null;
+  }
+  configureGethIpcPath(gethIpcEndpoint?.path ?? null);
+}
+
+/**
+ * Removes the short-path IPC directory created when userData was too long.
+ * @returns {Promise<void>}
+ */
+async function removeTemporaryIpcDir(): Promise<void> {
+  const dir = gethIpcEndpoint?.temporaryDir;
+  if (!dir) return;
+  await rm(dir, { recursive: true, force: true }).catch((err) => {
+    console.warn("[geth:ipc] Failed to remove temporary IPC dir:", err);
+  });
+}
 
 /**
  * Resolves the absolute path to the bundled Core-geth binary based on the
@@ -420,20 +458,9 @@ async function spawnGethProcess(store: any): Promise<void> {
     String(resolvedAuthRpcPort),
   ];
 
+  args.push(...buildGethIpcArgs(gethIpcEndpoint?.path ?? null));
   if (isRpcEnabled) {
-    args.push(
-      "--http",
-      "--http.addr",
-      "127.0.0.1",
-      "--http.port",
-      String(resolvedRpcPort),
-      "--http.api",
-      "eth,net,web3,miner,personal,admin",
-      "--http.corsdomain",
-      "*",
-      "--http.vhosts",
-      "*",
-    );
+    args.push(...buildGethHttpArgs(resolvedRpcPort));
   }
 
   const hardcodedUbuntuEnode =
@@ -1157,6 +1184,7 @@ app.whenReady().then(async () => {
     console.error("[geth:init] Fatal error during genesis init:", err);
   }
 
+  await prepareGethIpcEndpoint(store);
   await spawnGethProcess(store);
 
   const miningController = new MiningController(resolvedRpcPort, store);
@@ -1194,9 +1222,11 @@ app.on("before-quit", (e) => {
   }
   e.preventDefault();
   isAppQuitting = true;
-  killGethProcess().then(() => {
-    app.exit();
-  });
+  killGethProcess()
+    .then(removeTemporaryIpcDir)
+    .then(() => {
+      app.exit();
+    });
 });
 
 app.on("window-all-closed", () => {
@@ -1208,15 +1238,19 @@ app.on("window-all-closed", () => {
 process.on("SIGINT", () => {
   if (isAppQuitting) return;
   isAppQuitting = true;
-  killGethProcess().then(() => {
-    app.exit();
-  });
+  killGethProcess()
+    .then(removeTemporaryIpcDir)
+    .then(() => {
+      app.exit();
+    });
 });
 
 process.on("SIGTERM", () => {
   if (isAppQuitting) return;
   isAppQuitting = true;
-  killGethProcess().then(() => {
-    app.exit();
-  });
+  killGethProcess()
+    .then(removeTemporaryIpcDir)
+    .then(() => {
+      app.exit();
+    });
 });
