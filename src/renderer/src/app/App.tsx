@@ -18,7 +18,6 @@ import { useAuthStore } from "@/features/auth";
 import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport, useNotificationStore } from "@/features/notifications";
-import { useDappRequestHandler } from "@/features/dapp";
 import { useAutoLock } from "@/features/auth";
 
 const Miner = lazy(() =>
@@ -94,8 +93,6 @@ function App(): JSX.Element {
       offSite();
     };
   }, []);
-
-  useDappRequestHandler();
 
   const handleNavigate = (view: string, payload?: any) => {
     setActiveView(view as ActiveView);

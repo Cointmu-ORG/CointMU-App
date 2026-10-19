@@ -37,14 +37,12 @@ import {
   type GethIpcEndpoint,
 } from "./geth/ipcEndpoint";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
-import { createPairedOriginCheck } from "./services/extensionPairing";
 import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
 import {
   scanWalletActivity,
   fetchNetworkInsights,
 } from "./services/activityScanner";
-import { startDappWsServer } from "./services/dappWsServer";
 import {
   startExtensionSyncServer,
   broadcastWalletState,
@@ -1197,7 +1195,6 @@ app.whenReady().then(async () => {
   initUpdater(win);
   miningController.setWindow(win);
 
-  const dappServer = startDappWsServer(win, createPairedOriginCheck(store));
   const extSyncServer = startExtensionSyncServer(store, resolvedRpcPort, win);
 
   app.on("activate", function () {
@@ -1207,7 +1204,6 @@ app.whenReady().then(async () => {
   });
 
   app.on("before-quit", () => {
-    dappServer.close();
     extSyncServer.close();
     removeRendererRpcHandler();
   });

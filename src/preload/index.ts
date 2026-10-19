@@ -167,38 +167,6 @@ const api = {
     },
   },
   dapp: {
-    onDappRequest: (
-      callback: (payload: {
-        id: number;
-        method: string;
-        params: unknown[];
-        tabId: number;
-        origin: string;
-      }) => void,
-    ) => {
-      const handler = (
-        _: any,
-        payload: {
-          id: number;
-          method: string;
-          params: unknown[];
-          tabId: number;
-          origin: string;
-        },
-      ): void => {
-        callback(payload);
-      };
-      ipcRenderer.on("dapp:request", handler);
-      return () => ipcRenderer.removeListener("dapp:request", handler);
-    },
-    sendDappResponse: (payload: {
-      id: number;
-      tabId: number;
-      approved: boolean;
-      result?: unknown;
-    }) => {
-      ipcRenderer.send("dapp:response", payload);
-    },
     onSiteConnected: (callback: (origin: string) => void) => {
       const handler = (_: any, origin: string): void => {
         callback(origin);

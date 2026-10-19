@@ -25,14 +25,6 @@ interface UpdaterEvent {
   error?: string;
 }
 
-interface DappRequest {
-  id: number;
-  method: string;
-  params: unknown[];
-  tabId: number;
-  origin: string;
-}
-
 interface CointmuAPI {
   getRpcPort: () => Promise<number>;
   rpc: {
@@ -141,13 +133,6 @@ interface CointmuAPI {
     ) => () => void;
   };
   dapp: {
-    onDappRequest: (callback: (payload: DappRequest) => void) => () => void;
-    sendDappResponse: (payload: {
-      id: number;
-      tabId: number;
-      approved: boolean;
-      result?: unknown;
-    }) => void;
     onSiteConnected: (callback: (origin: string) => void) => () => void;
     revokeSite: (origin: string) => void;
   };
