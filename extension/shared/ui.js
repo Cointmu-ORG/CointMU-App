@@ -2,6 +2,13 @@
 
 import { loadTranslations } from "./locale.js";
 
+/** Translation keys for bridge refusal codes sent by the desktop app. */
+const BRIDGE_NOTICE_KEYS = {
+  NOT_PAIRED: "extension.wallet.bridgeNotPaired",
+};
+const BRIDGE_NOTICE_FALLBACK =
+  "This extension is not paired with CointMU Desktop. Update both apps, then choose Link to Desktop App.";
+
 export async function initPopup() {
   const translations = await loadTranslations();
 
@@ -24,6 +31,22 @@ export async function initPopup() {
   const assetsCount = document.getElementById("assets-count");
   const connectedStatus = document.getElementById("connected-status");
   const statusText = document.getElementById("status-text");
+  const bridgeNotice = document.getElementById("bridge-notice");
+
+  /**
+   * Shows why the desktop app refused this extension, if it did.
+   * @param {string | null} code - The stored bridge refusal code.
+   * @returns {void}
+   */
+  const renderBridgeNotice = (code) => {
+    if (!code) {
+      bridgeNotice.classList.add("hidden");
+      return;
+    }
+    bridgeNotice.textContent =
+      translations[BRIDGE_NOTICE_KEYS[code]] || BRIDGE_NOTICE_FALLBACK;
+    bridgeNotice.classList.remove("hidden");
+  };
 
   const accountDropdown = document.getElementById("account-dropdown");
   const accountSelectedText = document.getElementById("account-selected-text");
@@ -438,6 +461,7 @@ export async function initPopup() {
         addNetworkView.classList.add("hidden");
       }
     }
+    renderBridgeNotice(res.isLinked ? null : res.bridgeNotice);
 
     // Adaptive Asset Fetching
     const customNet = (res.customNetworks || []).find(

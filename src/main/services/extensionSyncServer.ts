@@ -1,12 +1,89 @@
+import type { IncomingMessage } from "node:http";
 import { WebSocketServer, type WebSocket } from "ws";
 import { callGethRpc } from "../utils/rpcUtils";
 import { ipcMain, BrowserWindow } from "electron";
+import {
+  BRIDGE_NOT_PAIRED_MESSAGE,
+  BridgeAccess,
+} from "../security/bridgeOrigin";
+import {
+  clearPairedOrigin,
+  createPairedOriginCheck,
+  savePairedOrigin,
+  verifyExtensionClient,
+} from "./extensionPairing";
+import {
+  handleBridgeRpc,
+  sendBridgeRpcResponse,
+  type BridgeRpcRequest,
+} from "./extensionBridgeRpc";
 
 const EXTENSION_SYNC_PORT = process.env.ELECTRON_WS_PORT
   ? parseInt(process.env.ELECTRON_WS_PORT)
   : 8765;
+const EIP1193_UNAUTHORIZED = 4100;
+/** Message types an extension may send before it is paired. */
+const UNPAIRED_MESSAGE_TYPES: ReadonlySet<string> = new Set([
+  "REQUEST_LINK",
+  "ping",
+]);
 let wss: WebSocketServer | null = null;
 let pendingSocket: WebSocket | null = null;
+/** Sockets from the paired extension origin; only these get wallet data. */
+const pairedSockets = new Set<WebSocket>();
+const socketOrigins = new WeakMap<WebSocket, string>();
+
+/**
+ * Sends a payload to every open socket of the paired extension.
+ * @param {string} payload - The serialized message.
+ * @returns {void}
+ */
+function broadcastToPaired(payload: string): void {
+  pairedSockets.forEach((client) => {
+    if (client.readyState === 1) {
+      client.send(payload);
+    }
+  });
+}
+
+/**
+ * Tells an unpaired extension why it was refused. FORCE_UNLINK makes older
+ * extension builds drop their stale "linked" state and show the pair screen.
+ * @param {WebSocket} socket - The unpaired socket.
+ * @param {BridgeRpcRequest & { jsonrpc?: unknown }} msg - The refused message.
+ * @returns {void}
+ */
+function respondNotPaired(
+  socket: WebSocket,
+  msg: BridgeRpcRequest & { jsonrpc?: unknown },
+): void {
+  if (msg.jsonrpc === "2.0") {
+    sendBridgeRpcResponse(socket, msg, {
+      error: { code: EIP1193_UNAUTHORIZED, message: BRIDGE_NOT_PAIRED_MESSAGE },
+    });
+    return;
+  }
+  socket.send(
+    JSON.stringify({
+      type: "BRIDGE_ERROR",
+      code: "NOT_PAIRED",
+      message: BRIDGE_NOT_PAIRED_MESSAGE,
+    }),
+  );
+  socket.send(JSON.stringify({ type: "FORCE_UNLINK" }));
+}
+
+/**
+ * Notifies the renderer whether a paired extension is connected.
+ * @param {boolean} isConnected - The new status.
+ * @returns {void}
+ */
+function sendExtensionStatus(isConnected: boolean): void {
+  BrowserWindow.getAllWindows()[0]?.webContents.send(
+    "dapp:extensionStatus",
+    isConnected,
+  );
+}
 
 /**
  * Fetches the latest balance for the active wallet and broadcasts the full
@@ -60,11 +137,7 @@ export async function broadcastWalletState(
     network,
   });
 
-  wss.clients.forEach((client) => {
-    if (client.readyState === 1) {
-      client.send(payload);
-    }
-  });
+  broadcastToPaired(payload);
 }
 
 /**
@@ -80,14 +153,24 @@ export function startExtensionSyncServer(
   rpcPort: number,
   win: BrowserWindow,
 ): { close: () => void } {
-  wss = new WebSocketServer({ host: "127.0.0.1", port: EXTENSION_SYNC_PORT });
+  wss = new WebSocketServer({
+    host: "127.0.0.1",
+    port: EXTENSION_SYNC_PORT,
+    verifyClient: verifyExtensionClient,
+  });
+  const checkPairing = createPairedOriginCheck(store);
 
   ipcMain.on("pairing:respond", (_, approved: boolean) => {
     if (pendingSocket && pendingSocket.readyState === 1) {
-      if (approved) {
+      const origin = socketOrigins.get(pendingSocket);
+      if (approved && origin) {
+        savePairedOrigin(store, origin);
+        pairedSockets.clear();
+        pairedSockets.add(pendingSocket);
         pendingSocket.send(JSON.stringify({ type: "LINK_APPROVED" }));
         store.set("isExtensionLinked", true);
         win.webContents.send("extension:linked");
+        sendExtensionStatus(true);
         void broadcastWalletState(store, rpcPort);
       } else {
         pendingSocket.send(JSON.stringify({ type: "LINK_REJECTED" }));
@@ -97,41 +180,42 @@ export function startExtensionSyncServer(
   });
 
   ipcMain.on("extension:unlink", () => {
-    if (wss) {
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-          client.send(JSON.stringify({ type: "FORCE_UNLINK" }));
-        }
-      });
-    }
+    broadcastToPaired(JSON.stringify({ type: "FORCE_UNLINK" }));
+    pairedSockets.clear();
+    clearPairedOrigin(store);
     store.set("isExtensionLinked", false);
+    sendExtensionStatus(false);
   });
 
   ipcMain.on("dapp:revokeSite", (_, origin: string) => {
-    if (wss) {
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-          client.send(JSON.stringify({ type: "REVOKE_SITE", origin }));
-        }
-      });
-    }
+    broadcastToPaired(JSON.stringify({ type: "REVOKE_SITE", origin }));
   });
 
   wss.on("listening", () => {
     console.log(`[Extension-Bridge] Listening on port ${EXTENSION_SYNC_PORT}`);
   });
 
-  wss.on("connection", (socket: WebSocket) => {
-    console.log("[extension-sync] Extension UI connected.");
-    BrowserWindow.getAllWindows()[0]?.webContents.send(
-      "dapp:extensionStatus",
-      true,
+  wss.on("connection", (socket: WebSocket, req: IncomingMessage) => {
+    const origin = req.headers.origin;
+    if (origin) socketOrigins.set(socket, origin);
+    const isPaired = checkPairing(origin) === BridgeAccess.PAIRED;
+    console.log(
+      `[extension-sync] Extension connected (${isPaired ? "paired" : "not paired"}).`,
     );
+    if (isPaired) {
+      pairedSockets.add(socket);
+      sendExtensionStatus(true);
+    }
 
     socket.on("message", async (data: Buffer) => {
       try {
         const msg = JSON.parse(data.toString());
-        if (msg.type === "REQUEST_LINK") {
+        if (
+          !pairedSockets.has(socket) &&
+          !UNPAIRED_MESSAGE_TYPES.has(msg.type)
+        ) {
+          respondNotPaired(socket, msg);
+        } else if (msg.type === "REQUEST_LINK") {
           pendingSocket = socket;
           win.webContents.send("pairing:request");
         } else if (msg.type === "ping") {
@@ -159,77 +243,15 @@ export function startExtensionSyncServer(
         } else if (msg.type === "SWITCH_ACCOUNT") {
           store.set("activeWalletAddress", msg.address);
           void broadcastWalletState(store, rpcPort);
-          if (wss) {
-            wss.clients.forEach((client) => {
-              if (client.readyState === 1) {
-                client.send(
-                  JSON.stringify({
-                    type: "ACCOUNTS_CHANGED",
-                    accounts: [msg.address],
-                  }),
-                );
-              }
-            });
-          }
+          broadcastToPaired(
+            JSON.stringify({
+              type: "ACCOUNTS_CHANGED",
+              accounts: [msg.address],
+            }),
+          );
         } else if (msg.jsonrpc === "2.0") {
           try {
-            const parsedPayload = msg;
-
-            if (
-              parsedPayload.method === "eth_requestAccounts" ||
-              parsedPayload.method === "eth_accounts"
-            ) {
-              let walletAddress = "0x0000000000000000000000000000000000000000";
-              try {
-                const storedAddress = store.get("activeWalletAddress");
-                if (storedAddress) walletAddress = storedAddress;
-              } catch (e) {
-                console.error(
-                  "[WS Server Error] Failed to fetch activeWalletAddress:",
-                  e,
-                );
-              }
-
-              if (parsedPayload.method === "eth_requestAccounts") {
-                BrowserWindow.getAllWindows()[0]?.webContents.send(
-                  "dapp:siteConnected",
-                  parsedPayload.origin,
-                );
-              }
-
-              const response = JSON.stringify({
-                jsonrpc: "2.0",
-                id: parsedPayload.id,
-                result: [walletAddress],
-                __tabId: parsedPayload.__tabId,
-              });
-              socket.send(response);
-            } else {
-              try {
-                const result = await callGethRpc(
-                  rpcPort,
-                  parsedPayload.method,
-                  parsedPayload.params,
-                );
-                socket.send(
-                  JSON.stringify({
-                    jsonrpc: "2.0",
-                    id: parsedPayload.id,
-                    __tabId: parsedPayload.__tabId,
-                    result,
-                  }),
-                );
-              } catch (err: any) {
-                socket.send(
-                  JSON.stringify({
-                    jsonrpc: "2.0",
-                    id: parsedPayload.id,
-                    __tabId: parsedPayload.__tabId,
-                    error: { code: -32603, message: err.message },
-                  }),
-                );
-              }
-            }
+            await handleBridgeRpc(socket, msg, store, rpcPort);
           } catch (error) {
             console.error("[WS Server Error]:", error);
           }
@@ -244,21 +266,17 @@ export function startExtensionSyncServer(
       if (pendingSocket === socket) {
         pendingSocket = null;
       }
-      if (wss && wss.clients.size === 0) {
-        BrowserWindow.getAllWindows()[0]?.webContents.send(
-          "dapp:extensionStatus",
-          false,
-        );
+      pairedSockets.delete(socket);
+      if (pairedSockets.size === 0) {
+        sendExtensionStatus(false);
       }
     });
 
     socket.on("error", (err: Error) => {
       console.error("[extension-sync] Socket error:", err.message);
-      if (wss && wss.clients.size === 0) {
-        BrowserWindow.getAllWindows()[0]?.webContents.send(
-          "dapp:extensionStatus",
-          false,
-        );
+      pairedSockets.delete(socket);
+      if (pairedSockets.size === 0) {
+        sendExtensionStatus(false);
       }
     });
   });
@@ -273,6 +291,7 @@ export function startExtensionSyncServer(
         wss.close();
         wss = null;
       }
+      pairedSockets.clear();
       ipcMain.removeAllListeners("pairing:respond");
       ipcMain.removeAllListeners("extension:unlink");
       ipcMain.removeAllListeners("dapp:revokeSite");

@@ -67,12 +67,18 @@ export function handleSocketMessage(event) {
   } else if (payload.type === "LINK_APPROVED") {
     connectionMode = "desktop";
     chrome.storage.local.set({ isLinked: true, connectionMode: "desktop" });
+    chrome.storage.local.remove("bridgeNotice");
     return;
   } else if (payload.type === "LINK_REJECTED") {
     chrome.storage.local.set({ isLinked: false });
     return;
   } else if (payload.type === "FORCE_UNLINK") {
     chrome.storage.local.remove(["isLinked", "walletState"]);
+    return;
+  } else if (payload.type === "BRIDGE_ERROR") {
+    // The desktop app refused this extension (e.g. not paired); the popup
+    // shows the notice on the pairing screen until the next approved link.
+    chrome.storage.local.set({ bridgeNotice: payload.code || "UNKNOWN" });
     return;
   } else if (payload.type === "WALLET_STATE") {
     if (connectionMode === "standalone") {
@@ -405,6 +411,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
         "customNetworks",
         "activeStandaloneAddress",
         "activeNetworkId",
+        "bridgeNotice",
       ])
       .then((res) => {
         const isDesktopMode = (res.connectionMode || "desktop") === "desktop";
@@ -437,6 +444,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
           customNetworks: res.customNetworks || [],
           activeStandaloneAddress: res.activeStandaloneAddress || null,
           activeNetworkId: res.activeNetworkId || "desktop_connection",
+          bridgeNotice: res.bridgeNotice || null,
         });
       });
     return true;
