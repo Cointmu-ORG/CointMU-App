@@ -848,7 +848,23 @@ class MiningController {
   }
 }
 
+// A second instance would spawn a second geth on the same datadir and fail on
+// the database lock, so it quits and hands focus to the running instance.
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+if (!hasSingleInstanceLock) {
+  app.quit();
+}
+
+app.on("second-instance", () => {
+  const [win] = BrowserWindow.getAllWindows();
+  if (!win) return;
+  if (win.isMinimized()) win.restore();
+  if (!win.isVisible()) win.show();
+  win.focus();
+});
+
 app.whenReady().then(async () => {
+  if (!hasSingleInstanceLock) return;
   electronApp.setAppUserModelId("com.cointmu.desktop");
 
   app.on("browser-window-created", (_, window) => {
