@@ -1,26 +1,37 @@
 import { resolve } from "path";
 import { readFileSync } from "fs";
-import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { defineConfig } from "electron-vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 
+// electron-vite externalizes "dependencies" for main and preload by default
+// (build.externalizeDeps), so they need no plugin of their own.
 export default defineConfig({
-  main: {
-    plugins: [externalizeDepsPlugin()],
-  },
-  preload: {
-    plugins: [externalizeDepsPlugin()],
-  },
+  main: {},
+  preload: {},
   renderer: {
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks: {
-            "vendor-react": ["react", "react-dom", "qrcode.react"],
-            "vendor-ethers": ["ethers"],
-            "vendor-utils": ["zustand", "date-fns"],
+          // Groups match by path, so transitive deps that the old object-form
+          // manualChunks pulled in implicitly are listed explicitly.
+          codeSplitting: {
+            groups: [
+              {
+                name: "vendor-react",
+                test: /[\\/]node_modules[\\/](react|react-dom|scheduler|qrcode\.react)[\\/]/,
+              },
+              {
+                name: "vendor-ethers",
+                test: /[\\/]node_modules[\\/](ethers|@noble|@adraffy|aes-js)[\\/]/,
+              },
+              {
+                name: "vendor-utils",
+                test: /[\\/]node_modules[\\/](zustand|date-fns)[\\/]/,
+              },
+            ],
           },
         },
       },
