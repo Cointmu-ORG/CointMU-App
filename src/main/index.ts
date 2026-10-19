@@ -59,6 +59,10 @@ const WINDOW_MIN_WIDTH = 900;
 const WINDOW_MIN_HEIGHT = 600;
 
 const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
+// Geth always opens the engine (auth) RPC; its fixed default 8551 collides
+// with any other node on the machine, so it is scanned like the HTTP port.
+const DEFAULT_AUTH_RPC_PORT = 8551;
+const LOCALHOST_ADDR = "127.0.0.1";
 let GETH_NETWORK_ID =
   process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
 
@@ -141,6 +145,7 @@ async function getDirectorySize(dir: string): Promise<number> {
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT;
+let resolvedAuthRpcPort: number = DEFAULT_AUTH_RPC_PORT;
 let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
@@ -168,18 +173,20 @@ function resolveGethBinaryPath(): string {
 }
 
 /**
- * Scans for the first available TCP port starting from the configured default.
+ * Scans for the first available TCP port starting from a default.
  * Uses detect-port to avoid binding conflicts with other local services.
- * @returns A promise resolving to the first available port number.
+ * @param startPort - The preferred port and start of the scan range.
+ * @param reservedPort - A port already assigned to geth but not yet bound, so detect-port cannot see it.
+ * @returns A promise resolving to the first available port number, or startPort when none is free.
  */
-async function findAvailablePort(): Promise<number> {
-  const portRangeEnd = DEFAULT_RPC_PORT + MAX_PORT_SCAN_ATTEMPTS;
+async function findAvailablePort(
+  startPort: number,
+  reservedPort?: number,
+): Promise<number> {
+  const portRangeEnd = startPort + MAX_PORT_SCAN_ATTEMPTS;
 
-  for (
-    let candidate = DEFAULT_RPC_PORT;
-    candidate < portRangeEnd;
-    candidate++
-  ) {
+  for (let candidate = startPort; candidate < portRangeEnd; candidate++) {
+    if (candidate === reservedPort) continue;
     try {
       const available = await detectPort(candidate);
       if (available === candidate) {
@@ -190,7 +197,7 @@ async function findAvailablePort(): Promise<number> {
     }
   }
 
-  return DEFAULT_RPC_PORT;
+  return startPort;
 }
 
 /**
@@ -397,6 +404,10 @@ async function spawnGethProcess(store: any): Promise<void> {
     GETH_LOG_VERBOSITY,
     "--syncmode",
     "full",
+    "--authrpc.addr",
+    LOCALHOST_ADDR,
+    "--authrpc.port",
+    String(resolvedAuthRpcPort),
   ];
 
   if (isRpcEnabled) {
@@ -1091,7 +1102,11 @@ app.whenReady().then(async () => {
     }
   });
 
-  resolvedRpcPort = await findAvailablePort();
+  resolvedRpcPort = await findAvailablePort(DEFAULT_RPC_PORT);
+  resolvedAuthRpcPort = await findAvailablePort(
+    DEFAULT_AUTH_RPC_PORT,
+    resolvedRpcPort,
+  );
 
   loadNetworkId(store);
 
