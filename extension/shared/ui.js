@@ -1,6 +1,14 @@
 "use strict";
 
 import { loadTranslations } from "./locale.js";
+import { renderApprovalView } from "./approval-popup.js";
+
+/** Translation keys for bridge refusal codes sent by the desktop app. */
+const BRIDGE_NOTICE_KEYS = {
+  NOT_PAIRED: "extension.wallet.bridgeNotPaired",
+};
+const BRIDGE_NOTICE_FALLBACK =
+  "This extension is not paired with CointMU Desktop. Update both apps, then choose Link to Desktop App.";
 
 export async function initPopup() {
   const translations = await loadTranslations();
@@ -24,6 +32,22 @@ export async function initPopup() {
   const assetsCount = document.getElementById("assets-count");
   const connectedStatus = document.getElementById("connected-status");
   const statusText = document.getElementById("status-text");
+  const bridgeNotice = document.getElementById("bridge-notice");
+
+  /**
+   * Shows why the desktop app refused this extension, if it did.
+   * @param {string | null} code - The stored bridge refusal code.
+   * @returns {void}
+   */
+  const renderBridgeNotice = (code) => {
+    if (!code) {
+      bridgeNotice.classList.add("hidden");
+      return;
+    }
+    bridgeNotice.textContent =
+      translations[BRIDGE_NOTICE_KEYS[code]] || BRIDGE_NOTICE_FALLBACK;
+    bridgeNotice.classList.remove("hidden");
+  };
 
   const accountDropdown = document.getElementById("account-dropdown");
   const accountSelectedText = document.getElementById("account-selected-text");
@@ -92,22 +116,22 @@ export async function initPopup() {
     defaultView.classList.add("hidden");
     approvalView.classList.remove("hidden");
 
+    const approvalElements = {
+      title: document.getElementById("extension.wallet.approveTx"),
+      rows: document.getElementById("approval-rows"),
+      warning: document.getElementById("approval-warning"),
+      approve: btnApproveConfirm,
+    };
+    // Stays disabled until the request details are shown.
+    btnApproveConfirm.disabled = true;
     chrome.runtime.sendMessage(
       { action: "GET_PENDING_REQ", reqId },
       (response) => {
-        if (response && response.success && response.data) {
-          const { method, params, origin } = response.data;
-          document.getElementById("tx-to").textContent =
-            origin || "Unknown Origin";
-          document.getElementById("tx-value").textContent =
-            method === "eth_requestAccounts"
-              ? "Connection Request"
-              : params[0]?.value || "0x0";
-          document.getElementById("tx-data").textContent =
-            method === "eth_requestAccounts"
-              ? "Allow access to your wallet address"
-              : params[0]?.data || "0x";
-        }
+        renderApprovalView(
+          approvalElements,
+          translations,
+          response && response.success ? response.view : null,
+        );
       },
     );
 
@@ -438,6 +462,7 @@ export async function initPopup() {
         addNetworkView.classList.add("hidden");
       }
     }
+    renderBridgeNotice(res.isLinked ? null : res.bridgeNotice);
 
     // Adaptive Asset Fetching
     const customNet = (res.customNetworks || []).find(

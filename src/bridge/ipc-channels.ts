@@ -3,3 +3,7 @@ export const NODE_CHANNELS = {
   RETRY: "node:retry",
   GET_RECOVERY_STATE: "node:get-recovery-state",
 } as const;
+
+export const RPC_CHANNELS = {
+  CALL: "rpc:call",
+} as const;

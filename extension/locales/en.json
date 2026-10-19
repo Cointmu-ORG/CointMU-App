@@ -1,5 +1,33 @@
 {
   "extension": {
+    "approval": {
+      "title": {
+        "connect": "Connection Request",
+        "message": "Sign Message",
+        "typedData": "Sign Typed Data",
+        "sendTransaction": "Approve Transaction",
+        "signTransaction": "Sign Transaction"
+      },
+      "label": {
+        "site": "Site",
+        "account": "Account",
+        "permission": "Permission",
+        "message": "Message",
+        "network": "Chain ID",
+        "type": "Type",
+        "to": "To",
+        "value": "Value",
+        "data": "Data"
+      },
+      "value": {
+        "accounts": "See your wallet address and request approvals",
+        "contractCreation": "New contract (no recipient)"
+      },
+      "warning": {
+        "contractData": "This transaction interacts with a smart contract. Only approve it if you trust this site and understand what it does."
+      },
+      "notFound": "This request is no longer available. It may have expired or been answered already."
+    },
     "mining": {
       "heatmap": {
         "blocksValidated": "blocks validated",
@@ -42,6 +70,7 @@
       "addWalletSelectionTitle": "Choose Wallet Type",
       "selectImportBtn": "Import Private Key",
       "selectLinkBtn": "Link to Desktop App",
+      "bridgeNotPaired": "This extension is not paired with CointMU Desktop. Update both apps, then choose Link to Desktop App to pair again.",
       "cancelSelectionBtn": "Cancel",
       "importFailed": "Invalid private key or derivation failed.",
       "selectAccount": "Select Account",

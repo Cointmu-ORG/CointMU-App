@@ -7,8 +7,57 @@ import {
   clearHeartbeat,
   startHeartbeat,
 } from "./socket.js";
+import "./protocol.js";
+import {
+  getConnectedOrigins,
+  removeConnectedOrigin,
+  selectConnectedTabIds,
+} from "./site-permissions.js";
+
+const { RuntimeMessage } = globalThis.CointMUProtocol;
 
 export const JSON_RPC_VERSION = "2.0";
+
+/**
+ * Sends a runtime message to the content script of each tab. Tabs without
+ * the content script (e.g. chrome:// pages) reject; that is expected.
+ * @param {number[]} tabIds
+ * @param {Object} message
+ */
+function sendToTabs(tabIds, message) {
+  for (const tabId of tabIds) {
+    chrome.tabs.sendMessage(tabId, message).catch(() => {});
+  }
+}
+
+/**
+ * Delivers an account change only to tabs of connected sites.
+ * @param {string[]} accounts - The new account list.
+ * @returns {Promise<void>}
+ */
+async function notifyConnectedTabs(accounts) {
+  const [tabs, origins] = await Promise.all([
+    chrome.tabs.query({}),
+    getConnectedOrigins(),
+  ]);
+  sendToTabs(selectConnectedTabIds(tabs, origins), {
+    type: RuntimeMessage.ACCOUNTS_CHANGED,
+    accounts,
+  });
+}
+
+/**
+ * Forgets a site revoked in the desktop app and tells its open tabs.
+ * @param {string} origin - The revoked origin.
+ * @returns {Promise<void>}
+ */
+async function revokeSite(origin) {
+  await removeConnectedOrigin(origin);
+  const tabs = await chrome.tabs.query({});
+  sendToTabs(selectConnectedTabIds(tabs, [origin]), {
+    type: RuntimeMessage.REVOKE_SITE,
+  });
+}
 
 /** @type {'desktop' | 'standalone'} */
 export let connectionMode = "desktop";
@@ -23,13 +72,6 @@ export function setConnectionMode(mode) {
  * @type {Map<string, Function>}
  */
 export const pendingCallbacks = new Map();
-
-/**
- * Stores pending dApp requests waiting for user approval via the popup.
- * Keyed by request ID.
- * @type {Map<number, any>}
- */
-export const approvalQueue = new Map();
 
 /**
  * Builds the composite pending-map key for a given tab and request ID.
@@ -67,12 +109,18 @@ export function handleSocketMessage(event) {
   } else if (payload.type === "LINK_APPROVED") {
     connectionMode = "desktop";
     chrome.storage.local.set({ isLinked: true, connectionMode: "desktop" });
+    chrome.storage.local.remove("bridgeNotice");
     return;
   } else if (payload.type === "LINK_REJECTED") {
     chrome.storage.local.set({ isLinked: false });
     return;
   } else if (payload.type === "FORCE_UNLINK") {
     chrome.storage.local.remove(["isLinked", "walletState"]);
+    return;
+  } else if (payload.type === "BRIDGE_ERROR") {
+    // The desktop app refused this extension (e.g. not paired); the popup
+    // shows the notice on the pairing screen until the next approved link.
+    chrome.storage.local.set({ bridgeNotice: payload.code || "UNKNOWN" });
     return;
   } else if (payload.type === "WALLET_STATE") {
     if (connectionMode === "standalone") {
@@ -91,29 +139,14 @@ export function handleSocketMessage(event) {
     return;
   } else if (payload.type === "REVOKE_SITE") {
     if (payload.origin) {
-      chrome.tabs.query({ url: payload.origin + "/*" }, (tabs) => {
-        for (const tab of tabs) {
-          if (tab.id) {
-            chrome.tabs
-              .sendMessage(tab.id, { type: "REVOKE_SITE" })
-              .catch(() => {});
-          }
-        }
+      revokeSite(payload.origin).catch((err) => {
+        console.error("[CointMU-bg] Failed to revoke site:", err);
       });
     }
     return;
   } else if (payload.type === "ACCOUNTS_CHANGED") {
-    chrome.tabs.query({}, (tabs) => {
-      for (const tab of tabs) {
-        if (tab.id) {
-          chrome.tabs
-            .sendMessage(tab.id, {
-              type: "ACCOUNTS_CHANGED",
-              accounts: payload.accounts,
-            })
-            .catch(() => {});
-        }
-      }
+    notifyConnectedTabs(payload.accounts).catch((err) => {
+      console.error("[CointMU-bg] Failed to deliver account change:", err);
     });
     return;
   }
@@ -127,210 +160,6 @@ export function handleSocketMessage(event) {
 
   pendingCallbacks.delete(key);
   callback({ result: result ?? null, error: error ?? null });
-}
-
-/**
- * Receives a JSON-RPC request message forwarded by a content script, tags it
- * with the originating tab ID so the response can be routed back, stores the
- * reply callback in the pending map, and transmits the payload over the
- * WebSocket to the Electron application. If the socket is not yet open the
- * callback is immediately invoked with an error.
- * @param {{ id: number, method: string, params: unknown[] }} message - The JSON-RPC request from the content script.
- * @param {chrome.runtime.MessageSender} sender - The sender metadata including the originating tab.
- * @param {Function} sendResponse - The chrome.runtime reply function to call with the result.
- * @returns {boolean} Returns true to keep the message channel open for the async response.
- */
-export function handleContentMessage(message, sender, sendResponse) {
-  const tabId = sender.tab?.id;
-  if (tabId === undefined) {
-    sendResponse({
-      result: null,
-      error: { message: "Sender has no tab context." },
-    });
-    return false;
-  }
-
-  const { id, method, params, origin } = message;
-
-  chrome.storage.local
-    .get([
-      "connectionMode",
-      "activeStandaloneAddress",
-      "wallets",
-      "activeNetworkId",
-      "customNetworks",
-    ])
-    .then((res) => {
-      if (res.connectionMode === "standalone") {
-        if (method === "eth_accounts") {
-          if (res.activeStandaloneAddress) {
-            sendResponse({
-              result: [res.activeStandaloneAddress],
-              error: null,
-            });
-          } else {
-            sendResponse({ result: [], error: null });
-          }
-        } else if (method === "personal_sign") {
-          try {
-            const messageHex = params[0];
-            const requestedAddress = params[1];
-            if (
-              !requestedAddress ||
-              !res.activeStandaloneAddress ||
-              requestedAddress.toLowerCase() !==
-                res.activeStandaloneAddress.toLowerCase()
-            ) {
-              sendResponse({
-                result: null,
-                error: {
-                  message:
-                    "Requested address does not match active standalone address.",
-                },
-              });
-              return;
-            }
-            const walletData = (res.wallets || []).find(
-              (w) =>
-                w.address.toLowerCase() ===
-                res.activeStandaloneAddress.toLowerCase(),
-            );
-            if (!walletData || !walletData.privateKey) {
-              sendResponse({
-                result: null,
-                error: { message: "Private key not found for active address." },
-              });
-              return;
-            }
-            const wallet = new globalThis.ethers.Wallet(walletData.privateKey);
-            wallet
-              .signMessage(globalThis.ethers.getBytes(messageHex))
-              .then((signature) => {
-                sendResponse({ result: signature, error: null });
-              })
-              .catch((err) => {
-                sendResponse({
-                  result: null,
-                  error: { message: err.message || "Failed to sign message" },
-                });
-              });
-          } catch (err) {
-            sendResponse({
-              result: null,
-              error: {
-                message: err.message || "Failed to parse or sign message",
-              },
-            });
-          }
-        } else if (
-          method === "eth_sendTransaction" ||
-          method === "eth_requestAccounts"
-        ) {
-          approvalQueue.set(id, {
-            id,
-            method,
-            params,
-            origin: origin || `Tab ${tabId}`,
-            tabId,
-            sendResponse,
-          });
-          chrome.windows.create({
-            url: chrome.runtime.getURL(
-              `popup/popup.html?mode=approve&reqId=${id}`,
-            ),
-            type: "popup",
-            width: 360,
-            height: 700,
-          });
-        } else if (method === "eth_signTypedData_v4") {
-          sendResponse({
-            result: null,
-            error: { message: "Method not supported in standalone mode yet." },
-          });
-        } else {
-          const customNet = (res.customNetworks || []).find(
-            (n) => n.id === res.activeNetworkId,
-          );
-          if (!customNet) {
-            sendResponse({
-              result: null,
-              error: { message: "No active custom network found." },
-            });
-            return;
-          }
-          let rpcUrl = customNet.rpcUrl;
-          if (!rpcUrl.startsWith("http")) rpcUrl = "http://" + rpcUrl;
-
-          fetch(rpcUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ jsonrpc: "2.0", id, method, params }),
-          })
-            .then((r) => r.json())
-            .then((json) => {
-              sendResponse({ result: json.result, error: json.error });
-            })
-            .catch((err) => {
-              sendResponse({
-                result: null,
-                error: {
-                  message: err.message || "Failed to fetch from RPC endpoint.",
-                },
-              });
-            });
-        }
-        return;
-      }
-
-      if (res.connectionMode === "desktop") {
-        if (!socket || socket.readyState !== WebSocket.OPEN) {
-          sendResponse({
-            result: null,
-            error: { message: "CointMU desktop wallet is not connected." },
-          });
-          return;
-        }
-
-        const key = pendingKey(tabId, id);
-        pendingCallbacks.set(key, sendResponse);
-
-        const wsPayload = JSON.stringify({
-          jsonrpc: JSON_RPC_VERSION,
-          id,
-          method,
-          params: params || [],
-          __tabId: tabId,
-          origin: origin || `Tab ${tabId}`,
-        });
-
-        if (
-          method === "eth_requestAccounts" ||
-          method === "eth_sendTransaction"
-        ) {
-          approvalQueue.set(id, {
-            id,
-            method,
-            params,
-            origin: origin || `Tab ${tabId}`,
-            tabId,
-            wsPayload,
-            sendResponse,
-          });
-          chrome.windows.create({
-            url: chrome.runtime.getURL(
-              `popup/popup.html?mode=approve&reqId=${id}`,
-            ),
-            type: "popup",
-            width: 360,
-            height: 700,
-          });
-        } else {
-          socket.send(wsPayload);
-        }
-      }
-    });
-
-  return true; // Keep message channel open
 }
 
 /**
@@ -405,6 +234,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
         "customNetworks",
         "activeStandaloneAddress",
         "activeNetworkId",
+        "bridgeNotice",
       ])
       .then((res) => {
         const isDesktopMode = (res.connectionMode || "desktop") === "desktop";
@@ -437,6 +267,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
           customNetworks: res.customNetworks || [],
           activeStandaloneAddress: res.activeStandaloneAddress || null,
           activeNetworkId: res.activeNetworkId || "desktop_connection",
+          bridgeNotice: res.bridgeNotice || null,
         });
       });
     return true;
@@ -558,20 +389,6 @@ export function handleInternalMessage(message, sender, sendResponse) {
         sendResponse({ success: true });
       }
       return false;
-    }
-    return false;
-  }
-
-  if (message.action === "GET_PENDING_REQ") {
-    const data = approvalQueue.get(Number(message.reqId));
-    if (data) {
-      const { id, method, params, origin, tabId, wsPayload } = data;
-      sendResponse({
-        success: true,
-        data: { id, method, params, origin, tabId, wsPayload },
-      });
-    } else {
-      sendResponse({ success: false });
     }
     return false;
   }
@@ -708,150 +525,6 @@ export function handleInternalMessage(message, sender, sendResponse) {
       sendResponse({ success: true, pendingApproval: true });
       return false;
     }
-  }
-
-  if (message.action === "RESOLVE_REQ") {
-    const reqId = Number(message.reqId);
-    const entry = approvalQueue.get(reqId);
-    if (!entry) {
-      console.error("[CointMU-bg] Request not found in queue for id:", reqId);
-      sendResponse({ success: false, error: "Request not found in queue" });
-      return false;
-    }
-
-    approvalQueue.delete(reqId);
-    const key = pendingKey(entry.tabId, reqId);
-
-    if (message.approved === false) {
-      pendingCallbacks.delete(key);
-      entry.sendResponse({
-        result: null,
-        error: { code: 4001, message: "User Rejected Request" },
-      });
-    } else if (message.approved === true) {
-      chrome.storage.local
-        .get([
-          "connectionMode",
-          "wallets",
-          "activeStandaloneAddress",
-          "customNetworks",
-          "activeNetworkId",
-        ])
-        .then((res) => {
-          if (res.connectionMode === "standalone") {
-            if (entry.method === "eth_sendTransaction") {
-              const txParams = entry.params[0];
-              if (
-                !txParams ||
-                !txParams.from ||
-                txParams.from.toLowerCase() !==
-                  res.activeStandaloneAddress.toLowerCase()
-              ) {
-                pendingCallbacks.delete(key);
-                entry.sendResponse({
-                  result: null,
-                  error: {
-                    message:
-                      "Sender address does not match active standalone address",
-                  },
-                });
-                return;
-              }
-              const walletData = (res.wallets || []).find(
-                (w) =>
-                  w.address.toLowerCase() ===
-                  res.activeStandaloneAddress.toLowerCase(),
-              );
-              if (!walletData || !walletData.privateKey) {
-                pendingCallbacks.delete(key);
-                entry.sendResponse({
-                  result: null,
-                  error: {
-                    message: "Private key not found for active address",
-                  },
-                });
-                return;
-              }
-              const customNet = (res.customNetworks || []).find(
-                (n) => n.id === res.activeNetworkId,
-              );
-              if (!customNet) {
-                pendingCallbacks.delete(key);
-                entry.sendResponse({
-                  result: null,
-                  error: { message: "Active custom network not found" },
-                });
-                return;
-              }
-              let rpcUrl = customNet.rpcUrl;
-              if (!rpcUrl.startsWith("http")) rpcUrl = "http://" + rpcUrl;
-
-              try {
-                const provider = new globalThis.ethers.JsonRpcProvider(
-                  rpcUrl,
-                  parseInt(customNet.chainId, 10),
-                  { staticNetwork: true },
-                );
-                const wallet = new globalThis.ethers.Wallet(
-                  walletData.privateKey,
-                  provider,
-                );
-                wallet
-                  .sendTransaction({
-                    to: txParams.to,
-                    value: txParams.value,
-                    data: txParams.data,
-                    gasLimit: txParams.gas,
-                  })
-                  .then((tx) => {
-                    pendingCallbacks.delete(key);
-                    entry.sendResponse({ result: tx.hash, error: null });
-                  })
-                  .catch((err) => {
-                    pendingCallbacks.delete(key);
-                    entry.sendResponse({
-                      result: null,
-                      error: {
-                        message: err.message || "Transaction execution failed",
-                      },
-                    });
-                  });
-              } catch (err) {
-                pendingCallbacks.delete(key);
-                entry.sendResponse({
-                  result: null,
-                  error: {
-                    message: err.message || "Failed to initialize provider",
-                  },
-                });
-              }
-            } else if (entry.method === "eth_requestAccounts") {
-              pendingCallbacks.delete(key);
-              entry.sendResponse({
-                result: [res.activeStandaloneAddress],
-                error: null,
-              });
-            }
-          } else {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-              pendingCallbacks.set(key, entry.sendResponse);
-              console.log(
-                "[CointMU-bg] Forwarding approved payload to Desktop",
-                entry.wsPayload,
-              );
-              socket.send(entry.wsPayload);
-            } else {
-              pendingCallbacks.delete(key);
-              entry.sendResponse({
-                result: null,
-                error: { message: "WebSocket disconnected before execution." },
-              });
-            }
-          }
-        });
-    }
-    sendResponse({ success: true });
-    return false;
   }
 
   return false;
