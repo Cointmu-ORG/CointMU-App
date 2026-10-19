@@ -61,7 +61,6 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^3.0.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@electron-toolkit/utils": "^4.0.0",
