@@ -42,6 +42,7 @@
       "addWalletSelectionTitle": "Choose Wallet Type",
       "selectImportBtn": "Import Private Key",
       "selectLinkBtn": "Link to Desktop App",
+      "bridgeNotPaired": "This extension is not paired with CointMU Desktop. Update both apps, then choose Link to Desktop App to pair again.",
       "cancelSelectionBtn": "Cancel",
       "importFailed": "Invalid private key or derivation failed.",
       "selectAccount": "Select Account",

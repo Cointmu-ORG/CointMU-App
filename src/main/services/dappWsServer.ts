@@ -1,8 +1,17 @@
+import type { IncomingMessage } from "node:http";
 import { WebSocketServer, type WebSocket, type RawData } from "ws";
 import { ipcMain, type BrowserWindow } from "electron";
+import {
+  BRIDGE_NOT_PAIRED_MESSAGE,
+  BridgeAccess,
+} from "../security/bridgeOrigin";
+import { verifyExtensionClient } from "./extensionPairing";
 
 const DAPP_WS_PORT = 8546;
 const JSON_RPC_VERSION = "2.0";
+const WS_CLOSE_POLICY_VIOLATION = 1008;
+// Close reasons must fit in a 123-byte control frame.
+const NOT_PAIRED_CLOSE_REASON = "Extension not paired";
 
 /**
  * Represents a single JSON-RPC request received from the browser extension,
@@ -178,18 +187,33 @@ function registerApprovalHandler(): void {
  * accepts connections from the browser extension background script, parses
  * incoming JSON-RPC requests, and dispatches them to the renderer via IPC for
  * user approval. Returns a cleanup function that closes the server and removes
- * the IPC handler so the caller can shut down cleanly on app exit.
+ * the IPC handler so the caller can shut down cleanly on app exit. Only the
+ * paired extension may connect; anything else would reach the renderer with
+ * a self-declared dApp origin.
  * @param {BrowserWindow} win - The main Electron BrowserWindow for IPC dispatch.
+ * @param {(origin: string | undefined) => BridgeAccess} checkPairing - Classifies a handshake origin.
  * @returns {{ close: () => void }} An object with a close method for cleanup.
  */
-function startDappWsServer(win: BrowserWindow): { close: () => void } {
-  const wss = new WebSocketServer({ host: "127.0.0.1", port: DAPP_WS_PORT });
+function startDappWsServer(
+  win: BrowserWindow,
+  checkPairing: (origin: string | undefined) => BridgeAccess,
+): { close: () => void } {
+  const wss = new WebSocketServer({
+    host: "127.0.0.1",
+    port: DAPP_WS_PORT,
+    verifyClient: verifyExtensionClient,
+  });
 
   wss.on("listening", () => {
     console.log(`[dapp-ws] Listening on ws://127.0.0.1:${DAPP_WS_PORT}`);
   });
 
-  wss.on("connection", (socket: WebSocket) => {
+  wss.on("connection", (socket: WebSocket, req: IncomingMessage) => {
+    if (checkPairing(req.headers.origin) !== BridgeAccess.PAIRED) {
+      console.warn(`[dapp-ws] ${BRIDGE_NOT_PAIRED_MESSAGE}`);
+      socket.close(WS_CLOSE_POLICY_VIOLATION, NOT_PAIRED_CLOSE_REASON);
+      return;
+    }
     console.log("[dapp-ws] Browser extension connected.");
 
     socket.on("message", (raw: RawData) => {

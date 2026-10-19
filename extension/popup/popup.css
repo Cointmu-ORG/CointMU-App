@@ -626,6 +626,17 @@ body {
   margin-bottom: 12px;
 }
 
+.bridge-notice {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--warning-color);
+  border-radius: var(--radius-sm);
+  background: var(--warning-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .input-group {
   margin-bottom: 14px;
   display: flex;

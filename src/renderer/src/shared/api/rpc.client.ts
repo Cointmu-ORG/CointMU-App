@@ -1,48 +1,8 @@
-const RPC_HOST = "127.0.0.1";
-const RPC_FALLBACK_PORT = 8585;
-const JSON_RPC_VERSION = "2.0";
 const HEX_RADIX = 16;
 const WEI_PER_GWEI = 1_000_000_000;
 const WEI_PER_CMU = 1e18;
 const BALANCE_DECIMAL_PLACES = 2;
 const LATEST_BLOCK_TAG = "latest";
-
-let requestCounter = 0;
-let cachedRpcUrl: string | null = null;
-let pendingPortResolution: Promise<string> | null = null;
-
-/**
- * Resolves the JSON-RPC base URL of the locally running Core-geth node. The
- * dynamically allocated port is fetched once from the Electron main process via
- * the IPC bridge and cached for all subsequent calls. On a successful resolution
- * the URL is memoized; on failure the fallback port is used for the current call
- * and the resolution is retried on the next invocation.
- * @returns The fully qualified base URL of the local node HTTP endpoint.
- */
-async function resolveRpcUrl(): Promise<string> {
-  if (cachedRpcUrl !== null) {
-    return cachedRpcUrl;
-  }
-
-  if (pendingPortResolution === null) {
-    pendingPortResolution = window.api
-      .getRpcPort()
-      .then((resolved) => {
-        const port =
-          typeof resolved === "number" && resolved > 0
-            ? resolved
-            : RPC_FALLBACK_PORT;
-        cachedRpcUrl = `http://${RPC_HOST}:${port}`;
-        return cachedRpcUrl;
-      })
-      .catch(() => {
-        pendingPortResolution = null;
-        return `http://${RPC_HOST}:${RPC_FALLBACK_PORT}`;
-      });
-  }
-
-  return pendingPortResolution;
-}
 
 interface RpcResponse {
   result: any;
@@ -56,8 +16,9 @@ const RPC_SUCCESS_NO_ERROR: Pick<RpcResponse, "hasError" | "errorMessage"> = {
 };
 
 /**
- * Performs a single JSON-RPC 2.0 call to the remote Core-geth node using the
- * native Fetch API. Returns the full RPC response including error state.
+ * Performs a single JSON-RPC 2.0 call to the local Core-geth node through the
+ * main process (the node's HTTP endpoint sends no CORS headers). Returns the
+ * full RPC response including error state.
  * For read-only queries that return null on success (like miner_start),
  * callers must check hasError rather than the result value.
  * @param method - The JSON-RPC method name (e.g. 'eth_blockNumber').
@@ -68,42 +29,18 @@ async function callRaw(
   method: string,
   params: unknown[] = [],
 ): Promise<RpcResponse> {
-  requestCounter += 1;
-
-  const body = JSON.stringify({
-    jsonrpc: JSON_RPC_VERSION,
-    method,
-    params,
-    id: requestCounter,
-  });
-
   try {
-    const baseUrl = await resolveRpcUrl();
-    const response = await fetch(baseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
+    const envelope = await window.api.rpc.call(method, params);
 
-    if (!response.ok) {
+    if ("error" in envelope) {
       return {
         result: null,
         hasError: true,
-        errorMessage: `HTTP ${response.status}`,
+        errorMessage: envelope.error.message || "Unknown RPC error",
       };
     }
 
-    const json = await response.json();
-
-    if (json.error) {
-      return {
-        result: null,
-        hasError: true,
-        errorMessage: json.error.message || "Unknown RPC error",
-      };
-    }
-
-    return { result: json.result, ...RPC_SUCCESS_NO_ERROR };
+    return { result: envelope.result, ...RPC_SUCCESS_NO_ERROR };
   } catch {
     return { result: null, hasError: true, errorMessage: "Node unreachable" };
   }

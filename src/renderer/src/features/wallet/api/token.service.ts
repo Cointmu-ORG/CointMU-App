@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { createNodeProvider } from "@/shared/api";
 
 export interface TokenInfo {
   symbol: string;
@@ -84,7 +85,7 @@ export class TokenService {
     address: string,
   ): Promise<Partial<TokenInfo> | null> {
     try {
-      const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8585");
+      const provider = createNodeProvider();
       const contract = new ethers.Contract(
         address,
         STANDARD_ERC20_ABI,
@@ -143,7 +144,7 @@ export async function getTokenBalance(
   if (!walletAddress || !tokenContractAddress) return "0.00";
 
   try {
-    const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8585");
+    const provider = createNodeProvider();
 
     if (tokenContractAddress === "native") {
       const balanceBigInt = await provider.getBalance(walletAddress);

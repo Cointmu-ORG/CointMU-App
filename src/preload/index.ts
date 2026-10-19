@@ -2,8 +2,8 @@ import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { NODE_CHANNELS } from "../bridge/ipc-channels";
-import type { NodeRecoveryEvent } from "../bridge/types";
+import { NODE_CHANNELS, RPC_CHANNELS } from "../bridge/ipc-channels";
+import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
 
 const pkg = JSON.parse(
   readFileSync(join(__dirname, "../../package.json"), "utf-8"),
@@ -68,6 +68,10 @@ interface UpdaterEvent {
 
 const api = {
   getRpcPort: (): Promise<number> => ipcRenderer.invoke("get-rpc-port"),
+  rpc: {
+    call: (method: string, params: unknown[] = []): Promise<JsonRpcEnvelope> =>
+      ipcRenderer.invoke(RPC_CHANNELS.CALL, method, params),
+  },
   getCpuUsage: (): Promise<number> => ipcRenderer.invoke("get-cpu-usage"),
   getNodeStatus: (): Promise<{
     running: boolean;

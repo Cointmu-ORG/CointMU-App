@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { STANDARD_ERC20_ABI } from "@/features/wallet";
 import { call } from "@/shared/api/rpc.client";
+import { createNodeProvider } from "@/shared/api";
 import { getSetting } from "@/features/settings";
 import {
   getSessionPassword,
@@ -8,15 +9,12 @@ import {
   type DerivedAccount,
 } from "@/features/wallet";
 
-const RPC_URL = "http://127.0.0.1:8585";
-
 /**
- * Resolves the active local JSON-RPC provider, falling back to the hard-coded
- * default port when the dynamic port has not yet been cached.
- * @returns A configured ethers JsonRpcProvider instance.
+ * Resolves the local node provider, relayed through the main process.
+ * @returns A configured ethers provider instance.
  */
-function getProvider(): ethers.JsonRpcProvider {
-  return new ethers.JsonRpcProvider(RPC_URL);
+function getProvider(): ethers.JsonRpcApiProvider {
+  return createNodeProvider();
 }
 
 /**
