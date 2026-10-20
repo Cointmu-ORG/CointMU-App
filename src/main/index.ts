@@ -20,7 +20,6 @@ import {
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
-import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
@@ -51,19 +50,16 @@ import {
   startExtensionSyncServer,
   broadcastWalletState,
 } from "./services/extensionSyncServer";
-import { gethLog, initLogging } from "./diagnostics/logging";
-import { initErrorReporting } from "./diagnostics/errorReporting";
+import { gethLog } from "./diagnostics/logging";
 import {
   recordGethLine,
   reportBootnodeConfigProblem,
   reportRecoveryEvent,
 } from "./diagnostics/gethReporting";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
-
-initLogging();
-initErrorReporting();
-
-config({ path: join(app.getAppPath(), ".env") });
+// Must stay below the imports above and above every local module below: see
+// bootstrap.ts for why the evaluation order matters.
+import "./bootstrap";
 
 const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
