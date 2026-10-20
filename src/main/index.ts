@@ -1,22 +1,17 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
 import { initUpdater } from "./services/updater";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
-import { NODE_CHANNELS } from "../bridge/ipc-channels";
 import { startExtensionSyncServer } from "./services/extensionSyncServer";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
 import { getRpcPort, resolveGethPorts } from "./geth/ports";
-import {
-  getNetworkId,
-  loadNetworkId,
-  resolveDataDir,
-} from "./geth/networkConfig";
-import { isSessionValid, startSession } from "./services/session";
+import { loadNetworkId, resolveDataDir } from "./geth/networkConfig";
+import { startSession } from "./services/session";
 import { createWindow } from "./window";
 import { createAppStore } from "./services/appStore";
 import {
@@ -24,10 +19,7 @@ import {
   removeTemporaryIpcDir,
 } from "./geth/ipcEndpointLifecycle";
 import {
-  NODE_RESTART_DELAY_MS,
   attachNodeRecovery,
-  getNodeRecovery,
-  isGethRunning,
   killGethProcess,
   spawnGethProcess,
 } from "./geth/gethProcess";
@@ -39,6 +31,10 @@ import { registerSettingsHandlers } from "./ipc/settingsIpc";
 import { registerWalletHandlers } from "./ipc/walletIpc";
 import { registerAppHandlers } from "./ipc/appIpc";
 import { registerNetworkHandlers } from "./ipc/networkIpc";
+import {
+  registerNodeControlHandlers,
+  registerNodeStatusHandlers,
+} from "./ipc/nodeIpc";
 
 let isAppQuitting = false;
 
@@ -67,52 +63,18 @@ app.whenReady().then(async () => {
 
   startSession();
 
-  ipcMain.handle("get-rpc-port", () => getRpcPort());
-  ipcMain.handle("get-node-status", () => ({
-    running: isGethRunning(),
-    port: getRpcPort(),
-    sessionValid: isSessionValid(),
-    networkId: getNetworkId(),
-  }));
+  registerNodeStatusHandlers();
 
   const store = await createAppStore();
 
   registerDiagnosticsHandlers(store);
-
   registerSettingsHandlers(store);
-
   registerWalletHandlers(store);
-
   registerAppHandlers();
-
   registerCryptoHandlers();
   registerSystemHandlers();
-
   registerNetworkHandlers(store);
-
-  /**
-   * Restarts geth on a user action, clearing any blocked or failed recovery
-   * state first. Skipped while a recovery owns the node lifecycle.
-   * @returns {void}
-   */
-  const restartNodeByUser = (): void => {
-    const nodeRecovery = getNodeRecovery();
-    if (nodeRecovery && !nodeRecovery.resume()) return;
-    console.log("[network] Restarting node with new configurations...");
-    killGethProcess().then(() => {
-      setTimeout(() => {
-        void spawnGethProcess(store);
-      }, NODE_RESTART_DELAY_MS);
-    });
-  };
-
-  ipcMain.on("network:restartNode", restartNodeByUser);
-  ipcMain.handle(NODE_CHANNELS.RETRY, restartNodeByUser);
-  ipcMain.handle(
-    NODE_CHANNELS.GET_RECOVERY_STATE,
-    () => getNodeRecovery()?.getActiveEvent() ?? null,
-  );
-
+  registerNodeControlHandlers(store);
   registerWindowHandlers();
 
   await resolveGethPorts();
