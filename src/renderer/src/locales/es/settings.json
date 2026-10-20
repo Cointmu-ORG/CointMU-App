@@ -284,5 +284,43 @@
     "access": "Acceso",
     "backup": "Copia de seguridad",
     "hardware": "Hardware"
+  },
+  "privacy": {
+    "title": "Privacidad y diagnóstico",
+    "subtitle": "Informes de errores y registros locales",
+    "reporting": "Informes de errores",
+    "notConfigured": "Los informes de errores no están configurados en esta compilación. No se envía nada; los registros se siguen guardando en este equipo.",
+    "toggleTitle": "Enviar informes de errores",
+    "toggleDesc": "Envía informes de errores depurados al servidor de CointMU en {{host}}, accesible solo desde la red del campus. Al desactivarlo se eliminan los informes aún no enviados.",
+    "sentTitle": "Qué se envía",
+    "sent": {
+      "error": "Tipo y mensaje del error",
+      "stack": "Traza de pila, sin tu nombre de usuario en las rutas de archivos",
+      "versions": "Versiones de la app, Electron y el sistema operativo",
+      "node": "Categoría del fallo del nodo y etapa de recuperación"
+    },
+    "neverSentTitle": "Nunca se envía",
+    "neverSent": {
+      "secrets": "Contraseñas, frases de recuperación, claves privadas, transacciones firmadas",
+      "addresses": "Direcciones de billetera",
+      "identity": "Direcciones IP, nombre de usuario, nombre del equipo"
+    },
+    "queue": {
+      "title": "Pendientes de envío ({{count}})",
+      "refresh": "Actualizar",
+      "deleteAll": "Eliminar todo",
+      "empty": "No hay informes pendientes de envío.",
+      "loadFailed": "No se pudo leer la cola de informes."
+    },
+    "logs": "Registros",
+    "logsDesc": "Los registros se guardan depurados en este equipo y nunca se envían automáticamente. Adjúntalos cuando informes de un problema.",
+    "notice": {
+      "title": "Los informes de errores nos ayudan a mejorar CointMU",
+      "what": "Cuando algo falla, CointMU guarda un informe con el error, una traza de pila y las versiones de la app y del sistema. Antes se eliminan contraseñas, frases de recuperación, claves privadas, direcciones de billetera, direcciones IP y tu nombre de usuario.",
+      "where": "Los informes se envían al servidor de CointMU en {{host}}, accesible solo desde la red del campus. Fuera del campus esperan en este equipo y se envían más tarde.",
+      "howToDisable": "Puedes desactivarlo en cualquier momento en Ajustes → Privacidad y diagnóstico.",
+      "turnOff": "Desactivar",
+      "acknowledge": "Entendido"
+    }
   }
 }

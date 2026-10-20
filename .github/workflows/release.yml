@@ -73,6 +73,10 @@ jobs:
           GETH_HTTP_API: ${{ secrets.GETH_HTTP_API }}
           GETH_P2P_PORT: ${{ secrets.GETH_P2P_PORT }}
           GETH_LOG_VERBOSITY: ${{ secrets.GETH_LOG_VERBOSITY }}
+          # Not secret (the DSN key is public, the pin is a public-key hash),
+          # so repository variables; empty disables error reporting.
+          MAIN_VITE_TELEMETRY_DSN: ${{ vars.TELEMETRY_DSN }}
+          MAIN_VITE_TELEMETRY_PINS: ${{ vars.TELEMETRY_PINS }}
 
   # electron-builder creates a published release with an empty body and
   # never edits the body afterwards, so filling it after every OS build

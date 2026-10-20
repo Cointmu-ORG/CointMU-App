@@ -13,5 +13,11 @@
     "system": "System",
     "settings": "Settings",
     "lockWallet": "Lock Wallet"
+  },
+  "logs": {
+    "openFolder": "Open logs folder",
+    "copyRecent": "Copy recent logs",
+    "copied": "Logs copied",
+    "copyFailed": "Copy failed"
   }
 }

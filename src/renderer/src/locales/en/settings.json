@@ -283,5 +283,43 @@
     "access": "Access",
     "backup": "Backup",
     "hardware": "Hardware"
+  },
+  "privacy": {
+    "title": "Privacy & Diagnostics",
+    "subtitle": "Error reports and local logs",
+    "reporting": "Error reporting",
+    "notConfigured": "Error reporting is not configured in this build. Nothing is sent; logs are still saved on this computer.",
+    "toggleTitle": "Send error reports",
+    "toggleDesc": "Sends sanitized error reports to the CointMU server at {{host}}, reachable only on the campus network. Off deletes reports that have not been sent yet.",
+    "sentTitle": "What is sent",
+    "sent": {
+      "error": "Error type and message",
+      "stack": "Stack trace, with your user name removed from file paths",
+      "versions": "App, Electron and operating system versions",
+      "node": "Node failure category and recovery stage"
+    },
+    "neverSentTitle": "Never sent",
+    "neverSent": {
+      "secrets": "Passwords, recovery phrases, private keys, signed transactions",
+      "addresses": "Wallet addresses",
+      "identity": "IP addresses, user name, computer name"
+    },
+    "queue": {
+      "title": "Waiting to be sent ({{count}})",
+      "refresh": "Refresh",
+      "deleteAll": "Delete all",
+      "empty": "No reports are waiting to be sent.",
+      "loadFailed": "Could not read the report queue."
+    },
+    "logs": "Logs",
+    "logsDesc": "Logs are saved on this computer (sanitized) and are never sent automatically. Attach them when you report a problem.",
+    "notice": {
+      "title": "Error reports help us fix CointMU",
+      "what": "When something goes wrong, CointMU saves a report with the error, a stack trace, and app and system versions. Passwords, recovery phrases, private keys, wallet addresses, IP addresses and your user name are removed first.",
+      "where": "Reports are sent to the CointMU server at {{host}}, which is reachable only on the campus network. Off campus they wait on this computer and are sent later.",
+      "howToDisable": "You can turn this off at any time in Settings → Privacy & Diagnostics.",
+      "turnOff": "Turn off",
+      "acknowledge": "Got it"
+    }
   }
 }

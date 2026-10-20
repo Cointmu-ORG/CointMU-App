@@ -73,6 +73,24 @@ Produces a macOS application and DMG in the `dist/` directory.
 Continuous integration builds all three platforms automatically through the GitHub Actions
 release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed.
 
+## Error Reporting and Logs
+
+- **Logs** are always written, sanitized, to `<userData>/logs/`: `main.log` (main and
+  renderer, 1 MB) and `geth.log` (node output, 5 MB), each rotated to one `.old` file.
+  Settings → Privacy & Diagnostics and the "recovery stopped" banner can open the folder
+  or copy recent lines.
+- **Error reports** use the Sentry protocol (`@sentry/electron`) and go only to a collector
+  whose public key is pinned in the build. They are configured at build time through
+  `MAIN_VITE_TELEMETRY_DSN` and `MAIN_VITE_TELEMETRY_PINS` (see `.env.example`; the release
+  workflow reads the `TELEMETRY_DSN` and `TELEMETRY_PINS` repository variables). Without a
+  DSN the build has no reporting at all.
+- Reporting is on by default (opt-out). A first-run notice explains it, and nothing is sent
+  until the notice is dismissed. Turning it off in Settings deletes unsent reports.
+- Reports are rebuilt from an allowlist of fields and sanitized (recovery phrases, keys and
+  other long hex, addresses, IPs, user and host names). Native crashes are sent as an event
+  only; minidumps are never uploaded. Unsent reports wait in `<userData>/telemetry-queue/`
+  (at most 5 MB and 30 days, oldest dropped first) and are visible in Settings.
+
 ## Development Workflow
 
 ### Using the Makefile

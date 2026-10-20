@@ -3,3 +3,4 @@ export * from "./node-provider.client";
 
 export * from "./updater.service";
 export * from "./system.service";
+export * from "./diagnostics.service";

@@ -21,6 +21,8 @@ export {
   SkeletonTable,
 } from "./skeletons.component";
 export { Sparkline } from "./sparkline.component";
+export { LogActions } from "./log-actions.component";
+export type { LogActionsProps } from "./log-actions.component";
 
 export * from "./ui.constants";
 
