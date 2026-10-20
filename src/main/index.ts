@@ -16,7 +16,6 @@ import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
 import { initUpdater } from "./services/updater";
 import { parseGethLogChunk } from "./utils/gethLogParser";
-import { GENESIS_BLOCK, type GenesisBlock } from "./services/genesis";
 import ms from "ms";
 import { callGethRpc, configureGethIpcPath } from "./utils/rpcUtils";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./geth/gethArgs";
@@ -58,6 +57,13 @@ import {
   getRpcPort,
   resolveGethPorts,
 } from "./geth/ports";
+import {
+  buildGenesis,
+  getNetworkId,
+  loadNetworkId,
+  resolveDataDir,
+  setNetworkId,
+} from "./geth/networkConfig";
 
 const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
@@ -73,41 +79,6 @@ const WINDOW_MIN_HEIGHT = 600;
 
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
-let GETH_NETWORK_ID =
-  process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
-
-/**
- * Resolves the active chain id and records it as the authoritative network id
- * used for both genesis init and the geth spawn. Resolution order is: a persisted
- * override (set by the chain-id editor), then the GETH_NETWORK_ID environment
- * value, then the inlined genesis default.
- * @param {any} store - The electron-store instance holding the optional override.
- * @returns {void}
- */
-function loadNetworkId(store: any): void {
-  const override = Number(store.get("network.chainId"));
-  const envNetworkId = Number(process.env.GETH_NETWORK_ID);
-  GETH_NETWORK_ID = String(
-    Number.isFinite(override) && override > 0
-      ? override
-      : Number.isFinite(envNetworkId) && envNetworkId > 0
-        ? envNetworkId
-        : GENESIS_BLOCK.config.chainId,
-  );
-}
-
-/**
- * Builds the effective genesis block by applying the active chain id override to
- * the inlined canonical genesis constant.
- * @returns {GenesisBlock} The genesis block to initialize the chain with.
- */
-function buildGenesis(): GenesisBlock {
-  return {
-    ...GENESIS_BLOCK,
-    config: { ...GENESIS_BLOCK.config, chainId: Number(GETH_NETWORK_ID) },
-  };
-}
-const GETH_DATA_DIR = join(app.getPath("userData"), "cointmu-chaindata");
 // Baked in at build time; a packaged app never sees the CI process.env.
 const BOOTNODE_CONFIG = resolveBootnodeConfig(
   import.meta.env.MAIN_VITE_BOOTNODE_ENODE,
@@ -125,15 +96,6 @@ let isAppQuitting = false;
 let gethRestartTimer: NodeJS.Timeout | null = null;
 let bootnodeWatcher: NodeJS.Timeout | null = null;
 let pendingBootnodeEnode: string | null = null;
-
-/**
- * Resolves the absolute geth data directory for the active network:
- * <userData>/cointmu-chaindata/<networkId>.
- * @returns {string} The absolute data directory path.
- */
-function resolveDataDir(): string {
-  return join(GETH_DATA_DIR, GETH_NETWORK_ID);
-}
 
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
@@ -371,7 +333,7 @@ async function spawnGethProcess(store: any): Promise<void> {
 
   const args = [
     "--networkid",
-    GETH_NETWORK_ID,
+    getNetworkId(),
     "--datadir",
     resolveDataDir(),
     "--port",
@@ -842,7 +804,7 @@ app.whenReady().then(async () => {
     running: gethProcess !== null && !gethProcess.killed,
     port: getRpcPort(),
     sessionValid: isSessionValid(),
-    networkId: GETH_NETWORK_ID,
+    networkId: getNetworkId(),
   }));
 
   const { default: Store } = await import("electron-store");
@@ -1023,7 +985,7 @@ app.whenReady().then(async () => {
 
   ipcMain.handle("network:setChainId", async (_, newId: number) => {
     try {
-      GETH_NETWORK_ID = String(newId);
+      setNetworkId(String(newId));
       store.set("network.chainId", newId);
 
       await killGethProcess();
