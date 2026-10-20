@@ -162,7 +162,12 @@ function WalletPage({
       setAccounts(updatedAccounts);
       await handleAccountSwitch(newAccount.address);
     } catch (e) {
-      console.error("HD Derivation Error:", e);
+      // Message only: the error object may carry ethers argument values from
+      // the decrypted phrase or key handled above.
+      console.error(
+        "[wallet] Account derivation failed:",
+        e instanceof Error ? e.message : "unknown error",
+      );
     }
   };
 

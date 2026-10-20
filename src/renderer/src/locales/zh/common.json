@@ -13,5 +13,11 @@
     "system": "系统",
     "settings": "设置",
     "lockWallet": "锁定钱包"
+  },
+  "logs": {
+    "openFolder": "打开日志文件夹",
+    "copyRecent": "复制最近日志",
+    "copied": "日志已复制",
+    "copyFailed": "复制失败"
   }
 }

@@ -13,5 +13,11 @@
     "system": "Sistem",
     "settings": "Pengaturan",
     "lockWallet": "Kunci Dompet"
+  },
+  "logs": {
+    "openFolder": "Buka folder log",
+    "copyRecent": "Salin log terbaru",
+    "copied": "Log disalin",
+    "copyFailed": "Gagal menyalin"
   }
 }

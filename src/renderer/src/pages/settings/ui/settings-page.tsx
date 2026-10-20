@@ -18,6 +18,7 @@ import {
 } from "@/features/settings";
 import { useAppearanceStore } from "@/features/settings";
 import { useNotificationStore } from "@/features/notifications";
+import { ErrorReportingSettings } from "@/features/error-reporting";
 import {
   Sun,
   Image,
@@ -29,6 +30,7 @@ import {
   Bell,
   Globe,
   Download,
+  ShieldCheck,
 } from "lucide-react";
 
 export type SettingsCategory =
@@ -41,6 +43,7 @@ export type SettingsCategory =
   | "connectedSites"
   | "externalSources"
   | "advanced"
+  | "privacy"
   | "about";
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
@@ -89,6 +92,11 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
       id: "advanced",
       label: "Advanced",
       icon: <Settings width={16} height={16} />,
+    },
+    {
+      id: "privacy",
+      label: "Privacy & Diagnostics",
+      icon: <ShieldCheck width={16} height={16} />,
     },
     {
       id: "about",
@@ -237,6 +245,7 @@ function SettingsPage({
             {activeCategory === "connectedSites" && <ConnectedSitesSettings />}
             {activeCategory === "externalSources" && <ExternalSourceSettings />}
             {activeCategory === "advanced" && <AdvancedSettings />}
+            {activeCategory === "privacy" && <ErrorReportingSettings />}
             {activeCategory === "about" && <AboutSettings />}
           </div>
         </div>

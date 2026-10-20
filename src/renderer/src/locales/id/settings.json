@@ -142,8 +142,6 @@
     "diagnostics": "Diagnostik",
     "logLevelTitle": "Tingkat log",
     "logLevelDesc": "Verbositas log node",
-    "analyticsTitle": "Kirim analitik anonim",
-    "analyticsDesc": "Bantu perbaiki CointMU dengan laporan kerusakan dan data penggunaan",
     "title": "Lanjutan",
     "openDataTitle": "Buka folder data",
     "openDataDesc": "Tampilkan datadir di penjelajah berkas Anda",
@@ -286,5 +284,43 @@
     "access": "Akses",
     "backup": "Cadangan",
     "hardware": "Perangkat Keras"
+  },
+  "privacy": {
+    "title": "Privasi & Diagnostik",
+    "subtitle": "Laporan error dan log lokal",
+    "reporting": "Pelaporan error",
+    "notConfigured": "Pelaporan error tidak dikonfigurasi di build ini. Tidak ada yang dikirim; log tetap disimpan di komputer ini.",
+    "toggleTitle": "Kirim laporan error",
+    "toggleDesc": "Mengirim laporan error yang sudah disanitasi ke server CointMU di {{host}}, yang hanya dapat dijangkau dari jaringan kampus. Mematikannya akan menghapus laporan yang belum terkirim.",
+    "sentTitle": "Yang dikirim",
+    "sent": {
+      "error": "Jenis dan pesan error",
+      "stack": "Stack trace, dengan nama pengguna dihapus dari path file",
+      "versions": "Versi aplikasi, Electron, dan sistem operasi",
+      "node": "Kategori kegagalan node dan tahap pemulihan"
+    },
+    "neverSentTitle": "Tidak pernah dikirim",
+    "neverSent": {
+      "secrets": "Kata sandi, frasa pemulihan, private key, transaksi bertanda tangan",
+      "addresses": "Alamat wallet",
+      "identity": "Alamat IP, nama pengguna, nama komputer"
+    },
+    "queue": {
+      "title": "Menunggu dikirim ({{count}})",
+      "refresh": "Muat ulang",
+      "deleteAll": "Hapus semua",
+      "empty": "Tidak ada laporan yang menunggu dikirim.",
+      "loadFailed": "Gagal membaca antrean laporan."
+    },
+    "logs": "Log",
+    "logsDesc": "Log disimpan di komputer ini (sudah disanitasi) dan tidak pernah dikirim otomatis. Lampirkan saat melaporkan masalah.",
+    "notice": {
+      "title": "Laporan error membantu kami memperbaiki CointMU",
+      "what": "Saat terjadi masalah, CointMU menyimpan laporan berisi error, stack trace, serta versi aplikasi dan sistem. Kata sandi, frasa pemulihan, private key, alamat wallet, alamat IP, dan nama pengguna Anda dihapus terlebih dahulu.",
+      "where": "Laporan dikirim ke server CointMU di {{host}}, yang hanya dapat dijangkau dari jaringan kampus. Di luar kampus, laporan menunggu di komputer ini dan dikirim nanti.",
+      "howToDisable": "Anda dapat mematikannya kapan saja di Pengaturan → Privasi & Diagnostik.",
+      "turnOff": "Matikan",
+      "acknowledge": "Mengerti"
+    }
   }
 }

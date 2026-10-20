@@ -1,5 +1,8 @@
+import "@sentry/electron/preload";
+import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import {
+  DIAGNOSTICS_CHANNELS,
   NODE_CHANNELS,
   RPC_CHANNELS,
   SYSTEM_CHANNELS,
@@ -8,6 +11,8 @@ import type {
   AppInfo,
   JsonRpcEnvelope,
   NodeRecoveryEvent,
+  QueuedReport,
+  TelemetryState,
 } from "../bridge/types";
 
 const appInfo: AppInfo = ipcRenderer.sendSync(SYSTEM_CHANNELS.GET_APP_INFO);
@@ -195,6 +200,22 @@ const api = {
     getRecoveryState: (): Promise<NodeRecoveryEvent | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_RECOVERY_STATE),
     retry: (): Promise<void> => ipcRenderer.invoke(NODE_CHANNELS.RETRY),
+  },
+  diagnostics: {
+    openLogsFolder: (): Promise<void> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.OPEN_LOGS_FOLDER),
+    copyRecentLogs: (): Promise<number> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.COPY_RECENT_LOGS),
+    getTelemetryState: (): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.GET_TELEMETRY_STATE),
+    setTelemetryEnabled: (isEnabled: boolean): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.SET_TELEMETRY_ENABLED, isEnabled),
+    acknowledgeNotice: (): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.ACKNOWLEDGE_NOTICE),
+    listQueuedReports: (): Promise<QueuedReport[]> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.LIST_QUEUED_REPORTS),
+    clearQueuedReports: (): Promise<void> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.CLEAR_QUEUED_REPORTS),
   },
   extension: {
     unlink: () => {

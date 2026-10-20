@@ -13,5 +13,11 @@
     "system": "Sistema",
     "settings": "Ajustes",
     "lockWallet": "Bloquear Billetera"
+  },
+  "logs": {
+    "openFolder": "Abrir carpeta de registros",
+    "copyRecent": "Copiar registros recientes",
+    "copied": "Registros copiados",
+    "copyFailed": "Error al copiar"
   }
 }

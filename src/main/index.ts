@@ -47,6 +47,16 @@ import {
   startExtensionSyncServer,
   broadcastWalletState,
 } from "./services/extensionSyncServer";
+import { gethLog, initLogging } from "./diagnostics/logging";
+import { initErrorReporting } from "./diagnostics/errorReporting";
+import {
+  recordGethLine,
+  reportRecoveryEvent,
+} from "./diagnostics/gethReporting";
+import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
+
+initLogging();
+initErrorReporting();
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -517,14 +527,16 @@ async function spawnGethProcess(store: any): Promise<void> {
         return combined;
       }
       const complete = combined.slice(0, newlineIndex);
-      complete.split("\n").forEach((line) => nodeRecovery?.handleLogLine(line));
+      complete.split("\n").forEach((line) => {
+        gethLog.info(line);
+        recordGethLine(line);
+        nodeRecovery?.handleLogLine(line);
+      });
       parseGethLogChunk(complete).forEach(broadcastMiningLog);
       return combined.slice(newlineIndex + 1);
     };
 
     gethProcess.stdout?.on("data", (data: Buffer) => {
-      const output = data.toString();
-      console.log("[Geth Log]", output);
       stdoutBuffer = consumeStream(stdoutBuffer, data);
     });
 
@@ -536,7 +548,6 @@ async function spawnGethProcess(store: any): Promise<void> {
      */
     const handleGethStderr = (data: Buffer): void => {
       const output = data.toString();
-      console.log("[Geth Log]", output);
       const dagMatch = output.match(/percentage=(\d+)/);
       if (dagMatch && dagMatch[1]) {
         BrowserWindow.getAllWindows().forEach((win) => {
@@ -853,7 +864,7 @@ class MiningController {
               : Number(hashrateHex) || 0;
           const isMining = isMiningHex === true || isMiningHex === "true";
 
-          console.log(
+          console.debug(
             `[mining:getStats] eth_mining=${isMiningHex} eth_hashrate raw=${hashrateHex} parsed=${hashrate} H/s`,
           );
 
@@ -966,7 +977,6 @@ app.whenReady().then(async () => {
         wsRpc: false,
         corsOrigins: "https://*.cointmu.net",
         logLevel: "Info",
-        analytics: false,
       },
       notifications: {
         global: true,
@@ -977,8 +987,14 @@ app.whenReady().then(async () => {
         sound: false,
       },
       notificationHistory: [],
+      telemetry: {
+        enabled: true,
+        noticeAcknowledged: false,
+      },
     },
   });
+
+  registerDiagnosticsHandlers(store);
 
   ipcMain.handle("settings:get", (_, key) => store.get(key));
   ipcMain.handle("settings:set", (_, key, value) => {
@@ -1171,6 +1187,7 @@ app.whenReady().then(async () => {
     resolveRpcPort: () =>
       (store.get("advanced.httpRpc") ?? true) ? resolvedRpcPort : null,
     broadcast: (event) => {
+      reportRecoveryEvent(event);
       BrowserWindow.getAllWindows().forEach((win) => {
         win.webContents.send(NODE_CHANNELS.RECOVERY, event);
       });
