@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { electronAPI } from "@electron-toolkit/preload";
 import {
   NODE_CHANNELS,
   RPC_CHANNELS,
@@ -216,15 +215,12 @@ const api = {
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("systemInfo", systemInfo);
   } catch {
     console.error("Failed to expose context bridge APIs");
   }
 } else {
-  // @ts-ignore
-  window.electron = electronAPI;
   // @ts-ignore
   window.api = api;
   // @ts-ignore
