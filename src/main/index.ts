@@ -17,18 +17,13 @@ import { registerSystemHandlers } from "./services/system";
 import { initUpdater } from "./services/updater";
 import { parseGethLogChunk } from "./utils/gethLogParser";
 import ms from "ms";
-import { callGethRpc, configureGethIpcPath } from "./utils/rpcUtils";
+import { callGethRpc } from "./utils/rpcUtils";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./geth/gethArgs";
 import {
   formatEnode,
   parseEnode,
   resolveBootnodeConfig,
 } from "./geth/bootnode";
-import {
-  getOrCreateInstallId,
-  resolveGethIpcEndpoint,
-  type GethIpcEndpoint,
-} from "./geth/ipcEndpoint";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
 import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
@@ -67,6 +62,11 @@ import {
 import { isSessionValid, startSession } from "./services/session";
 import { createWindow } from "./window";
 import { createAppStore, type AppStore } from "./services/appStore";
+import {
+  getGethIpcPath,
+  prepareGethIpcEndpoint,
+  removeTemporaryIpcDir,
+} from "./geth/ipcEndpointLifecycle";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
@@ -100,38 +100,6 @@ let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
 let nodeRecovery: GethRecovery | null = null;
-let gethIpcEndpoint: GethIpcEndpoint | null = null;
-
-/**
- * Prepares the private geth IPC endpoint. On failure geth starts with IPC
- * disabled, so mining controls fail visibly instead of using an unsafe path.
- * @param {AppStore} store - The electron-store instance holding the install id.
- * @returns {Promise<void>}
- */
-async function prepareGethIpcEndpoint(store: AppStore): Promise<void> {
-  try {
-    gethIpcEndpoint = await resolveGethIpcEndpoint({
-      userDataDir: app.getPath("userData"),
-      installId: getOrCreateInstallId(store),
-    });
-  } catch (err) {
-    console.error("[geth:ipc] Could not prepare a private IPC endpoint:", err);
-    gethIpcEndpoint = null;
-  }
-  configureGethIpcPath(gethIpcEndpoint?.path ?? null);
-}
-
-/**
- * Removes the short-path IPC directory created when userData was too long.
- * @returns {Promise<void>}
- */
-async function removeTemporaryIpcDir(): Promise<void> {
-  const dir = gethIpcEndpoint?.temporaryDir;
-  if (!dir) return;
-  await rm(dir, { recursive: true, force: true }).catch((err) => {
-    console.warn("[geth:ipc] Failed to remove temporary IPC dir:", err);
-  });
-}
 
 /**
  * Resolves the absolute path to the bundled Core-geth binary based on the
@@ -344,7 +312,7 @@ async function spawnGethProcess(store: AppStore): Promise<void> {
     String(getAuthRpcPort()),
   ];
 
-  args.push(...buildGethIpcArgs(gethIpcEndpoint?.path ?? null));
+  args.push(...buildGethIpcArgs(getGethIpcPath()));
   if (isRpcEnabled) {
     args.push(...buildGethHttpArgs(getRpcPort()));
   }
