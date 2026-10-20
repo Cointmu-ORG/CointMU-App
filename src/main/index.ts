@@ -8,15 +8,7 @@ import {
 } from "electron";
 import { join } from "path";
 import { existsSync, writeFileSync } from "fs";
-import {
-  readdir,
-  stat,
-  readFile,
-  writeFile,
-  rm,
-  mkdir,
-  copyFile,
-} from "fs/promises";
+import { stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
@@ -60,6 +52,7 @@ import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
+import { getDirectorySize } from "./services/directorySize";
 
 const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
@@ -143,33 +136,6 @@ function resolveDataDir(): string {
   return join(GETH_DATA_DIR, GETH_NETWORK_ID);
 }
 
-/**
- * Recursively sums the byte size of every file under a directory. Returns 0 when
- * the directory is missing or unreadable so callers can render a safe default.
- * @param {string} dir - The directory to measure.
- * @returns {Promise<number>} The total size in bytes.
- */
-async function getDirectorySize(dir: string): Promise<number> {
-  let total = 0;
-  try {
-    const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const entryPath = join(dir, entry.name);
-      if (entry.isDirectory()) {
-        total += await getDirectorySize(entryPath);
-      } else if (entry.isFile()) {
-        try {
-          total += (await stat(entryPath)).size;
-        } catch {
-          total += 0;
-        }
-      }
-    }
-  } catch {
-    return 0;
-  }
-  return total;
-}
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT;
