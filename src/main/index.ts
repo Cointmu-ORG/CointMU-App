@@ -9,10 +9,7 @@ import { initUpdater } from "./services/updater";
 import ms from "ms";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
-import {
-  startExtensionSyncServer,
-  broadcastWalletState,
-} from "./services/extensionSyncServer";
+import { startExtensionSyncServer } from "./services/extensionSyncServer";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
@@ -44,6 +41,7 @@ import { initGethIfNeeded } from "./geth/gethInit";
 import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
+import { registerSettingsHandlers } from "./ipc/settingsIpc";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 
@@ -86,14 +84,7 @@ app.whenReady().then(async () => {
 
   registerDiagnosticsHandlers(store);
 
-  ipcMain.handle("settings:get", (_, key) => store.get(key));
-  ipcMain.handle("settings:set", (_, key, value) => {
-    store.set(key, value);
-    if (key === "activeWalletAddress" || key === "network.network") {
-      void broadcastWalletState(store, getRpcPort());
-    }
-  });
-  ipcMain.handle("settings:getAll", () => store.store);
+  registerSettingsHandlers(store);
 
   ipcMain.handle(
     "dialog:saveKeystore",
