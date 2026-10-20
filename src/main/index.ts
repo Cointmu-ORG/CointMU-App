@@ -64,8 +64,8 @@ import {
   resolveDataDir,
   setNetworkId,
 } from "./geth/networkConfig";
+import { isSessionValid, startSession } from "./services/session";
 
-const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
 const BOOTNODE_DNS_RETRY_MS = ms("30s");
@@ -103,7 +103,6 @@ let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
 let nodeRecovery: GethRecovery | null = null;
-let sessionStartTimestamp: number = Date.now();
 let gethIpcEndpoint: GethIpcEndpoint | null = null;
 
 /**
@@ -535,15 +534,6 @@ function hasGethExited(): boolean {
 }
 
 /**
- * Validates whether the current session is within the allowed duration window.
- * @returns True if the session has not exceeded SESSION_DURATION_MS.
- */
-function isSessionValid(): boolean {
-  const elapsed = Date.now() - sessionStartTimestamp;
-  return elapsed < SESSION_DURATION_MS;
-}
-
-/**
  * Creates the main application BrowserWindow with security-hardened settings
  * and context-isolated preload script.
  * @returns The created BrowserWindow instance.
@@ -797,7 +787,7 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  sessionStartTimestamp = Date.now();
+  startSession();
 
   ipcMain.handle("get-rpc-port", () => getRpcPort());
   ipcMain.handle("get-node-status", () => ({
