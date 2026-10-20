@@ -7,3 +7,7 @@ export const NODE_CHANNELS = {
 export const RPC_CHANNELS = {
   CALL: "rpc:call",
 } as const;
+
+export const SYSTEM_CHANNELS = {
+  GET_APP_INFO: "system:get-app-info",
+} as const;

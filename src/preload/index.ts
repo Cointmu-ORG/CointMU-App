@@ -1,13 +1,17 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { electronAPI } from "@electron-toolkit/preload";
-import { readFileSync } from "fs";
-import { join } from "path";
-import { NODE_CHANNELS, RPC_CHANNELS } from "../bridge/ipc-channels";
-import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
+import {
+  NODE_CHANNELS,
+  RPC_CHANNELS,
+  SYSTEM_CHANNELS,
+} from "../bridge/ipc-channels";
+import type {
+  AppInfo,
+  JsonRpcEnvelope,
+  NodeRecoveryEvent,
+} from "../bridge/types";
 
-const pkg = JSON.parse(
-  readFileSync(join(__dirname, "../../package.json"), "utf-8"),
-);
+const appInfo: AppInfo = ipcRenderer.sendSync(SYSTEM_CHANNELS.GET_APP_INFO);
+const MS_PER_SECOND = 1000;
 
 let platformStr = "";
 if (process.platform === "darwin") {
@@ -18,25 +22,15 @@ if (process.platform === "darwin") {
   platformStr = `Linux ${process.arch}`;
 }
 
-let buildId = "00000000";
-try {
-  const buildData = JSON.parse(
-    readFileSync(join(__dirname, "../../build-info.json"), "utf-8"),
-  );
-  if (typeof buildData.build === "string") {
-    buildId = buildData.build;
-  }
-} catch (e) {
-  buildId = "00000000";
-}
-
 const systemInfo = {
-  version: pkg.version,
-  codename: pkg.codename,
-  build: buildId,
+  version: appInfo.version,
+  codename: appInfo.codename,
+  build: appInfo.build,
   platform: platformStr,
   nodeVersion: process.versions.node,
-  getUptime: () => process.uptime(),
+  // App uptime from the main process start. process.uptime() has a bogus base
+  // in a sandboxed preload.
+  getUptime: () => (Date.now() - appInfo.startedAtMs) / MS_PER_SECOND,
 };
 
 /**
@@ -221,15 +215,12 @@ const api = {
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("systemInfo", systemInfo);
   } catch {
     console.error("Failed to expose context bridge APIs");
   }
 } else {
-  // @ts-ignore
-  window.electron = electronAPI;
   // @ts-ignore
   window.api = api;
   // @ts-ignore

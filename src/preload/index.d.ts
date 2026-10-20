@@ -1,4 +1,3 @@
-import { ElectronAPI } from "@electron-toolkit/preload";
 import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
 
 interface UpdaterProgress {
@@ -158,7 +157,6 @@ interface CointmuAPI {
 
 declare global {
   interface Window {
-    electron: ElectronAPI;
     api: CointmuAPI;
     systemInfo?: {
       version: string;

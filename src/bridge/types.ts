@@ -45,3 +45,12 @@ export interface JsonRpcErrorObject {
  */
 export type JsonRpcEnvelope =
   { readonly result: unknown } | { readonly error: JsonRpcErrorObject };
+
+/** Version metadata the preload exposes as `window.systemInfo`. */
+export interface AppInfo {
+  readonly version: string;
+  readonly codename: string;
+  readonly build: string;
+  /** Epoch ms when the main process started; the base for the app uptime. */
+  readonly startedAtMs: number;
+}
