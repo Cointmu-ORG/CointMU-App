@@ -8,8 +8,7 @@ By participating in this project you agree to abide by our
 
 ## Prerequisites
 
-- Node.js v22 or higher
-- npm (bundled with Node.js)
+- Node.js 24 and the npm pinned in `package.json` (see the README Quick Start)
 - Git
 - A `geth` binary placed in `resources/bin/` (see below)
 

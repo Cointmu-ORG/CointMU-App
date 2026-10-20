@@ -8,8 +8,8 @@ It runs on Windows, Linux, and macOS.
 
 ### Prerequisites
 
-- Node.js (v22 or higher recommended)
-- npm (bundled with Node.js)
+- Node.js 24 (pinned in `.nvmrc`)
+- npm 12, the exact version pinned in `package.json` `packageManager` and activated through Corepack (Node 24 bundles npm 11, which the project rejects)
 - Git
 - A `geth` binary placed in the `resources/bin/` directory (`geth.exe` on Windows, `geth` on Linux and macOS)
 
@@ -28,10 +28,13 @@ It runs on Windows, Linux, and macOS.
    ```bash
    cp .env.example .env
    ```
-4. Install dependencies:
+4. Switch to Node 24, let Corepack provide the pinned npm, and install dependencies:
    ```bash
+   nvm use 24
+   corepack enable npm   # after nvm use, so the shim lands in Node 24
    npm install
    ```
+   npm 12 blocks dependency install scripts unless `package.json` `allowScripts` covers them. If your `~/.npmrc` has a global `allow-scripts=...` line, remove it: npm ignores it in this project and warns on every install. For a global install that needs scripts, pass the flag instead, e.g. `npm install -g --allow-scripts=<pkg> <pkg>`.
 5. Start the application in development mode:
    ```bash
    npm run dev
