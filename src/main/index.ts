@@ -66,6 +66,7 @@ import {
 } from "./geth/networkConfig";
 import { isSessionValid, startSession } from "./services/session";
 import { createWindow } from "./window";
+import { createAppStore, type AppStore } from "./services/appStore";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
@@ -104,10 +105,10 @@ let gethIpcEndpoint: GethIpcEndpoint | null = null;
 /**
  * Prepares the private geth IPC endpoint. On failure geth starts with IPC
  * disabled, so mining controls fail visibly instead of using an unsafe path.
- * @param {any} store - The electron-store instance holding the install id.
+ * @param {AppStore} store - The electron-store instance holding the install id.
  * @returns {Promise<void>}
  */
-async function prepareGethIpcEndpoint(store: any): Promise<void> {
+async function prepareGethIpcEndpoint(store: AppStore): Promise<void> {
   try {
     gethIpcEndpoint = await resolveGethIpcEndpoint({
       userDataDir: app.getPath("userData"),
@@ -282,10 +283,10 @@ function startBootnodeWatcher(): void {
 /**
  * Schedules a single delayed geth respawn after an unexpected exit. Repeated
  * calls while a restart is already pending are ignored to avoid restart storms.
- * @param {any} store - The electron-store instance containing user preferences.
+ * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {void}
  */
-function scheduleGethRestart(store: any): void {
+function scheduleGethRestart(store: AppStore): void {
   if (gethRestartTimer || nodeRecovery?.isRestartSuppressed()) {
     return;
   }
@@ -303,10 +304,10 @@ function scheduleGethRestart(store: any): void {
  * resolved the node launches without bootnodes in an isolated local state and a
  * watcher re-attaches the peer once DNS recovers. Unexpected exits trigger an
  * automatic restart and mining is auto-resumed when previously enabled.
- * @param {any} store - The electron-store instance containing user preferences.
+ * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {Promise<void>}
  */
-async function spawnGethProcess(store: any): Promise<void> {
+async function spawnGethProcess(store: AppStore): Promise<void> {
   const binaryPath = resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
@@ -536,10 +537,10 @@ function hasGethExited(): boolean {
  */
 class MiningController {
   private rpcPort: number;
-  private store: any;
+  private store: AppStore;
   private win: BrowserWindow | null;
 
-  constructor(rpcPort: number, store: any) {
+  constructor(rpcPort: number, store: AppStore) {
     this.rpcPort = rpcPort;
     this.store = store;
     this.win = null;
@@ -746,71 +747,7 @@ app.whenReady().then(async () => {
     networkId: getNetworkId(),
   }));
 
-  const { default: Store } = await import("electron-store");
-
-  const store = new Store({
-    defaults: {
-      mnemonic: null,
-      activeWalletAddress: null,
-      accounts: [],
-      general: {
-        launchAtLogin: true,
-        openInBackground: false,
-        pushNotifications: true,
-        notificationSound: false,
-        language: "English",
-        currency: "CMU (native)",
-      },
-      appearance: {
-        theme: "Light",
-        accentColor: "#3b82f6", // blue-500
-        density: "Comfortable",
-        showSidebarColors: true,
-        animatedTransitions: true,
-      },
-      network: {
-        network: "CointMU Mainnet",
-        rpcEndpoint: "https://rpc.cointmu.net",
-        maxPeers: 14,
-        discovery: true,
-        listenPort: 30303,
-        syncMode: "Snap (recommended)",
-        pruneOldState: true,
-      },
-      mining: {
-        isMiningEnabled: false,
-        startAtLaunch: false,
-        cpuThreads: 4,
-        intensity: "Balanced",
-        pauseOnBattery: true,
-        miningMode: "Solo",
-        poolAddress: "",
-      },
-      security: {
-        autoLock: true,
-        requireBiometrics: false,
-      },
-      advanced: {
-        httpRpc: true,
-        wsRpc: false,
-        corsOrigins: "https://*.cointmu.net",
-        logLevel: "Info",
-      },
-      notifications: {
-        global: true,
-        transactions: true,
-        mining: true,
-        security: true,
-        desktopOs: true,
-        sound: false,
-      },
-      notificationHistory: [],
-      telemetry: {
-        enabled: true,
-        noticeAcknowledged: false,
-      },
-    },
-  });
+  const store = await createAppStore();
 
   registerDiagnosticsHandlers(store);
 
