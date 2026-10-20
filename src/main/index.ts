@@ -1,7 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from "electron";
-import { join } from "path";
-import { existsSync } from "fs";
-import { copyFile } from "fs/promises";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
@@ -14,7 +11,6 @@ import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
-import { getDirectorySize } from "./services/directorySize";
 import { getRpcPort, resolveGethPorts } from "./geth/ports";
 import {
   buildGenesis,
@@ -43,6 +39,7 @@ import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
 import { registerSettingsHandlers } from "./ipc/settingsIpc";
 import { registerWalletHandlers } from "./ipc/walletIpc";
+import { registerAppHandlers } from "./ipc/appIpc";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 
@@ -89,48 +86,7 @@ app.whenReady().then(async () => {
 
   registerWalletHandlers(store);
 
-  ipcMain.handle("export-extension-zip", async () => {
-    const sourcePath = app.isPackaged
-      ? join(process.resourcesPath, "extension.zip")
-      : join(app.getAppPath(), "resources", "extension.zip");
-
-    if (!existsSync(sourcePath)) {
-      console.error("[export] Extension ZIP not found at:", sourcePath);
-      return false;
-    }
-
-    const result = await dialog.showSaveDialog({
-      title: "Export Companion Browser Extension",
-      defaultPath: "CointMU-Extension.zip",
-      filters: [{ name: "ZIP Archive", extensions: ["zip"] }],
-    });
-
-    if (result.canceled || !result.filePath) {
-      return false;
-    }
-
-    try {
-      await copyFile(sourcePath, result.filePath);
-      return true;
-    } catch (err) {
-      console.error("[export] Failed to copy extension ZIP:", err);
-      return false;
-    }
-  });
-
-  ipcMain.handle("app:getDatadir", () => resolveDataDir());
-
-  ipcMain.handle("app:getChainDbSize", async () => {
-    try {
-      return await getDirectorySize(
-        join(resolveDataDir(), "geth", "chaindata"),
-      );
-    } catch {
-      return 0;
-    }
-  });
-
-  ipcMain.handle("app:openDataFolder", () => shell.openPath(resolveDataDir()));
+  registerAppHandlers();
 
   registerCryptoHandlers();
   registerSystemHandlers();
