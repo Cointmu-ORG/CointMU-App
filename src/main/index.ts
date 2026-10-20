@@ -11,7 +11,6 @@ import { existsSync, writeFileSync } from "fs";
 import { readFile, copyFile } from "fs/promises";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
-import { lookup } from "node:dns/promises";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
 import { initUpdater } from "./services/updater";
@@ -19,11 +18,6 @@ import { parseGethLogChunk } from "./utils/gethLogParser";
 import ms from "ms";
 import { callGethRpc } from "./utils/rpcUtils";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./geth/gethArgs";
-import {
-  formatEnode,
-  parseEnode,
-  resolveBootnodeConfig,
-} from "./geth/bootnode";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
 import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
@@ -38,7 +32,6 @@ import {
 import { gethLog } from "./diagnostics/logging";
 import {
   recordGethLine,
-  reportBootnodeConfigProblem,
   reportRecoveryEvent,
 } from "./diagnostics/gethReporting";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
@@ -68,32 +61,25 @@ import {
   removeTemporaryIpcDir,
 } from "./geth/ipcEndpointLifecycle";
 import { initGethIfNeeded, resolveGethBinaryPath } from "./geth/gethInit";
+import {
+  BOOTNODE_CONFIG,
+  resolveBootnodeEnode,
+  setPendingBootnodeEnode,
+  startBootnodeWatcher,
+  stopBootnodeWatcher,
+} from "./geth/bootnodeWatcher";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
-const BOOTNODE_DNS_RETRY_MS = ms("30s");
 
 const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
 
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
-// Baked in at build time; a packaged app never sees the CI process.env.
-const BOOTNODE_CONFIG = resolveBootnodeConfig(
-  import.meta.env.MAIN_VITE_BOOTNODE_ENODE,
-);
-if (BOOTNODE_CONFIG.problem) {
-  console.warn(
-    `[bootnode] MAIN_VITE_BOOTNODE_ENODE is not a valid enode (${BOOTNODE_CONFIG.problem}); expected enode://<128 hex>@<host>:<port>. Using the built-in bootnode.`,
-  );
-  reportBootnodeConfigProblem(BOOTNODE_CONFIG.problem);
-}
-console.log(`[bootnode] Using the ${BOOTNODE_CONFIG.source} bootnode`);
 
 let intentionalGethShutdown = false;
 let isAppQuitting = false;
 let gethRestartTimer: NodeJS.Timeout | null = null;
-let bootnodeWatcher: NodeJS.Timeout | null = null;
-let pendingBootnodeEnode: string | null = null;
 
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
@@ -101,69 +87,6 @@ let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
 let nodeRecovery: GethRecovery | null = null;
-
-/**
- * Resolves an enode's hostname to an IP so geth never depends on its own DNS
- * resolution. IP-based enodes are returned unchanged. Returns null when the
- * hostname cannot currently be resolved, signaling a DNS outage.
- * @param {string} enode - The configured bootnode enode URL.
- * @returns {Promise<string | null>} The IP-rewritten enode, or null on failure.
- */
-async function resolveBootnodeEnode(enode: string): Promise<string | null> {
-  const parsed = parseEnode(enode);
-  if (!parsed) {
-    return null;
-  }
-  if (parsed.isIp) {
-    return enode;
-  }
-  try {
-    const { address } = await lookup(parsed.host);
-    return formatEnode(parsed, address);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Stops the bootnode DNS-recovery watcher if it is running.
- * @returns {void}
- */
-function stopBootnodeWatcher(): void {
-  if (bootnodeWatcher) {
-    clearInterval(bootnodeWatcher);
-    bootnodeWatcher = null;
-  }
-}
-
-/**
- * Starts a periodic watcher that re-resolves a bootnode whose DNS was down at
- * spawn time. Once the hostname resolves again, the peer is added back to the
- * running node via admin_addPeer so it resumes discovery and propagates locally
- * mined blocks without a manual restart.
- * @returns {void}
- */
-function startBootnodeWatcher(): void {
-  if (bootnodeWatcher) {
-    return;
-  }
-  bootnodeWatcher = setInterval(async () => {
-    if (!pendingBootnodeEnode) {
-      stopBootnodeWatcher();
-      return;
-    }
-    const resolved = await resolveBootnodeEnode(pendingBootnodeEnode);
-    if (!resolved) {
-      return;
-    }
-    const added = await callGethRpc(getRpcPort(), "admin_addPeer", [resolved]);
-    if (added !== null) {
-      console.log("[geth] Bootnode reachable again; re-added peer");
-      pendingBootnodeEnode = null;
-      stopBootnodeWatcher();
-    }
-  }, BOOTNODE_DNS_RETRY_MS);
-}
 
 /**
  * Schedules a single delayed geth respawn after an unexpected exit. Repeated
@@ -238,13 +161,13 @@ async function spawnGethProcess(store: AppStore): Promise<void> {
   const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
   if (resolvedEnode) {
     args.push("--bootnodes", resolvedEnode);
-    pendingBootnodeEnode = null;
+    setPendingBootnodeEnode(null);
     stopBootnodeWatcher();
   } else {
     console.warn(
       "[geth:spawn] Bootnode DNS unresolved; starting without bootnodes in isolated local state",
     );
-    pendingBootnodeEnode = configuredEnode;
+    setPendingBootnodeEnode(configuredEnode);
     startBootnodeWatcher();
   }
 
@@ -363,7 +286,7 @@ function killGethProcess(): Promise<void> {
     gethRestartTimer = null;
   }
   stopBootnodeWatcher();
-  pendingBootnodeEnode = null;
+  setPendingBootnodeEnode(null);
 
   if (!gethProcess) {
     return Promise.resolve();
