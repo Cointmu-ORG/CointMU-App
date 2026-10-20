@@ -43,6 +43,7 @@ import {
 import { initGethIfNeeded } from "./geth/gethInit";
 import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
+import { registerWindowHandlers } from "./ipc/windowIpc";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 
@@ -244,21 +245,7 @@ app.whenReady().then(async () => {
     () => getNodeRecovery()?.getActiveEvent() ?? null,
   );
 
-  ipcMain.on("window-minimize", (event) => {
-    const webContents = event.sender;
-    const win = BrowserWindow.fromWebContents(webContents);
-    if (win) {
-      win.minimize();
-    }
-  });
-
-  ipcMain.on("window-close", (event) => {
-    const webContents = event.sender;
-    const win = BrowserWindow.fromWebContents(webContents);
-    if (win) {
-      win.close();
-    }
-  });
+  registerWindowHandlers();
 
   await resolveGethPorts();
 
