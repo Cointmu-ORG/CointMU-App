@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 16
-EXTRAVERSION = Kitsune
+SUBLEVEL = 17
+EXTRAVERSION = Siren
 
 help:
 	@echo "============================================="
