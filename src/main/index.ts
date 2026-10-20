@@ -12,7 +12,6 @@ import { stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
-import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
 import { initUpdater } from "./services/updater";
@@ -53,6 +52,12 @@ import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
 import { getDirectorySize } from "./services/directorySize";
+import {
+  findAvailablePort,
+  getAuthRpcPort,
+  getRpcPort,
+  resolveGethPorts,
+} from "./geth/ports";
 
 const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
@@ -61,17 +66,11 @@ const BOOTNODE_DNS_RETRY_MS = ms("30s");
 
 const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
 
-const MAX_PORT_SCAN_ATTEMPTS = 50;
-
 const WINDOW_DEFAULT_WIDTH = 1280;
 const WINDOW_DEFAULT_HEIGHT = 800;
 const WINDOW_MIN_WIDTH = 900;
 const WINDOW_MIN_HEIGHT = 600;
 
-const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
-// Geth always opens the engine (auth) RPC; its fixed default 8551 collides
-// with any other node on the machine, so it is scanned like the HTTP port.
-const DEFAULT_AUTH_RPC_PORT = 8551;
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
 let GETH_NETWORK_ID =
@@ -138,8 +137,6 @@ function resolveDataDir(): string {
 
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
-let resolvedRpcPort: number = DEFAULT_RPC_PORT;
-let resolvedAuthRpcPort: number = DEFAULT_AUTH_RPC_PORT;
 let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
@@ -196,34 +193,6 @@ function resolveGethBinaryPath(): string {
     return join(process.resourcesPath, "bin", platformDir, binaryName);
   }
   return join(app.getAppPath(), "resources", "bin", platformDir, binaryName);
-}
-
-/**
- * Scans for the first available TCP port starting from a default.
- * Uses detect-port to avoid binding conflicts with other local services.
- * @param startPort - The preferred port and start of the scan range.
- * @param reservedPort - A port already assigned to geth but not yet bound, so detect-port cannot see it.
- * @returns A promise resolving to the first available port number, or startPort when none is free.
- */
-async function findAvailablePort(
-  startPort: number,
-  reservedPort?: number,
-): Promise<number> {
-  const portRangeEnd = startPort + MAX_PORT_SCAN_ATTEMPTS;
-
-  for (let candidate = startPort; candidate < portRangeEnd; candidate++) {
-    if (candidate === reservedPort) continue;
-    try {
-      const available = await detectPort(candidate);
-      if (available === candidate) {
-        return candidate;
-      }
-    } catch {
-      continue;
-    }
-  }
-
-  return startPort;
 }
 
 /**
@@ -344,9 +313,7 @@ function startBootnodeWatcher(): void {
     if (!resolved) {
       return;
     }
-    const added = await callGethRpc(resolvedRpcPort, "admin_addPeer", [
-      resolved,
-    ]);
+    const added = await callGethRpc(getRpcPort(), "admin_addPeer", [resolved]);
     if (added !== null) {
       console.log("[geth] Bootnode reachable again; re-added peer");
       pendingBootnodeEnode = null;
@@ -416,12 +383,12 @@ async function spawnGethProcess(store: any): Promise<void> {
     "--authrpc.addr",
     LOCALHOST_ADDR,
     "--authrpc.port",
-    String(resolvedAuthRpcPort),
+    String(getAuthRpcPort()),
   ];
 
   args.push(...buildGethIpcArgs(gethIpcEndpoint?.path ?? null));
   if (isRpcEnabled) {
-    args.push(...buildGethHttpArgs(resolvedRpcPort));
+    args.push(...buildGethHttpArgs(getRpcPort()));
   }
 
   const configuredEnode = BOOTNODE_CONFIG.enode;
@@ -870,10 +837,10 @@ app.whenReady().then(async () => {
 
   sessionStartTimestamp = Date.now();
 
-  ipcMain.handle("get-rpc-port", () => resolvedRpcPort);
+  ipcMain.handle("get-rpc-port", () => getRpcPort());
   ipcMain.handle("get-node-status", () => ({
     running: gethProcess !== null && !gethProcess.killed,
-    port: resolvedRpcPort,
+    port: getRpcPort(),
     sessionValid: isSessionValid(),
     networkId: GETH_NETWORK_ID,
   }));
@@ -950,7 +917,7 @@ app.whenReady().then(async () => {
   ipcMain.handle("settings:set", (_, key, value) => {
     store.set(key, value);
     if (key === "activeWalletAddress" || key === "network.network") {
-      void broadcastWalletState(store, resolvedRpcPort);
+      void broadcastWalletState(store, getRpcPort());
     }
   });
   ipcMain.handle("settings:getAll", () => store.store);
@@ -1120,11 +1087,7 @@ app.whenReady().then(async () => {
     }
   });
 
-  resolvedRpcPort = await findAvailablePort(DEFAULT_RPC_PORT);
-  resolvedAuthRpcPort = await findAvailablePort(
-    DEFAULT_AUTH_RPC_PORT,
-    resolvedRpcPort,
-  );
+  await resolveGethPorts();
 
   loadNetworkId(store);
 
@@ -1135,7 +1098,7 @@ app.whenReady().then(async () => {
     initGenesis: initGethIfNeeded,
     resolveDataDir,
     resolveRpcPort: () =>
-      (store.get("advanced.httpRpc") ?? true) ? resolvedRpcPort : null,
+      (store.get("advanced.httpRpc") ?? true) ? getRpcPort() : null,
     broadcast: (event) => {
       reportRecoveryEvent(event);
       BrowserWindow.getAllWindows().forEach((win) => {
@@ -1153,16 +1116,14 @@ app.whenReady().then(async () => {
   await prepareGethIpcEndpoint(store);
   await spawnGethProcess(store);
 
-  const miningController = new MiningController(resolvedRpcPort, store);
-  const removeRendererRpcHandler = registerRendererRpcHandler(
-    () => resolvedRpcPort,
-  );
+  const miningController = new MiningController(getRpcPort(), store);
+  const removeRendererRpcHandler = registerRendererRpcHandler(getRpcPort);
 
   const win = createWindow();
   initUpdater(win);
   miningController.setWindow(win);
 
-  const extSyncServer = startExtensionSyncServer(store, resolvedRpcPort, win);
+  const extSyncServer = startExtensionSyncServer(store, getRpcPort(), win);
 
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
