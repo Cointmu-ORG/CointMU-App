@@ -20,6 +20,7 @@ import { recordGethLine } from "../diagnostics/gethReporting";
 import type { GethRecovery } from "../services/gethRecovery";
 import type { AppStore } from "../services/appStore";
 
+export const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
 const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
 const DEFAULT_P2P_PORT = 30303;
