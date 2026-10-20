@@ -87,9 +87,16 @@ release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed
 - Reporting is on by default (opt-out). A first-run notice explains it, and nothing is sent
   until the notice is dismissed. Turning it off in Settings deletes unsent reports.
 - Reports are rebuilt from an allowlist of fields and sanitized (recovery phrases, keys and
-  other long hex, addresses, IPs, user and host names). Native crashes are sent as an event
-  only; minidumps are never uploaded. Unsent reports wait in `<userData>/telemetry-queue/`
-  (at most 5 MB and 30 days, oldest dropped first) and are visible in Settings.
+  other long hex, ethers error argument values, addresses, IPs, user and host names).
+  Unsent reports wait in `<userData>/telemetry-queue/` (at most 5 MB and 30 days, oldest
+  dropped first) and are visible in Settings.
+- **Native crashes** are sent as an event only (process, reason, exit code); minidumps are
+  never uploaded. Crashpad writes the dump to `<userData>/Crashpad/` (`completed/` on
+  Linux, `reports/` on Windows, `completed/` + `pending/` on macOS). The SDK reads and
+  deletes it as soon as it handles the crash: right away for renderer and child processes,
+  or at the next app start for a crash of the main process. Dumps are deleted whether the
+  event is sent, dropped (reporting off), over the per-session limit, or older than 30
+  days. Builds without a DSN do not start the crash reporter, so they write no dumps.
 
 ## Development Workflow
 
