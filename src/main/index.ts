@@ -20,7 +20,6 @@ import {
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
-import { isIP } from "node:net";
 import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./services/crypto";
@@ -31,6 +30,11 @@ import { GENESIS_BLOCK, type GenesisBlock } from "./services/genesis";
 import ms from "ms";
 import { callGethRpc, configureGethIpcPath } from "./utils/rpcUtils";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./geth/gethArgs";
+import {
+  formatEnode,
+  parseEnode,
+  resolveBootnodeConfig,
+} from "./geth/bootnode";
 import {
   getOrCreateInstallId,
   resolveGethIpcEndpoint,
@@ -51,6 +55,7 @@ import { gethLog, initLogging } from "./diagnostics/logging";
 import { initErrorReporting } from "./diagnostics/errorReporting";
 import {
   recordGethLine,
+  reportBootnodeConfigProblem,
   reportRecoveryEvent,
 } from "./diagnostics/gethReporting";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
@@ -115,7 +120,17 @@ function buildGenesis(): GenesisBlock {
   };
 }
 const GETH_DATA_DIR = join(app.getPath("userData"), "cointmu-chaindata");
-const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
+// Baked in at build time; a packaged app never sees the CI process.env.
+const BOOTNODE_CONFIG = resolveBootnodeConfig(
+  import.meta.env.MAIN_VITE_BOOTNODE_ENODE,
+);
+if (BOOTNODE_CONFIG.problem) {
+  console.warn(
+    `[bootnode] MAIN_VITE_BOOTNODE_ENODE is not a valid enode (${BOOTNODE_CONFIG.problem}); expected enode://<128 hex>@<host>:<port>. Using the built-in bootnode.`,
+  );
+  reportBootnodeConfigProblem(BOOTNODE_CONFIG.problem);
+}
+console.log(`[bootnode] Using the ${BOOTNODE_CONFIG.source} bootnode`);
 
 let intentionalGethShutdown = false;
 let isAppQuitting = false;
@@ -313,31 +328,6 @@ async function initGethIfNeeded(datadir: string): Promise<void> {
   }
 }
 
-interface ParsedEnode {
-  host: string;
-  isIp: boolean;
-}
-
-/**
- * Extracts the host portion of an enode URL and reports whether it is already a
- * literal IP address rather than a hostname that would require DNS resolution.
- * @param {string} enode - The enode URL (enode://pubkey@host:port).
- * @returns {ParsedEnode | null} The parsed host info, or null when unparseable.
- */
-function parseEnode(enode: string): ParsedEnode | null {
-  const atIndex = enode.lastIndexOf("@");
-  if (atIndex === -1) {
-    return null;
-  }
-  const authority = enode.slice(atIndex + 1).split("?")[0];
-  const colonIndex = authority.lastIndexOf(":");
-  const host = colonIndex === -1 ? authority : authority.slice(0, colonIndex);
-  if (!host) {
-    return null;
-  }
-  return { host, isIp: isIP(host) !== 0 };
-}
-
 /**
  * Resolves an enode's hostname to an IP so geth never depends on its own DNS
  * resolution. IP-based enodes are returned unchanged. Returns null when the
@@ -355,7 +345,7 @@ async function resolveBootnodeEnode(enode: string): Promise<string | null> {
   }
   try {
     const { address } = await lookup(parsed.host);
-    return enode.replace(`@${parsed.host}`, `@${address}`);
+    return formatEnode(parsed, address);
   } catch {
     return null;
   }
@@ -472,9 +462,7 @@ async function spawnGethProcess(store: any): Promise<void> {
     args.push(...buildGethHttpArgs(resolvedRpcPort));
   }
 
-  const hardcodedUbuntuEnode =
-    "enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303";
-  const configuredEnode = GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode;
+  const configuredEnode = BOOTNODE_CONFIG.enode;
   const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
   if (resolvedEnode) {
     args.push("--bootnodes", resolvedEnode);

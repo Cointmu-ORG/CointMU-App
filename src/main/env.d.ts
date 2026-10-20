@@ -5,4 +5,6 @@ interface ImportMetaEnv {
   readonly MAIN_VITE_TELEMETRY_DSN?: string;
   /** Comma-separated base64 SHA-256 SPKI pins of the collector certificate. */
   readonly MAIN_VITE_TELEMETRY_PINS?: string;
+  /** Bootnode enode baked in at build time; empty uses the built-in one. */
+  readonly MAIN_VITE_BOOTNODE_ENODE?: string;
 }
