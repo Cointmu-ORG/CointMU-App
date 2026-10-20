@@ -6,6 +6,7 @@ directories:
 files:
   - "!**/.vscode/*"
   - "!src/*"
+  - "!resources/bin/**"
   - "!electron.vite.config.*"
   - "!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
@@ -35,8 +36,15 @@ mac:
   entitlements: resources/mac/entitlements.mac.plist
   entitlementsInherit: resources/mac/entitlements.mac.inherit.plist
   extendInfo:
-    - NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
-    - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+    NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
+    NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+  extraResources:
+    - from: resources/bin/mac/
+      to: bin/mac/
+      filter:
+        - "geth"
+    - from: resources/extension.zip
+      to: extension.zip
   notarize: false
 linux:
   artifactName: linux-cointmu-desktop-${version}-installer.${ext}

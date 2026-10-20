@@ -70,6 +70,7 @@ const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
 const DEFAULT_AUTH_RPC_PORT = 8551;
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
+const OFFLINE_MODE = process.argv.includes("--offline");
 let GETH_NETWORK_ID =
   process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
 
@@ -465,8 +466,15 @@ async function spawnGethProcess(store: any): Promise<void> {
   const hardcodedUbuntuEnode =
     "enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303";
   const configuredEnode = GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode;
-  const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
-  if (resolvedEnode) {
+  const resolvedEnode = OFFLINE_MODE
+    ? null
+    : await resolveBootnodeEnode(configuredEnode);
+  if (OFFLINE_MODE) {
+    args.push("--nodiscover", "--maxpeers", "0", "--bootnodes", "");
+    console.log(
+      "[geth:spawn] Offline mode: peer connections and discovery disabled.",
+    );
+  } else if (resolvedEnode) {
     args.push("--bootnodes", resolvedEnode);
     pendingBootnodeEnode = null;
     stopBootnodeWatcher();
@@ -1192,7 +1200,7 @@ app.whenReady().then(async () => {
   );
 
   const win = createWindow();
-  initUpdater(win);
+  initUpdater(win, OFFLINE_MODE);
   miningController.setWindow(win);
 
   const extSyncServer = startExtensionSyncServer(store, resolvedRpcPort, win);

@@ -35,9 +35,10 @@ interface UpdaterStatePayload {
  * is downloaded it is installed immediately via quitAndInstall, restarting the
  * application on the new version.
  * @param {BrowserWindow} mainWindow - The main BrowserWindow used to forward update events.
+ * @param {boolean} offlineMode - Skips automatic update checks for offline launches.
  * @returns {void}
  */
-function initUpdater(mainWindow: BrowserWindow): void {
+function initUpdater(mainWindow: BrowserWindow, offlineMode = false): void {
   autoUpdater.autoDownload = true;
   autoUpdater.logger = console;
   autoUpdater.allowPrerelease = true;
@@ -128,7 +129,9 @@ function initUpdater(mainWindow: BrowserWindow): void {
     autoUpdater.quitAndInstall();
   });
 
-  if (app.isPackaged) {
+  if (offlineMode) {
+    console.log("[updater] Offline mode: automatic update check skipped.");
+  } else if (app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
       console.error("[updater] Initial update check failed:", err.message);
     });

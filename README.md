@@ -70,6 +70,11 @@ npm run build:mac
 
 Produces a macOS application and DMG in the `dist/` directory.
 
+To launch without connecting to blockchain peers or automatically checking for updates, use
+`open -a CointMU --args --offline` on macOS. During development use
+`corepack npm run dev -- -- --offline`. Offline mode still starts the local node;
+it does not enable mining or create a wallet.
+
 Continuous integration builds all three platforms automatically through the GitHub Actions
 release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed.
 
