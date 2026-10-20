@@ -49,10 +49,61 @@ describe("sanitizeText mnemonics", () => {
     expect(sanitizeText(line)).toBe(line);
   });
 
-  it("keeps runs shorter than 12 words", () => {
-    const eleven = WORDS_12.slice(0, 11).join(" ");
+  it("keeps runs of fewer than 8 BIP39 words", () => {
+    const seven = WORDS_12.slice(0, 7).join(" ");
 
-    expect(sanitizeText(eleven)).toBe(eleven);
+    expect(sanitizeText(seven)).toBe(seven);
+  });
+});
+
+/** Replaces the words at the given indexes with misspellings. */
+function withTypos(
+  words: readonly string[],
+  indexes: readonly number[],
+): string {
+  return words
+    .map((word, i) => (indexes.includes(i) ? `${word.slice(1)}q` : word))
+    .join(" ");
+}
+
+describe("sanitizeText mistyped mnemonics", () => {
+  const WORDS_24 = MNEMONIC_24.split(" ");
+
+  it.each([
+    ["12 words, 1 typo in the middle", withTypos(WORDS_12, [5])],
+    ["12 words, 2 typos", withTypos(WORDS_12, [2, 8])],
+    ["12 words, typo in the first word", withTypos(WORDS_12, [0])],
+    ["12 words, typo in the last word", withTypos(WORDS_12, [11])],
+    ["12 words, typos first and last", withTypos(WORDS_12, [0, 11])],
+    ["24 words, 1 typo", withTypos(WORDS_24, [13])],
+    ["24 words, 2 typos", withTypos(WORDS_24, [3, 20])],
+    [
+      "JSON-escaped, 2 typos",
+      JSON.stringify(withTypos(WORDS_12, [4, 7]).replaceAll(" ", "\n")),
+    ],
+  ])("redacts the whole phrase: %s", (_, phrase) => {
+    const result = sanitizeText(`import: ${phrase} (end)`);
+
+    expect(result).toBe(
+      phrase.startsWith('"')
+        ? `import: "${REDACTED.MNEMONIC}" (end)`
+        : `import: ${REDACTED.MNEMONIC} (end)`,
+    );
+  });
+});
+
+describe("sanitizeText false positives", () => {
+  it.each([
+    "INFO [10-20|12:33:05.746] Allocated cache and file handles         database=/data/geth/chaindata cache=512.00MiB handles=524,288",
+    "INFO [10-20|12:33:06.150] Started P2P networking                   self=enode://[REDACTED:hex]@[REDACTED:ip]:30303",
+    'WARN [10-20|12:33:05.739] Smartcard socket not found, disabling    err="stat /run/pcscd/pcscd.comm: no such file or directory"',
+    "INFO [10-20|12:40:01.002] Submitted transaction                    hash=abc nonce=0 recipient=xyz value=1,000,000",
+    "Your wallet keystore was not touched. Retry, or restart the app; if it keeps failing, report an issue with the logs.",
+    "Another program is using the node's network port. Close it or change the Listen port in Settings, then retry.",
+    "Sends sanitized error reports to the CointMU server, reachable only on the campus network. Off deletes reports that have not been sent yet.",
+    "Error: Cannot read properties of undefined (reading 'address')\n    at Object.getBalance (app:///out/renderer/assets/index.js:1:2345)",
+  ])("keeps %s", (line) => {
+    expect(sanitizeText(line)).toBe(line);
   });
 });
 

@@ -1,7 +1,10 @@
 import { LangEn } from "ethers/wordlists";
+import { redactEthersErrorDetails } from "./ethersErrorDetails";
 
 const BIP39_WORD_COUNT = 2048;
-const MIN_MNEMONIC_WORDS = 12;
+/** Fewer than a 12-word phrase, so a phrase split by typos is still caught. */
+const MIN_MNEMONIC_WORDS = 8;
+const MAX_MNEMONIC_TYPOS = 2;
 
 export const REDACTED = {
   MNEMONIC: "[REDACTED:mnemonic]",
@@ -32,33 +35,82 @@ const IPV6_PATTERN =
 const HOME_PATH_PATTERN = /((?:^|[\\/])(?:home|Users)[\\/]+)[^\\/\s"'`:]+/gi;
 const MIN_LITERAL_LENGTH = 3;
 
+interface MnemonicRun {
+  readonly start: number;
+  /** Start of a misspelled word right before the first BIP39 word, if any. */
+  readonly leadStart: number | null;
+  end: number;
+  words: number;
+  typos: number;
+}
+
+interface WordToken {
+  readonly start: number;
+  readonly end: number;
+  readonly isBip39: boolean;
+}
+
+function isMnemonicGap(text: string, from: number, to: number): boolean {
+  return MNEMONIC_GAP_PATTERN.test(text.slice(from, to));
+}
+
+function startRun(
+  text: string,
+  word: WordToken,
+  previous: WordToken | null,
+): MnemonicRun {
+  const hasLead =
+    previous !== null &&
+    !previous.isBip39 &&
+    isMnemonicGap(text, previous.end, word.start);
+  return {
+    start: word.start,
+    leadStart: hasLead ? previous.start : null,
+    end: word.end,
+    words: 1,
+    typos: 0,
+  };
+}
+
 /**
- * Finds every run of 12 or more BIP39 words, whatever sits between the words
- * (spaces, newlines, commas, quotes, a JSON array).
+ * Finds runs that look like a recovery phrase: at least 8 BIP39 words joined by
+ * mnemonic separators (spaces, newlines, commas, quotes, a JSON array), with up
+ * to 2 other words (typos) inside or right before them, so a mistyped phrase is
+ * still caught whole.
  * @param text - Input text.
  * @returns [start, end) offsets of each run.
  */
 function findMnemonicSpans(text: string): Array<[number, number]> {
   const spans: Array<[number, number]> = [];
-  let run: RegExpExecArray[] = [];
+  let run: MnemonicRun | null = null;
+  let previous: WordToken | null = null;
   const closeRun = (): void => {
-    const last = run.at(-1);
-    if (last && run.length >= MIN_MNEMONIC_WORDS) {
-      spans.push([run[0].index, last.index + last[0].length]);
+    if (run && run.words >= MIN_MNEMONIC_WORDS) {
+      const start =
+        run.leadStart !== null && run.typos < MAX_MNEMONIC_TYPOS
+          ? run.leadStart
+          : run.start;
+      spans.push([start, run.end]);
     }
-    run = [];
+    run = null;
   };
-  for (const word of text.matchAll(WORD_PATTERN)) {
-    if (!BIP39_WORDS.has(word[0].toLowerCase())) {
+  for (const token of text.matchAll(WORD_PATTERN)) {
+    const current: WordToken = {
+      start: token.index,
+      end: token.index + token[0].length,
+      isBip39: BIP39_WORDS.has(token[0].toLowerCase()),
+    };
+    if (run && !isMnemonicGap(text, run.end, current.start)) closeRun();
+    if (run && !current.isBip39 && run.typos === MAX_MNEMONIC_TYPOS) {
       closeRun();
-      continue;
+    } else if (run) {
+      run.end = current.end;
+      if (current.isBip39) run.words += 1;
+      else run.typos += 1;
+    } else if (current.isBip39) {
+      run = startRun(text, current, previous);
     }
-    const previous = run.at(-1);
-    const gap = previous
-      ? text.slice(previous.index + previous[0].length, word.index)
-      : "";
-    if (previous && !MNEMONIC_GAP_PATTERN.test(gap)) closeRun();
-    run.push(word);
+    previous = current;
   }
   closeRun();
   return spans;
@@ -89,8 +141,9 @@ function escapeRegExp(value: string): string {
 
 /**
  * Removes secrets and identifying data from free text before it is logged or
- * reported: mnemonics, private keys and other long hex, addresses, IPs, the user
- * name in paths, and any extra literal (e.g. the OS user or host name).
+ * reported: argument values in ethers errors, mnemonics (typos tolerated),
+ * private keys and other long hex, addresses, IPs, the user name in paths, and
+ * any extra literal (e.g. the OS user or host name).
  * Passwords cannot be recognised and must never be passed in.
  * @param text - Input text.
  * @param literals - Extra exact strings to redact, case-insensitively.
@@ -100,7 +153,7 @@ export function sanitizeText(
   text: string,
   literals: readonly string[] = [],
 ): string {
-  let result = redactMnemonics(text)
+  let result = redactMnemonics(redactEthersErrorDetails(text))
     .replace(LONG_HEX_PATTERN, REDACTED.SECRET_HEX)
     .replace(ADDRESS_PATTERN, REDACTED.ADDRESS)
     .replace(IPV4_PATTERN, REDACTED.IP)
