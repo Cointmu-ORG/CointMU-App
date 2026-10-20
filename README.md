@@ -46,6 +46,11 @@ The application is packaged with electron-builder. Each command builds the insta
 the host operating system. Build Windows artifacts on Windows, Linux artifacts on Linux,
 and macOS artifacts on macOS.
 
+The bootnode is baked in at build time from `MAIN_VITE_BOOTNODE_ENODE` (see `.env.example`;
+the release workflow reads the `BOOTNODE_ENODE` repository variable). When it is empty the
+built-in bootnode in `src/main/geth/bootnode.ts` is used. An invalid value is logged and
+reported at startup, and the built-in bootnode is used.
+
 ### Windows
 
 ```bash

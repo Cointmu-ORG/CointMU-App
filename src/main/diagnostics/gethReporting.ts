@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/electron/main";
 import { NodeRecoveryStage, type NodeRecoveryEvent } from "../../bridge/types";
+import type { BootnodeConfigProblem } from "../geth/bootnode";
 import {
   GethLineSeverity,
   classifyGethLine,
@@ -32,6 +33,23 @@ export function recordGethLine(line: string): void {
     level: isFatal ? "fatal" : "error",
     message: `${classification.kind}: ${message}`,
   });
+}
+
+/**
+ * Reports a rejected build-time bootnode value. The value itself is not sent;
+ * the problem code is enough to tell a broken build from a stale bootnode.
+ * @param problem - Why the configured bootnode was rejected.
+ */
+export function reportBootnodeConfigProblem(
+  problem: BootnodeConfigProblem,
+): void {
+  const message = `bootnode config rejected: ${problem}`;
+  Sentry.addBreadcrumb({
+    category: BreadcrumbCategory.GETH,
+    level: "warning",
+    message,
+  });
+  Sentry.captureMessage(message, { level: "warning" });
 }
 
 function describeRecoveryEvent(event: NodeRecoveryEvent): string {

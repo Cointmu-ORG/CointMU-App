@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as Sentry from "@sentry/electron/main";
 import { NodeRecoveryStage } from "../../bridge/types";
-import { recordGethLine, reportRecoveryEvent } from "./gethReporting";
+import { BootnodeConfigProblem } from "../geth/bootnode";
+import {
+  recordGethLine,
+  reportBootnodeConfigProblem,
+  reportRecoveryEvent,
+} from "./gethReporting";
 
 vi.mock("@sentry/electron/main", () => ({
   addBreadcrumb: vi.fn(),
@@ -75,5 +80,26 @@ describe("reportRecoveryEvent", () => {
         ],
       },
     );
+  });
+});
+
+describe("reportBootnodeConfigProblem", () => {
+  beforeEach(() => {
+    vi.mocked(Sentry.addBreadcrumb).mockClear();
+    vi.mocked(Sentry.captureMessage).mockClear();
+  });
+
+  it("leaves a breadcrumb and reports a warning with the problem code only", () => {
+    reportBootnodeConfigProblem(BootnodeConfigProblem.INVALID_BUILD_VALUE);
+
+    const message = "bootnode config rejected: invalid-build-value";
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: "geth",
+      level: "warning",
+      message,
+    });
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
+      level: "warning",
+    });
   });
 });
