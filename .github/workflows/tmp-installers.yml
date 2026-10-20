@@ -1,0 +1,85 @@
+# TEMP(chore/node24-npm12): builds the release installers on all three OS
+# without publishing, to verify Node 24 + npm 12 before merge. Drop this
+# commit before merging.
+name: TEMP installers
+
+on:
+  push:
+    branches: [chore/node24-npm12]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
+
+      # Same npm as Dependabot and local: package.json "packageManager".
+      # bash so the same script runs on the Windows runner. Must run before
+      # any other npm command in the repo: Node 24 bundles npm 11, which
+      # devEngines rejects, so setup-node's `cache: npm` (it calls
+      # `npm config get cache` first) is replaced by actions/cache.
+      - name: Use pinned npm
+        id: npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache npm
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install System Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libarchive-tools build-essential fakeroot rpm libfuse2
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Artifacts
+        run: npm run build && npx electron-builder --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          GETH_DATA_DIR: ${{ secrets.GETH_DATA_DIR }}
+          GETH_NETWORK_ID: ${{ secrets.GETH_NETWORK_ID }}
+          GETH_BOOTNODE_ENODE: ${{ secrets.GETH_BOOTNODE_ENODE }}
+          GETH_GENESIS_PATH: ${{ secrets.GETH_GENESIS_PATH }}
+          GETH_HTTP_HOST: ${{ secrets.GETH_HTTP_HOST }}
+          GETH_HTTP_PORT: ${{ secrets.GETH_HTTP_PORT }}
+          GETH_HTTP_API: ${{ secrets.GETH_HTTP_API }}
+          GETH_P2P_PORT: ${{ secrets.GETH_P2P_PORT }}
+          GETH_LOG_VERBOSITY: ${{ secrets.GETH_LOG_VERBOSITY }}
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: installers-${{ runner.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.deb
+          if-no-files-found: error
+          retention-days: 3
