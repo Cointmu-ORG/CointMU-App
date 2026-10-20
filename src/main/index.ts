@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, dialog } from "electron";
 import { join } from "path";
-import { existsSync, writeFileSync } from "fs";
-import { readFile, copyFile } from "fs/promises";
+import { existsSync } from "fs";
+import { copyFile } from "fs/promises";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "./services/crypto";
 import { registerSystemHandlers } from "./services/system";
@@ -42,6 +42,7 @@ import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
 import { registerSettingsHandlers } from "./ipc/settingsIpc";
+import { registerWalletHandlers } from "./ipc/walletIpc";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 
@@ -86,25 +87,7 @@ app.whenReady().then(async () => {
 
   registerSettingsHandlers(store);
 
-  ipcMain.handle(
-    "dialog:saveKeystore",
-    async (_, keystoreJson: string, filename: string) => {
-      const result = await dialog.showSaveDialog({
-        title: "Export Keystore",
-        defaultPath: filename,
-        filters: [{ name: "JSON", extensions: ["json"] }],
-      });
-      if (result.canceled || !result.filePath) {
-        return { success: false, canceled: true };
-      }
-      try {
-        writeFileSync(result.filePath, keystoreJson, "utf8");
-        return { success: true, path: result.filePath };
-      } catch (err) {
-        return { success: false, error: (err as Error).message };
-      }
-    },
-  );
+  registerWalletHandlers(store);
 
   ipcMain.handle("export-extension-zip", async () => {
     const sourcePath = app.isPackaged
@@ -135,18 +118,6 @@ app.whenReady().then(async () => {
     }
   });
 
-  ipcMain.handle("wallet:clearAllData", () => {
-    try {
-      store.set("encryptedPayload", null);
-      store.set("mnemonic", null);
-      store.set("activeWalletAddress", null);
-      store.set("accounts", []);
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: (err as Error).message };
-    }
-  });
-
   ipcMain.handle("app:getDatadir", () => resolveDataDir());
 
   ipcMain.handle("app:getChainDbSize", async () => {
@@ -160,23 +131,6 @@ app.whenReady().then(async () => {
   });
 
   ipcMain.handle("app:openDataFolder", () => shell.openPath(resolveDataDir()));
-
-  ipcMain.handle("app:openKeystore", async () => {
-    const result = await dialog.showOpenDialog({
-      title: "Import Keystore",
-      properties: ["openFile"],
-      filters: [{ name: "JSON", extensions: ["json"] }],
-    });
-    if (result.canceled || result.filePaths.length === 0) {
-      return { success: false, canceled: true };
-    }
-    try {
-      const data = await readFile(result.filePaths[0], "utf8");
-      return { success: true, data };
-    } catch (err) {
-      return { success: false, error: (err as Error).message };
-    }
-  });
 
   registerCryptoHandlers();
   registerSystemHandlers();
