@@ -38,7 +38,9 @@
     "lint:code": "oxlint",
     "lint:fsd": "steiger ./src/renderer/src",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "preversion": "npm run build",
+    "version": "node scripts/sync-release-files.js"
   },
   "dependencies": {
     "archiver": "^8.0.0",

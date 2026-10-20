@@ -1,198 +1,202 @@
+/**
+ * Releases a new version: preflight checks, `npm version`, push.
+ *
+ * The bump, commit and tag are npm's own (`npm version` also runs the
+ * `preversion` build gate and the `version` hook, scripts/sync-release-files.js,
+ * which stamps the codename and the Makefile). This script only
+ * adds the guards around them, and undoes a local release if the push fails.
+ *
+ * @example
+ * node scripts/bump-version.js patch my-codename
+ * node scripts/bump-version.js preminor my-codename --preid=beta
+ * node scripts/bump-version.js 1.4.0 my-codename
+ */
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 
-const PACKAGE_JSON_PATH = path.resolve(__dirname, "../package.json");
-const MAKEFILE_PATH = path.resolve(__dirname, "../Makefile");
-const ENCODING_UTF8 = "utf8";
-
-const ARG_POSITION_BUMP_TYPE = 2;
-const ARG_POSITION_CODENAME = 3;
-const ARG_POSITION_PRERELEASE = 4;
-const VERSION_PARTS_LENGTH = 3;
-const PART_MAJOR_INDEX = 0;
-const PART_MINOR_INDEX = 1;
-const PART_PATCH_INDEX = 2;
-const INDENT_SPACES = 2;
-
-const EXIT_CODE_ERROR = 1;
+const ROOT = path.resolve(__dirname, "..");
+const RELEASE_BRANCH = "main";
 
 /**
- * Reads and parses the package.json file.
- * @returns {Object} The parsed package.json object.
+ * Runs a git command and returns its trimmed stdout.
+ * @param {string[]} args - Arguments to pass to git.
+ * @returns {string} The trimmed stdout.
  */
-function readPackageJson() {
-  const content = fs.readFileSync(PACKAGE_JSON_PATH, ENCODING_UTF8);
-  return JSON.parse(content);
+function git(args) {
+  return execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim();
 }
 
 /**
- * Writes the updated package.json object back to the file.
- * @param {Object} pkg - The package.json object to write.
+ * Runs a git command and reports whether it exited zero.
+ * @param {string[]} args - Arguments to pass to git.
+ * @returns {boolean} True when the command succeeded.
+ */
+function gitOk(args) {
+  try {
+    execFileSync("git", args, { cwd: ROOT, stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Runs a command with inherited stdio, throwing if it fails.
+ * @param {string} cmd - The command to run.
+ * @param {string[]} args - Arguments to pass to the command.
+ * @param {Object} [env] - Extra environment variables.
  * @returns {void}
  */
-function writePackageJson(pkg) {
-  const content = JSON.stringify(pkg, null, INDENT_SPACES) + "\n";
-  fs.writeFileSync(PACKAGE_JSON_PATH, content, ENCODING_UTF8);
+function run(cmd, args, env) {
+  console.log(`> ${cmd} ${args.join(" ")}`);
+  execFileSync(cmd, args, {
+    cwd: ROOT,
+    stdio: "inherit",
+    env: { ...process.env, ...env },
+  });
 }
 
 /**
- * Reads the content of the Makefile.
- * @returns {string} The content of the Makefile.
+ * Prints a message and exits with a failure code.
+ * @param {...string} lines - Lines to print to stderr.
+ * @returns {never}
  */
-function readMakefile() {
-  return fs.readFileSync(MAKEFILE_PATH, ENCODING_UTF8);
+function die(...lines) {
+  console.error(lines.join("\n"));
+  process.exit(1);
 }
 
 /**
- * Writes the updated content back to the Makefile.
- * @param {string} content - The string content to write.
- * @returns {void}
+ * Undoes a release that was committed locally but never pushed.
+ *
+ * Decides by comparing HEAD against the SHA captured before the release began:
+ * a failure that happened before any commit was created must leave git
+ * untouched, and a commit the remote already accepted must not be reset.
+ *
+ * @param {string} reason - What failed, printed first.
+ * @param {string} preRunHead - HEAD as it was before `npm version` ran.
+ * @returns {never}
  */
-function writeMakefile(content) {
-  fs.writeFileSync(MAKEFILE_PATH, content, ENCODING_UTF8);
-}
+function rollback(reason, preRunHead) {
+  const now = git(["rev-parse", "HEAD"]);
 
-/**
- * Bumps the version string based on the given bump type and optional prerelease tag.
- * @param {string} currentVersion - The current version string.
- * @param {string} bumpType - The type of bump (major, minor, patch).
- * @param {string} [prereleaseTag] - An optional prerelease tag.
- * @returns {string} The new version string.
- */
-function calculateNewVersion(currentVersion, bumpType, prereleaseTag) {
-  const versionCore = currentVersion.split("-")[0];
-  const parts = versionCore.split(".").map(Number);
+  console.error(`\n${reason}`);
 
-  if (parts.length !== VERSION_PARTS_LENGTH) {
-    throw new Error("Invalid version format in package.json");
+  if (now === preRunHead) {
+    die(`HEAD unchanged (${now}) - nothing to roll back.`);
   }
 
-  let major = parts[PART_MAJOR_INDEX];
-  let minor = parts[PART_MINOR_INDEX];
-  let patch = parts[PART_PATCH_INDEX];
-
-  if (bumpType === "major") {
-    major += 1;
-    minor = 0;
-    patch = 0;
-  } else if (bumpType === "minor") {
-    minor += 1;
-    patch = 0;
-  } else if (bumpType === "patch") {
-    patch += 1;
-  } else {
-    throw new Error("Invalid bump type. Use major, minor, or patch.");
+  if (gitOk(["merge-base", "--is-ancestor", now, `origin/${RELEASE_BRANCH}`])) {
+    die(
+      `commit ${now} is already on origin/${RELEASE_BRANCH} - NOT resetting.`,
+      "The release landed remotely; reconcile manually before retrying.",
+    );
   }
 
-  let newVersion = `${major}.${minor}.${patch}`;
-
-  if (prereleaseTag) {
-    newVersion += `-${prereleaseTag}`;
+  for (const tag of git(["tag", "--points-at", now])
+    .split("\n")
+    .filter(Boolean)) {
+    git(["tag", "-d", tag]);
   }
+  git(["reset", "--hard", preRunHead]);
 
-  return newVersion;
+  die(
+    `rolled back: HEAD ${now} -> ${git(["rev-parse", "HEAD"])}`,
+    `             (expected ${preRunHead})`,
+  );
 }
 
 /**
- * Updates the Linux kernel style version variables in the Makefile content.
- * @param {string} makefileContent - The original Makefile content.
- * @param {string} newVersion - The new version string to set.
- * @param {string} codename - The codename string.
- * @returns {string} The updated Makefile content.
- */
-function updateMakefileVersion(makefileContent, newVersion, codename) {
-  const versionCore = newVersion.split("-")[0];
-  const parts = versionCore.split(".").map(Number);
-
-  let updated = makefileContent.replace(
-    /^VERSION\s*=\s*.*$/m,
-    `VERSION = ${parts[PART_MAJOR_INDEX]}`,
-  );
-  updated = updated.replace(
-    /^PATCHLEVEL\s*=\s*.*$/m,
-    `PATCHLEVEL = ${parts[PART_MINOR_INDEX]}`,
-  );
-  updated = updated.replace(
-    /^SUBLEVEL\s*=\s*.*$/m,
-    `SUBLEVEL = ${parts[PART_PATCH_INDEX]}`,
-  );
-  updated = updated.replace(
-    /^EXTRAVERSION\s*=\s*.*$/m,
-    `EXTRAVERSION = ${codename}`,
-  );
-
-  return updated;
-}
-
-/**
- * Executes a shell command synchronously and logs the output.
- * @param {string} command - The shell command to execute.
- * @returns {void}
- */
-function runCommand(command) {
-  console.log(`Executing: ${command}`);
-  execSync(command, { stdio: "inherit", cwd: path.resolve(__dirname, "..") });
-}
-
-/**
- * Main execution flow for the bump version script.
+ * Main execution flow for the release script.
  * @returns {void}
  */
 function main() {
-  const args = process.argv;
-  const bumpType = args[ARG_POSITION_BUMP_TYPE];
-  const newCodename = args[ARG_POSITION_CODENAME];
-  const prereleaseTag = args[ARG_POSITION_PRERELEASE];
+  const [bumpType, codename, ...passthrough] = process.argv.slice(2);
 
-  if (!bumpType || !newCodename) {
-    console.error(
-      "Usage: node scripts/bump-version.js <major|minor|patch> <codename> [prerelease-tag]",
+  if (!bumpType || !codename) {
+    die(
+      "Usage: node scripts/bump-version.js <bump-type> <codename> [npm-version-flags]",
+      "  bump-type: major | minor | patch | premajor | preminor | prepatch |",
+      "             prerelease | an explicit version such as 1.4.0",
+      "  example:   node scripts/bump-version.js preminor my-codename --preid=beta",
     );
-    process.exit(EXIT_CODE_ERROR);
+  }
+
+  // The old script took a prerelease tag as a third positional; npm takes
+  // --preid instead, so catch the muscle-memory form rather than forwarding it.
+  const stray = passthrough.find((arg) => !arg.startsWith("-"));
+  if (stray) {
+    die(
+      `Unexpected argument ${JSON.stringify(stray)}.`,
+      "Prereleases no longer take a third positional. Use an npm prerelease",
+      `bump instead, e.g.: prepatch ${codename} --preid=${stray.replace(/\..*$/, "")}`,
+    );
+  }
+
+  // The codename is interpolated into npm's -m, where %s expands to the version.
+  if (!/^[A-Za-z0-9._-]+$/.test(codename)) {
+    die(
+      `Invalid codename ${JSON.stringify(codename)}.`,
+      "Use letters, digits, dot, dash or underscore only.",
+    );
+  }
+
+  const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]);
+  if (branch !== RELEASE_BRANCH) {
+    die(
+      `Refusing to release from "${branch}".`,
+      `Releases must run on ${RELEASE_BRANCH}; nothing was changed.`,
+    );
+  }
+
+  git(["fetch", "origin", "--tags"]);
+
+  const behind = git([
+    "rev-list",
+    "--count",
+    `${RELEASE_BRANCH}..origin/${RELEASE_BRANCH}`,
+  ]);
+  if (behind !== "0") {
+    die(
+      `origin/${RELEASE_BRANCH} is ${behind} commit(s) ahead of yours.`,
+      `Run: git pull --rebase origin ${RELEASE_BRANCH}`,
+    );
+  }
+
+  const preRunHead = git(["rev-parse", "HEAD"]);
+  console.log(`Releasing from ${preRunHead} on ${branch}`);
+
+  try {
+    run(
+      "npm",
+      [
+        "version",
+        bumpType,
+        ...passthrough,
+        "--tag-version-prefix=v",
+        "-m",
+        `chore: release version %s-${codename}`,
+      ],
+      { CMU_CODENAME: codename },
+    );
+  } catch {
+    rollback("npm version failed.", preRunHead);
   }
 
   try {
-    console.log("Running build process to verify before version bump...");
-    execSync("npm run build", { stdio: "inherit" });
-  } catch (error) {
-    console.error("Version update aborted: Build process failed with errors.");
-    process.exit(EXIT_CODE_ERROR);
+    run("git", ["push", "--atomic", "origin", RELEASE_BRANCH, "--follow-tags"]);
+  } catch {
+    rollback(
+      `Push to origin/${RELEASE_BRANCH} failed (remote moved, or the tag exists there).`,
+      preRunHead,
+    );
   }
 
-  const pkg = readPackageJson();
-  const currentVersion = pkg.version;
-  const newVersion = calculateNewVersion(
-    currentVersion,
-    bumpType,
-    prereleaseTag,
+  const { version } = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "package.json"), "utf8"),
   );
-
-  console.log(
-    `Bumping version from ${currentVersion} to ${newVersion} with codename ${newCodename}`,
-  );
-
-  pkg.version = newVersion;
-  pkg.codename = newCodename;
-  writePackageJson(pkg);
-
-  const makefileContent = readMakefile();
-  const updatedMakefile = updateMakefileVersion(
-    makefileContent,
-    newVersion,
-    newCodename,
-  );
-  writeMakefile(updatedMakefile);
-
-  runCommand("npm install");
-  runCommand("git add .");
-  const fullVersionString = `${newVersion}-${newCodename}`;
-  runCommand(`git commit -m "chore: release version ${fullVersionString}"`);
-  runCommand(`git tag -a v${newVersion} -m "Release v${newVersion}"`);
-  runCommand("git push origin main");
-  runCommand("git push origin --tags");
-
-  console.log(`Successfully released version ${fullVersionString}`);
+  console.log(`\nReleased v${version} (${codename})`);
 }
 
 main();

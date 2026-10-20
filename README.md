@@ -86,23 +86,25 @@ We provide a professional build system via `Makefile` to streamline development 
 
 ### Release Workflow
 
-Releasing a new version is fully automated using our custom bump-version script. This script synchronizes the version string across both `package.json` and the `Makefile`, installs dependencies, creates a versioned git commit, applies an annotated git tag, and pushes the updates to the remote repository.
+Releases run through `scripts/bump-version.js`, a thin wrapper around `npm version`. It refuses to run off `main` or behind `origin/main`, then `npm version` builds the app (`preversion`), bumps `package.json` and `package-lock.json`, stamps the codename and the `Makefile` version (`version` hook, `scripts/sync-release-files.js`), and creates the release commit and annotated `v*` tag. The script pushes the commit and tag atomically. If anything fails after the commit was created, it deletes the tag and resets to the starting commit, so a failed release leaves nothing behind locally.
 
 **Usage:**
 
 ```bash
-node scripts/bump-version.js <major|minor|patch> [prerelease-tag]
+node scripts/bump-version.js <bump-type> <codename> [npm-version-flags]
 ```
+
+`<bump-type>` is anything `npm version` accepts: `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`, or an explicit version.
 
 **Examples:**
 
-- Bump the minor version (e.g., from 1.1.0 to 1.2.0):
+- Bump the patch version (e.g., from 1.6.16 to 1.6.17):
   ```bash
-  node scripts/bump-version.js minor
+  node scripts/bump-version.js patch Siren
   ```
-- Bump the patch version with a prerelease tag (e.g., to 1.1.1-beta):
+- Start a beta prerelease (e.g., to 1.7.0-beta.0):
   ```bash
-  node scripts/bump-version.js patch beta
+  node scripts/bump-version.js preminor Siren --preid=beta
   ```
 
 ## Community and Contributing
