@@ -142,8 +142,6 @@
     "diagnostics": "Diagnostik",
     "logLevelTitle": "Tingkat log",
     "logLevelDesc": "Verbositas log node",
-    "analyticsTitle": "Kirim analitik anonim",
-    "analyticsDesc": "Bantu perbaiki CointMU dengan laporan kerusakan dan data penggunaan",
     "title": "Lanjutan",
     "openDataTitle": "Buka folder data",
     "openDataDesc": "Tampilkan datadir di penjelajah berkas Anda",

@@ -141,8 +141,6 @@
     "diagnostics": "診断",
     "logLevelTitle": "ログレベル",
     "logLevelDesc": "ノードログの詳細度",
-    "analyticsTitle": "匿名の分析データを送信する",
-    "analyticsDesc": "クラッシュレポートと使用状況データでCointMUの改善に協力します",
     "title": "詳細設定",
     "openDataTitle": "データフォルダを開く",
     "openDataDesc": "ファイルエクスプローラーでデータディレクトリを表示します",

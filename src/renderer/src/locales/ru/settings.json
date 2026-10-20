@@ -142,8 +142,6 @@
     "diagnostics": "Диагностика",
     "logLevelTitle": "Уровень логирования",
     "logLevelDesc": "Детальность журнала узла",
-    "analyticsTitle": "Отправлять аналитику",
-    "analyticsDesc": "Помогите улучшить CointMU",
     "title": "Дополнительно",
     "openDataTitle": "Открыть папку данных",
     "openDataDesc": "Показать в проводнике",

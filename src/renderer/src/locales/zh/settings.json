@@ -142,8 +142,6 @@
     "diagnostics": "诊断",
     "logLevelTitle": "日志级别",
     "logLevelDesc": "节点日志的详细程度",
-    "analyticsTitle": "发送匿名分析",
-    "analyticsDesc": "通过崩溃报告和使用数据帮助改进 CointMU",
     "title": "高级",
     "openDataTitle": "打开数据文件夹",
     "openDataDesc": "在文件浏览器中显示数据目录",

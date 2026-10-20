@@ -966,7 +966,6 @@ app.whenReady().then(async () => {
         wsRpc: false,
         corsOrigins: "https://*.cointmu.net",
         logLevel: "Info",
-        analytics: false,
       },
       notifications: {
         global: true,

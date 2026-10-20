@@ -7,7 +7,6 @@ export interface AdvancedSettings {
   wsRpc: boolean;
   corsOrigins: string;
   logLevel: string;
-  analytics: boolean;
 }
 
 export interface StorageInfo {
@@ -29,7 +28,6 @@ const DEFAULT_SETTINGS: AdvancedSettings = {
   wsRpc: false,
   corsOrigins: "https://*.cointmu.net",
   logLevel: "Info",
-  analytics: false,
 };
 
 const DEFAULT_STORAGE: StorageInfo = {

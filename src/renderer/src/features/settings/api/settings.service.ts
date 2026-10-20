@@ -81,7 +81,6 @@ async function resetAllSettings(): Promise<void> {
       wsRpc: false,
       corsOrigins: "https://*.cointmu.net",
       logLevel: "Info",
-      analytics: false,
     }),
     setSetting("notifications", {
       global: true,

@@ -52,7 +52,6 @@ export interface SettingsStore {
     wsRpc: boolean;
     corsOrigins: string;
     logLevel: string;
-    analytics: boolean;
   };
   notifications: {
     transactionAlerts: boolean;

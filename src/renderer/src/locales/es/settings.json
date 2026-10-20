@@ -142,8 +142,6 @@
     "diagnostics": "Diagnósticos",
     "logLevelTitle": "Nivel de log",
     "logLevelDesc": "Verbosidad del registro del nodo",
-    "analyticsTitle": "Enviar analíticas anónimas",
-    "analyticsDesc": "Ayuda a mejorar CointMU con informes de fallos y uso",
     "title": "Avanzado",
     "openDataTitle": "Abrir carpeta de datos",
     "openDataDesc": "Revelar el directorio en tu explorador de archivos",

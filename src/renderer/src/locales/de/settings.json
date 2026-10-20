@@ -142,8 +142,6 @@
     "diagnostics": "Diagnose",
     "logLevelTitle": "Log-Level",
     "logLevelDesc": "Ausführlichkeit des Knotenprotokolls",
-    "analyticsTitle": "Anonyme Analysedaten senden",
-    "analyticsDesc": "Helfen Sie, CointMU mit Fehlerberichten und Nutzungsdaten zu verbessern",
     "title": "Erweitert",
     "openDataTitle": "Datenordner öffnen",
     "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen",

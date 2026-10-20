@@ -141,8 +141,6 @@
     "diagnostics": "Diagnostics",
     "logLevelTitle": "Log level",
     "logLevelDesc": "Verbosity of the node log",
-    "analyticsTitle": "Send anonymous analytics",
-    "analyticsDesc": "Help improve CointMU with crash reports and usage data",
     "title": "Advanced",
     "openDataTitle": "Open data folder",
     "openDataDesc": "Reveal the datadir in your file explorer",
