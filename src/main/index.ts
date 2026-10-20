@@ -16,7 +16,6 @@ import { initUpdater } from "./services/updater";
 import ms from "ms";
 import { callGethRpc } from "./utils/rpcUtils";
 import { registerRendererRpcHandler } from "./services/rendererRpc";
-import { GethRecovery } from "./services/gethRecovery";
 import { NODE_CHANNELS } from "../bridge/ipc-channels";
 import {
   scanWalletActivity,
@@ -26,7 +25,6 @@ import {
   startExtensionSyncServer,
   broadcastWalletState,
 } from "./services/extensionSyncServer";
-import { reportRecoveryEvent } from "./diagnostics/gethReporting";
 import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
@@ -50,12 +48,12 @@ import {
 import {
   attachNodeRecovery,
   getNodeRecovery,
-  hasGethExited,
   isGethRunning,
   killGethProcess,
   spawnGethProcess,
 } from "./geth/gethProcess";
 import { initGethIfNeeded } from "./geth/gethInit";
+import { createNodeRecovery } from "./geth/nodeRecovery";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 
@@ -461,23 +459,7 @@ app.whenReady().then(async () => {
 
   loadNetworkId(store);
 
-  attachNodeRecovery(
-    new GethRecovery({
-      spawnGeth: () => spawnGethProcess(store),
-      stopGeth: killGethProcess,
-      hasGethExited,
-      initGenesis: initGethIfNeeded,
-      resolveDataDir,
-      resolveRpcPort: () =>
-        (store.get("advanced.httpRpc") ?? true) ? getRpcPort() : null,
-      broadcast: (event) => {
-        reportRecoveryEvent(event);
-        BrowserWindow.getAllWindows().forEach((win) => {
-          win.webContents.send(NODE_CHANNELS.RECOVERY, event);
-        });
-      },
-    }),
-  );
+  attachNodeRecovery(createNodeRecovery(store));
 
   try {
     await initGethIfNeeded(resolveDataDir());
