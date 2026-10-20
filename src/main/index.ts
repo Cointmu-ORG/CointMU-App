@@ -139,8 +139,8 @@ let bootnodeWatcher: NodeJS.Timeout | null = null;
 let pendingBootnodeEnode: string | null = null;
 
 /**
- * Resolves the absolute geth data directory. A relative GETH_DATA_DIR is anchored
- * under the Electron userData path; an absolute one is returned as-is.
+ * Resolves the absolute geth data directory for the active network:
+ * <userData>/cointmu-chaindata/<networkId>.
  * @returns {string} The absolute data directory path.
  */
 function resolveDataDir(): string {
