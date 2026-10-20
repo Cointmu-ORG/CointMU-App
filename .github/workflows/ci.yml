@@ -21,14 +21,27 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "22"
-          cache: npm
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
 
       # Same npm as Dependabot and local: package.json "packageManager".
+      # Must run before any other npm command in the repo: Node 24 bundles
+      # npm 11, which devEngines rejects, so setup-node's `cache: npm` (it
+      # calls `npm config get cache` first) is replaced by actions/cache.
       - name: Use pinned npm
+        id: npm
         run: |
           version=$(node -p "require('./package.json').packageManager.split('@')[1]")
           [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
 
       # Skips the ~100MB Electron binary download and electron-builder's
       # install-app-deps; none of the steps below launch Electron and the
@@ -53,14 +66,27 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "22"
-          cache: npm
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
 
       # Same npm as Dependabot and local: package.json "packageManager".
+      # Must run before any other npm command in the repo: Node 24 bundles
+      # npm 11, which devEngines rejects, so setup-node's `cache: npm` (it
+      # calls `npm config get cache` first) is replaced by actions/cache.
       - name: Use pinned npm
+        id: npm
         run: |
           version=$(node -p "require('./package.json').packageManager.split('@')[1]")
           [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
 
       - run: npm ci --ignore-scripts
 
@@ -86,7 +112,16 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "22"
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
+
+      # npm audit is subject to devEngines too.
+      - name: Use pinned npm
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
 
       # Non-blocking: main still carries high-severity transitive advisories.
       # npm audit only reads package-lock.json, so no install is needed.
