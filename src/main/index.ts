@@ -8,7 +8,7 @@ import {
 } from "electron";
 import { join } from "path";
 import { existsSync, writeFileSync } from "fs";
-import { stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
+import { readFile, copyFile } from "fs/promises";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
@@ -67,6 +67,7 @@ import {
   prepareGethIpcEndpoint,
   removeTemporaryIpcDir,
 } from "./geth/ipcEndpointLifecycle";
+import { initGethIfNeeded, resolveGethBinaryPath } from "./geth/gethInit";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
@@ -100,90 +101,6 @@ let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
 let nodeRecovery: GethRecovery | null = null;
-
-/**
- * Resolves the absolute path to the bundled Core-geth binary based on the
- * current operating system. Uses platform-specific subdirectories to avoid
- * bundling binaries for the wrong OS.
- * @returns {string} The absolute filesystem path to the geth executable.
- */
-function resolveGethBinaryPath(): string {
-  const platformDir =
-    process.platform === "win32"
-      ? "win"
-      : process.platform === "darwin"
-        ? "mac"
-        : "linux";
-  const binaryName = process.platform === "win32" ? "geth.exe" : "geth";
-  if (app.isPackaged) {
-    return join(process.resourcesPath, "bin", platformDir, binaryName);
-  }
-  return join(app.getAppPath(), "resources", "bin", platformDir, binaryName);
-}
-
-/**
- * Initializes the geth chain database from the inlined genesis block on a fresh
- * installation only. It detects an existing database by stat-ing the chaindata
- * directory and skips when present. On a fresh datadir it writes the effective
- * genesis to a temporary file, runs 'geth --datadir <dir> init <temp>', and
- * removes the temporary file afterward. The whole flow is invisible to the user.
- * @param {string} datadir - The absolute geth data directory.
- * @returns {Promise<void>} Resolves once the chain is initialized or already present.
- */
-async function initGethIfNeeded(datadir: string): Promise<void> {
-  const chainDataPath = join(datadir, "geth", "chaindata");
-  try {
-    await stat(chainDataPath);
-    console.log(
-      "[geth:init] Chain data already exists, skipping genesis initialization.",
-    );
-    return;
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code !== "ENOENT") {
-      throw err;
-    }
-  }
-
-  const binaryPath = resolveGethBinaryPath();
-  if (!existsSync(binaryPath)) {
-    console.warn(
-      `[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`,
-    );
-    return;
-  }
-
-  console.log("[geth:init] Initializing chain with genesis block...");
-  await mkdir(datadir, { recursive: true });
-  const tempGenesisPath = join(datadir, "genesis-temp.json");
-  await writeFile(
-    tempGenesisPath,
-    JSON.stringify(buildGenesis(), null, 2),
-    "utf8",
-  );
-
-  try {
-    await new Promise<void>((resolve, reject) => {
-      const initProcess = spawn(
-        binaryPath,
-        ["--datadir", datadir, "init", tempGenesisPath],
-        {
-          stdio: "ignore",
-        },
-      );
-      initProcess.on("exit", (code) => {
-        if (code === 0) {
-          console.log("[geth:init] Genesis initialization successful.");
-          resolve();
-        } else {
-          reject(new Error(`Geth init failed with code ${code}`));
-        }
-      });
-      initProcess.on("error", reject);
-    });
-  } finally {
-    await rm(tempGenesisPath, { force: true });
-  }
-}
 
 /**
  * Resolves an enode's hostname to an IP so geth never depends on its own DNS
