@@ -9,7 +9,7 @@ import {
 import { join } from "path";
 import { existsSync, writeFileSync } from "fs";
 import { stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
+import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from "node:dns/promises";
 import { registerCryptoHandlers } from "./services/crypto";
@@ -65,17 +65,13 @@ import {
   setNetworkId,
 } from "./geth/networkConfig";
 import { isSessionValid, startSession } from "./services/session";
+import { createWindow } from "./window";
 
 const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
 const BOOTNODE_DNS_RETRY_MS = ms("30s");
 
 const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
-
-const WINDOW_DEFAULT_WIDTH = 1280;
-const WINDOW_DEFAULT_HEIGHT = 800;
-const WINDOW_MIN_WIDTH = 900;
-const WINDOW_MIN_HEIGHT = 600;
 
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
@@ -531,53 +527,6 @@ function hasGethExited(): boolean {
     proc.exitCode !== null ||
     proc.signalCode !== null
   );
-}
-
-/**
- * Creates the main application BrowserWindow with security-hardened settings
- * and context-isolated preload script.
- * @returns The created BrowserWindow instance.
- */
-function createWindow(): BrowserWindow {
-  const mainWindow = new BrowserWindow({
-    width: WINDOW_DEFAULT_WIDTH,
-    height: WINDOW_DEFAULT_HEIGHT,
-    minWidth: WINDOW_MIN_WIDTH,
-    minHeight: WINDOW_MIN_HEIGHT,
-    show: false,
-    autoHideMenuBar: true,
-    title: "CointMU",
-    icon:
-      process.platform === "win32"
-        ? join(__dirname, "../../resources/icon.ico")
-        : join(__dirname, "../../resources/icon.png"),
-    backgroundColor: "#0a0a0f",
-    frame: false,
-    titleBarStyle: "hidden",
-    webPreferences: {
-      preload: join(__dirname, "../preload/index.js"),
-      sandbox: true,
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
-  });
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: "deny" };
-  });
-
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-  }
-
-  return mainWindow;
 }
 
 /**
