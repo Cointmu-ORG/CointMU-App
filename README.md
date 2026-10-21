@@ -48,6 +48,11 @@ The application is packaged with electron-builder. Each command builds the insta
 the host operating system. Build Windows artifacts on Windows, Linux artifacts on Linux,
 and macOS artifacts on macOS.
 
+The bootnode is baked in at build time from `MAIN_VITE_BOOTNODE_ENODE` (see `.env.example`;
+the release workflow reads the `BOOTNODE_ENODE` repository variable). When it is empty the
+built-in bootnode in `src/main/geth/bootnode.ts` is used. An invalid value is logged and
+reported at startup, and the built-in bootnode is used.
+
 ### Windows
 
 ```bash
@@ -112,6 +117,31 @@ installation before replacing it. Open the installed app from Finder.
 
 Continuous integration builds all three platforms automatically through the GitHub Actions
 release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed.
+
+## Error Reporting and Logs
+
+- **Logs** are always written, sanitized, to `<userData>/logs/`: `main.log` (main and
+  renderer, 1 MB) and `geth.log` (node output, 5 MB), each rotated to one `.old` file.
+  Settings → Privacy & Diagnostics and the "recovery stopped" banner can open the folder
+  or copy recent lines.
+- **Error reports** use the Sentry protocol (`@sentry/electron`) and go only to a collector
+  whose public key is pinned in the build. They are configured at build time through
+  `MAIN_VITE_TELEMETRY_DSN` and `MAIN_VITE_TELEMETRY_PINS` (see `.env.example`; the release
+  workflow reads the `TELEMETRY_DSN` and `TELEMETRY_PINS` repository variables). Without a
+  DSN the build has no reporting at all.
+- Reporting is on by default (opt-out). A first-run notice explains it, and nothing is sent
+  until the notice is dismissed. Turning it off in Settings deletes unsent reports.
+- Reports are rebuilt from an allowlist of fields and sanitized (recovery phrases, keys and
+  other long hex, ethers error argument values, addresses, IPs, user and host names).
+  Unsent reports wait in `<userData>/telemetry-queue/` (at most 5 MB and 30 days, oldest
+  dropped first) and are visible in Settings.
+- **Native crashes** are sent as an event only (process, reason, exit code); minidumps are
+  never uploaded. Crashpad writes the dump to `<userData>/Crashpad/` (`completed/` on
+  Linux, `reports/` on Windows, `completed/` + `pending/` on macOS). The SDK reads and
+  deletes it as soon as it handles the crash: right away for renderer and child processes,
+  or at the next app start for a crash of the main process. Dumps are deleted whether the
+  event is sent, dropped (reporting off), over the per-session limit, or older than 30
+  days. Builds without a DSN do not start the crash reporter, so they write no dumps.
 
 ## Development Workflow
 

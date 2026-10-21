@@ -19,6 +19,7 @@ import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport, useNotificationStore } from "@/features/notifications";
 import { useAutoLock } from "@/features/auth";
+import { FirstRunNotice } from "@/features/error-reporting";
 
 const Miner = lazy(() =>
   import("@/pages/mining").then((m) => ({ default: m.MiningPage })),
@@ -169,6 +170,7 @@ function App(): JSX.Element {
           <NodeRecoveryBanner />
         </div>
         <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
+        <FirstRunNotice />
       </Suspense>
     );
   }
@@ -179,6 +181,7 @@ function App(): JSX.Element {
       <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
         <ToastViewport />
+        <FirstRunNotice />
         <Sidebar
           accounts={accounts}
           activeWalletAddress={activeWalletAddress}

@@ -142,8 +142,6 @@
     "diagnostics": "Diagnose",
     "logLevelTitle": "Log-Level",
     "logLevelDesc": "Ausführlichkeit des Knotenprotokolls",
-    "analyticsTitle": "Anonyme Analysedaten senden",
-    "analyticsDesc": "Helfen Sie, CointMU mit Fehlerberichten und Nutzungsdaten zu verbessern",
     "title": "Erweitert",
     "openDataTitle": "Datenordner öffnen",
     "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen",
@@ -286,5 +284,43 @@
     "access": "Zugriff",
     "backup": "Sicherung",
     "hardware": "Hardware"
+  },
+  "privacy": {
+    "title": "Datenschutz & Diagnose",
+    "subtitle": "Fehlerberichte und lokale Logs",
+    "reporting": "Fehlerberichte",
+    "notConfigured": "Fehlerberichte sind in diesem Build nicht konfiguriert. Es wird nichts gesendet; Logs werden weiterhin auf diesem Computer gespeichert.",
+    "toggleTitle": "Fehlerberichte senden",
+    "toggleDesc": "Sendet bereinigte Fehlerberichte an den CointMU-Server unter {{host}}, der nur im Campusnetz erreichbar ist. Ausschalten löscht noch nicht gesendete Berichte.",
+    "sentTitle": "Was gesendet wird",
+    "sent": {
+      "error": "Fehlertyp und -meldung",
+      "stack": "Stacktrace, ohne Ihren Benutzernamen in Dateipfaden",
+      "versions": "Versionen von App, Electron und Betriebssystem",
+      "node": "Fehlerkategorie des Knotens und Wiederherstellungsphase"
+    },
+    "neverSentTitle": "Wird nie gesendet",
+    "neverSent": {
+      "secrets": "Passwörter, Wiederherstellungsphrasen, private Schlüssel, signierte Transaktionen",
+      "addresses": "Wallet-Adressen",
+      "identity": "IP-Adressen, Benutzername, Computername"
+    },
+    "queue": {
+      "title": "Warten auf Versand ({{count}})",
+      "refresh": "Aktualisieren",
+      "deleteAll": "Alle löschen",
+      "empty": "Keine Berichte warten auf den Versand.",
+      "loadFailed": "Die Berichtswarteschlange konnte nicht gelesen werden."
+    },
+    "logs": "Logs",
+    "logsDesc": "Logs werden bereinigt auf diesem Computer gespeichert und nie automatisch gesendet. Hängen Sie sie an, wenn Sie ein Problem melden.",
+    "notice": {
+      "title": "Fehlerberichte helfen uns, CointMU zu verbessern",
+      "what": "Wenn etwas schiefgeht, speichert CointMU einen Bericht mit dem Fehler, einem Stacktrace sowie App- und Systemversionen. Passwörter, Wiederherstellungsphrasen, private Schlüssel, Wallet-Adressen, IP-Adressen und Ihr Benutzername werden vorher entfernt.",
+      "where": "Berichte werden an den CointMU-Server unter {{host}} gesendet, der nur im Campusnetz erreichbar ist. Außerhalb des Campus warten sie auf diesem Computer und werden später gesendet.",
+      "howToDisable": "Sie können dies jederzeit unter Einstellungen → Datenschutz & Diagnose ausschalten.",
+      "turnOff": "Ausschalten",
+      "acknowledge": "Verstanden"
+    }
   }
 }

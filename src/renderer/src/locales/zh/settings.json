@@ -142,8 +142,6 @@
     "diagnostics": "诊断",
     "logLevelTitle": "日志级别",
     "logLevelDesc": "节点日志的详细程度",
-    "analyticsTitle": "发送匿名分析",
-    "analyticsDesc": "通过崩溃报告和使用数据帮助改进 CointMU",
     "title": "高级",
     "openDataTitle": "打开数据文件夹",
     "openDataDesc": "在文件浏览器中显示数据目录",
@@ -286,5 +284,43 @@
     "access": "访问",
     "backup": "备份",
     "hardware": "硬件"
+  },
+  "privacy": {
+    "title": "隐私与诊断",
+    "subtitle": "错误报告与本地日志",
+    "reporting": "错误报告",
+    "notConfigured": "此版本未配置错误报告。不会发送任何内容；日志仍保存在本机。",
+    "toggleTitle": "发送错误报告",
+    "toggleDesc": "将脱敏后的错误报告发送到 {{host}} 上的 CointMU 服务器，该服务器仅可在校园网内访问。关闭后将删除尚未发送的报告。",
+    "sentTitle": "发送的内容",
+    "sent": {
+      "error": "错误类型和消息",
+      "stack": "堆栈跟踪（已从文件路径中移除用户名）",
+      "versions": "应用、Electron 和操作系统版本",
+      "node": "节点故障类别和恢复阶段"
+    },
+    "neverSentTitle": "绝不发送",
+    "neverSent": {
+      "secrets": "密码、助记词、私钥、已签名交易",
+      "addresses": "钱包地址",
+      "identity": "IP 地址、用户名、计算机名"
+    },
+    "queue": {
+      "title": "等待发送（{{count}}）",
+      "refresh": "刷新",
+      "deleteAll": "全部删除",
+      "empty": "没有等待发送的报告。",
+      "loadFailed": "无法读取报告队列。"
+    },
+    "logs": "日志",
+    "logsDesc": "日志经脱敏后保存在本机，绝不会自动发送。报告问题时请附上日志。",
+    "notice": {
+      "title": "错误报告帮助我们改进 CointMU",
+      "what": "出现问题时，CointMU 会保存一份包含错误、堆栈跟踪以及应用和系统版本的报告。密码、助记词、私钥、钱包地址、IP 地址和你的用户名会事先移除。",
+      "where": "报告会发送到 {{host}} 上的 CointMU 服务器，该服务器仅可在校园网内访问。在校外时，报告会保存在本机，稍后再发送。",
+      "howToDisable": "你可以随时在 设置 → 隐私与诊断 中关闭此功能。",
+      "turnOff": "关闭",
+      "acknowledge": "知道了"
+    }
   }
 }

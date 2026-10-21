@@ -45,3 +45,33 @@ export interface JsonRpcErrorObject {
  */
 export type JsonRpcEnvelope =
   { readonly result: unknown } | { readonly error: JsonRpcErrorObject };
+
+/** Version metadata the preload exposes as `window.systemInfo`. */
+export interface AppInfo {
+  readonly version: string;
+  readonly codename: string;
+  readonly build: string;
+  /** Epoch ms when the main process started; the base for the app uptime. */
+  readonly startedAtMs: number;
+}
+
+/**
+ * Error reporting status for the settings card and the first-run notice.
+ * `isAvailable` is false when the build has no collector configured.
+ */
+export interface TelemetryState {
+  readonly isAvailable: boolean;
+  readonly collectorHost: string | null;
+  readonly isEnabled: boolean;
+  readonly isNoticeAcknowledged: boolean;
+}
+
+/** One sanitized report waiting in the local queue. */
+export interface QueuedReport {
+  readonly id: string;
+  readonly createdMs: number;
+  readonly level: string;
+  readonly title: string;
+  /** The exact event JSON that will be sent. */
+  readonly payload: string;
+}

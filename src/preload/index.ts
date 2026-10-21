@@ -1,13 +1,22 @@
+import "@sentry/electron/preload";
+import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { electronAPI } from "@electron-toolkit/preload";
-import { readFileSync } from "fs";
-import { join } from "path";
-import { NODE_CHANNELS, RPC_CHANNELS } from "../bridge/ipc-channels";
-import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
+import {
+  DIAGNOSTICS_CHANNELS,
+  NODE_CHANNELS,
+  RPC_CHANNELS,
+  SYSTEM_CHANNELS,
+} from "../bridge/ipc-channels";
+import type {
+  AppInfo,
+  JsonRpcEnvelope,
+  NodeRecoveryEvent,
+  QueuedReport,
+  TelemetryState,
+} from "../bridge/types";
 
-const pkg = JSON.parse(
-  readFileSync(join(__dirname, "../../package.json"), "utf-8"),
-);
+const appInfo: AppInfo = ipcRenderer.sendSync(SYSTEM_CHANNELS.GET_APP_INFO);
+const MS_PER_SECOND = 1000;
 
 let platformStr = "";
 if (process.platform === "darwin") {
@@ -18,25 +27,15 @@ if (process.platform === "darwin") {
   platformStr = `Linux ${process.arch}`;
 }
 
-let buildId = "00000000";
-try {
-  const buildData = JSON.parse(
-    readFileSync(join(__dirname, "../../build-info.json"), "utf-8"),
-  );
-  if (typeof buildData.build === "string") {
-    buildId = buildData.build;
-  }
-} catch (e) {
-  buildId = "00000000";
-}
-
 const systemInfo = {
-  version: pkg.version,
-  codename: pkg.codename,
-  build: buildId,
+  version: appInfo.version,
+  codename: appInfo.codename,
+  build: appInfo.build,
   platform: platformStr,
   nodeVersion: process.versions.node,
-  getUptime: () => process.uptime(),
+  // App uptime from the main process start. process.uptime() has a bogus base
+  // in a sandboxed preload.
+  getUptime: () => (Date.now() - appInfo.startedAtMs) / MS_PER_SECOND,
 };
 
 /**
@@ -202,6 +201,22 @@ const api = {
       ipcRenderer.invoke(NODE_CHANNELS.GET_RECOVERY_STATE),
     retry: (): Promise<void> => ipcRenderer.invoke(NODE_CHANNELS.RETRY),
   },
+  diagnostics: {
+    openLogsFolder: (): Promise<void> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.OPEN_LOGS_FOLDER),
+    copyRecentLogs: (): Promise<number> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.COPY_RECENT_LOGS),
+    getTelemetryState: (): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.GET_TELEMETRY_STATE),
+    setTelemetryEnabled: (isEnabled: boolean): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.SET_TELEMETRY_ENABLED, isEnabled),
+    acknowledgeNotice: (): Promise<TelemetryState> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.ACKNOWLEDGE_NOTICE),
+    listQueuedReports: (): Promise<QueuedReport[]> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.LIST_QUEUED_REPORTS),
+    clearQueuedReports: (): Promise<void> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.CLEAR_QUEUED_REPORTS),
+  },
   extension: {
     unlink: () => {
       ipcRenderer.send("extension:unlink");
@@ -221,15 +236,12 @@ const api = {
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("systemInfo", systemInfo);
   } catch {
     console.error("Failed to expose context bridge APIs");
   }
 } else {
-  // @ts-ignore
-  window.electron = electronAPI;
   // @ts-ignore
   window.api = api;
   // @ts-ignore

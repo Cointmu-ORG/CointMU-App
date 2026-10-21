@@ -64,15 +64,14 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GETH_DATA_DIR: ${{ secrets.GETH_DATA_DIR }}
-          GETH_NETWORK_ID: ${{ secrets.GETH_NETWORK_ID }}
-          GETH_BOOTNODE_ENODE: ${{ secrets.GETH_BOOTNODE_ENODE }}
-          GETH_GENESIS_PATH: ${{ secrets.GETH_GENESIS_PATH }}
-          GETH_HTTP_HOST: ${{ secrets.GETH_HTTP_HOST }}
-          GETH_HTTP_PORT: ${{ secrets.GETH_HTTP_PORT }}
-          GETH_HTTP_API: ${{ secrets.GETH_HTTP_API }}
-          GETH_P2P_PORT: ${{ secrets.GETH_P2P_PORT }}
-          GETH_LOG_VERBOSITY: ${{ secrets.GETH_LOG_VERBOSITY }}
+          # Only MAIN_VITE_* reaches the app (baked in by electron-vite).
+          # The enode is public, so a repository variable; empty uses the
+          # built-in bootnode.
+          MAIN_VITE_BOOTNODE_ENODE: ${{ vars.BOOTNODE_ENODE }}
+          # Not secret (the DSN key is public, the pin is a public-key hash),
+          # so repository variables; empty disables error reporting.
+          MAIN_VITE_TELEMETRY_DSN: ${{ vars.TELEMETRY_DSN }}
+          MAIN_VITE_TELEMETRY_PINS: ${{ vars.TELEMETRY_PINS }}
 
   # electron-builder creates a published release with an empty body and
   # never edits the body afterwards, so filling it after every OS build

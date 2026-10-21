@@ -1,5 +1,9 @@
-import { ElectronAPI } from "@electron-toolkit/preload";
-import type { JsonRpcEnvelope, NodeRecoveryEvent } from "../bridge/types";
+import type {
+  JsonRpcEnvelope,
+  NodeRecoveryEvent,
+  QueuedReport,
+  TelemetryState,
+} from "../bridge/types";
 
 interface UpdaterProgress {
   percent: number;
@@ -149,6 +153,16 @@ interface CointmuAPI {
     getRecoveryState: () => Promise<NodeRecoveryEvent | null>;
     retry: () => Promise<void>;
   };
+  diagnostics: {
+    openLogsFolder: () => Promise<void>;
+    /** Copies sanitized recent logs to the clipboard; resolves to the length copied. */
+    copyRecentLogs: () => Promise<number>;
+    getTelemetryState: () => Promise<TelemetryState>;
+    setTelemetryEnabled: (isEnabled: boolean) => Promise<TelemetryState>;
+    acknowledgeNotice: () => Promise<TelemetryState>;
+    listQueuedReports: () => Promise<QueuedReport[]>;
+    clearQueuedReports: () => Promise<void>;
+  };
   extension: {
     unlink: () => void;
     onLinked: (callback: () => void) => () => void;
@@ -158,7 +172,6 @@ interface CointmuAPI {
 
 declare global {
   interface Window {
-    electron: ElectronAPI;
     api: CointmuAPI;
     systemInfo?: {
       version: string;

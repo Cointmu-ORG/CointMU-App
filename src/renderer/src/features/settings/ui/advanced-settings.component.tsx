@@ -210,27 +210,6 @@ export function AdvancedSettings(): JSX.Element {
                 />
               </div>
             </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:advanced.analyticsTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:advanced.analyticsDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() =>
-                  updateSettings({ analytics: !settings.analytics })
-                }
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${settings.analytics ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${settings.analytics ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
           </div>
         </section>
 

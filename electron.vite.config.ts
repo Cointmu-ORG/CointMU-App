@@ -10,7 +10,13 @@ const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 // (build.externalizeDeps), so they need no plugin of their own.
 export default defineConfig({
   main: {},
-  preload: {},
+  preload: {
+    // Bundled rather than required at runtime, so the preload keeps working
+    // once the renderer is sandboxed (a sandboxed preload cannot require them).
+    build: {
+      externalizeDeps: { exclude: ["@sentry/electron", "electron-log"] },
+    },
+  },
   renderer: {
     build: {
       rolldownOptions: {

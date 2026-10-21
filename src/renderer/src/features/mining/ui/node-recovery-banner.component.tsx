@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { NodeRecoveryStage, type NodeRecoveryEvent } from "@bridge/types";
+import { LogActions } from "@/shared/ui";
 import { useNodeRecovery } from "../lib/node-recovery.hook";
 
 const ATTENTION_STAGES: ReadonlySet<string> = new Set([
@@ -14,6 +15,8 @@ const TONE_PROGRESS =
   "bg-amber-50 text-amber-900 border-amber-200 dark:bg-amber-950/60 dark:text-amber-100 dark:border-amber-900";
 const TONE_SUCCESS =
   "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-200 dark:border-emerald-900";
+const ACTION_BUTTON =
+  "px-3 py-1 rounded-md border border-current font-medium hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current";
 
 /**
  * Picks the banner colour set for a recovery stage.
@@ -71,16 +74,19 @@ export function NodeRecoveryBanner(): JSX.Element | null {
         {hintKey && <p className="opacity-90">{t(hintKey)}</p>}
       </div>
       {needsAttention && (
-        <button
-          type="button"
-          onClick={() => void retry()}
-          disabled={isRetrying}
-          className="px-3 py-1 rounded-md border border-current font-medium hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
-        >
-          {isRetrying
-            ? t("mining:recovery.retrying")
-            : t("mining:recovery.retry")}
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <LogActions buttonClassName={ACTION_BUTTON} />
+          <button
+            type="button"
+            onClick={() => void retry()}
+            disabled={isRetrying}
+            className={ACTION_BUTTON}
+          >
+            {isRetrying
+              ? t("mining:recovery.retrying")
+              : t("mining:recovery.retry")}
+          </button>
+        </div>
       )}
     </div>
   );
