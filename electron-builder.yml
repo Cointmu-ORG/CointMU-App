@@ -7,6 +7,8 @@ files:
   - "!**/.vscode/*"
   - "!src/*"
   - "!resources/bin/**"
+  # Shipped once via top-level extraResources.
+  - "!resources/extension.zip"
   - "!electron.vite.config.*"
   - "!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
