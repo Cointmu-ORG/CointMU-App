@@ -86,6 +86,9 @@
     "hint": {
       "PORT_IN_USE": "Another program is using the node's network port. Close it or change the Listen port in Settings → Network, then retry.",
       "DB_LOCKED": "The node database is in use by another process, such as another CointMU or geth instance. Close it, then retry.",
+      "GETH_NOT_FOUND": "The node program is missing from this installation. Reinstall CointMU, then retry.",
+      "GETH_NOT_EXECUTABLE": "The node program is not allowed to run (missing execute permission). Reinstall CointMU, then retry.",
+      "GETH_WRONG_ARCH": "The node program is built for a different processor. On an Apple Silicon Mac, install Rosetta 2 by running softwareupdate --install-rosetta in Terminal, then retry.",
       "failed": "Your wallet keystore was not touched. Retry, or restart the app; if it keeps failing, report an issue with the logs."
     },
     "retry": "Retry",

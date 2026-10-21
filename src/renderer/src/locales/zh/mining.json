@@ -86,6 +86,9 @@
     "hint": {
       "PORT_IN_USE": "节点的网络端口正被其他程序占用。请关闭该程序，或在 设置 → 网络 中更改监听端口，然后重试。",
       "DB_LOCKED": "节点数据库正被其他进程使用（例如另一个 CointMU 或 geth 实例）。请关闭该进程后重试。",
+      "GETH_NOT_FOUND": "此安装中缺少节点程序。请重新安装 CointMU，然后重试。",
+      "GETH_NOT_EXECUTABLE": "节点程序不允许运行（缺少执行权限）。请重新安装 CointMU，然后重试。",
+      "GETH_WRONG_ARCH": "节点程序是为其他处理器构建的。在 Apple 芯片的 Mac 上，请在终端中运行 softwareupdate --install-rosetta 安装 Rosetta 2，然后重试。",
       "failed": "您的钱包密钥库未被改动。请重试或重启应用；如果仍然失败，请附上日志报告问题。"
     },
     "retry": "重试",

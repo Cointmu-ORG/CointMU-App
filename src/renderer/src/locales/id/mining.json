@@ -86,6 +86,9 @@
     "hint": {
       "PORT_IN_USE": "Port jaringan node sedang dipakai program lain. Tutup program tersebut atau ubah Port dengar di Pengaturan → Jaringan, lalu coba lagi.",
       "DB_LOCKED": "Database node sedang dipakai proses lain, misalnya instance CointMU atau geth lain. Tutup proses tersebut, lalu coba lagi.",
+      "GETH_NOT_FOUND": "Program node tidak ditemukan di instalasi ini. Instal ulang CointMU, lalu coba lagi.",
+      "GETH_NOT_EXECUTABLE": "Program node tidak diizinkan berjalan (izin eksekusi tidak ada). Instal ulang CointMU, lalu coba lagi.",
+      "GETH_WRONG_ARCH": "Program node dibuat untuk prosesor lain. Di Mac Apple Silicon, pasang Rosetta 2 dengan menjalankan softwareupdate --install-rosetta di Terminal, lalu coba lagi.",
       "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."
     },
     "retry": "Coba lagi",
