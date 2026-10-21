@@ -52,6 +52,38 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      # A PowerPC Mach-O gets the same EBADARCH ("Bad CPU type") an x86_64
+      # geth gets on Apple Silicon without Rosetta; the ELF geth gets ENOEXEC.
+      - name: Probe spawn errors (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cat > spawn-probe.ts <<'EOF'
+          import { spawn } from "node:child_process";
+          import { chmodSync, writeFileSync } from "node:fs";
+          import { classifySpawnError } from "./src/main/geth/gethSpawnError";
+
+          const ppc = Buffer.alloc(4096);
+          ppc.writeUInt32LE(0xfeedface, 0); // MH_MAGIC
+          ppc.writeInt32LE(18, 4); // CPU_TYPE_POWERPC
+          ppc.writeUInt32LE(2, 12); // MH_EXECUTE
+          writeFileSync("ppc-macho", ppc);
+          chmodSync("ppc-macho", 0o755);
+
+          for (const file of ["./ppc-macho", "resources/bin/linux/geth", "resources/bin/mac/geth"]) {
+            const report = (how: string, err: NodeJS.ErrnoException) =>
+              console.log(file, how, err.code, err.errno, classifySpawnError(err, process.platform));
+            try {
+              const child = spawn(file, ["version"], { stdio: "ignore" });
+              child.on("spawn", () => console.log(file, "spawned"));
+              child.on("error", (err) => report("async", err));
+            } catch (err) {
+              report("sync", err as NodeJS.ErrnoException);
+            }
+          }
+          EOF
+          uname -m
+          npx --no -- tsx spawn-probe.ts
+
       # Same command as release.yml, minus publishing.
       - name: Build Artifacts
         run: npm run build && npx electron-builder --publish never
