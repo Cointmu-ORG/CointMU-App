@@ -12,6 +12,11 @@ files:
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
 asarUnpack:
   - resources/**
+# The export-extension-zip handler reads process.resourcesPath/extension.zip
+# on every OS.
+extraResources:
+  - from: resources/extension.zip
+    to: extension.zip
 win:
   artifactName: windows-cointmu-desktop-${version}-installer.${ext}
   executableName: CointMU
@@ -43,8 +48,6 @@ mac:
       to: bin/mac/
       filter:
         - "geth"
-    - from: resources/extension.zip
-      to: extension.zip
   notarize: false
 linux:
   artifactName: linux-cointmu-desktop-${version}-installer.${ext}
