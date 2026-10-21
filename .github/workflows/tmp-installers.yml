@@ -1,0 +1,112 @@
+# TEMP(fix/macos-resources-offline-launch): builds the release installers on
+# all three OS without publishing and inspects the packaged geth and
+# extension.zip, to verify the final PR #60 code before merge. Revert this
+# commit before merging.
+name: TEMP installers
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Use pinned npm
+        id: npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache npm
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install System Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libarchive-tools build-essential fakeroot rpm libfuse2
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # Same command as release.yml, minus publishing.
+      - name: Build Artifacts
+        run: npm run build && npx electron-builder --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          MAIN_VITE_BOOTNODE_ENODE: ${{ vars.BOOTNODE_ENODE }}
+
+      # Fails when extension.zip is anywhere inside the given app.asar.
+      - name: Write asar check
+        shell: bash
+        run: |
+          # In the workspace so require() finds the repo node_modules.
+          cat > asar-no-zip.cjs <<'EOF'
+          const asar = require("@electron/asar");
+          const hits = asar.listPackage(process.argv[2]).filter((p) => p.endsWith("extension.zip"));
+          if (hits.length) { console.error("extension.zip in app.asar:", hits); process.exit(1); }
+          console.log("app.asar: no extension.zip");
+          EOF
+
+      - name: Inspect DMG and zip (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          set -eux
+          hdiutil attach dist/*.dmg -mountpoint /tmp/dmg -nobrowse -readonly
+          res=/tmp/dmg/CointMU.app/Contents/Resources
+          ls -l "$res/bin/mac/geth" "$res/extension.zip"
+          file "$res/bin/mac/geth"
+          test -x "$res/bin/mac/geth"
+          node asar-no-zip.cjs "$res/app.asar"
+          test -z "$(find "$res/app.asar.unpacked" -name extension.zip)"
+          hdiutil detach /tmp/dmg
+          unzip -Z dist/*.zip | grep -E 'Contents/Resources/(bin/mac/geth|extension\.zip)$'
+          test "$(unzip -Z1 dist/*.zip | grep -c 'extension\.zip$')" = 1
+
+      - name: Inspect NSIS installer (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          set -eux
+          7z x -y -o/tmp/nsis dist/*.exe '$PLUGINSDIR/app-64.7z'
+          pkg='/tmp/nsis/$PLUGINSDIR/app-64.7z'
+          7z l "$pkg" > /tmp/nsis/list.txt
+          grep -E 'resources\\(extension\.zip|bin\\win\\geth\.exe)$' /tmp/nsis/list.txt
+          test "$(grep -cE 'extension\.zip$' /tmp/nsis/list.txt)" = 1
+          7z e -y -o/tmp/nsis "$pkg" app.asar -r
+          node asar-no-zip.cjs /tmp/nsis/app.asar
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: installers-${{ runner.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+            dist/*.AppImage
+            dist/*.deb
+          if-no-files-found: error
+          retention-days: 7
