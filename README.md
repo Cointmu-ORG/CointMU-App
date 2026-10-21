@@ -21,11 +21,8 @@ It runs on Windows, Linux, and macOS.
    git clone https://github.com/kakonoomoidee/CointMU.git
    cd CointMU
    ```
-2. Place the platform-appropriate Geth binary at the path listed above. On macOS, make it executable:
-   ```bash
-   chmod +x resources/bin/mac/geth
-   ```
-   On Linux, use `chmod +x resources/bin/linux/geth` instead.
+2. The Geth binaries are tracked at the paths listed above, with the executable bit set in
+   git for Linux and macOS. If you replace one, keep it executable (`chmod +x`).
 3. Configure your environment variables in `.env` based on `.env.example`:
    ```bash
    cp .env.example .env
@@ -72,42 +69,40 @@ Produces Linux packages (such as AppImage or deb) in the `dist/` directory.
 ### macOS
 
 ```bash
-corepack npm run build:mac -- --publish never
+npm run build:mac
 ```
 
 Produces a macOS application and DMG in the `dist/` directory.
 
-The macOS build script makes the bundled Geth executable and runs its nested
-build through Corepack, so it also works when Node 24's global npm is still npm 11.
 The project postinstall explicitly runs Electron's `install-electron` command
 before rebuilding native dependencies. Electron 44 provides this command without
 a package postinstall hook, so dependency installation must invoke it explicitly
 to download the runtime.
 
-For Apple Silicon, provide a compatible ARM64 Geth binary and build with:
-
-```bash
-corepack npm run build:mac -- --arm64 --publish never
-```
-
 Check the Geth architecture with `file resources/bin/mac/geth` and its version
 with `resources/bin/mac/geth version`. The binary tracked in this repository is
-currently x86_64; the `--arm64` packaging option does not convert it. For the
-existing Geth 1.10.26 PoW setup, build the same version from the official
+currently x86_64 (Geth 1.10.26). On Apple Silicon it runs through Rosetta 2
+(`softwareupdate --install-rosetta`); the `--arm64` packaging option does not
+convert it. For a native build, compile the same version from the official
 [go-ethereum v1.10.26 source](https://github.com/ethereum/go-ethereum/releases/tag/v1.10.26)
-for `darwin/arm64` rather than substituting a newer consensus implementation.
+for `darwin/arm64` rather than substituting a newer consensus implementation,
+then build with:
+
+```bash
+npm run build:mac -- --arm64
+```
 
 If dependencies were previously installed without downloading the Electron runtime
 and launching reports `Electron uninstall`, repair the existing installation:
 
 ```bash
-corepack npm run postinstall
+npm run postinstall
 ```
 
 To create a locally signed personal build without a Developer ID certificate:
 
 ```bash
-CSC_IDENTITY_AUTO_DISCOVERY=false corepack npm run build:mac -- --arm64 --publish never -c.mac.identity=- -c.mac.hardenedRuntime=false
+CSC_IDENTITY_AUTO_DISCOVERY=false npm run build:mac -- --arm64 -c.mac.identity=- -c.mac.hardenedRuntime=false
 ```
 
 This uses ad-hoc signing for the application bundle without changing global macOS
