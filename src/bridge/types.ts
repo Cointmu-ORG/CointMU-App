@@ -15,6 +15,10 @@ export type NodeRecoveryStage =
 export const NodeBlockReason = {
   PORT_IN_USE: "PORT_IN_USE",
   DB_LOCKED: "DB_LOCKED",
+  GETH_NOT_FOUND: "GETH_NOT_FOUND",
+  GETH_NOT_EXECUTABLE: "GETH_NOT_EXECUTABLE",
+  GETH_WRONG_ARCH: "GETH_WRONG_ARCH",
+  GENESIS_INIT_FAILED: "GENESIS_INIT_FAILED",
 } as const;
 
 export type NodeBlockReason =

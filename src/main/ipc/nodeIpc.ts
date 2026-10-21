@@ -2,12 +2,12 @@ import { ipcMain } from "electron";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
 import { getRpcPort } from "../geth/ports";
 import { getNetworkId } from "../geth/networkConfig";
+import { initAndSpawnGeth } from "../geth/gethStart";
 import {
   NODE_RESTART_DELAY_MS,
   getNodeRecovery,
   isGethRunning,
   killGethProcess,
-  spawnGethProcess,
 } from "../geth/gethProcess";
 import { isSessionValid } from "../services/session";
 import type { AppStore } from "../services/appStore";
@@ -44,7 +44,7 @@ export function registerNodeControlHandlers(store: AppStore): void {
     console.log("[network] Restarting node with new configurations...");
     killGethProcess().then(() => {
       setTimeout(() => {
-        void spawnGethProcess(store);
+        void initAndSpawnGeth(store);
       }, NODE_RESTART_DELAY_MS);
     });
   };

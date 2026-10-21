@@ -96,6 +96,15 @@ export class GethRecovery {
   }
 
   /**
+   * Blocks restarts after a start failure only the user can fix, such as a
+   * missing, non-executable or wrong-architecture binary, or a failed genesis init.
+   * @param reason - Why geth could not be started.
+   */
+  handleStartFailure(reason: NodeBlockReason): void {
+    this.block(reason);
+  }
+
+  /**
    * Settles what the last run logged once geth exits unexpectedly: counts an
    * unknown fatal toward the restart cap and confirms pending ERROR corruption.
    */

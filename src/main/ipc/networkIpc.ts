@@ -1,15 +1,7 @@
 import { ipcMain } from "electron";
-import {
-  buildGenesis,
-  resolveDataDir,
-  setNetworkId,
-} from "../geth/networkConfig";
-import {
-  NODE_RESTART_DELAY_MS,
-  killGethProcess,
-  spawnGethProcess,
-} from "../geth/gethProcess";
-import { initGethIfNeeded } from "../geth/gethInit";
+import { buildGenesis, setNetworkId } from "../geth/networkConfig";
+import { NODE_RESTART_DELAY_MS, killGethProcess } from "../geth/gethProcess";
+import { initAndSpawnGeth } from "../geth/gethStart";
 import type { AppStore } from "../services/appStore";
 
 /**
@@ -30,18 +22,8 @@ export function registerNetworkHandlers(store: AppStore): void {
 
       await killGethProcess();
 
-      const dataDir = resolveDataDir();
-
-      setTimeout(async () => {
-        try {
-          await initGethIfNeeded(dataDir);
-        } catch (err) {
-          console.error(
-            "[network:setChainId] Genesis re-initialization failed",
-            err,
-          );
-        }
-        void spawnGethProcess(store);
+      setTimeout(() => {
+        void initAndSpawnGeth(store);
       }, NODE_RESTART_DELAY_MS);
 
       return true;

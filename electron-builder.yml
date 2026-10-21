@@ -6,11 +6,19 @@ directories:
 files:
   - "!**/.vscode/*"
   - "!src/*"
+  - "!resources/bin/**"
+  # Shipped once via top-level extraResources.
+  - "!resources/extension.zip"
   - "!electron.vite.config.*"
   - "!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
 asarUnpack:
   - resources/**
+# The export-extension-zip handler reads process.resourcesPath/extension.zip
+# on every OS.
+extraResources:
+  - from: resources/extension.zip
+    to: extension.zip
 win:
   artifactName: windows-cointmu-desktop-${version}-installer.${ext}
   executableName: CointMU
@@ -35,8 +43,13 @@ mac:
   entitlements: resources/mac/entitlements.mac.plist
   entitlementsInherit: resources/mac/entitlements.mac.inherit.plist
   extendInfo:
-    - NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
-    - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+    NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
+    NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+  extraResources:
+    - from: resources/bin/mac/
+      to: bin/mac/
+      filter:
+        - "geth"
   notarize: false
 linux:
   artifactName: linux-cointmu-desktop-${version}-installer.${ext}

@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 import { existsSync } from "fs";
 import { spawn, ChildProcess } from "child_process";
 import ms from "ms";
@@ -14,6 +14,7 @@ import {
 } from "./bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethBinaryPath } from "./gethInit";
+import { SPAWN_FAILURE_DETAIL, classifySpawnError } from "./gethSpawnError";
 import { parseGethLogChunk } from "../utils/gethLogParser";
 import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
@@ -67,6 +68,22 @@ function scheduleGethRestart(store: AppStore): void {
 }
 
 /**
+ * Logs a spawn failure the user must fix and blocks restarts on it.
+ * @param {unknown} err - The error from spawn() or the child's 'error' event.
+ * @param {string} binaryPath - The geth binary that failed to start.
+ * @returns {boolean} True when the failure was classified and restarts blocked.
+ */
+function blockOnSpawnFailure(err: unknown, binaryPath: string): boolean {
+  const reason = classifySpawnError(err, process.platform);
+  if (!reason) return false;
+  console.error(
+    `[geth:spawn] Cannot start ${binaryPath}: ${SPAWN_FAILURE_DETAIL[reason]}`,
+  );
+  nodeRecovery?.handleStartFailure(reason);
+  return true;
+}
+
+/**
  * Spawns the Core-geth binary as a managed child process with environment-driven
  * configuration for networking, RPC, and data storage. The configured bootnode
  * is pre-resolved so a DNS outage cannot fatally abort startup: when it cannot be
@@ -79,9 +96,9 @@ function scheduleGethRestart(store: AppStore): void {
 export async function spawnGethProcess(store: AppStore): Promise<void> {
   const binaryPath = resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
-    console.warn(
-      `[geth:spawn] Warning: Geth binary not found at ${binaryPath}. Skipping node spawn.`,
-    );
+    const err: NodeJS.ErrnoException = new Error("geth binary not found");
+    err.code = "ENOENT";
+    blockOnSpawnFailure(err, binaryPath);
     return;
   }
 
@@ -139,6 +156,11 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       detached: false,
     });
     lastSpawnedGeth = gethProcess;
+    gethProcess.once("spawn", () => {
+      console.log(
+        `[geth:spawn] Started ${binaryPath} (arch=${process.arch}, mode=${app.isPackaged ? "packaged" : "dev"})`,
+      );
+    });
 
     /**
      * Broadcasts a parsed mining log object to every renderer window.
@@ -212,6 +234,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
         intentionalGethShutdown = false;
         return;
       }
+      blockOnSpawnFailure(err, binaryPath);
       scheduleGethRestart(store);
     });
 
@@ -226,9 +249,12 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       scheduleGethRestart(store);
     });
   } catch (err) {
-    console.error(
-      `[geth:spawn] Unable to spawn geth binary at path: ${binaryPath}`,
-    );
+    if (!blockOnSpawnFailure(err, binaryPath)) {
+      console.error(
+        `[geth:spawn] Unable to spawn geth binary at path: ${binaryPath}`,
+        err,
+      );
+    }
     gethProcess = null;
   }
 }

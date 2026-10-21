@@ -86,6 +86,10 @@
     "hint": {
       "PORT_IN_USE": "Ein anderes Programm verwendet den Netzwerk-Port des Knotens. Schließen Sie es oder ändern Sie den Listen-Port unter Einstellungen → Netzwerk und versuchen Sie es erneut.",
       "DB_LOCKED": "Die Knotendatenbank wird von einem anderen Prozess verwendet, z. B. einer weiteren CointMU- oder geth-Instanz. Schließen Sie diesen und versuchen Sie es erneut.",
+      "GETH_NOT_FOUND": "Das Knotenprogramm fehlt in dieser Installation. Installieren Sie CointMU neu und versuchen Sie es dann erneut.",
+      "GETH_NOT_EXECUTABLE": "Das Knotenprogramm darf nicht ausgeführt werden (Ausführungsrecht fehlt). Installieren Sie CointMU neu und versuchen Sie es dann erneut.",
+      "GETH_WRONG_ARCH": "Das Knotenprogramm wurde für einen anderen Prozessor erstellt. Installieren Sie auf einem Mac mit Apple Silicon Rosetta 2 mit softwareupdate --install-rosetta im Terminal und versuchen Sie es dann erneut.",
+      "GENESIS_INIT_FAILED": "Der Knoten konnte seine Chain-Daten nicht vorbereiten und wurde daher nicht gestartet. Prüfen Sie, ob genügend Speicherplatz frei ist und der CointMU-Datenordner beschreibbar ist, und versuchen Sie es erneut; wenn es weiterhin fehlschlägt, melden Sie ein Problem mit den Protokollen.",
       "failed": "Ihr Wallet-Keystore wurde nicht verändert. Versuchen Sie es erneut oder starten Sie die App neu; tritt der Fehler weiter auf, melden Sie ein Problem mit den Logs."
     },
     "retry": "Erneut versuchen",

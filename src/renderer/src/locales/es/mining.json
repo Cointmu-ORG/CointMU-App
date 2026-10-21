@@ -86,6 +86,10 @@
     "hint": {
       "PORT_IN_USE": "Otro programa está usando el puerto de red del nodo. Ciérralo o cambia el Puerto de escucha en Ajustes → Red y vuelve a intentarlo.",
       "DB_LOCKED": "Otro proceso está usando la base de datos del nodo, por ejemplo otra instancia de CointMU o geth. Ciérralo y vuelve a intentarlo.",
+      "GETH_NOT_FOUND": "Falta el programa del nodo en esta instalación. Reinstala CointMU y vuelve a intentarlo.",
+      "GETH_NOT_EXECUTABLE": "El programa del nodo no tiene permiso para ejecutarse (falta el permiso de ejecución). Reinstala CointMU y vuelve a intentarlo.",
+      "GETH_WRONG_ARCH": "El programa del nodo está compilado para otro procesador. En un Mac con Apple Silicon, instala Rosetta 2 ejecutando softwareupdate --install-rosetta en Terminal y vuelve a intentarlo.",
+      "GENESIS_INIT_FAILED": "El nodo no pudo preparar sus datos de la cadena, así que no se inició. Comprueba que haya espacio libre en el disco y que se pueda escribir en la carpeta de datos de CointMU, y vuelve a intentarlo; si sigue fallando, informa del problema con los registros.",
       "failed": "El almacén de claves de tu billetera no se modificó. Vuelve a intentarlo o reinicia la aplicación; si sigue fallando, reporta un problema con los registros."
     },
     "retry": "Reintentar",
