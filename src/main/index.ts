@@ -10,7 +10,7 @@ import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
 import { getRpcPort, resolveGethPorts } from "./geth/ports";
-import { loadNetworkId, resolveDataDir } from "./geth/networkConfig";
+import { loadNetworkId } from "./geth/networkConfig";
 import { startSession } from "./services/session";
 import { createWindow } from "./window";
 import { createAppStore } from "./services/appStore";
@@ -18,12 +18,8 @@ import {
   prepareGethIpcEndpoint,
   removeTemporaryIpcDir,
 } from "./geth/ipcEndpointLifecycle";
-import {
-  attachNodeRecovery,
-  killGethProcess,
-  spawnGethProcess,
-} from "./geth/gethProcess";
-import { initGethIfNeeded } from "./geth/gethInit";
+import { attachNodeRecovery, killGethProcess } from "./geth/gethProcess";
+import { initAndSpawnGeth } from "./geth/gethStart";
 import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
@@ -83,14 +79,8 @@ app.whenReady().then(async () => {
 
   attachNodeRecovery(createNodeRecovery(store));
 
-  try {
-    await initGethIfNeeded(resolveDataDir());
-  } catch (err) {
-    console.error("[geth:init] Fatal error during genesis init:", err);
-  }
-
   await prepareGethIpcEndpoint(store);
-  await spawnGethProcess(store);
+  await initAndSpawnGeth(store);
 
   const miningController = new MiningController(getRpcPort(), store);
   const removeRendererRpcHandler = registerRendererRpcHandler(getRpcPort);

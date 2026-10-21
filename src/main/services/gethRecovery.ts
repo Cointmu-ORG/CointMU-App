@@ -96,11 +96,11 @@ export class GethRecovery {
   }
 
   /**
-   * Blocks restarts after a spawn failure only the user can fix, such as a
-   * missing, non-executable or wrong-architecture binary.
+   * Blocks restarts after a start failure only the user can fix, such as a
+   * missing, non-executable or wrong-architecture binary, or a failed genesis init.
    * @param reason - Why geth could not be started.
    */
-  handleSpawnFailure(reason: NodeBlockReason): void {
+  handleStartFailure(reason: NodeBlockReason): void {
     this.block(reason);
   }
 

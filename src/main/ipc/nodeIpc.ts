@@ -1,14 +1,13 @@
 import { ipcMain } from "electron";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
 import { getRpcPort } from "../geth/ports";
-import { getNetworkId, resolveDataDir } from "../geth/networkConfig";
-import { initGethIfNeeded } from "../geth/gethInit";
+import { getNetworkId } from "../geth/networkConfig";
+import { initAndSpawnGeth } from "../geth/gethStart";
 import {
   NODE_RESTART_DELAY_MS,
   getNodeRecovery,
   isGethRunning,
   killGethProcess,
-  spawnGethProcess,
 } from "../geth/gethProcess";
 import { isSessionValid } from "../services/session";
 import type { AppStore } from "../services/appStore";
@@ -26,22 +25,6 @@ export function registerNodeStatusHandlers(): void {
     sessionValid: isSessionValid(),
     networkId: getNetworkId(),
   }));
-}
-
-/**
- * Inits genesis when the datadir has none, then spawns geth. A retry after a
- * blocked first start (e.g. Rosetta installed afterwards) must not let geth
- * fill an empty datadir with its default mainnet genesis.
- * @param {AppStore} store - The electron-store instance containing user preferences.
- * @returns {Promise<void>}
- */
-async function initAndSpawnGeth(store: AppStore): Promise<void> {
-  try {
-    await initGethIfNeeded(resolveDataDir());
-  } catch (err) {
-    console.error("[geth:init] Genesis init failed before restart:", err);
-  }
-  await spawnGethProcess(store);
 }
 
 /**

@@ -89,6 +89,7 @@
       "GETH_NOT_FOUND": "Program node tidak ditemukan di instalasi ini. Instal ulang CointMU, lalu coba lagi.",
       "GETH_NOT_EXECUTABLE": "Program node tidak diizinkan berjalan (izin eksekusi tidak ada). Instal ulang CointMU, lalu coba lagi.",
       "GETH_WRONG_ARCH": "Program node dibuat untuk prosesor lain. Di Mac Apple Silicon, pasang Rosetta 2 dengan menjalankan softwareupdate --install-rosetta di Terminal, lalu coba lagi.",
+      "GENESIS_INIT_FAILED": "Node tidak dapat menyiapkan data chain, jadi tidak dijalankan. Pastikan ruang disk masih cukup dan folder data CointMU bisa ditulis, lalu coba lagi; jika terus gagal, laporkan masalah beserta log-nya.",
       "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."
     },
     "retry": "Coba lagi",

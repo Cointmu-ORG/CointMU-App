@@ -18,6 +18,7 @@ export const NodeBlockReason = {
   GETH_NOT_FOUND: "GETH_NOT_FOUND",
   GETH_NOT_EXECUTABLE: "GETH_NOT_EXECUTABLE",
   GETH_WRONG_ARCH: "GETH_WRONG_ARCH",
+  GENESIS_INIT_FAILED: "GENESIS_INIT_FAILED",
 } as const;
 
 export type NodeBlockReason =

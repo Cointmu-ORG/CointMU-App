@@ -79,7 +79,7 @@ function blockOnSpawnFailure(err: unknown, binaryPath: string): boolean {
   console.error(
     `[geth:spawn] Cannot start ${binaryPath}: ${SPAWN_FAILURE_DETAIL[reason]}`,
   );
-  nodeRecovery?.handleSpawnFailure(reason);
+  nodeRecovery?.handleStartFailure(reason);
   return true;
 }
 
