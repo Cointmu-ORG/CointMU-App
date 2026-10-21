@@ -4,7 +4,7 @@ import { spawn, ChildProcess } from "child_process";
 import ms from "ms";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
 import { getNetworkId, resolveDataDir } from "./networkConfig";
-import { findAvailablePort, getAuthRpcPort, getRpcPort } from "./ports";
+import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
 import {
   BOOTNODE_CONFIG,
   resolveBootnodeEnode,
@@ -88,8 +88,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
   const isRpcEnabled = store.get("advanced.httpRpc") ?? true;
   const configuredListenPort =
     store.get("network.listenPort") || DEFAULT_P2P_PORT;
-  // detect-port probes TCP only; a UDP-only clash still ends in PORT_IN_USE.
-  const listenPort = await findAvailablePort(configuredListenPort);
+  const listenPort = await findAvailableP2pPort(configuredListenPort);
   if (listenPort !== configuredListenPort) {
     console.warn(
       `[geth:spawn] P2P port ${configuredListenPort} is in use; listening on ${listenPort}`,
