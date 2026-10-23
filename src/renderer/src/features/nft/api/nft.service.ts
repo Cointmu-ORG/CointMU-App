@@ -1,5 +1,4 @@
-import { call } from "@/shared/api/rpc.client";
-import { createNodeProvider } from "@/shared/api";
+import { call, createNodeProvider } from "@/shared/api";
 
 const ERC721_TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
