@@ -10,8 +10,8 @@ export const MAX_CORES = navigator.hardwareConcurrency || 8;
 export const UPTIME_REFRESH_MS = ms("1m");
 
 export const NETWORK_OPTIONS = [
-  "CointMU Mainnet � chain ID 1912",
-  "CointMU Testnet � chain ID 7013",
+  "CointMU Mainnet · chain ID 1912",
+  "CointMU Testnet · chain ID 7013",
   "Localhost 8545",
 ];
 
@@ -36,7 +36,7 @@ export const LANGUAGE_OPTIONS = [
   { label: "日本語", value: "ja" },
 ];
 
-export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR ()"];
+export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR (€)"];
 
 export const COLORS = [
   { id: "#3b82f6", color: "bg-blue-500", name: "blue" },
