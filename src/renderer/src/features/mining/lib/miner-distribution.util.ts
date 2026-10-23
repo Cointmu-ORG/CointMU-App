@@ -1,4 +1,4 @@
-import { call } from "@/shared/api/rpc.client";
+import { call } from "@/shared/api";
 import {
   SECONDS_IN_DAY,
   TOP_MINERS_LIMIT,
