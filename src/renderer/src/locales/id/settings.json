@@ -323,7 +323,8 @@
     "toggleTitle": "Kirim laporan error",
     "toggleDesc": "Mengirim laporan error yang sudah disanitasi ke server CointMU di {{host}}, yang hanya dapat dijangkau dari jaringan kampus. Mematikannya akan menghapus laporan yang belum terkirim.",
     "sentTitle": "Yang dikirim",
-    "sendingOff": "Tidak ada yang dikirim selama laporan galat dinonaktifkan.",
+    "sendingOff": "Tidak ada yang dikirim selama laporan error dinonaktifkan.",
+    "sendingHeld": "Laporan error menunggu di komputer ini sampai Anda menutup pemberitahuan laporan error.",
     "sent": {
       "error": "Jenis dan pesan error",
       "stack": "Stack trace, dengan nama pengguna dihapus dari path file",

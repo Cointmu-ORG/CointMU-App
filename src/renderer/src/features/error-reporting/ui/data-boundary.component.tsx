@@ -5,25 +5,32 @@ import { ArrowUpRight, Lock } from "lucide-react";
 const SENT_KEYS = ["error", "stack", "versions", "node"] as const;
 const NEVER_SENT_KEYS = ["secrets", "addresses", "identity"] as const;
 const ICON_SIZE = 14;
+const PAUSED_KEYS = {
+  held: "settings:privacy.sendingHeld",
+  off: "settings:privacy.sendingOff",
+} as const;
+
+/** Mirrors canSend in main: "held" is on but the first-run notice is still open. */
+export type SendStatus = "sending" | keyof typeof PAUSED_KEYS;
 
 export interface DataBoundaryProps {
-  /** True when reports actually leave this computer (configured and on). */
-  readonly isSending: boolean;
+  readonly sendStatus: SendStatus;
   readonly collectorHost: string | null;
 }
 
 /**
  * What stays on this computer versus what crosses to the collector, split by
  * a dashed line standing for the network boundary. The outgoing side fades
- * and says so when nothing is being sent.
+ * and says why when nothing is being sent.
  * @param props - Whether reports are sent, and where to.
  * @returns The two-sided data panel.
  */
 export function DataBoundary({
-  isSending,
+  sendStatus,
   collectorHost,
 }: DataBoundaryProps): JSX.Element {
   const { t } = useTranslation("settings");
+  const isSending = sendStatus === "sending";
 
   return (
     <div className="grid sm:grid-cols-2 text-xs">
@@ -55,7 +62,9 @@ export function DataBoundary({
         <p
           className={`mt-0.5 text-slate-500 dark:text-gray-400 ${isSending ? "font-mono text-[11px] break-all" : ""}`}
         >
-          {isSending ? collectorHost : t("settings:privacy.sendingOff")}
+          {sendStatus === "sending"
+            ? collectorHost
+            : t(PAUSED_KEYS[sendStatus])}
         </p>
         <ul className="mt-3 space-y-2 text-slate-600 dark:text-gray-400">
           {SENT_KEYS.map((key) => (

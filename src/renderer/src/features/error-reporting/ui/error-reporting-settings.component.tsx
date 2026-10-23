@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LogActions } from "@/shared/ui";
 import { useTelemetryState } from "../lib/telemetry-state.hook";
 import { QueuedReports } from "./queued-reports.component";
-import { DataBoundary } from "./data-boundary.component";
+import { DataBoundary, type SendStatus } from "./data-boundary.component";
 
 const SECTION_TITLE =
   "text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3";
@@ -21,6 +21,12 @@ export function ErrorReportingSettings(): JSX.Element {
   const { t } = useTranslation("settings");
   const { state, isSaving, setEnabled } = useTelemetryState();
   const isEnabled = state?.isEnabled ?? false;
+  const sendStatus: SendStatus =
+    !state?.isAvailable || !isEnabled
+      ? "off"
+      : state.isNoticeAcknowledged
+        ? "sending"
+        : "held";
 
   return (
     <div>
@@ -66,7 +72,7 @@ export function ErrorReportingSettings(): JSX.Element {
               </div>
             )}
             <DataBoundary
-              isSending={Boolean(state?.isAvailable && isEnabled)}
+              sendStatus={sendStatus}
               collectorHost={state?.collectorHost ?? null}
             />
             {state?.isAvailable && <QueuedReports key={String(isEnabled)} />}
