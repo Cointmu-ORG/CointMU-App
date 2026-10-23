@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 17
-EXTRAVERSION = Siren
+SUBLEVEL = 18
+EXTRAVERSION = Medusa
 
 help:
 	@echo "============================================="
