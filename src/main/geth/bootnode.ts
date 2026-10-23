@@ -15,7 +15,7 @@ const IPV6_FAMILY = 6;
  * sets no MAIN_VITE_BOOTNODE_ENODE.
  */
 export const FALLBACK_BOOTNODE_ENODE =
-  "enode://4b74ebfd9f2cd50cf2cfe42b60e07ff302188233c7cdd51a401b1bf391d6fc8efe5f105bd4b11a09d1ae2d36082797e2d395df1211827cea4f46a8b40c71eb40@10.64.24.248:30303";
+  "enode://aafe317d76f528fde06ee7b4017b5dda1e0ac20c25444e4218bfa6ce79a8bd2449eb258c3f077358d0fa02e727f53482d0582d64ef0f95e80d146222606c4dd5@10.64.24.101:30303";
 
 export interface ParsedEnode {
   readonly nodeId: string;

@@ -143,7 +143,7 @@ describe("sanitizeText hex and addresses", () => {
 
 describe("sanitizeText network and identity", () => {
   it("redacts IPv4 addresses in enode URLs", () => {
-    expect(sanitizeText("dial 10.64.24.248:30303 failed")).toBe(
+    expect(sanitizeText("dial 10.64.24.101:30303 failed")).toBe(
       `dial ${REDACTED.IP}:30303 failed`,
     );
   });
