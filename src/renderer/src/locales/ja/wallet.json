@@ -54,7 +54,10 @@
       "noHidden": "非表示のアカウントはありません。",
       "unhideTooltip": "アカウントを再表示",
       "confirmDeleteZero": "この残高がゼロのアカウントを完全に削除してもよろしいですか？",
-      "confirmDeleteDust": "このアカウントには少額の残高があります。完全に削除して資金を失ってもよろしいですか？"
+      "confirmDeleteDust": "このアカウントには少額の残高があります。完全に削除して資金を失ってもよろしいですか？",
+      "deleteTitle": "アカウントを削除",
+      "cancel": "キャンセル",
+      "delete": "削除"
     },
     "receive": {
       "title": "CMUの受信",

@@ -201,7 +201,8 @@
     "downloadingUpdateTitle": "Descargando actualización",
     "readyUpdateTitle": "Actualización lista para instalar",
     "readyUpdateDesc": "Se ha descargado la versión {{version}}.",
-    "restartUpdateBtn": "Reiniciar e instalar"
+    "restartUpdateBtn": "Reiniciar e instalar",
+    "uptimeLoading": "Cargando..."
   },
   "resetToDefaults": "Restablecer valores",
   "resetModal": {
@@ -313,7 +314,11 @@
     "resetWalletBtn": "Restablecer...",
     "access": "Acceso",
     "backup": "Copia de seguridad",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "biometricsTitle": "Requerir Touch ID / Windows Hello para firmar",
+    "biometricsDesc": "Usar biometría para autorizar cada transacción",
+    "connecting": "Conectando...",
+    "connect": "Conectar"
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",
@@ -340,7 +345,8 @@
       "refresh": "Actualizar",
       "deleteAll": "Eliminar todo",
       "empty": "No hay informes pendientes de envío.",
-      "loadFailed": "No se pudo leer la cola de informes."
+      "loadFailed": "No se pudo leer la cola de informes.",
+      "loading": "Cargando..."
     },
     "logs": "Registros",
     "logsDesc": "Los registros se guardan depurados en este equipo y nunca se envían automáticamente. Adjúntalos cuando informes de un problema.",

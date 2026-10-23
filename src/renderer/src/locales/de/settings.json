@@ -201,7 +201,8 @@
     "downloadingUpdateTitle": "Update wird heruntergeladen",
     "readyUpdateTitle": "Update zur Installation bereit",
     "readyUpdateDesc": "Version {{version}} wurde heruntergeladen.",
-    "restartUpdateBtn": "Neu starten & installieren"
+    "restartUpdateBtn": "Neu starten & installieren",
+    "uptimeLoading": "Laden..."
   },
   "resetToDefaults": "Auf Standard zurücksetzen",
   "resetModal": {
@@ -313,7 +314,11 @@
     "resetWalletBtn": "Zurücksetzen...",
     "access": "Zugriff",
     "backup": "Sicherung",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "biometricsTitle": "Touch ID / Windows Hello zum Signieren anfordern",
+    "biometricsDesc": "Biometrie verwenden, um jede Transaktion zu autorisieren",
+    "connecting": "Verbinden...",
+    "connect": "Verbinden"
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",
@@ -340,7 +345,8 @@
       "refresh": "Aktualisieren",
       "deleteAll": "Alle löschen",
       "empty": "Keine Berichte warten auf den Versand.",
-      "loadFailed": "Die Berichtswarteschlange konnte nicht gelesen werden."
+      "loadFailed": "Die Berichtswarteschlange konnte nicht gelesen werden.",
+      "loading": "Laden..."
     },
     "logs": "Logs",
     "logsDesc": "Logs werden bereinigt auf diesem Computer gespeichert und nie automatisch gesendet. Hängen Sie sie an, wenn Sie ein Problem melden.",

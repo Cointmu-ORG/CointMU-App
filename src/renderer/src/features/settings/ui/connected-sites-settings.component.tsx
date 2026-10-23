@@ -166,7 +166,7 @@ function ConnectedSitesSettings(): JSX.Element {
                               dateStyle: "medium",
                             }).format(new Date(site.connectedAt)),
                           })
-                        : t("settings:connectedSites.accessGranted")}
+                        : t("settings:connectedSites.readOnlyAccess")}
                     </p>
                   </div>
                 </div>

@@ -201,7 +201,8 @@
     "downloadingUpdateTitle": "Mengunduh pembaruan",
     "readyUpdateTitle": "Pembaruan siap dipasang",
     "readyUpdateDesc": "Versi {{version}} telah diunduh.",
-    "restartUpdateBtn": "Mulai Ulang & Pasang"
+    "restartUpdateBtn": "Mulai Ulang & Pasang",
+    "uptimeLoading": "Memuat..."
   },
   "resetToDefaults": "Kembalikan ke awal",
   "resetModal": {
@@ -313,7 +314,11 @@
     "resetWalletBtn": "Reset...",
     "access": "Akses",
     "backup": "Cadangan",
-    "hardware": "Perangkat Keras"
+    "hardware": "Perangkat Keras",
+    "biometricsTitle": "Perlukan Touch ID / Windows Hello untuk menandatangani",
+    "biometricsDesc": "Gunakan biometrik untuk mengotorisasi setiap transaksi",
+    "connecting": "Menghubungkan...",
+    "connect": "Hubungkan"
   },
   "privacy": {
     "title": "Privasi & Diagnostik",
@@ -340,7 +345,8 @@
       "refresh": "Muat ulang",
       "deleteAll": "Hapus semua",
       "empty": "Tidak ada laporan yang menunggu dikirim.",
-      "loadFailed": "Gagal membaca antrean laporan."
+      "loadFailed": "Gagal membaca antrean laporan.",
+      "loading": "Memuat..."
     },
     "logs": "Log",
     "logsDesc": "Log disimpan di komputer ini (sudah disanitasi) dan tidak pernah dikirim otomatis. Lampirkan saat melaporkan masalah.",

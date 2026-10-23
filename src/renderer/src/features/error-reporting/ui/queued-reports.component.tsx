@@ -88,7 +88,7 @@ export function QueuedReports(): JSX.Element {
       )}
       {reports === null && !hasFailed && (
         <p className="text-xs text-slate-500">
-          {t("settings:advanced.loading")}
+          {t("settings:privacy.queue.loading")}
         </p>
       )}
       {reports?.length === 0 && (

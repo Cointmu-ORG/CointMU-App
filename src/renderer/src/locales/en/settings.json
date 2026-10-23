@@ -200,7 +200,8 @@
     "documentationDesc": "Guides, API reference, RPC schema",
     "openLink": "Open ›",
     "reportIssueTitle": "Report an issue",
-    "latestVersion": "You are on the latest version"
+    "latestVersion": "You are on the latest version",
+    "uptimeLoading": "Loading..."
   },
   "resetToDefaults": "Reset to defaults",
   "resetModal": {
@@ -312,7 +313,11 @@
     "resetWalletBtn": "Reset...",
     "access": "Access",
     "backup": "Backup",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "biometricsTitle": "Require Touch ID / Windows Hello to sign",
+    "biometricsDesc": "Use biometrics to authorize every transaction",
+    "connecting": "Connecting...",
+    "connect": "Connect"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",
@@ -339,7 +344,8 @@
       "refresh": "Refresh",
       "deleteAll": "Delete all",
       "empty": "No reports are waiting to be sent.",
-      "loadFailed": "Could not read the report queue."
+      "loadFailed": "Could not read the report queue.",
+      "loading": "Loading..."
     },
     "logs": "Logs",
     "logsDesc": "Logs are saved on this computer (sanitized) and are never sent automatically. Attach them when you report a problem.",

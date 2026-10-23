@@ -14,7 +14,9 @@
     "logAwaiting": "Esperando actividad del nodo...",
     "tabFound": "Encontrado",
     "tabLog": "Registro",
-    "tabActivity": "Actividad"
+    "tabActivity": "Actividad",
+    "blocksValidated": "bloques validados",
+    "miningOperations": "operaciones de minería"
   },
   "header": {
     "workspace": "Espacio de Trabajo",

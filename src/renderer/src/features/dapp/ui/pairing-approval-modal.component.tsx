@@ -41,7 +41,7 @@ export function PairingApprovalModal(): JSX.Element | null {
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-slate-100">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-              {t("ui.pairing.pairingRequest", "Extension Link Request")}
+              {t("ui:pairing.pairingRequest")}
             </p>
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1">
@@ -54,10 +54,7 @@ export function PairingApprovalModal(): JSX.Element | null {
 
         <div className="px-5 py-6 space-y-4 text-center">
           <p className="text-sm text-slate-600 leading-relaxed font-medium">
-            {t(
-              "ui.pairing.pairingDesc",
-              "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
-            )}
+            {t("ui:pairing.pairingDesc")}
           </p>
         </div>
 
@@ -67,14 +64,14 @@ export function PairingApprovalModal(): JSX.Element | null {
             onClick={handleReject}
             className="flex-1 rounded-xl border border-red-200 bg-red-50 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-100 hover:border-red-300 transition-colors duration-150"
           >
-            {t("ui.pairing.reject", "Reject")}
+            {t("ui:pairing.reject")}
           </button>
           <button
             type="button"
             onClick={handleApprove}
             className="flex-1 rounded-xl bg-emerald-500 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors duration-150 shadow-sm"
           >
-            {t("ui.pairing.approve", "Approve")}
+            {t("ui:pairing.approve")}
           </button>
         </div>
       </div>
