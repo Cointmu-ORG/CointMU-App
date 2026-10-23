@@ -84,6 +84,8 @@
       "failed": "Pemulihan otomatis dihentikan. Node memerlukan perhatian Anda."
     },
     "hint": {
+      "ACCESS_DENIED": "Windows menolak akses node ke pipe IPC atau file datanya, biasanya karena geth.exe dari sesi sebelumnya masih berjalan. Tutup proses geth.exe lewat Task Manager (tab Details) atau restart komputer, lalu klik Coba lagi.",
+      "PORT_RESERVED": "Windows mereservasi port {{port}} yang dibutuhkan node (Hyper-V dan WSL mereservasi rentang port sekaligus). Ganti Port dengar di Pengaturan → Jaringan, atau restart CointMU agar memilih port lain, lalu klik Coba lagi.",
       "PORT_IN_USE": "Port jaringan node sedang dipakai program lain. Tutup program tersebut atau ubah Port dengar di Pengaturan → Jaringan, lalu coba lagi.",
       "DB_LOCKED": "Database node sedang dipakai proses lain, misalnya instance CointMU atau geth lain. Tutup proses tersebut, lalu coba lagi.",
       "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."

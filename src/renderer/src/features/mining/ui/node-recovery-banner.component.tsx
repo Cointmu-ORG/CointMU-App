@@ -71,7 +71,9 @@ export function NodeRecoveryBanner(): JSX.Element | null {
             backupName: event.backupName,
           })}
         </p>
-        {hintKey && <p className="opacity-90">{t(hintKey)}</p>}
+        {hintKey && (
+          <p className="opacity-90">{t(hintKey, { port: event.port })}</p>
+        )}
       </div>
       {needsAttention && (
         <div className="flex flex-wrap items-center gap-2">

@@ -91,3 +91,42 @@ describe("GethRecovery blocking", () => {
     ]);
   });
 });
+
+describe("GethRecovery Windows fatals", () => {
+  it("blocks on access denied instead of counting toward the restart cap", () => {
+    const { recovery, events } = createRecovery();
+
+    crashOnce(
+      recovery,
+      "Fatal: Error starting protocol stack: Access is denied.",
+    );
+
+    expect(events).toEqual([
+      { stage: NodeRecoveryStage.BLOCKED, reason: "ACCESS_DENIED" },
+    ]);
+  });
+
+  it("does not block on an ERROR-level access denied", () => {
+    const { recovery, events } = createRecovery();
+
+    recovery.handleLogLine(
+      'EROR[10-18|18:20:46.928] Failed to write file                     err="Access is denied."',
+    );
+
+    expect(recovery.isRestartSuppressed()).toBe(false);
+    expect(events).toEqual([]);
+  });
+
+  it("blocks on a reserved port and reports which port", () => {
+    const { recovery, events } = createRecovery();
+
+    crashOnce(
+      recovery,
+      "Fatal: Error starting protocol stack: listen tcp 127.0.0.1:8551: bind: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    );
+
+    expect(events).toEqual([
+      { stage: NodeRecoveryStage.BLOCKED, reason: "PORT_RESERVED", port: 8551 },
+    ]);
+  });
+});

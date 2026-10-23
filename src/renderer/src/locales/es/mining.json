@@ -84,6 +84,8 @@
       "failed": "La recuperación automática se detuvo. El nodo requiere tu atención."
     },
     "hint": {
+      "ACCESS_DENIED": "Windows denegó al nodo el acceso a su canal IPC o a sus archivos de datos, normalmente porque sigue en ejecución un geth.exe de una sesión anterior. Cierra el proceso geth.exe en el Administrador de tareas (pestaña Detalles) o reinicia el equipo y pulsa Reintentar.",
+      "PORT_RESERVED": "Windows ha reservado el puerto {{port}}, que el nodo necesita (Hyper-V y WSL reservan rangos de puertos completos). Cambia el Puerto de escucha en Ajustes → Red o reinicia CointMU para que elija otros puertos y pulsa Reintentar.",
       "PORT_IN_USE": "Otro programa está usando el puerto de red del nodo. Ciérralo o cambia el Puerto de escucha en Ajustes → Red y vuelve a intentarlo.",
       "DB_LOCKED": "Otro proceso está usando la base de datos del nodo, por ejemplo otra instancia de CointMU o geth. Ciérralo y vuelve a intentarlo.",
       "failed": "El almacén de claves de tu billetera no se modificó. Vuelve a intentarlo o reinicia la aplicación; si sigue fallando, reporta un problema con los registros."

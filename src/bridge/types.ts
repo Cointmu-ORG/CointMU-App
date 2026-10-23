@@ -13,6 +13,8 @@ export type NodeRecoveryStage =
   (typeof NodeRecoveryStage)[keyof typeof NodeRecoveryStage];
 
 export const NodeBlockReason = {
+  ACCESS_DENIED: "ACCESS_DENIED",
+  PORT_RESERVED: "PORT_RESERVED",
   PORT_IN_USE: "PORT_IN_USE",
   DB_LOCKED: "DB_LOCKED",
 } as const;
@@ -29,6 +31,8 @@ export interface NodeRecoveryEvent {
   readonly attempt?: number;
   readonly maxAttempts?: number;
   readonly reason?: NodeBlockReason;
+  /** The port geth failed to bind, for PORT_RESERVED. */
+  readonly port?: number;
   readonly backupName?: string;
   readonly needsAttention?: boolean;
 }

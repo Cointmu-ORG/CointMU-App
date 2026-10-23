@@ -4,6 +4,7 @@ import {
   GethErrorKind,
   GethLineSeverity,
   classifyGethLine,
+  extractListenPort,
   isCorruptionConfirmed,
 } from "./gethErrorClassifier";
 
@@ -22,6 +23,20 @@ const DB_LOCKED_LINES = [
   "Fatal: Failed to create the protocol stack: datadir already used by another process",
   "Fatal: Failed to register the Ethereum service: resource temporarily unavailable",
   "Fatal: Failed to register the Ethereum service: open C:\\Users\\u\\AppData\\Roaming\\CointMU\\cointmu-chaindata\\geth\\chaindata\\LOCK: The process cannot access the file because it is being used by another process.",
+];
+
+// Built from the geth 1.10.26 Fatalf formats (cmd/utils/cmd.go:73,
+// cmd/utils/flags.go:1994) around the raw Windows errno text.
+const ACCESS_DENIED_LINES = [
+  // npipe.Listen on an IPC pipe another geth still holds
+  "Fatal: Error starting protocol stack: Access is denied.",
+  // chaindata LOCK opened by goleveldb without the needed rights
+  "Fatal: Failed to register the Ethereum service: Access is denied.",
+];
+
+const PORT_RESERVED_LINES = [
+  "Fatal: Error starting protocol stack: listen tcp 127.0.0.1:8551: bind: An attempt was made to access a socket in a way forbidden by its access permissions.",
+  "Fatal: Error starting protocol stack: listen udp :30303: bind: An attempt was made to access a socket in a way forbidden by its access permissions.",
 ];
 
 const FATAL_CORRUPT_LINES = [
@@ -52,6 +67,27 @@ describe("classifyGethLine", () => {
   });
 
   it.each(DB_LOCKED_LINES)("classifies database locks: %s", (line) => {
+    expect(classifyGethLine(line)?.kind).toBe(GethErrorKind.DB_LOCKED);
+  });
+
+  it.each(ACCESS_DENIED_LINES)("classifies access denied: %s", (line) => {
+    expect(classifyGethLine(line)).toEqual({
+      kind: GethErrorKind.ACCESS_DENIED,
+      severity: GethLineSeverity.FATAL,
+    });
+  });
+
+  it.each(PORT_RESERVED_LINES)("classifies reserved ports: %s", (line) => {
+    expect(classifyGethLine(line)).toEqual({
+      kind: GethErrorKind.PORT_RESERVED,
+      severity: GethLineSeverity.FATAL,
+    });
+  });
+
+  it("keeps a sharing violation on the LOCK file as DB_LOCKED", () => {
+    const line =
+      "Fatal: Failed to register the Ethereum service: The process cannot access the file because it is being used by another process.";
+
     expect(classifyGethLine(line)?.kind).toBe(GethErrorKind.DB_LOCKED);
   });
 
@@ -100,6 +136,25 @@ describe("classifyGethLine", () => {
     'EROR[10-18|18:20:46.928] Snapshot extension registration failed   peer=ab12 err="peer connected on snap without compatible eth support"',
   ])("ignores unmatched ERROR lines: %s", (line) => {
     expect(classifyGethLine(line)).toBeNull();
+  });
+});
+
+describe("extractListenPort", () => {
+  it.each([
+    [PORT_RESERVED_LINES[0], 8551],
+    [PORT_RESERVED_LINES[1], 30303],
+    [PORT_IN_USE_LINES[0], 30399],
+    // captured: geth 1.10.26 with UDP 30303 held by `nc -u -l 30303`
+    [
+      "Fatal: Error starting protocol stack: listen udp [::]:30303: bind: address already in use",
+      30303,
+    ],
+  ])("reads the port from %s", (line, port) => {
+    expect(extractListenPort(line)).toBe(port);
+  });
+
+  it("returns null when the line names no listen address", () => {
+    expect(extractListenPort(ACCESS_DENIED_LINES[0])).toBeNull();
   });
 });
 

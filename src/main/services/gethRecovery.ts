@@ -1,14 +1,15 @@
 import { setTimeout as delay } from "node:timers/promises";
 import ms from "ms";
 import {
+  NodeBlockReason,
   NodeRecoveryStage,
-  type NodeBlockReason,
   type NodeRecoveryEvent,
 } from "../../bridge/types";
 import {
   GethErrorKind,
   GethLineSeverity,
   classifyGethLine,
+  extractListenPort,
   isCorruptionConfirmed,
   type GethLineClassification,
 } from "../utils/gethErrorClassifier";
@@ -92,7 +93,7 @@ export class GethRecovery {
       this.hasPendingUnknownFatal = true;
       return;
     }
-    this.block(classification.kind);
+    this.block(classification.kind, extractListenPort(line));
   }
 
   /**
@@ -160,11 +161,17 @@ export class GethRecovery {
       this.fail();
   }
 
-  private block(reason: NodeBlockReason): void {
+  private block(reason: NodeBlockReason, port: number | null = null): void {
     if (this.phase === RecoveryPhase.FAILED) return;
     if (this.phase === RecoveryPhase.BLOCKED) return;
     this.phase = RecoveryPhase.BLOCKED;
-    this.emit({ stage: NodeRecoveryStage.BLOCKED, reason });
+    this.emit({
+      stage: NodeRecoveryStage.BLOCKED,
+      reason,
+      ...(reason === NodeBlockReason.PORT_RESERVED && port !== null
+        ? { port }
+        : {}),
+    });
   }
 
   private fail(): void {
