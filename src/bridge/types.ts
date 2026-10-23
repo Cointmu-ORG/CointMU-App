@@ -35,6 +35,10 @@ export interface NodeRecoveryEvent {
   readonly port?: number;
   readonly backupName?: string;
   readonly needsAttention?: boolean;
+  /** FAILED only: the classifier kind of the last Fatal/CRIT or corruption line. */
+  readonly failureKind?: string;
+  /** FAILED only: that geth line, sanitized and truncated in main. */
+  readonly failureLine?: string;
 }
 
 export interface JsonRpcErrorObject {

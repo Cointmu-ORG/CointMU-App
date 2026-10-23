@@ -74,6 +74,18 @@ export function NodeRecoveryBanner(): JSX.Element | null {
         {hintKey && (
           <p className="opacity-90">{t(hintKey, { port: event.port })}</p>
         )}
+        {event.failureLine && (
+          <p className="mt-1 text-xs opacity-90">
+            <span className="font-medium">
+              {t("mining:recovery.cause", {
+                kind: t(`mining:recovery.kind.${event.failureKind}`, {
+                  defaultValue: event.failureKind,
+                }),
+              })}
+            </span>{" "}
+            <code className="font-mono break-all">{event.failureLine}</code>
+          </p>
+        )}
       </div>
       {needsAttention && (
         <div className="flex flex-wrap items-center gap-2">

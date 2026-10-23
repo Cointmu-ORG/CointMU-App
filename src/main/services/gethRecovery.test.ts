@@ -8,6 +8,7 @@ const CAPTURED_UNKNOWN_FATAL =
 const CAPTURED_PORT_FATAL =
   "Fatal: Error starting protocol stack: listen tcp :30399: bind: address already in use";
 const UNKNOWN_FATAL_MAX_RESTARTS = 5;
+const MAX_FAILURE_LINE_CHARS = 300;
 
 /**
  * Builds a recovery instance with inert dependencies that records broadcasts.
@@ -63,7 +64,43 @@ describe("GethRecovery unknown fatal cap", () => {
     expect(events.at(-1)).toEqual({
       stage: NodeRecoveryStage.FAILED,
       needsAttention: true,
+      failureKind: "UNKNOWN_FATAL",
+      failureLine: CAPTURED_UNKNOWN_FATAL,
     });
+  });
+
+  it("reports the latest Fatal line, sanitized and truncated", () => {
+    const { recovery, events } = createRecovery();
+    const longFatal = `Fatal: Failed to open /home/alice/.cointmu/x\u001b[0m: ${"z".repeat(400)}`;
+    for (let run = 0; run < UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+    }
+
+    crashOnce(recovery, longFatal);
+
+    const line = events.at(-1)?.failureLine ?? "";
+    expect(
+      line.startsWith("Fatal: Failed to open /home/<user>/.cointmu/x"),
+    ).toBe(true);
+    expect(line).not.toContain("alice");
+    expect(line).not.toContain("\u001b");
+    expect(line).toHaveLength(MAX_FAILURE_LINE_CHARS);
+    expect(line.endsWith("…")).toBe(true);
+  });
+
+  it("forgets the failure line on resume", () => {
+    const { recovery, events } = createRecovery();
+    for (let run = 0; run <= UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      crashOnce(recovery, CAPTURED_UNKNOWN_FATAL);
+    }
+    recovery.resume();
+
+    for (let run = 0; run <= UNKNOWN_FATAL_MAX_RESTARTS; run++) {
+      recovery.handleLogLine("Fatal: different");
+      recovery.handleUnexpectedExit();
+    }
+
+    expect(events.at(-1)?.failureLine).toBe("Fatal: different");
   });
 
   it("resets the counter on resume", () => {

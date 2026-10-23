@@ -90,6 +90,11 @@
       "DB_LOCKED": "The node database is in use by another process, such as another CointMU or geth instance. Close it, then retry.",
       "failed": "Your wallet keystore was not touched. Retry, or restart the app; if it keeps failing, report an issue with the logs."
     },
+    "cause": "Last node error ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "unrecognized error",
+      "DB_CORRUPT": "chain database damaged"
+    },
     "retry": "Retry",
     "retrying": "Retrying..."
   }

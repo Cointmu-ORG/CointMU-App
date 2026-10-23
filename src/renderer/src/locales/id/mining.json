@@ -90,6 +90,11 @@
       "DB_LOCKED": "Database node sedang dipakai proses lain, misalnya instance CointMU atau geth lain. Tutup proses tersebut, lalu coba lagi.",
       "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."
     },
+    "cause": "Error node terakhir ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "error tidak dikenal",
+      "DB_CORRUPT": "database chain rusak"
+    },
     "retry": "Coba lagi",
     "retrying": "Mencoba lagi..."
   }

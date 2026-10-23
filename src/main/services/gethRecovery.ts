@@ -14,6 +14,7 @@ import {
   type GethLineClassification,
 } from "../utils/gethErrorClassifier";
 import { quarantineChainData } from "./chaindataQuarantine";
+import { sanitizeLocalLine } from "../diagnostics/localSanitizer";
 import { callGethRpc } from "../utils/rpcUtils";
 
 const RESTART_BACKOFF_MS = [ms("3s"), ms("10s"), ms("30s")];
@@ -22,6 +23,7 @@ const RPC_HEALTH_TIMEOUT_MS = ms("5s");
 const MAX_RECOVERIES_PER_SESSION = 1;
 const UNKNOWN_FATAL_MAX_RESTARTS = 5;
 const UNKNOWN_FATAL_WINDOW_MS = ms("10m");
+const MAX_FAILURE_LINE_CHARS = 300;
 
 const RecoveryPhase = {
   IDLE: "idle",
@@ -62,6 +64,7 @@ export class GethRecovery {
   private hasPendingUnknownFatal = false;
   private quarantineCount = 0;
   private unknownFatalTimestamps: number[] = [];
+  private lastFailure: { kind: GethErrorKind; line: string } | null = null;
 
   constructor(private readonly deps: GethRecoveryDeps) {}
 
@@ -82,6 +85,12 @@ export class GethRecovery {
   handleLogLine(line: string): void {
     const classification = classifyGethLine(line);
     if (!classification) return;
+    if (
+      classification.severity === GethLineSeverity.FATAL ||
+      classification.kind === GethErrorKind.DB_CORRUPT
+    ) {
+      this.lastFailure = { kind: classification.kind, line };
+    }
 
     if (classification.kind === GethErrorKind.DB_CORRUPT) {
       this.handleCorruptLine(classification);
@@ -125,6 +134,7 @@ export class GethRecovery {
     this.unknownFatalTimestamps = [];
     this.hasPendingUnknownFatal = false;
     this.pendingErrorCorruption = null;
+    this.lastFailure = null;
     this.emit({ stage: NodeRecoveryStage.RESUMED });
     return true;
   }
@@ -176,7 +186,15 @@ export class GethRecovery {
 
   private fail(): void {
     this.phase = RecoveryPhase.FAILED;
-    this.emit({ stage: NodeRecoveryStage.FAILED, needsAttention: true });
+    const failure = this.lastFailure;
+    this.emit({
+      stage: NodeRecoveryStage.FAILED,
+      needsAttention: true,
+      ...(failure && {
+        failureKind: failure.kind,
+        failureLine: sanitizeLocalLine(failure.line, MAX_FAILURE_LINE_CHARS),
+      }),
+    });
   }
 
   private emit(event: NodeRecoveryEvent): void {

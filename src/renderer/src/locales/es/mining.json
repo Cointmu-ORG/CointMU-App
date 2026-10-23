@@ -90,6 +90,11 @@
       "DB_LOCKED": "Otro proceso está usando la base de datos del nodo, por ejemplo otra instancia de CointMU o geth. Ciérralo y vuelve a intentarlo.",
       "failed": "El almacén de claves de tu billetera no se modificó. Vuelve a intentarlo o reinicia la aplicación; si sigue fallando, reporta un problema con los registros."
     },
+    "cause": "Último error del nodo ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "error no reconocido",
+      "DB_CORRUPT": "base de datos de la cadena dañada"
+    },
     "retry": "Reintentar",
     "retrying": "Reintentando..."
   }

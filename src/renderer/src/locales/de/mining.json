@@ -90,6 +90,11 @@
       "DB_LOCKED": "Die Knotendatenbank wird von einem anderen Prozess verwendet, z. B. einer weiteren CointMU- oder geth-Instanz. Schließen Sie diesen und versuchen Sie es erneut.",
       "failed": "Ihr Wallet-Keystore wurde nicht verändert. Versuchen Sie es erneut oder starten Sie die App neu; tritt der Fehler weiter auf, melden Sie ein Problem mit den Logs."
     },
+    "cause": "Letzter Knotenfehler ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "unbekannter Fehler",
+      "DB_CORRUPT": "Chain-Datenbank beschädigt"
+    },
     "retry": "Erneut versuchen",
     "retrying": "Wird erneut versucht..."
   }
