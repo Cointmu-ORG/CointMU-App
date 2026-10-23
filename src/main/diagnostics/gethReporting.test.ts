@@ -14,7 +14,7 @@ vi.mock("@sentry/electron/main", () => ({
 }));
 
 const UNKNOWN_FATAL_LINE =
-  "Fatal: Failed to start mining: dial 10.64.24.248:30303 timeout after 15s";
+  "Fatal: Failed to start mining: dial 10.64.24.101:30303 timeout after 15s";
 
 describe("recordGethLine", () => {
   beforeEach(() => {
