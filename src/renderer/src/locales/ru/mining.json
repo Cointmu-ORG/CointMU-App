@@ -14,9 +14,7 @@
     "logAwaiting": "Ожидание активности узла...",
     "tabFound": "Найдено",
     "tabLog": "Журнал",
-    "tabActivity": "Активность",
-    "blocksValidated": "проверенных блоков",
-    "miningOperations": "операций майнинга"
+    "tabActivity": "Активность"
   },
   "header": {
     "workspace": "Рабочая область",

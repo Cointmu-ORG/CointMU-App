@@ -14,9 +14,7 @@
     "logAwaiting": "Menunggu aktivitas node...",
     "tabFound": "Ditemukan",
     "tabLog": "Log",
-    "tabActivity": "Aktivitas",
-    "blocksValidated": "blok divalidasi",
-    "miningOperations": "operasi penambangan"
+    "tabActivity": "Aktivitas"
   },
   "header": {
     "workspace": "Ruang Kerja",

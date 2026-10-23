@@ -14,9 +14,7 @@
     "logAwaiting": "等待节点活动...",
     "tabFound": "已找到",
     "tabLog": "日志",
-    "tabActivity": "活动",
-    "blocksValidated": "个已验证区块",
-    "miningOperations": "次挖矿操作"
+    "tabActivity": "活动"
   },
   "header": {
     "workspace": "工作区",

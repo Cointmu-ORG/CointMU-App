@@ -14,9 +14,7 @@
     "logAwaiting": "ノードのアクティビティを待機しています...",
     "tabFound": "発見",
     "tabLog": "ログ",
-    "tabActivity": "アクティビティ",
-    "blocksValidated": "件のブロック検証",
-    "miningOperations": "件のマイニング操作"
+    "tabActivity": "アクティビティ"
   },
   "header": {
     "workspace": "ワークスペース",
