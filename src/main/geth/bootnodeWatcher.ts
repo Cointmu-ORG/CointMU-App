@@ -13,7 +13,7 @@ export const BOOTNODE_CONFIG = resolveBootnodeConfig(
 );
 if (BOOTNODE_CONFIG.problem) {
   console.warn(
-    `[bootnode] MAIN_VITE_BOOTNODE_ENODE is not a valid enode (${BOOTNODE_CONFIG.problem}); expected enode://<128 hex>@<host>:<port>. Using the built-in bootnode.`,
+    `[bootnode] MAIN_VITE_BOOTNODE_ENODE is not a valid enode (${BOOTNODE_CONFIG.problem}); expected enode://<secp256k1 public key, 128 hex>@<host>:<port>. Using the built-in bootnode.`,
   );
   reportBootnodeConfigProblem(BOOTNODE_CONFIG.problem);
 }
