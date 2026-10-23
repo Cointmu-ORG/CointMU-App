@@ -96,7 +96,6 @@
     "noConnectedSitesTitle": "没有连接的站点",
     "noConnectedSitesDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
     "readOnlyAccess": "已授予只读权限",
-    "revokeBtn": "撤销",
     "emptyTitle": "没有连接的站点",
     "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
     "extensionName": "CointMU Browser Extension",
