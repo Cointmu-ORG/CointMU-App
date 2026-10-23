@@ -237,7 +237,37 @@
     "pruneTitle": "Prune old state",
     "pruneDesc": "Keep last 128 blocks of historical state to save disk",
     "switchingNetwork": "Switching network... Please wait.",
-    "restartRequired": "Node restarting to connect to the new network."
+    "restartRequired": "Node restarting to connect to the new network.",
+    "advanced": "Advanced",
+    "bootnodes": {
+      "title": "Bootnodes",
+      "desc": "Nodes your node contacts first to find peers on the network",
+      "active": "Active bootnodes",
+      "loading": "Loading…",
+      "source": {
+        "user": "Custom",
+        "build": "Default (build)",
+        "fallback": "Default"
+      },
+      "restartPending": "Your saved bootnodes take effect the next time the node restarts.",
+      "warning": "Only enter enodes you received from the CointMU admins. A bootnode from anyone else can connect you to fake peers and show you a false view of the network.",
+      "customLabel": "Custom bootnodes",
+      "customHint": "One enode per line or comma-separated, up to 10. Saving restarts the node.",
+      "reset": "Reset to default",
+      "save": "Save and restart",
+      "saving": "Saving…",
+      "invalidEntry": "Entry {{position}}: {{value}}",
+      "requestFailed": "Could not update the bootnodes. Your previous setting is still in use.",
+      "errors": {
+        "INVALID_ENODE": "These entries are not valid enodes (enode://<128-hex public key>@<host>:<port>). Nothing was saved.",
+        "EMPTY": "Enter at least one enode, or use Reset to default.",
+        "TOO_MANY": "Too many bootnodes. Enter at most 10."
+      },
+      "notice": {
+        "saved": "Bootnodes saved.",
+        "reset": "Default bootnodes restored."
+      }
+    }
   },
   "miningSettings": {
     "subtitle": "Manage internal node mining behavior",

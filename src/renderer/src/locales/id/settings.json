@@ -238,7 +238,37 @@
     "pruneTitle": "Pangkas status lama",
     "pruneDesc": "Simpan 128 blok status historis terakhir untuk menghemat disk",
     "switchingNetwork": "Mengganti jaringan... Harap tunggu.",
-    "restartRequired": "Node sedang di-restart untuk terhubung ke jaringan baru."
+    "restartRequired": "Node sedang di-restart untuk terhubung ke jaringan baru.",
+    "advanced": "Lanjutan",
+    "bootnodes": {
+      "title": "Bootnode",
+      "desc": "Node yang pertama kali dihubungi node Anda untuk menemukan peer di jaringan",
+      "active": "Bootnode aktif",
+      "loading": "Memuat…",
+      "source": {
+        "user": "Kustom",
+        "build": "Default (build)",
+        "fallback": "Default"
+      },
+      "restartPending": "Bootnode yang disimpan berlaku saat node dimulai ulang berikutnya.",
+      "warning": "Hanya isi enode yang Anda terima dari admin CointMU. Bootnode dari pihak lain bisa menghubungkan Anda ke peer palsu dan menampilkan kondisi jaringan yang tidak benar.",
+      "customLabel": "Bootnode kustom",
+      "customHint": "Satu enode per baris atau dipisah koma, maksimal 10. Menyimpan akan memulai ulang node.",
+      "reset": "Reset ke default",
+      "save": "Simpan dan mulai ulang",
+      "saving": "Menyimpan…",
+      "invalidEntry": "Entri {{position}}: {{value}}",
+      "requestFailed": "Bootnode gagal diperbarui. Pengaturan sebelumnya masih dipakai.",
+      "errors": {
+        "INVALID_ENODE": "Entri ini bukan enode yang valid (enode://<public key 128 hex>@<host>:<port>). Tidak ada yang disimpan.",
+        "EMPTY": "Isi minimal satu enode, atau gunakan Reset ke default.",
+        "TOO_MANY": "Terlalu banyak bootnode. Maksimal 10."
+      },
+      "notice": {
+        "saved": "Bootnode disimpan.",
+        "reset": "Bootnode default dipulihkan."
+      }
+    }
   },
   "miningSettings": {
     "subtitle": "Kelola perilaku penambangan node internal",
