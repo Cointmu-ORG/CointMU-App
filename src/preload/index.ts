@@ -10,6 +10,7 @@ import {
 import type {
   AppInfo,
   JsonRpcEnvelope,
+  NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
   TelemetryState,
@@ -200,6 +201,14 @@ const api = {
     getRecoveryState: (): Promise<NodeRecoveryEvent | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_RECOVERY_STATE),
     retry: (): Promise<void> => ipcRenderer.invoke(NODE_CHANNELS.RETRY),
+    onPeerHint: (callback: (hint: NodePeerHint | null) => void) => {
+      const handler = (_: unknown, hint: NodePeerHint | null): void =>
+        callback(hint);
+      ipcRenderer.on(NODE_CHANNELS.PEER_HINT, handler);
+      return () => ipcRenderer.removeListener(NODE_CHANNELS.PEER_HINT, handler);
+    },
+    getPeerHint: (): Promise<NodePeerHint | null> =>
+      ipcRenderer.invoke(NODE_CHANNELS.GET_PEER_HINT),
   },
   diagnostics: {
     openLogsFolder: (): Promise<void> =>

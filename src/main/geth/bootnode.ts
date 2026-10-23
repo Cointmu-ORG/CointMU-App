@@ -1,8 +1,10 @@
 import { isIP } from "node:net";
+import { SigningKey } from "ethers";
 
 const ENODE_PROTOCOL = "enode:";
 // secp256k1 public key without the 0x04 prefix: 64 bytes as hex.
 const NODE_ID_PATTERN = /^[0-9a-f]{128}$/i;
+const UNCOMPRESSED_KEY_PREFIX = "0x04";
 const DISCPORT_PARAM = "discport";
 const MAX_PORT = 65535;
 const IPV6_FAMILY = 6;
@@ -52,6 +54,22 @@ function parsePort(value: string): number | null {
   return Number.isInteger(port) && port > 0 && port <= MAX_PORT ? port : null;
 }
 
+/**
+ * Checks that a node id is a real secp256k1 public key. Geth rejects an enode
+ * whose key is not on the curve ("Bootstrap URL invalid") on every start.
+ * @param nodeId - 128 hex chars: the uncompressed key without its 04 prefix.
+ * @returns True when the point lies on the curve.
+ */
+function isSecp256k1PublicKey(nodeId: string): boolean {
+  try {
+    SigningKey.computePublicKey(`${UNCOMPRESSED_KEY_PREFIX}${nodeId}`);
+    return true;
+  } catch {
+    // ethers throws "bad point" for keys off the curve; that is the invalid case.
+    return false;
+  }
+}
+
 function hasValidQuery(url: URL): boolean {
   const keys = [...url.searchParams.keys()];
   if (keys.length === 0) return true;
@@ -61,7 +79,8 @@ function hasValidQuery(url: URL): boolean {
 
 /**
  * Parses and validates an enode URL (enode://<node id>@<host>:<port>, with an
- * optional ?discport=<port>), the form geth accepts for --bootnodes.
+ * optional ?discport=<port>), the form geth accepts for --bootnodes. The node
+ * id must be a secp256k1 public key, not just 128 hex chars.
  * @param enode - The enode URL.
  * @returns The parsed parts, or null when the URL is not a valid enode.
  */
@@ -77,6 +96,7 @@ export function parseEnode(enode: string): ParsedEnode | null {
   const isWellFormed =
     url.protocol === ENODE_PROTOCOL &&
     NODE_ID_PATTERN.test(url.username) &&
+    isSecp256k1PublicKey(url.username) &&
     !url.password &&
     url.hostname !== "" &&
     url.pathname === "" &&

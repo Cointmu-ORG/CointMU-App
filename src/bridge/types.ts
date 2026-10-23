@@ -13,6 +13,8 @@ export type NodeRecoveryStage =
   (typeof NodeRecoveryStage)[keyof typeof NodeRecoveryStage];
 
 export const NodeBlockReason = {
+  ACCESS_DENIED: "ACCESS_DENIED",
+  PORT_RESERVED: "PORT_RESERVED",
   PORT_IN_USE: "PORT_IN_USE",
   DB_LOCKED: "DB_LOCKED",
 } as const;
@@ -29,8 +31,14 @@ export interface NodeRecoveryEvent {
   readonly attempt?: number;
   readonly maxAttempts?: number;
   readonly reason?: NodeBlockReason;
+  /** The port geth failed to bind, for PORT_RESERVED. */
+  readonly port?: number;
   readonly backupName?: string;
   readonly needsAttention?: boolean;
+  /** FAILED only: the classifier kind of the last Fatal/CRIT or corruption line. */
+  readonly failureKind?: string;
+  /** FAILED only: that geth line, sanitized and truncated in main. */
+  readonly failureLine?: string;
 }
 
 export interface JsonRpcErrorObject {
@@ -75,3 +83,13 @@ export interface QueuedReport {
   /** The exact event JSON that will be sent. */
   readonly payload: string;
 }
+
+export const NodePeerHint = {
+  /** The bootnode cannot be reached over TCP: off campus or no VPN. */
+  BOOTNODE_UNREACHABLE: "BOOTNODE_UNREACHABLE",
+  /** The bootnode answers but no peer connects: network id or enode mismatch. */
+  BOOTNODE_REACHABLE_NO_PEERS: "BOOTNODE_REACHABLE_NO_PEERS",
+} as const;
+
+/** Payload of NODE_CHANNELS.PEER_HINT (null clears it); a code the renderer localizes. */
+export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];

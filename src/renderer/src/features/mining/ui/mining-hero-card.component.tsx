@@ -5,6 +5,7 @@ import { Button } from "@/shared/ui";
 import { Play, Square } from "lucide-react";
 import { NonceCounter } from "./nonce-counter.component";
 import { SyncProgress } from "./sync-progress.component";
+import { usePeerHintKey } from "../lib/peer-hint.hook";
 import type { SyncStatus } from "../model/sync-status.types";
 
 interface MiningHeroCardProps {
@@ -110,10 +111,11 @@ function MiningHeroCard({
   onToggle,
 }: MiningHeroCardProps): JSX.Element {
   const { t } = useTranslation();
+  const peerHintKey = usePeerHintKey();
   const isSynced = sync.status === "synced";
   const startBlockedTooltip =
     sync.status === "no-peers"
-      ? t("mining:hero.noPeersTooltip")
+      ? t(peerHintKey ?? "mining:hero.noPeersTooltip")
       : t("mining:hero.nodeSyncingTooltip");
 
   if (isMining) {

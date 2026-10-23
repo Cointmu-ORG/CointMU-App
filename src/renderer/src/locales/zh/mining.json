@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "区块奖励将发送到此地址",
     "setInMiningSettings": "在挖矿设置中配置"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "无法连接到引导节点——请确认已连接到校园网络或 VPN。",
+    "BOOTNODE_REACHABLE_NO_PEERS": "可以连接到引导节点，但没有任何节点连入。节点的网络 ID 或引导节点 enode 可能与网络不匹配，或 UDP 发现被阻止。如果持续出现，请附上日志报告问题。"
+  },
   "recovery": {
     "stage": {
       "retrying": "检测到节点数据库错误。正在重启节点（第 {{attempt}} 次，共 {{maxAttempts}} 次）...",
@@ -84,9 +88,16 @@
       "failed": "自动恢复已停止，节点需要您处理。"
     },
     "hint": {
+      "ACCESS_DENIED": "Windows 拒绝了节点访问其 IPC 管道或数据文件，通常是因为上次会话的 geth.exe 仍在运行。请在任务管理器（“详细信息”选项卡）中结束 geth.exe 进程，或重启电脑，然后点击“重试”。",
+      "PORT_RESERVED": "节点所需的端口 {{port}} 已被 Windows 保留（Hyper-V 和 WSL 会保留整段端口范围）。请在 设置 → 网络 中更改监听端口，或重启 CointMU 以选择其他端口，然后点击“重试”。",
       "PORT_IN_USE": "节点的网络端口正被其他程序占用。请关闭该程序，或在 设置 → 网络 中更改监听端口，然后重试。",
       "DB_LOCKED": "节点数据库正被其他进程使用（例如另一个 CointMU 或 geth 实例）。请关闭该进程后重试。",
       "failed": "您的钱包密钥库未被改动。请重试或重启应用；如果仍然失败，请附上日志报告问题。"
+    },
+    "cause": "节点最后一次错误（{{kind}}）：",
+    "kind": {
+      "UNKNOWN_FATAL": "无法识别的错误",
+      "DB_CORRUPT": "链数据库已损坏"
     },
     "retry": "重试",
     "retrying": "正在重试..."

@@ -12,6 +12,8 @@ function readIdentityLiterals(): string[] {
 }
 
 const IDENTITY_LITERALS = readIdentityLiterals();
+const CONTROL_CHARS_PATTERN = /[\u0000-\u001f\u007f]+/g;
+const ELLIPSIS = "…";
 
 /**
  * Sanitizes text for this machine: the generic patterns plus the OS user and
@@ -21,4 +23,18 @@ const IDENTITY_LITERALS = readIdentityLiterals();
  */
 export function sanitizeLocal(text: string): string {
   return sanitizeText(text, IDENTITY_LITERALS);
+}
+
+/**
+ * Sanitizes one log line for display in the UI: local sanitizing, control
+ * characters collapsed to a space, and the result capped at maxChars.
+ * @param line - A raw log line.
+ * @param maxChars - The longest result allowed, ellipsis included.
+ * @returns The display-safe line.
+ */
+export function sanitizeLocalLine(line: string, maxChars: number): string {
+  const clean = sanitizeLocal(line).replace(CONTROL_CHARS_PATTERN, " ").trim();
+  return clean.length > maxChars
+    ? `${clean.slice(0, maxChars - ELLIPSIS.length)}${ELLIPSIS}`
+    : clean;
 }

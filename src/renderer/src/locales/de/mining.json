@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
     "setInMiningSettings": "In Mining-Einstellungen festgelegt"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode nicht erreichbar – stellen Sie sicher, dass Sie mit dem Campusnetz oder dem VPN verbunden sind.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "Der Bootnode ist erreichbar, aber es haben sich keine Peers verbunden. Die Netzwerk-ID oder der Bootnode-Enode des Knotens passt möglicherweise nicht zum Netzwerk, oder die UDP-Discovery wird blockiert. Wenn das anhält, melden Sie ein Problem mit den Logs."
+  },
   "recovery": {
     "stage": {
       "retrying": "Datenbankfehler des Knotens erkannt. Knoten wird neu gestartet (Versuch {{attempt}} von {{maxAttempts}})...",
@@ -84,9 +88,16 @@
       "failed": "Die automatische Wiederherstellung wurde beendet. Der Knoten benötigt Ihre Aufmerksamkeit."
     },
     "hint": {
+      "ACCESS_DENIED": "Windows hat dem Knoten den Zugriff auf seine IPC-Pipe oder Datendateien verweigert, meist weil noch eine geth.exe aus einer früheren Sitzung läuft. Beenden Sie den Prozess geth.exe im Task-Manager (Registerkarte Details) oder starten Sie den Computer neu und klicken Sie dann auf Erneut versuchen.",
+      "PORT_RESERVED": "Windows hat den Port {{port}} reserviert, den der Knoten benötigt (Hyper-V und WSL reservieren ganze Portbereiche). Ändern Sie den Listen-Port unter Einstellungen → Netzwerk oder starten Sie CointMU neu, damit andere Ports gewählt werden, und klicken Sie dann auf Erneut versuchen.",
       "PORT_IN_USE": "Ein anderes Programm verwendet den Netzwerk-Port des Knotens. Schließen Sie es oder ändern Sie den Listen-Port unter Einstellungen → Netzwerk und versuchen Sie es erneut.",
       "DB_LOCKED": "Die Knotendatenbank wird von einem anderen Prozess verwendet, z. B. einer weiteren CointMU- oder geth-Instanz. Schließen Sie diesen und versuchen Sie es erneut.",
       "failed": "Ihr Wallet-Keystore wurde nicht verändert. Versuchen Sie es erneut oder starten Sie die App neu; tritt der Fehler weiter auf, melden Sie ein Problem mit den Logs."
+    },
+    "cause": "Letzter Knotenfehler ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "unbekannter Fehler",
+      "DB_CORRUPT": "Chain-Datenbank beschädigt"
     },
     "retry": "Erneut versuchen",
     "retrying": "Wird erneut versucht..."

@@ -4,6 +4,7 @@ import { type DerivedAccount } from "@/features/wallet";
 import { type UpdaterStatus } from "@/shared/lib";
 import { useAppStore } from "@/shared/model";
 import { NotificationCenter } from "@/features/notifications";
+import { usePeerHintKey } from "@/features/mining";
 import {
   Zap,
   Grid,
@@ -12,6 +13,7 @@ import {
   Search,
   Settings,
   LockOpen,
+  TriangleAlert,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -41,9 +43,11 @@ export function Sidebar({
 }: SidebarProps): JSX.Element {
   const balance = useAppStore((s) => s.balance);
   const peerCount = useAppStore((s) => s.peerCount);
+  const peerHintKey = usePeerHintKey();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "mining"]);
+  const peerHint = peerCount === 0 && peerHintKey ? t(peerHintKey) : null;
 
   const activeAccount =
     accounts.find((a) => a.address === activeWalletAddress) || accounts[0];
@@ -92,7 +96,20 @@ export function Sidebar({
               CointMU Mainnet
             </span>
           </span>
-          <span className="ml-auto text-[10px] font-bold text-slate-500">
+          {peerHint && (
+            <span
+              role="img"
+              tabIndex={0}
+              title={peerHint}
+              aria-label={peerHint}
+              className="ml-auto text-amber-500 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+            >
+              <TriangleAlert className="w-3 h-3" aria-hidden="true" />
+            </span>
+          )}
+          <span
+            className={`${peerHint ? "" : "ml-auto "}text-[10px] font-bold text-slate-500`}
+          >
             {peerCount !== null ? peerCount : "--"}
           </span>
           <span className="text-[10px] text-slate-400">

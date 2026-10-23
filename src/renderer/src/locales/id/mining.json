@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
     "setInMiningSettings": "Atur di Pengaturan Penambangan"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode tidak terjangkau — pastikan terhubung ke jaringan kampus atau VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "Bootnode terjangkau, tetapi belum ada peer yang terhubung. Network ID atau enode bootnode node mungkin tidak cocok dengan jaringan, atau UDP discovery diblokir. Jika terus terjadi, laporkan issue beserta log."
+  },
   "recovery": {
     "stage": {
       "retrying": "Terdeteksi error database node. Menjalankan ulang node (percobaan {{attempt}} dari {{maxAttempts}})...",
@@ -84,9 +88,16 @@
       "failed": "Pemulihan otomatis dihentikan. Node memerlukan perhatian Anda."
     },
     "hint": {
+      "ACCESS_DENIED": "Windows menolak akses node ke pipe IPC atau file datanya, biasanya karena geth.exe dari sesi sebelumnya masih berjalan. Tutup proses geth.exe lewat Task Manager (tab Details) atau restart komputer, lalu klik Coba lagi.",
+      "PORT_RESERVED": "Windows mereservasi port {{port}} yang dibutuhkan node (Hyper-V dan WSL mereservasi rentang port sekaligus). Ganti Port dengar di Pengaturan → Jaringan, atau restart CointMU agar memilih port lain, lalu klik Coba lagi.",
       "PORT_IN_USE": "Port jaringan node sedang dipakai program lain. Tutup program tersebut atau ubah Port dengar di Pengaturan → Jaringan, lalu coba lagi.",
       "DB_LOCKED": "Database node sedang dipakai proses lain, misalnya instance CointMU atau geth lain. Tutup proses tersebut, lalu coba lagi.",
       "failed": "Keystore dompet Anda tidak disentuh. Coba lagi atau mulai ulang aplikasi; jika tetap gagal, laporkan masalah beserta log-nya."
+    },
+    "cause": "Error node terakhir ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "error tidak dikenal",
+      "DB_CORRUPT": "database chain rusak"
     },
     "retry": "Coba lagi",
     "retrying": "Mencoba lagi..."

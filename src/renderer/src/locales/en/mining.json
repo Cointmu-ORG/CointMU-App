@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Block rewards are credited here",
     "setInMiningSettings": "Set in Mining Settings"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode unreachable — make sure you are connected to the campus network or VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "The bootnode is reachable, but no peers have connected. The node's network ID or bootnode enode may not match the network, or UDP discovery may be blocked. If this persists, report an issue with the logs."
+  },
   "recovery": {
     "stage": {
       "retrying": "Node database error detected. Restarting the node (attempt {{attempt}} of {{maxAttempts}})...",
@@ -84,9 +88,16 @@
       "failed": "Automatic recovery stopped. The node needs your attention."
     },
     "hint": {
+      "ACCESS_DENIED": "Windows denied the node access to its IPC pipe or data files, usually because a geth.exe from an earlier session is still running. Close the geth.exe process in Task Manager (Details tab) or restart the computer, then click Retry.",
+      "PORT_RESERVED": "Windows has reserved port {{port}}, which the node needs (Hyper-V and WSL reserve whole port ranges). Change the Listen port in Settings → Network, or restart CointMU so it picks other ports, then click Retry.",
       "PORT_IN_USE": "Another program is using the node's network port. Close it or change the Listen port in Settings → Network, then retry.",
       "DB_LOCKED": "The node database is in use by another process, such as another CointMU or geth instance. Close it, then retry.",
       "failed": "Your wallet keystore was not touched. Retry, or restart the app; if it keeps failing, report an issue with the logs."
+    },
+    "cause": "Last node error ({{kind}}):",
+    "kind": {
+      "UNKNOWN_FATAL": "unrecognized error",
+      "DB_CORRUPT": "chain database damaged"
     },
     "retry": "Retry",
     "retrying": "Retrying..."
