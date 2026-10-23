@@ -29,7 +29,6 @@ export {
   MiningActivity,
   ACTIVITY_TAB_FOUND,
 } from "./ui/mining-activity.component";
-export { MiningIcon } from "./ui/mining-icon.component";
 export { NodeRecoveryBanner } from "./ui/node-recovery-banner.component";
 
 // API (Services)
