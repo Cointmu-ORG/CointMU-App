@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ms from "ms";
-import { formatElapsed } from "@/shared/lib";
+import { formatElapsed } from "./time.util";
 
 const TICK_INTERVAL_MS = ms("1s");
 const IDLE_LABEL = "--";

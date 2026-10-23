@@ -1,11 +1,8 @@
 import { ethers } from "ethers";
-import { STANDARD_ERC20_ABI } from "@/features/wallet";
+import { STANDARD_ERC20_ABI } from "./token.service";
 import { call, createNodeProvider, getSetting } from "@/shared/api";
-import {
-  getSessionPassword,
-  decryptSecret,
-  type DerivedAccount,
-} from "@/features/wallet";
+import { getSessionPassword } from "./wallet-session.service";
+import { decryptSecret, type DerivedAccount } from "./wallet.service";
 
 /**
  * Resolves the local node provider, relayed through the main process.
