@@ -1,9 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { MiningIcon } from "@/features/mining";
-import { SendIcon } from "@/features/wallet";
-import { ReceiveIcon } from "@/features/wallet";
-import { ContractIcon } from "@/features/wallet";
+import { ContractIcon, MiningIcon, ReceiveIcon, SendIcon } from "../icons";
 
 export type ActivityType = "mining" | "send" | "receive" | "contract";
 

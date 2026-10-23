@@ -27,3 +27,4 @@ export type { LogActionsProps } from "./log-actions.component";
 export * from "./ui.constants";
 
 export * from "./activity";
+export * from "./icons";

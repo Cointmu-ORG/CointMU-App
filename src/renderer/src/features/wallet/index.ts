@@ -24,6 +24,3 @@ export * from "./lib/history.util";
 
 export { AccountHeroCard } from "./ui/account-hero-card.component";
 export { AccountSidebar } from "./ui/account-sidebar.component";
-export { ContractIcon } from "./ui/contract-icon.component";
-export { ReceiveIcon } from "./ui/receive-icon.component";
-export { SendIcon } from "./ui/send-icon.component";
