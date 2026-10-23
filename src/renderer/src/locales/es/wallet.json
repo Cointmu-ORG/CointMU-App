@@ -54,7 +54,10 @@
       "noHidden": "No hay cuentas ocultas.",
       "unhideTooltip": "Mostrar cuenta",
       "confirmDeleteZero": "¿Está seguro de que desea eliminar permanentemente esta cuenta vacía?",
-      "confirmDeleteDust": "Esta cuenta tiene un saldo pequeño. ¿Está seguro de que desea eliminarla permanentemente y perder los fondos?"
+      "confirmDeleteDust": "Esta cuenta tiene un saldo pequeño. ¿Está seguro de que desea eliminarla permanentemente y perder los fondos?",
+      "deleteTitle": "Eliminar cuenta",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
     },
     "receive": {
       "title": "Recibir CMU",

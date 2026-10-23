@@ -47,10 +47,11 @@ function ContributionCell({
       <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1.5 text-[10px] text-white shadow-lg">
         <p className="font-bold">{label}</p>
         <p className="text-slate-300">
-          {contribution.blocksValidated} {t("mining:heatmap.blocksValidated")}
+          {contribution.blocksValidated} {t("mining:activity.blocksValidated")}
         </p>
         <p className="text-slate-300">
-          {contribution.miningOperations} {t("mining:heatmap.miningOperations")}
+          {contribution.miningOperations}{" "}
+          {t("mining:activity.miningOperations")}
         </p>
       </div>
     </div>
@@ -114,11 +115,11 @@ export function ActivityHeatmap({
       </div>
 
       <div className="flex items-center justify-end gap-1.5 mt-3 text-[10px] font-medium text-slate-400">
-        <span>{t("mining:heatmap.less")}</span>
+        <span>{t("mining:activity.less")}</span>
         {HEATMAP_INTENSITY_LEGEND.map((cls) => (
           <div key={cls} className={`w-3 h-3 rounded-sm ${cls}`} />
         ))}
-        <span>{t("mining:heatmap.more")}</span>
+        <span>{t("mining:activity.more")}</span>
       </div>
     </div>
   );

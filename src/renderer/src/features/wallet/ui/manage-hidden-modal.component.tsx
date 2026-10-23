@@ -82,7 +82,7 @@ function ManageHiddenModal({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="w-full max-w-md p-6 bg-white dark:bg-gray-900 border dark:border-gray-800 rounded-xl shadow-xl">
             <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-              {t("wallet:modals.manageHidden.deleteTitle", "Delete Account")}
+              {t("wallet:modals.manageHidden.deleteTitle")}
             </h4>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               {parseFloat(balances[accountToDelete.address] || "0") === 0
@@ -94,7 +94,7 @@ function ManageHiddenModal({
                 onClick={() => setAccountToDelete(null)}
                 className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
-                {t("wallet:modals.manageHidden.cancel", "Cancel")}
+                {t("wallet:modals.manageHidden.cancel")}
               </button>
               <button
                 onClick={() => {
@@ -103,7 +103,7 @@ function ManageHiddenModal({
                 }}
                 className="px-4 py-2 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
               >
-                {t("wallet:modals.manageHidden.delete", "Delete")}
+                {t("wallet:modals.manageHidden.delete")}
               </button>
             </div>
           </div>

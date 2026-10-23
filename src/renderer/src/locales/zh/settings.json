@@ -96,7 +96,6 @@
     "noConnectedSitesTitle": "没有连接的站点",
     "noConnectedSitesDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
     "readOnlyAccess": "已授予只读权限",
-    "revokeBtn": "撤销",
     "emptyTitle": "没有连接的站点",
     "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
     "extensionName": "CointMU Browser Extension",
@@ -201,7 +200,8 @@
     "downloadingUpdateTitle": "正在下载更新",
     "readyUpdateTitle": "更新已准备好安装",
     "readyUpdateDesc": "已下载版本 {{version}}。",
-    "restartUpdateBtn": "重启并安装"
+    "restartUpdateBtn": "重启并安装",
+    "uptimeLoading": "加载中..."
   },
   "resetToDefaults": "恢复默认值",
   "resetModal": {
@@ -313,7 +313,11 @@
     "resetWalletBtn": "重置...",
     "access": "访问",
     "backup": "备份",
-    "hardware": "硬件"
+    "hardware": "硬件",
+    "biometricsTitle": "需要 Touch ID / Windows Hello 来签名",
+    "biometricsDesc": "使用生物识别技术授权每笔交易",
+    "connecting": "连接中...",
+    "connect": "连接"
   },
   "privacy": {
     "title": "隐私与诊断",
@@ -342,7 +346,8 @@
       "refresh": "刷新",
       "deleteAll": "全部删除",
       "empty": "没有等待发送的报告。",
-      "loadFailed": "无法读取报告队列。"
+      "loadFailed": "无法读取报告队列。",
+      "loading": "加载中..."
     },
     "logs": "日志",
     "logsDesc": "日志经脱敏后保存在本机，绝不会自动发送。报告问题时请附上日志。",

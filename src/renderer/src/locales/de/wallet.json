@@ -54,7 +54,10 @@
       "noHidden": "Keine versteckten Konten.",
       "unhideTooltip": "Konto einblenden",
       "confirmDeleteZero": "Sind Sie sicher, dass Sie dieses leere Konto dauerhaft löschen möchten?",
-      "confirmDeleteDust": "Dieses Konto weist ein geringes Guthaben auf. Sind Sie sicher, dass Sie es dauerhaft löschen und das Guthaben verlieren möchten?"
+      "confirmDeleteDust": "Dieses Konto weist ein geringes Guthaben auf. Sind Sie sicher, dass Sie es dauerhaft löschen und das Guthaben verlieren möchten?",
+      "deleteTitle": "Konto löschen",
+      "cancel": "Abbrechen",
+      "delete": "Löschen"
     },
     "receive": {
       "title": "CMU empfangen",

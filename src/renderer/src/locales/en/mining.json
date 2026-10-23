@@ -14,7 +14,9 @@
     "logAwaiting": "Awaiting node activity...",
     "tabFound": "Found",
     "tabLog": "Log",
-    "tabActivity": "Activity"
+    "tabActivity": "Activity",
+    "blocksValidated": "blocks validated",
+    "miningOperations": "mining operations"
   },
   "header": {
     "workspace": "Workspace",

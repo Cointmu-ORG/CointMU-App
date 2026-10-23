@@ -54,7 +54,10 @@
       "noHidden": "Tidak ada akun tersembunyi.",
       "unhideTooltip": "Tampilkan akun",
       "confirmDeleteZero": "Apakah Anda yakin ingin menghapus akun kosong ini secara permanen?",
-      "confirmDeleteDust": "Akun ini memiliki saldo kecil. Apakah Anda yakin ingin menghapusnya secara permanen dan kehilangan dana tersebut?"
+      "confirmDeleteDust": "Akun ini memiliki saldo kecil. Apakah Anda yakin ingin menghapusnya secara permanen dan kehilangan dana tersebut?",
+      "deleteTitle": "Hapus Akun",
+      "cancel": "Batal",
+      "delete": "Hapus"
     },
     "receive": {
       "title": "Terima CMU",

@@ -1,105 +1,81 @@
-import * as fs from "fs";
-import * as path from "path";
+import { readdirSync, readFileSync } from "node:fs";
+import * as path from "node:path";
+import {
+  collectKeyRefs,
+  isResolvable,
+  readRegisteredNamespaces,
+} from "./i18n/key-usage";
+import {
+  buildKeyIndex,
+  findCatalogGaps,
+  loadCatalog,
+} from "./i18n/locale-catalog";
 
-const LOCALES_DIR = path.join(__dirname, "../src/renderer/src/locales");
-const SOURCE_LANG = "en";
+const RENDERER_DIR = path.join(__dirname, "../src/renderer/src");
+const LOCALES_DIR = path.join(RENDERER_DIR, "locales");
+const I18N_CONFIG = path.join(RENDERER_DIR, "app/i18n.ts");
+const SOURCE_FILE = /\.tsx?$/;
+const EXCLUDED_FILE = /\.(test|spec)\.tsx?$|\.d\.ts$/;
 
 /**
- * Recursively diffs an object against a source object to find missing keys.
- * @param source - The source object to check against.
- * @param target - The target object to check for missing keys.
- * @param prefix - The current object path prefix.
- * @returns An array of missing key paths.
+ * Lists renderer source files that can reference translation keys.
+ * @returns Paths relative to the repository root.
  */
-function findMissingKeys(source: any, target: any, prefix = ""): string[] {
-  let missing: string[] = [];
+function rendererSourceFiles(): string[] {
+  return readdirSync(RENDERER_DIR, { recursive: true, encoding: "utf8" })
+    .filter((file) => SOURCE_FILE.test(file) && !EXCLUDED_FILE.test(file))
+    .map((file) => path.join(RENDERER_DIR, file));
+}
 
-  for (const key in source) {
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      const currentPath = prefix ? `${prefix}.${key}` : key;
+/**
+ * Reports locale files or keys missing from any locale, compared with the
+ * union of every locale and the namespaces registered in app/i18n.ts.
+ * @returns The number of gaps found.
+ */
+function auditCatalog(): number {
+  const catalog = loadCatalog(LOCALES_DIR);
+  const registered = readRegisteredNamespaces(
+    readFileSync(I18N_CONFIG, "utf8"),
+  );
+  const gaps = findCatalogGaps(catalog, registered);
+  for (const gap of gaps) {
+    const what =
+      gap.key === null ? "namespace file is missing" : `missing key ${gap.key}`;
+    console.log(`  [${gap.locale}/${gap.namespace}.json] ${what}`);
+  }
+  console.log(
+    `Locale coverage: ${gaps.length} gap(s) across ${catalog.size} locales.`,
+  );
+  return gaps.length;
+}
 
-      if (target[key] === undefined) {
-        missing.push(currentPath);
-      } else if (typeof source[key] === "object" && source[key] !== null) {
-        if (typeof target[key] === "object" && target[key] !== null) {
-          missing = missing.concat(
-            findMissingKeys(source[key], target[key], currentPath),
-          );
-        } else {
-          missing.push(currentPath);
-        }
-      }
+/**
+ * Reports t()/<Trans> keys in renderer source that no locale defines.
+ * @returns The number of unresolved references.
+ */
+function auditKeyUsage(): number {
+  const index = buildKeyIndex(loadCatalog(LOCALES_DIR));
+  const root = path.join(__dirname, "..");
+  let checked = 0;
+  let unresolved = 0;
+  for (const file of rendererSourceFiles()) {
+    const refs = collectKeyRefs(
+      path.relative(root, file),
+      readFileSync(file, "utf8"),
+    );
+    checked += refs.length;
+    for (const ref of refs.filter((r) => !isResolvable(r, index))) {
+      unresolved++;
+      console.log(
+        `  ${ref.file}:${ref.line}  ${ref.raw}  (looked in: ${ref.namespaces.join(", ")})`,
+      );
     }
   }
-
-  return missing;
+  console.log(
+    `Key usage: ${unresolved} unresolved of ${checked} statically known key reference(s).`,
+  );
+  return unresolved;
 }
 
-/**
- * Audits all target locale namespaces against the primary english locale namespaces.
- * @returns Void.
- */
-function auditLocales(): void {
-  const sourceDir = path.join(LOCALES_DIR, SOURCE_LANG);
-
-  if (!fs.existsSync(sourceDir)) {
-    console.error(`Source directory not found: ${sourceDir}`);
-    process.exit(1);
-  }
-
-  const namespaces = fs
-    .readdirSync(sourceDir)
-    .filter((file) => file.endsWith(".json"));
-
-  const allLangs = fs
-    .readdirSync(LOCALES_DIR)
-    .filter((dir) => fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory());
-
-  const targetLangs = allLangs.filter((lang) => lang !== SOURCE_LANG);
-
-  console.log(`Starting i18n audit against ${SOURCE_LANG} namespaces...`);
-
-  let totalMissing = 0;
-
-  targetLangs.forEach((targetLang) => {
-    const targetDir = path.join(LOCALES_DIR, targetLang);
-
-    namespaces.forEach((namespaceFile) => {
-      const sourcePath = path.join(sourceDir, namespaceFile);
-      const targetPath = path.join(targetDir, namespaceFile);
-
-      const sourceData = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
-
-      let targetData = {};
-      if (fs.existsSync(targetPath)) {
-        targetData = JSON.parse(fs.readFileSync(targetPath, "utf8"));
-      } else {
-        console.warn(
-          `\n[${targetLang}/${namespaceFile}] File is completely missing.`,
-        );
-      }
-
-      const missingKeys = findMissingKeys(sourceData, targetData);
-
-      if (missingKeys.length > 0) {
-        console.log(
-          `\n[${targetLang}/${namespaceFile}] Missing ${missingKeys.length} keys:`,
-        );
-        missingKeys.forEach((key) => console.log(`  - ${key}`));
-        totalMissing += missingKeys.length;
-      }
-    });
-  });
-
-  if (totalMissing > 0) {
-    console.log(
-      `\nAudit complete. Found ${totalMissing} missing translations total.`,
-    );
-    process.exit(1);
-  } else {
-    console.log("\nAudit complete. 100% translation coverage!");
-    process.exit(0);
-  }
-}
-
-auditLocales();
+const failures = auditCatalog() + auditKeyUsage();
+process.exit(failures > 0 ? 1 : 0);

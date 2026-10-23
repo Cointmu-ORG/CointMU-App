@@ -54,7 +54,10 @@
       "noHidden": "没有隐藏的账户。",
       "unhideTooltip": "取消隐藏账户",
       "confirmDeleteZero": "您确定要永久删除这个空帐户吗？",
-      "confirmDeleteDust": "此帐户中有少量余额。您确定要永久删除它并失去这些资金吗？"
+      "confirmDeleteDust": "此帐户中有少量余额。您确定要永久删除它并失去这些资金吗？",
+      "deleteTitle": "删除帐户",
+      "cancel": "取消",
+      "delete": "删除"
     },
     "receive": {
       "title": "接收 CMU",

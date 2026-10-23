@@ -48,7 +48,7 @@ const formatBytes = (bytes: number): string => {
 export function AboutSettings(): JSX.Element {
   const { t } = useTranslation();
   const [uptimeStr, setUptimeStr] = useState<string>(
-    t("settings:about.loadingUptime"),
+    t("settings:about.uptimeLoading"),
   );
   const [chainId, setChainId] = useState<number | null>(null);
   const [isEditingChain, setIsEditingChain] = useState<boolean>(false);
@@ -94,7 +94,7 @@ export function AboutSettings(): JSX.Element {
     const parsedId = parseInt(newChainIdInput, 10);
     if (isNaN(parsedId) || parsedId <= 0) return;
 
-    const confirmed = window.confirm(t("settings:about.warningChainId"));
+    const confirmed = window.confirm(t("settings:about.chainWarning"));
 
     if (!confirmed) return;
 
@@ -104,13 +104,13 @@ export function AboutSettings(): JSX.Element {
       if (success) {
         setChainId(parsedId);
         setIsEditingChain(false);
-        alert(t("settings:about.successChainId"));
+        alert(t("settings:about.chainSuccess"));
       } else {
-        alert(t("settings:about.failChainId"));
+        alert(t("settings:about.chainFailure"));
       }
     } catch (err) {
       console.error(err);
-      alert(t("settings:about.errorChainId"));
+      alert(t("settings:about.chainError"));
     } finally {
       setIsSavingChain(false);
     }
@@ -177,10 +177,10 @@ export function AboutSettings(): JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings:about.updateAvailableTitle")}
+                    {t("settings:about.availableUpdateTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings:about.updateAvailableDesc", {
+                    {t("settings:about.availableUpdateDesc", {
                       version: updater.info?.version ?? "unknown",
                     })}
                   </p>
@@ -221,10 +221,10 @@ export function AboutSettings(): JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings:about.updateReadyTitle")}
+                    {t("settings:about.readyUpdateTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings:about.updateReadyDesc", {
+                    {t("settings:about.readyUpdateDesc", {
                       version: updater.info?.version ?? "unknown",
                     })}
                   </p>
@@ -233,7 +233,7 @@ export function AboutSettings(): JSX.Element {
                   onClick={() => updater.install()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
                 >
-                  {t("settings:about.restartInstallBtn")}
+                  {t("settings:about.restartUpdateBtn")}
                 </button>
               </div>
             )}
@@ -248,7 +248,7 @@ export function AboutSettings(): JSX.Element {
                   </p>
                   {updater.status === "error" ? (
                     <p className="text-xs text-red-500 mt-0.5">
-                      {updater.error ?? t("settings:about.failedCheck")}
+                      {updater.error ?? t("settings:about.updateError")}
                     </p>
                   ) : updater.status === "not-available" ? (
                     <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
@@ -306,8 +306,8 @@ export function AboutSettings(): JSX.Element {
                       className="text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded px-2.5 py-1 transition-colors"
                     >
                       {isSavingChain
-                        ? t("settings:about.saving")
-                        : t("settings:about.save")}
+                        ? t("settings:about.savingBtn")
+                        : t("settings:about.saveBtn")}
                     </button>
                     <button
                       onClick={() => {
@@ -317,7 +317,7 @@ export function AboutSettings(): JSX.Element {
                       disabled={isSavingChain}
                       className="text-xs font-bold text-slate-500 dark:text-gray-400 hover:text-slate-700 transition-colors"
                     >
-                      {t("settings:about.cancel")}
+                      {t("settings:about.cancelBtn")}
                     </button>
                   </>
                 ) : (

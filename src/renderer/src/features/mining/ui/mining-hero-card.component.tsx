@@ -150,7 +150,7 @@ function MiningHeroCard({
               leftIcon={<Square width={14} height={14} />}
             >
               {toggling
-                ? t("mining:hero.Squareping")
+                ? t("mining:hero.stopping")
                 : t("mining:hero.stopMiningbtn")}
             </Button>
           </div>

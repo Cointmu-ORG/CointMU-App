@@ -29,7 +29,7 @@ export function CustomTitleBar(): JSX.Element {
       >
         <button
           onClick={handleMinimize}
-          title={t("ui.window.minimize")}
+          title={t("ui:window.minimize")}
           className="flex items-center justify-center w-12 h-full text-slate-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
           <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
@@ -38,7 +38,7 @@ export function CustomTitleBar(): JSX.Element {
         </button>
         <button
           onClick={handleClose}
-          title={t("ui.window.close")}
+          title={t("ui:window.close")}
           className="flex items-center justify-center w-12 h-full text-slate-500 dark:text-gray-400 hover:bg-red-500 hover:text-white transition-colors"
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">

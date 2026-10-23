@@ -96,7 +96,6 @@
     "noConnectedSitesTitle": "Нет подключенных сайтов",
     "noConnectedSitesDesc": "Нет внешних приложений, подключенных к вашему кошельку.",
     "readOnlyAccess": "Доступ на чтение",
-    "revokeBtn": "Отозвать",
     "emptyTitle": "Нет подключенных сайтов",
     "emptyDesc": "Нет внешних приложений, подключенных к вашему кошельку.",
     "extensionName": "CointMU Browser Extension",
@@ -201,7 +200,8 @@
     "downloadingUpdateTitle": "Загрузка обновления",
     "readyUpdateTitle": "Обновление готово к установке",
     "readyUpdateDesc": "Версия {{version}} загружена.",
-    "restartUpdateBtn": "Перезапустить и установить"
+    "restartUpdateBtn": "Перезапустить и установить",
+    "uptimeLoading": "Загрузка..."
   },
   "resetToDefaults": "Сбросить настройки",
   "resetModal": {
@@ -313,7 +313,11 @@
     "resetWalletBtn": "Сбросить...",
     "access": "Доступ",
     "backup": "Резервное копирование",
-    "hardware": "Оборудование"
+    "hardware": "Оборудование",
+    "biometricsTitle": "Требовать Touch ID / Windows Hello для подписи",
+    "biometricsDesc": "Использовать биометрию для подтверждения",
+    "connecting": "Подключение...",
+    "connect": "Подключить"
   },
   "privacy": {
     "title": "Конфиденциальность и диагностика",
@@ -342,7 +346,8 @@
       "refresh": "Обновить",
       "deleteAll": "Удалить все",
       "empty": "Нет отчётов, ожидающих отправки.",
-      "loadFailed": "Не удалось прочитать очередь отчётов."
+      "loadFailed": "Не удалось прочитать очередь отчётов.",
+      "loading": "Загрузка..."
     },
     "logs": "Логи",
     "logsDesc": "Логи сохраняются на этом компьютере в очищенном виде и никогда не отправляются автоматически. Прикрепите их, когда сообщаете о проблеме.",

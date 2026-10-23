@@ -1,6 +1,11 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["src/main/**/*", "src/bridge/**/*", "electron.vite.config.ts"],
+  "include": [
+    "src/main/**/*",
+    "src/bridge/**/*",
+    "scripts/**/*.ts",
+    "electron.vite.config.ts"
+  ],
   "compilerOptions": {
     "composite": true,
     "moduleResolution": "bundler",

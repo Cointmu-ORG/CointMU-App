@@ -148,7 +148,7 @@ export function AdvancedSettings(): JSX.Element {
                 className="text-sm font-bold font-mono text-slate-700 truncate max-w-[16rem]"
                 title={storage.datadir}
               >
-                {storage.datadir || t("settings:advanced.loading")}
+                {storage.datadir || t("settings:advanced.datadirLoading")}
               </span>
             </div>
 

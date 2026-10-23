@@ -54,7 +54,10 @@
       "noHidden": "No hidden accounts.",
       "unhideTooltip": "Unhide account",
       "confirmDeleteZero": "Are you sure you want to permanently delete this empty account?",
-      "confirmDeleteDust": "This account has a small balance. Are you sure you want to permanently delete it and lose the funds?"
+      "confirmDeleteDust": "This account has a small balance. Are you sure you want to permanently delete it and lose the funds?",
+      "deleteTitle": "Delete Account",
+      "cancel": "Cancel",
+      "delete": "Delete"
     },
     "receive": {
       "title": "Receive CMU",

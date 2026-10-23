@@ -14,7 +14,9 @@
     "logAwaiting": "Warte auf Node-Aktivität...",
     "tabFound": "Gefunden",
     "tabLog": "Protokoll",
-    "tabActivity": "Aktivität"
+    "tabActivity": "Aktivität",
+    "blocksValidated": "validierte Blöcke",
+    "miningOperations": "Mining-Vorgänge"
   },
   "header": {
     "workspace": "Arbeitsbereich",
