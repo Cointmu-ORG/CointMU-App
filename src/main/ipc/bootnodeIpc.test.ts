@@ -4,6 +4,7 @@ import { BOOTNODE_CHANNELS } from "../../bridge/ipc-channels";
 import { BootnodeSaveError, BootnodeSource } from "../../bridge/types";
 import { resolveBuildBootnodes } from "../geth/bootnode";
 import { BOOTNODES_SETTING_KEY } from "../geth/bootnodeSettings";
+import { getActiveBootnodeConfig } from "../geth/bootnodeWatcher";
 import { restartNodeByUser } from "../geth/nodeRestart";
 import { registerBootnodeHandlers } from "./bootnodeIpc";
 
@@ -13,7 +14,7 @@ vi.mock("../geth/bootnodeWatcher", async () => {
   const { resolveBuildBootnodes } = await import("../geth/bootnode");
   return {
     DEFAULT_BOOTNODE_CONFIG: resolveBuildBootnodes(undefined),
-    getActiveBootnodeConfig: () => resolveBuildBootnodes(undefined),
+    getActiveBootnodeConfig: vi.fn(() => resolveBuildBootnodes(undefined)),
   };
 });
 
@@ -53,6 +54,9 @@ function registerWith(store: ReturnType<typeof createStore>): {
 describe("bootnode IPC", () => {
   beforeEach(() => {
     vi.mocked(restartNodeByUser).mockReset().mockReturnValue(true);
+    vi.mocked(getActiveBootnodeConfig).mockReturnValue(
+      resolveBuildBootnodes(undefined),
+    );
   });
 
   it("saves a valid list and restarts the node", () => {
@@ -93,7 +97,12 @@ describe("bootnode IPC", () => {
     expect(restartNodeByUser).not.toHaveBeenCalled();
   });
 
-  it("resets to the default bootnodes and restarts the node", () => {
+  it("resets to the default bootnodes and restarts a node using custom ones", () => {
+    vi.mocked(getActiveBootnodeConfig).mockReturnValue({
+      enodes: [SAVED_ENODE],
+      source: BootnodeSource.USER,
+      problem: null,
+    });
     const store = createStore([SAVED_ENODE]);
     const { invoke } = registerWith(store);
 
@@ -105,6 +114,20 @@ describe("bootnode IPC", () => {
       activeEnodes: resolveBuildBootnodes(undefined).enodes,
       source: BootnodeSource.FALLBACK,
       customEnodes: [],
+      isRestartPending: false,
+    });
+  });
+
+  it("does not restart on reset when the node already uses the defaults", () => {
+    const store = createStore([]);
+    const { invoke } = registerWith(store);
+
+    const state = invoke(BOOTNODE_CHANNELS.RESET);
+
+    expect(store.set).toHaveBeenCalledWith(BOOTNODES_SETTING_KEY, []);
+    expect(restartNodeByUser).not.toHaveBeenCalled();
+    expect(state).toMatchObject({
+      source: BootnodeSource.FALLBACK,
       isRestartPending: false,
     });
   });

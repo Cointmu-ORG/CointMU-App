@@ -74,6 +74,21 @@ export function checkBootnodeInput(input: unknown): BootnodeInputCheck {
 }
 
 /**
+ * @param left - An enode list.
+ * @param right - Another enode list.
+ * @returns True when both list the same enodes in the same order.
+ */
+export function hasSameEnodes(
+  left: readonly string[],
+  right: readonly string[],
+): boolean {
+  return (
+    left.length === right.length &&
+    left.every((enode, index) => enode === right[index])
+  );
+}
+
+/**
  * Describes the bootnode setting for the renderer.
  * @param store - The settings store.
  * @param defaults - The build or fallback bootnodes.
@@ -95,6 +110,6 @@ export function buildBootnodeState(
     source: active.source,
     customEnodes: isBootnodeList(saved) ? saved : [],
     isRestartPending:
-      running !== null && running.enodes.join() !== next.enodes.join(),
+      running !== null && !hasSameEnodes(running.enodes, next.enodes),
   };
 }

@@ -5,6 +5,7 @@ import {
   BOOTNODES_SETTING_KEY,
   buildBootnodeState,
   checkBootnodeInput,
+  hasSameEnodes,
 } from "../geth/bootnodeSettings";
 import {
   DEFAULT_BOOTNODE_CONFIG,
@@ -54,6 +55,15 @@ export function registerBootnodeHandlers(store: AppStore): void {
   ipcMain.handle(BOOTNODE_CHANNELS.RESET, (): BootnodeState => {
     store.set(BOOTNODES_SETTING_KEY, []);
     console.log("[bootnode] Reset to the default bootnodes");
+    const running = getActiveBootnodeConfig();
+    // "Reset all settings" always calls this; skip the restart when the
+    // running node (or a node not started yet) already uses the defaults.
+    const isAlreadyDefault =
+      running === null ||
+      hasSameEnodes(running.enodes, DEFAULT_BOOTNODE_CONFIG.enodes);
+    if (isAlreadyDefault) {
+      return buildBootnodeState(store, DEFAULT_BOOTNODE_CONFIG, running);
+    }
     return applyBootnodeChange(store);
   });
 }
