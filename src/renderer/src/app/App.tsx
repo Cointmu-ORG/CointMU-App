@@ -5,11 +5,11 @@ import { DashboardPage } from "@/pages/dashboard";
 import { AuthFlow } from "@/features/auth";
 import { type DerivedAccount } from "@/features/wallet";
 import {
-  getSetting,
   useSecurityStore,
   useAdvancedStore,
   useConnectedSitesStore,
 } from "@/features/settings";
+import { getSetting } from "@/shared/api";
 import { useUpdater } from "@/shared/lib";
 import { useMiningLogStream, NodeRecoveryBanner } from "@/features/mining";
 import { useAppStore } from "@/shared/model";

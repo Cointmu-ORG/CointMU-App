@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { STANDARD_ERC20_ABI } from "@/features/wallet";
-import { call, createNodeProvider } from "@/shared/api";
-import { getSetting } from "@/features/settings";
+import { call, createNodeProvider, getSetting } from "@/shared/api";
 import {
   getSessionPassword,
   decryptSecret,

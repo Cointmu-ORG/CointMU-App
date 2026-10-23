@@ -6,7 +6,7 @@ import {
 import { useState, useEffect, useRef, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "@/features/settings";
-import { setSetting } from "@/features/settings";
+import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
 

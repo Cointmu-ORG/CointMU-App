@@ -11,11 +11,8 @@ import { ExternalSourceSettings } from "@/features/settings";
 import { AdvancedSettings } from "@/features/settings";
 import { AboutSettings } from "@/features/settings";
 import { NotificationSettings } from "@/features/settings";
-import {
-  getAllSettings,
-  setSetting,
-  resetAllSettings,
-} from "@/features/settings";
+import { resetAllSettings } from "@/features/settings";
+import { getAllSettings, setSetting } from "@/shared/api";
 import { useAppearanceStore } from "@/features/settings";
 import { useNotificationStore } from "@/features/notifications";
 import { ErrorReportingSettings } from "@/features/error-reporting";

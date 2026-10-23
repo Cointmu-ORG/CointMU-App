@@ -7,7 +7,7 @@ import {
   type JSX,
 } from "react";
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
-import { getSetting } from "@/features/settings";
+import { getSetting } from "@/shared/api";
 import { revealPrivateKey, type DerivedAccount } from "@/features/wallet";
 import { useAppStore } from "@/shared/model";
 

@@ -1,4 +1,4 @@
-import { getAllSettings, setSetting } from "@/features/settings";
+import { getAllSettings, setSetting } from "@/shared/api";
 import { type MiningLog } from "../model/mining.store";
 
 interface MiningStats {

@@ -1,7 +1,7 @@
 import { RESET_CONFIRM_WORD } from "../config/settings.constants";
 import { useState, type SyntheticEvent, type JSX } from "react";
 import { AlertTriangle, Eye, EyeOff, X } from "lucide-react";
-import { getSetting } from "@/features/settings";
+import { getSetting } from "@/shared/api";
 import { verifyPassword, lockSession } from "@/features/wallet";
 
 interface ResetWalletModalProps {
