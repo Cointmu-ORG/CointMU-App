@@ -2,6 +2,7 @@ import "@sentry/electron/preload";
 import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import {
+  BOOTNODE_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   NODE_CHANNELS,
   RPC_CHANNELS,
@@ -9,6 +10,8 @@ import {
 } from "../bridge/ipc-channels";
 import type {
   AppInfo,
+  BootnodeSaveResult,
+  BootnodeState,
   JsonRpcEnvelope,
   NodePeerHint,
   NodeRecoveryEvent,
@@ -209,6 +212,14 @@ const api = {
     },
     getPeerHint: (): Promise<NodePeerHint | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_PEER_HINT),
+  },
+  bootnode: {
+    get: (): Promise<BootnodeState> =>
+      ipcRenderer.invoke(BOOTNODE_CHANNELS.GET),
+    set: (text: string): Promise<BootnodeSaveResult> =>
+      ipcRenderer.invoke(BOOTNODE_CHANNELS.SET, text),
+    reset: (): Promise<BootnodeState> =>
+      ipcRenderer.invoke(BOOTNODE_CHANNELS.RESET),
   },
   diagnostics: {
     openLogsFolder: (): Promise<void> =>

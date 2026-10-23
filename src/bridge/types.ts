@@ -93,3 +93,51 @@ export const NodePeerHint = {
 
 /** Payload of NODE_CHANNELS.PEER_HINT (null clears it); a code the renderer localizes. */
 export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];
+
+/** Where the bootnodes geth dials come from, highest priority first. */
+export const BootnodeSource = {
+  /** Saved by the user in Settings → Network. */
+  USER: "user",
+  /** MAIN_VITE_BOOTNODE_ENODE baked in at build time. */
+  BUILD: "build",
+  /** The built-in campus bootnode. */
+  FALLBACK: "fallback",
+} as const;
+
+export type BootnodeSource =
+  (typeof BootnodeSource)[keyof typeof BootnodeSource];
+
+/** Payload of BOOTNODE_CHANNELS.GET, and of a successful SET or RESET. */
+export interface BootnodeState {
+  /** What the running node dials, or what the next start will dial. */
+  readonly activeEnodes: readonly string[];
+  readonly source: BootnodeSource;
+  /** The saved custom list; empty when the default is used. */
+  readonly customEnodes: readonly string[];
+  /** True when the saved setting is not in effect until the node restarts. */
+  readonly isRestartPending: boolean;
+}
+
+export const BootnodeSaveError = {
+  EMPTY: "EMPTY",
+  TOO_MANY: "TOO_MANY",
+  INVALID_ENODE: "INVALID_ENODE",
+} as const;
+
+export type BootnodeSaveError =
+  (typeof BootnodeSaveError)[keyof typeof BootnodeSaveError];
+
+export interface InvalidBootnodeEntry {
+  /** 1-based position among the non-empty entries. */
+  readonly position: number;
+  readonly value: string;
+}
+
+/** Payload of BOOTNODE_CHANNELS.SET. A rejected list leaves the saved one in place. */
+export type BootnodeSaveResult =
+  | { readonly isSaved: true; readonly state: BootnodeState }
+  | {
+      readonly isSaved: false;
+      readonly error: BootnodeSaveError;
+      readonly invalid: readonly InvalidBootnodeEntry[];
+    };

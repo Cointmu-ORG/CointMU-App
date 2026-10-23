@@ -238,7 +238,37 @@
     "pruneTitle": "修剪旧状态",
     "pruneDesc": "保留最近 128 个区块的历史状态以节省磁盘空间",
     "switchingNetwork": "正在切换网络...请稍候。",
-    "restartRequired": "节点正在重新启动以连接到新网络。"
+    "restartRequired": "节点正在重新启动以连接到新网络。",
+    "advanced": "高级",
+    "bootnodes": {
+      "title": "引导节点",
+      "desc": "你的节点在网络中寻找对等节点时首先连接的节点",
+      "active": "当前引导节点",
+      "loading": "加载中…",
+      "source": {
+        "user": "自定义",
+        "build": "默认（构建）",
+        "fallback": "默认"
+      },
+      "restartPending": "已保存的引导节点将在节点下次重启后生效。",
+      "warning": "请只填写 CointMU 管理员提供的 enode。来自其他人的引导节点可能会让你连接到虚假的对等节点，并显示错误的网络状态。",
+      "customLabel": "自定义引导节点",
+      "customHint": "每行一个 enode 或用逗号分隔，最多 10 个。保存后节点将重启。",
+      "reset": "恢复默认",
+      "save": "保存并重启",
+      "saving": "正在保存…",
+      "invalidEntry": "第 {{position}} 项：{{value}}",
+      "requestFailed": "无法更新引导节点，仍在使用之前的设置。",
+      "errors": {
+        "INVALID_ENODE": "这些条目不是有效的 enode（enode://<128 位十六进制公钥>@<主机>:<端口>）。未保存任何内容。",
+        "EMPTY": "请至少填写一个 enode，或恢复默认。",
+        "TOO_MANY": "引导节点过多，最多 10 个。"
+      },
+      "notice": {
+        "saved": "引导节点已保存。",
+        "reset": "已恢复默认引导节点。"
+      }
+    }
   },
   "miningSettings": {
     "subtitle": "管理内部节点挖矿行为",

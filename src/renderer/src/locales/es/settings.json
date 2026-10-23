@@ -238,7 +238,37 @@
     "pruneTitle": "Podar estado antiguo",
     "pruneDesc": "Mantener últimos 128 bloques de estado histórico para ahorrar disco",
     "switchingNetwork": "Cambiando de red... Por favor, espere.",
-    "restartRequired": "El nodo se está reiniciando para conectarse a la nueva red."
+    "restartRequired": "El nodo se está reiniciando para conectarse a la nueva red.",
+    "advanced": "Avanzado",
+    "bootnodes": {
+      "title": "Bootnodes",
+      "desc": "Nodos que tu nodo contacta primero para encontrar pares en la red",
+      "active": "Bootnodes activos",
+      "loading": "Cargando…",
+      "source": {
+        "user": "Personalizado",
+        "build": "Predeterminado (build)",
+        "fallback": "Predeterminado"
+      },
+      "restartPending": "Los bootnodes guardados se aplicarán la próxima vez que se reinicie el nodo.",
+      "warning": "Introduce solo enodes que te hayan dado los administradores de CointMU. Un bootnode de otra persona puede conectarte con pares falsos y mostrarte una vista falsa de la red.",
+      "customLabel": "Bootnodes personalizados",
+      "customHint": "Un enode por línea o separados por comas, hasta 10. Al guardar se reinicia el nodo.",
+      "reset": "Restablecer valores predeterminados",
+      "save": "Guardar y reiniciar",
+      "saving": "Guardando…",
+      "invalidEntry": "Entrada {{position}}: {{value}}",
+      "requestFailed": "No se pudieron actualizar los bootnodes. Se sigue usando la configuración anterior.",
+      "errors": {
+        "INVALID_ENODE": "Estas entradas no son enodes válidos (enode://<clave pública de 128 hex>@<host>:<puerto>). No se guardó nada.",
+        "EMPTY": "Introduce al menos un enode o restablece los valores predeterminados.",
+        "TOO_MANY": "Demasiados bootnodes. Introduce como máximo 10."
+      },
+      "notice": {
+        "saved": "Bootnodes guardados.",
+        "reset": "Bootnodes predeterminados restablecidos."
+      }
+    }
   },
   "miningSettings": {
     "subtitle": "Gestionar el comportamiento de minería del nodo interno",

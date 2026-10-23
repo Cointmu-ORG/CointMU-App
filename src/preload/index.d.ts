@@ -1,4 +1,6 @@
 import type {
+  BootnodeSaveResult,
+  BootnodeState,
   JsonRpcEnvelope,
   NodePeerHint,
   NodeRecoveryEvent,
@@ -155,6 +157,12 @@ interface CointmuAPI {
     retry: () => Promise<void>;
     onPeerHint: (callback: (hint: NodePeerHint | null) => void) => () => void;
     getPeerHint: () => Promise<NodePeerHint | null>;
+  };
+  bootnode: {
+    get: () => Promise<BootnodeState>;
+    /** Validates every entry in main; a rejected list leaves the saved one in place. */
+    set: (text: string) => Promise<BootnodeSaveResult>;
+    reset: () => Promise<BootnodeState>;
   };
   diagnostics: {
     openLogsFolder: () => Promise<void>;

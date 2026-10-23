@@ -2,13 +2,8 @@ import { ipcMain } from "electron";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
 import { getRpcPort } from "../geth/ports";
 import { getNetworkId } from "../geth/networkConfig";
-import {
-  NODE_RESTART_DELAY_MS,
-  getNodeRecovery,
-  isGethRunning,
-  killGethProcess,
-  spawnGethProcess,
-} from "../geth/gethProcess";
+import { getNodeRecovery, isGethRunning } from "../geth/gethProcess";
+import { restartNodeByUser } from "../geth/nodeRestart";
 import { isSessionValid } from "../services/session";
 import { peerWatchdog } from "../geth/nodeRecovery";
 import type { AppStore } from "../services/appStore";
@@ -35,24 +30,12 @@ export function registerNodeStatusHandlers(): void {
  * @returns {void}
  */
 export function registerNodeControlHandlers(store: AppStore): void {
-  /**
-   * Restarts geth on a user action, clearing any blocked or failed recovery
-   * state first. Skipped while a recovery owns the node lifecycle.
-   * @returns {void}
-   */
-  const restartNodeByUser = (): void => {
-    const nodeRecovery = getNodeRecovery();
-    if (nodeRecovery && !nodeRecovery.resume()) return;
-    console.log("[network] Restarting node with new configurations...");
-    killGethProcess().then(() => {
-      setTimeout(() => {
-        void spawnGethProcess(store);
-      }, NODE_RESTART_DELAY_MS);
-    });
+  const restart = (): void => {
+    restartNodeByUser(store);
   };
 
-  ipcMain.on("network:restartNode", restartNodeByUser);
-  ipcMain.handle(NODE_CHANNELS.RETRY, restartNodeByUser);
+  ipcMain.on("network:restartNode", restart);
+  ipcMain.handle(NODE_CHANNELS.RETRY, restart);
   ipcMain.handle(
     NODE_CHANNELS.GET_RECOVERY_STATE,
     () => getNodeRecovery()?.getActiveEvent() ?? null,

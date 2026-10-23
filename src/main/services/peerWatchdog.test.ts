@@ -6,6 +6,7 @@ import {
   PEER_POLL_INTERVAL_MS,
   PROBE_BACKOFF_MS,
   PeerWatchdog,
+  isAnyBootnodeReachable,
   isTcpReachable,
 } from "./peerWatchdog";
 
@@ -172,5 +173,34 @@ describe("isTcpReachable", () => {
     await expect(
       isTcpReachable("127.0.0.1", port, PROBE_TIMEOUT_MS),
     ).resolves.toBe(false);
+  });
+});
+
+describe("isAnyBootnodeReachable", () => {
+  // The secp256k1 generator point G: the public key of private key 1.
+  const NODE_ID =
+    "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798" +
+    "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8";
+  const DOWN = `enode://${NODE_ID}@10.0.0.5:30303`;
+  const UP = `enode://${NODE_ID}@10.0.0.6:30304`;
+  const probe = vi.fn(async (host: string) => host === "10.0.0.6");
+
+  beforeEach(() => {
+    probe.mockClear();
+  });
+
+  it("probes every active bootnode, custom ones included", async () => {
+    await expect(isAnyBootnodeReachable([DOWN, UP], probe)).resolves.toBe(true);
+    expect(probe).toHaveBeenCalledWith("10.0.0.5", 30303);
+    expect(probe).toHaveBeenCalledWith("10.0.0.6", 30304);
+  });
+
+  it("is unreachable when no bootnode answers", async () => {
+    await expect(isAnyBootnodeReachable([DOWN], probe)).resolves.toBe(false);
+  });
+
+  it("is unreachable without bootnodes, e.g. before the first start", async () => {
+    await expect(isAnyBootnodeReachable([], probe)).resolves.toBe(false);
+    expect(probe).not.toHaveBeenCalled();
   });
 });

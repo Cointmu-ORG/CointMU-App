@@ -5,13 +5,7 @@ import ms from "ms";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
 import { getNetworkId, resolveDataDir } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
-import {
-  BOOTNODE_CONFIG,
-  resolveBootnodeEnode,
-  setPendingBootnodeEnode,
-  startBootnodeWatcher,
-  stopBootnodeWatcher,
-} from "./bootnodeWatcher";
+import { forgetRunningBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethBinaryPath } from "./gethInit";
 import { parseGethLogChunk } from "../utils/gethLogParser";
@@ -68,10 +62,10 @@ function scheduleGethRestart(store: AppStore): void {
 
 /**
  * Spawns the Core-geth binary as a managed child process with environment-driven
- * configuration for networking, RPC, and data storage. The configured bootnode
- * is pre-resolved so a DNS outage cannot fatally abort startup: when it cannot be
- * resolved the node launches without bootnodes in an isolated local state and a
- * watcher re-attaches the peer once DNS recovers. Unexpected exits trigger an
+ * configuration for networking, RPC, and data storage. The bootnodes (user
+ * setting, build value or fallback) are pre-resolved so a DNS outage cannot
+ * fatally abort startup: unresolved ones are left out and a watcher re-attaches
+ * them once DNS recovers. Unexpected exits trigger an
  * automatic restart and mining is auto-resumed when previously enabled.
  * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {Promise<void>}
@@ -117,19 +111,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     args.push(...buildGethHttpArgs(getRpcPort()));
   }
 
-  const configuredEnode = BOOTNODE_CONFIG.enode;
-  const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
-  if (resolvedEnode) {
-    args.push("--bootnodes", resolvedEnode);
-    setPendingBootnodeEnode(null);
-    stopBootnodeWatcher();
-  } else {
-    console.warn(
-      "[geth:spawn] Bootnode DNS unresolved; starting without bootnodes in isolated local state",
-    );
-    setPendingBootnodeEnode(configuredEnode);
-    startBootnodeWatcher();
-  }
+  args.push(...(await prepareBootnodeArgs(store)));
 
   try {
     intentionalGethShutdown = false;
@@ -245,8 +227,7 @@ export function killGethProcess(): Promise<void> {
     clearTimeout(gethRestartTimer);
     gethRestartTimer = null;
   }
-  stopBootnodeWatcher();
-  setPendingBootnodeEnode(null);
+  forgetRunningBootnodes();
 
   if (!gethProcess) {
     return Promise.resolve();

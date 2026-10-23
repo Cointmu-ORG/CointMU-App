@@ -238,7 +238,37 @@
     "pruneTitle": "Alten Zustand bereinigen",
     "pruneDesc": "Die letzten 128 Blöcke des historischen Zustands behalten, um Speicherplatz zu sparen",
     "switchingNetwork": "Netzwerk wechseln... Bitte warten.",
-    "restartRequired": "Knoten wird neu gestartet, um sich mit dem neuen Netzwerk zu verbinden."
+    "restartRequired": "Knoten wird neu gestartet, um sich mit dem neuen Netzwerk zu verbinden.",
+    "advanced": "Erweitert",
+    "bootnodes": {
+      "title": "Bootnodes",
+      "desc": "Knoten, die dein Node zuerst kontaktiert, um Peers im Netzwerk zu finden",
+      "active": "Aktive Bootnodes",
+      "loading": "Wird geladen…",
+      "source": {
+        "user": "Benutzerdefiniert",
+        "build": "Standard (Build)",
+        "fallback": "Standard"
+      },
+      "restartPending": "Die gespeicherten Bootnodes gelten ab dem nächsten Neustart des Nodes.",
+      "warning": "Gib nur Enodes ein, die du von den CointMU-Admins erhalten hast. Ein fremder Bootnode kann dich mit gefälschten Peers verbinden und dir ein falsches Bild des Netzwerks zeigen.",
+      "customLabel": "Benutzerdefinierte Bootnodes",
+      "customHint": "Ein Enode pro Zeile oder durch Kommas getrennt, höchstens 10. Speichern startet den Node neu.",
+      "reset": "Auf Standard zurücksetzen",
+      "save": "Speichern und neu starten",
+      "saving": "Wird gespeichert…",
+      "invalidEntry": "Eintrag {{position}}: {{value}}",
+      "requestFailed": "Die Bootnodes konnten nicht aktualisiert werden. Die vorherige Einstellung bleibt aktiv.",
+      "errors": {
+        "INVALID_ENODE": "Diese Einträge sind keine gültigen Enodes (enode://<128-Hex-Public-Key>@<Host>:<Port>). Es wurde nichts gespeichert.",
+        "EMPTY": "Gib mindestens einen Enode ein oder setze auf Standard zurück.",
+        "TOO_MANY": "Zu viele Bootnodes. Höchstens 10 sind erlaubt."
+      },
+      "notice": {
+        "saved": "Bootnodes gespeichert.",
+        "reset": "Standard-Bootnodes wiederhergestellt."
+      }
+    }
   },
   "miningSettings": {
     "subtitle": "Internes Node-Mining-Verhalten verwalten",

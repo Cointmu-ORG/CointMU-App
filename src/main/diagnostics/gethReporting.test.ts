@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as Sentry from "@sentry/electron/main";
-import { NodeRecoveryStage } from "../../bridge/types";
+import { BootnodeSource, NodeRecoveryStage } from "../../bridge/types";
 import { BootnodeConfigProblem } from "../geth/bootnode";
 import {
   recordGethLine,
   reportBootnodeConfigProblem,
+  reportBootnodeSource,
   reportRecoveryEvent,
 } from "./gethReporting";
 
@@ -100,6 +101,22 @@ describe("reportBootnodeConfigProblem", () => {
     });
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: "warning",
+    });
+  });
+});
+
+describe("reportBootnodeSource", () => {
+  beforeEach(() => {
+    vi.mocked(Sentry.addBreadcrumb).mockClear();
+  });
+
+  it("records only the source, never an enode", () => {
+    reportBootnodeSource(BootnodeSource.USER);
+
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: "geth",
+      level: "info",
+      message: "bootnode source: user",
     });
   });
 });

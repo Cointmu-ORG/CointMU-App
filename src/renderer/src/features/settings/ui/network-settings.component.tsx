@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import type { CustomNetwork, SettingsStore } from "@/features/settings";
 import { CustomDropdown } from "@/shared/ui";
 import { AddNetworkModal } from "./add-network-modal.component";
+import { BootnodeSettings } from "./bootnode-settings.component";
 
 interface NetworkSettingsProps {
   config: SettingsStore["network"];
@@ -296,6 +297,8 @@ export function NetworkSettings({
             </div>
           </div>
         </section>
+
+        <BootnodeSettings />
       </div>
       <AddNetworkModal
         isOpen={isAddModalOpen}

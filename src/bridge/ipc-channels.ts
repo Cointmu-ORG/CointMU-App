@@ -6,6 +6,12 @@ export const NODE_CHANNELS = {
   GET_PEER_HINT: "node:get-peer-hint",
 } as const;
 
+export const BOOTNODE_CHANNELS = {
+  GET: "bootnode:get",
+  SET: "bootnode:set",
+  RESET: "bootnode:reset",
+} as const;
+
 export const RPC_CHANNELS = {
   CALL: "rpc:call",
 } as const;

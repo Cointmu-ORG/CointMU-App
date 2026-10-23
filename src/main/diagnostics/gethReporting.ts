@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/electron/main";
 import {
   NodeRecoveryStage,
+  type BootnodeSource,
   type NodePeerHint,
   type NodeRecoveryEvent,
 } from "../../bridge/types";
@@ -54,6 +55,19 @@ export function reportBootnodeConfigProblem(
     message,
   });
   Sentry.captureMessage(message, { level: "warning" });
+}
+
+/**
+ * Records where the bootnodes of a geth start came from. Only the source is
+ * sent, never the enodes: a custom list holds the user's own peer addresses.
+ * @param source - user, build or fallback.
+ */
+export function reportBootnodeSource(source: BootnodeSource): void {
+  Sentry.addBreadcrumb({
+    category: BreadcrumbCategory.GETH,
+    level: "info",
+    message: `bootnode source: ${source}`,
+  });
 }
 
 /**

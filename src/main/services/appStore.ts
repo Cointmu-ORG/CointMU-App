@@ -39,6 +39,8 @@ export async function createAppStore() {
         listenPort: 30303,
         syncMode: "Snap (recommended)",
         pruneOldState: true,
+        // Custom bootnode enodes; empty means the build or built-in default.
+        bootnodes: [],
       },
       mining: {
         isMiningEnabled: false,
