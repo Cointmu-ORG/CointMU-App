@@ -11,7 +11,6 @@ const namespaces = [
   "explorer",
   "auth",
   "ui",
-  "extension",
 ];
 
 const savedLanguage = localStorage.getItem("appLanguage") || "en";
