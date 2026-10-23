@@ -6,6 +6,12 @@ import {
   setTelemetryEnabled,
 } from "../api/error-reporting.service";
 
+/**
+ * Every mounted hook's setter, so a choice saved in one place (the first-run
+ * notice) shows up in the others (Settings) without reopening them.
+ */
+const subscribers = new Set<(state: TelemetryState) => void>();
+
 export interface TelemetryStateHook {
   /** Null while loading or when the state could not be read. */
   readonly state: TelemetryState | null;
@@ -21,6 +27,13 @@ export interface TelemetryStateHook {
 export function useTelemetryState(): TelemetryStateHook {
   const [state, setState] = useState<TelemetryState | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    subscribers.add(setState);
+    return (): void => {
+      subscribers.delete(setState);
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,7 +53,8 @@ export function useTelemetryState(): TelemetryStateHook {
     async (action: () => Promise<TelemetryState>): Promise<void> => {
       setIsSaving(true);
       try {
-        setState(await action());
+        const next = await action();
+        subscribers.forEach((notify) => notify(next));
       } catch (err) {
         console.error("[error-reporting] Failed to save reporting choice", err);
       } finally {
