@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Las recompensas de bloque se acreditan aquí",
     "setInMiningSettings": "Establecido en Ajustes de Minería"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode inaccesible: asegúrate de estar conectado a la red del campus o a la VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "El bootnode es accesible, pero no se ha conectado ningún par. Puede que el ID de red o el enode del bootnode no coincidan con la red, o que el descubrimiento UDP esté bloqueado. Si continúa, informa de un problema con los registros."
+  },
   "recovery": {
     "stage": {
       "retrying": "Se detectó un error en la base de datos del nodo. Reiniciando el nodo (intento {{attempt}} de {{maxAttempts}})...",

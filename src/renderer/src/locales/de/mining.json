@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
     "setInMiningSettings": "In Mining-Einstellungen festgelegt"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode nicht erreichbar – stellen Sie sicher, dass Sie mit dem Campusnetz oder dem VPN verbunden sind.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "Der Bootnode ist erreichbar, aber es haben sich keine Peers verbunden. Die Netzwerk-ID oder der Bootnode-Enode des Knotens passt möglicherweise nicht zum Netzwerk, oder die UDP-Discovery wird blockiert. Wenn das anhält, melden Sie ein Problem mit den Logs."
+  },
   "recovery": {
     "stage": {
       "retrying": "Datenbankfehler des Knotens erkannt. Knoten wird neu gestartet (Versuch {{attempt}} von {{maxAttempts}})...",

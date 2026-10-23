@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Награды за блоки зачисляются сюда",
     "setInMiningSettings": "Установлено в настройках майнинга"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode недоступен — убедитесь, что вы подключены к сети кампуса или VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "Bootnode доступен, но ни один пир не подключился. Возможно, network ID или enode bootnode не совпадают с сетью, либо UDP-обнаружение заблокировано. Если это повторяется, сообщите о проблеме и приложите логи."
+  },
   "recovery": {
     "stage": {
       "retrying": "Обнаружена ошибка базы данных узла. Перезапуск узла (попытка {{attempt}} из {{maxAttempts}})...",

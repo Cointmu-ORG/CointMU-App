@@ -2,6 +2,7 @@ import { PERCENT_MAX } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { toEtaDuration } from "../model/sync-status.util";
+import { usePeerHintKey } from "../lib/peer-hint.hook";
 import type { SyncStatus } from "../model/sync-status.types";
 
 const PERCENT_FRACTION_DIGITS = 1;
@@ -32,10 +33,13 @@ function formatEta(etaSeconds: number, locale: string): string {
 function SyncProgress({ sync }: SyncProgressProps): JSX.Element {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const peerHintKey = usePeerHintKey();
 
   if (sync.status === "no-peers") {
     return (
-      <p className="text-sm text-amber-400 mt-2">{t("mining:hero.noPeers")}</p>
+      <p className="text-sm text-amber-400 mt-2">
+        {t(peerHintKey ?? "mining:hero.noPeers")}
+      </p>
     );
   }
 

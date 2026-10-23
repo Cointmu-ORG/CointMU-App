@@ -1,5 +1,9 @@
 import * as Sentry from "@sentry/electron/main";
-import { NodeRecoveryStage, type NodeRecoveryEvent } from "../../bridge/types";
+import {
+  NodeRecoveryStage,
+  type NodePeerHint,
+  type NodeRecoveryEvent,
+} from "../../bridge/types";
 import type { BootnodeConfigProblem } from "../geth/bootnode";
 import {
   GethLineSeverity,
@@ -50,6 +54,19 @@ export function reportBootnodeConfigProblem(
     message,
   });
   Sentry.captureMessage(message, { level: "warning" });
+}
+
+/**
+ * Records a peer hint change as a breadcrumb, so a later report shows whether
+ * the bootnode was reachable while the node had no peers.
+ * @param hint - The new hint, or null when it cleared.
+ */
+export function reportPeerHint(hint: NodePeerHint | null): void {
+  Sentry.addBreadcrumb({
+    category: BreadcrumbCategory.GETH,
+    level: hint ? "warning" : "info",
+    message: `peer hint: ${hint ?? "cleared"}`,
+  });
 }
 
 function describeRecoveryEvent(event: NodeRecoveryEvent): string {

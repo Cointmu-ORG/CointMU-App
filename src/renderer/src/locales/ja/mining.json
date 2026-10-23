@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "ブロック報酬はここにクレジットされます",
     "setInMiningSettings": "マイニング設定で設定します"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "ブートノードに到達できません。キャンパスネットワークまたは VPN に接続していることを確認してください。",
+    "BOOTNODE_REACHABLE_NO_PEERS": "ブートノードには到達できますが、ピアが接続されていません。ノードのネットワーク ID またはブートノードの enode がネットワークと一致していないか、UDP ディスカバリーがブロックされている可能性があります。続く場合は、ログを添えて問題を報告してください。"
+  },
   "recovery": {
     "stage": {
       "retrying": "ノードのデータベースエラーを検出しました。ノードを再起動しています（{{maxAttempts}} 回中 {{attempt}} 回目）...",

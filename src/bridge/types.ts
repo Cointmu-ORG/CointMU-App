@@ -83,3 +83,13 @@ export interface QueuedReport {
   /** The exact event JSON that will be sent. */
   readonly payload: string;
 }
+
+export const NodePeerHint = {
+  /** The bootnode cannot be reached over TCP: off campus or no VPN. */
+  BOOTNODE_UNREACHABLE: "BOOTNODE_UNREACHABLE",
+  /** The bootnode answers but no peer connects: network id or enode mismatch. */
+  BOOTNODE_REACHABLE_NO_PEERS: "BOOTNODE_REACHABLE_NO_PEERS",
+} as const;
+
+/** Payload of NODE_CHANNELS.PEER_HINT (null clears it); a code the renderer localizes. */
+export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];

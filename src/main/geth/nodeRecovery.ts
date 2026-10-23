@@ -1,9 +1,18 @@
 import { BrowserWindow } from "electron";
+import ms from "ms";
 import { GethRecovery } from "../services/gethRecovery";
+import { PeerWatchdog, isTcpReachable } from "../services/peerWatchdog";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
-import { reportRecoveryEvent } from "../diagnostics/gethReporting";
+import {
+  reportPeerHint,
+  reportRecoveryEvent,
+} from "../diagnostics/gethReporting";
+import { callGethRpc } from "../utils/rpcUtils";
+import { parseEnode } from "./bootnode";
+import { BOOTNODE_CONFIG } from "./bootnodeWatcher";
 import {
   hasGethExited,
+  isGethRunning,
   killGethProcess,
   spawnGethProcess,
 } from "./gethProcess";
@@ -12,13 +21,18 @@ import { resolveDataDir } from "./networkConfig";
 import { getRpcPort } from "./ports";
 import type { AppStore } from "../services/appStore";
 
+const PEER_COUNT_TIMEOUT_MS = ms("5s");
+const BOOTNODE_PROBE_TIMEOUT_MS = ms("3s");
+
 /**
  * Builds the recovery controller that owns geth restarts after a classified
- * failure, wired to the node lifecycle and the renderer recovery channel.
+ * failure, wired to the node lifecycle and the renderer recovery channel, and
+ * starts the peer watchdog alongside it.
  * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {GethRecovery} The recovery controller.
  */
 export function createNodeRecovery(store: AppStore): GethRecovery {
+  peerWatchdog.start();
   return new GethRecovery({
     spawnGeth: () => spawnGethProcess(store),
     stopGeth: killGethProcess,
@@ -35,3 +49,45 @@ export function createNodeRecovery(store: AppStore): GethRecovery {
     },
   });
 }
+
+/**
+ * Reads the peer count over the IPC endpoint (admin_peers), which works even
+ * when the HTTP-RPC endpoint is disabled.
+ * @returns {Promise<number | null>} The peer count, or null when geth did not answer.
+ */
+async function getPeerCount(): Promise<number | null> {
+  const peers: unknown = await callGethRpc(
+    getRpcPort(),
+    "admin_peers",
+    [],
+    PEER_COUNT_TIMEOUT_MS,
+  );
+  return Array.isArray(peers) ? peers.length : null;
+}
+
+/**
+ * Probes the configured bootnode's TCP port.
+ * @returns {Promise<boolean>} True when a TCP connection could be opened.
+ */
+async function isBootnodeReachable(): Promise<boolean> {
+  const bootnode = parseEnode(BOOTNODE_CONFIG.enode);
+  if (!bootnode) return false;
+  return isTcpReachable(
+    bootnode.host,
+    bootnode.port,
+    BOOTNODE_PROBE_TIMEOUT_MS,
+  );
+}
+
+/** Explains a peerless node to the renderer; started once geth is spawned. */
+export const peerWatchdog = new PeerWatchdog({
+  isGethRunning,
+  getPeerCount,
+  isBootnodeReachable,
+  broadcast: (hint) => {
+    reportPeerHint(hint);
+    BrowserWindow.getAllWindows().forEach((win) => {
+      win.webContents.send(NODE_CHANNELS.PEER_HINT, hint);
+    });
+  },
+});

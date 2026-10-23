@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Block rewards are credited here",
     "setInMiningSettings": "Set in Mining Settings"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode unreachable — make sure you are connected to the campus network or VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "The bootnode is reachable, but no peers have connected. The node's network ID or bootnode enode may not match the network, or UDP discovery may be blocked. If this persists, report an issue with the logs."
+  },
   "recovery": {
     "stage": {
       "retrying": "Node database error detected. Restarting the node (attempt {{attempt}} of {{maxAttempts}})...",

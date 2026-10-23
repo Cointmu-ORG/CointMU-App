@@ -1,5 +1,6 @@
 import type {
   JsonRpcEnvelope,
+  NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
   TelemetryState,
@@ -152,6 +153,8 @@ interface CointmuAPI {
     onRecovery: (callback: (event: NodeRecoveryEvent) => void) => () => void;
     getRecoveryState: () => Promise<NodeRecoveryEvent | null>;
     retry: () => Promise<void>;
+    onPeerHint: (callback: (hint: NodePeerHint | null) => void) => () => void;
+    getPeerHint: () => Promise<NodePeerHint | null>;
   };
   diagnostics: {
     openLogsFolder: () => Promise<void>;

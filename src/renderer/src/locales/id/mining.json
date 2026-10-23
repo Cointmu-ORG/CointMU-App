@@ -73,6 +73,10 @@
     "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
     "setInMiningSettings": "Atur di Pengaturan Penambangan"
   },
+  "peerHint": {
+    "BOOTNODE_UNREACHABLE": "Bootnode tidak terjangkau — pastikan terhubung ke jaringan kampus atau VPN.",
+    "BOOTNODE_REACHABLE_NO_PEERS": "Bootnode terjangkau, tetapi belum ada peer yang terhubung. Network ID atau enode bootnode node mungkin tidak cocok dengan jaringan, atau UDP discovery diblokir. Jika terus terjadi, laporkan issue beserta log."
+  },
   "recovery": {
     "stage": {
       "retrying": "Terdeteksi error database node. Menjalankan ulang node (percobaan {{attempt}} dari {{maxAttempts}})...",

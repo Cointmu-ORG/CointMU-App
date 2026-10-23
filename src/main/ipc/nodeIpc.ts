@@ -10,6 +10,7 @@ import {
   spawnGethProcess,
 } from "../geth/gethProcess";
 import { isSessionValid } from "../services/session";
+import { peerWatchdog } from "../geth/nodeRecovery";
 import type { AppStore } from "../services/appStore";
 
 /**
@@ -25,6 +26,7 @@ export function registerNodeStatusHandlers(): void {
     sessionValid: isSessionValid(),
     networkId: getNetworkId(),
   }));
+  ipcMain.handle(NODE_CHANNELS.GET_PEER_HINT, () => peerWatchdog.getHint());
 }
 
 /**

@@ -2,6 +2,8 @@ export const NODE_CHANNELS = {
   RECOVERY: "node:recovery",
   RETRY: "node:retry",
   GET_RECOVERY_STATE: "node:get-recovery-state",
+  PEER_HINT: "node:peer-hint",
+  GET_PEER_HINT: "node:get-peer-hint",
 } as const;
 
 export const RPC_CHANNELS = {

@@ -7,6 +7,7 @@ export { useMiningControls } from "./lib/mining-controls.hook";
 export { useMiningActivity } from "./lib/mining-activity.hook";
 export { useMiningLogStream } from "./lib/mining-log-stream.hook";
 export { useSyncStatus } from "./lib/sync-status.hook";
+export { usePeerHintKey } from "./lib/peer-hint.hook";
 export {
   getSafeConcurrency,
   formatRewards,
