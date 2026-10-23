@@ -323,6 +323,8 @@
     "toggleTitle": "Fehlerberichte senden",
     "toggleDesc": "Sendet bereinigte Fehlerberichte an den CointMU-Server unter {{host}}, der nur im Campusnetz erreichbar ist. Ausschalten löscht noch nicht gesendete Berichte.",
     "sentTitle": "Was gesendet wird",
+    "sendingOff": "Solange die Fehlerberichte aus sind, wird nichts gesendet.",
+    "sendingHeld": "Berichte bleiben auf diesem Computer, bis Sie den Hinweis zu Fehlerberichten schließen.",
     "sent": {
       "error": "Fehlertyp und -meldung",
       "stack": "Stacktrace, ohne Ihren Benutzernamen in Dateipfaden",

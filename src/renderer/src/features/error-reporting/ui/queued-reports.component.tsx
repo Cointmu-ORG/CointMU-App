@@ -103,11 +103,17 @@ export function QueuedReports(): JSX.Element {
             className="border border-slate-200 dark:border-gray-800 rounded-lg p-3"
           >
             <details>
-              <summary className="cursor-pointer text-xs text-slate-700 dark:text-gray-300">
-                <span className="font-mono">
+              <summary className="cursor-pointer flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-slate-700 dark:text-gray-300">
+                <span className="px-1.5 rounded bg-slate-100 dark:bg-gray-800 text-[11px] font-semibold">
+                  {report.level}
+                </span>
+                <span className="font-semibold">{report.title}</span>
+                <time
+                  dateTime={new Date(report.createdMs).toISOString()}
+                  className="ml-auto text-slate-500 dark:text-gray-400"
+                >
                   {new Date(report.createdMs).toLocaleString()}
-                </span>{" "}
-                · {report.level} · {report.title}
+                </time>
               </summary>
               <pre className="mt-2 max-h-64 overflow-auto text-[11px] font-mono bg-slate-50 dark:bg-gray-950 p-2 rounded whitespace-pre-wrap break-all">
                 {report.payload}
