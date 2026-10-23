@@ -323,6 +323,7 @@
     "toggleTitle": "Enviar informes de errores",
     "toggleDesc": "Envía informes de errores depurados al servidor de CointMU en {{host}}, accesible solo desde la red del campus. Al desactivarlo se eliminan los informes aún no enviados.",
     "sentTitle": "Qué se envía",
+    "sendingOff": "No se envía nada mientras el envío de errores está desactivado.",
     "sent": {
       "error": "Tipo y mensaje del error",
       "stack": "Traza de pila, sin tu nombre de usuario en las rutas de archivos",

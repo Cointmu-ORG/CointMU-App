@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LogActions } from "@/shared/ui";
 import { useTelemetryState } from "../lib/telemetry-state.hook";
 import { QueuedReports } from "./queued-reports.component";
+import { DataBoundary } from "./data-boundary.component";
 
 const SECTION_TITLE =
   "text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3";
@@ -10,8 +11,6 @@ const CARD =
   "bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm";
 const LOG_BUTTON =
   "px-3 py-1.5 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors";
-const SENT_KEYS = ["error", "stack", "versions", "node"] as const;
-const NEVER_SENT_KEYS = ["secrets", "addresses", "identity"] as const;
 
 /**
  * Privacy & Diagnostics settings: the error reporting toggle, what is and is
@@ -66,28 +65,10 @@ export function ErrorReportingSettings(): JSX.Element {
                 </button>
               </div>
             )}
-            <div className="grid gap-4 p-4 sm:grid-cols-2 text-xs text-slate-600 dark:text-gray-400">
-              <div>
-                <p className="font-bold text-slate-800 dark:text-gray-100 mb-1">
-                  {t("settings:privacy.sentTitle")}
-                </p>
-                <ul className="list-disc pl-4 space-y-0.5">
-                  {SENT_KEYS.map((key) => (
-                    <li key={key}>{t(`settings:privacy.sent.${key}`)}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="font-bold text-slate-800 dark:text-gray-100 mb-1">
-                  {t("settings:privacy.neverSentTitle")}
-                </p>
-                <ul className="list-disc pl-4 space-y-0.5">
-                  {NEVER_SENT_KEYS.map((key) => (
-                    <li key={key}>{t(`settings:privacy.neverSent.${key}`)}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <DataBoundary
+              isSending={Boolean(state?.isAvailable && isEnabled)}
+              collectorHost={state?.collectorHost ?? null}
+            />
             {state?.isAvailable && <QueuedReports key={String(isEnabled)} />}
           </div>
         </section>
