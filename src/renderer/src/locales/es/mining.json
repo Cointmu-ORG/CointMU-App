@@ -27,7 +27,6 @@
     "rewardsToday": "Recompensas de hoy",
     "miningWithThreads": "Minando con {{count}} hilos",
     "stopping": "Deteniendo...",
-    "stopMining": "Detener minería",
     "targetDifficulty": "Dificultad objetivo",
     "blockReward": "Recompensa de bloque",
     "initializing": "Inicializando",

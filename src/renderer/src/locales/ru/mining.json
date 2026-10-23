@@ -27,7 +27,6 @@
     "rewardsToday": "Награды за сегодня",
     "miningWithThreads": "Майнинг с {{count}} потоками",
     "stopping": "Остановка...",
-    "stopMining": "Остановить майнинг",
     "targetDifficulty": "Целевая сложность",
     "blockReward": "Награда за блок",
     "initializing": "Инициализация",

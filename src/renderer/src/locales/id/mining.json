@@ -27,7 +27,6 @@
     "rewardsToday": "Hadiah hari ini",
     "miningWithThreads": "Menambang dengan {{count}} thread",
     "stopping": "Menghentikan...",
-    "stopMining": "Hentikan penambangan",
     "targetDifficulty": "Target kesulitan",
     "blockReward": "Hadiah blok",
     "initializing": "Menginisialisasi",

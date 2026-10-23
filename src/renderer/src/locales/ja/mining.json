@@ -27,7 +27,6 @@
     "rewardsToday": "今日の報酬",
     "miningWithThreads": "{{count}} スレッドでマイニング中",
     "stopping": "停止しています...",
-    "stopMining": "マイニングを停止",
     "targetDifficulty": "目標難易度",
     "blockReward": "ブロック報酬",
     "initializing": "初期化中",
