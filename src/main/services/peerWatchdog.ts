@@ -1,6 +1,7 @@
 import { connect } from "node:net";
 import ms from "ms";
 import { NodePeerHint } from "../../bridge/types";
+import { parseEnode } from "../geth/bootnode";
 
 export const PEER_POLL_INTERVAL_MS = ms("30s");
 /** How long the node must run with zero peers before the bootnode is probed. */
@@ -106,4 +107,23 @@ export function isTcpReachable(
     socket.once("timeout", () => finish(false));
     socket.once("error", () => finish(false));
   });
+}
+
+/**
+ * Probes a list of bootnodes in parallel.
+ * @param enodes - The enodes the running node was started with.
+ * @param isReachable - Probes one host:port.
+ * @returns True when at least one bootnode answers; false for an empty list.
+ */
+export async function isAnyBootnodeReachable(
+  enodes: readonly string[],
+  isReachable: (host: string, port: number) => Promise<boolean>,
+): Promise<boolean> {
+  const results = await Promise.all(
+    enodes.map((enode) => {
+      const parsed = parseEnode(enode);
+      return parsed ? isReachable(parsed.host, parsed.port) : false;
+    }),
+  );
+  return results.includes(true);
 }

@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { BootnodeSource } from "../../bridge/types";
 import {
   BootnodeConfigProblem,
-  BootnodeSource,
-  FALLBACK_BOOTNODE_ENODE,
+  FALLBACK_BOOTNODE_ENODES,
+  MAX_BOOTNODES,
   formatEnode,
+  isBootnodeList,
+  parseBootnodeList,
   parseEnode,
   resolveBootnodeConfig,
+  resolveBuildBootnodes,
 } from "./bootnode";
 
 // The secp256k1 generator point G: the public key of private key 1.
@@ -15,11 +19,16 @@ const NODE_ID =
 // Valid hex of the right length, but not a point on the curve.
 const OFF_CURVE_NODE_ID = "ab".repeat(64);
 const ENODE = `enode://${NODE_ID}@10.0.0.5:30303`;
+const SECOND_ENODE = `enode://${NODE_ID}@10.0.0.6:30303`;
+const OFF_CURVE_ENODE = `enode://${OFF_CURVE_NODE_ID}@10.0.0.5:30303`;
 
 describe("parseEnode", () => {
-  it("accepts the built-in fallback bootnode", () => {
-    expect(parseEnode(FALLBACK_BOOTNODE_ENODE)).not.toBeNull();
-  });
+  it.each(FALLBACK_BOOTNODE_ENODES)(
+    "accepts the built-in fallback bootnode %s",
+    (enode) => {
+      expect(parseEnode(enode)).not.toBeNull();
+    },
+  );
 
   it("parses an IP enode", () => {
     expect(parseEnode(ENODE)).toEqual({
@@ -80,16 +89,45 @@ describe("formatEnode", () => {
   });
 });
 
-describe("resolveBootnodeConfig", () => {
-  it("has a valid fallback", () => {
-    expect(parseEnode(FALLBACK_BOOTNODE_ENODE)).not.toBeNull();
+describe("parseBootnodeList", () => {
+  it("splits on newlines, commas and blank space, skipping empty entries", () => {
+    const text = `\n ${ENODE} ,\r\n\n${SECOND_ENODE},\n`;
+
+    expect(parseBootnodeList(text)).toEqual({
+      enodes: [ENODE, SECOND_ENODE],
+      invalid: [],
+    });
   });
 
+  it("drops duplicates and keeps the input order", () => {
+    expect(
+      parseBootnodeList(`${SECOND_ENODE}\n${ENODE}\n${SECOND_ENODE}`).enodes,
+    ).toEqual([SECOND_ENODE, ENODE]);
+  });
+
+  it("reports every invalid entry with its 1-based position", () => {
+    const text = `${ENODE}\nenode://stale@10.0.0.5:30303,${OFF_CURVE_ENODE}`;
+
+    expect(parseBootnodeList(text)).toEqual({
+      enodes: [ENODE],
+      invalid: [
+        { position: 2, value: "enode://stale@10.0.0.5:30303" },
+        { position: 3, value: OFF_CURVE_ENODE },
+      ],
+    });
+  });
+
+  it("returns nothing for blank input", () => {
+    expect(parseBootnodeList(" \n , ")).toEqual({ enodes: [], invalid: [] });
+  });
+});
+
+describe("resolveBuildBootnodes", () => {
   it.each([undefined, "", "  "])(
     "uses the fallback when the build sets nothing (%j)",
     (buildValue) => {
-      expect(resolveBootnodeConfig(buildValue)).toEqual({
-        enode: FALLBACK_BOOTNODE_ENODE,
+      expect(resolveBuildBootnodes(buildValue)).toEqual({
+        enodes: FALLBACK_BOOTNODE_ENODES,
         source: BootnodeSource.FALLBACK,
         problem: null,
       });
@@ -97,28 +135,82 @@ describe("resolveBootnodeConfig", () => {
   );
 
   it("uses a valid build value, trimmed", () => {
-    expect(resolveBootnodeConfig(` ${ENODE} `)).toEqual({
-      enode: ENODE,
+    expect(resolveBuildBootnodes(` ${ENODE} `)).toEqual({
+      enodes: [ENODE],
       source: BootnodeSource.BUILD,
       problem: null,
     });
   });
 
-  it("falls back and reports a build value whose key is off the curve", () => {
-    expect(
-      resolveBootnodeConfig(`enode://${OFF_CURVE_NODE_ID}@10.0.0.5:30303`),
-    ).toEqual({
-      enode: FALLBACK_BOOTNODE_ENODE,
+  it("accepts a comma-separated build list", () => {
+    expect(resolveBuildBootnodes(`${ENODE},${SECOND_ENODE}`).enodes).toEqual([
+      ENODE,
+      SECOND_ENODE,
+    ]);
+  });
+
+  it.each([
+    ["a key off the curve", OFF_CURVE_ENODE],
+    ["a malformed enode", "enode://stale@10.0.0.5:30303"],
+    ["one bad entry in a list", `${ENODE},enode://stale@10.0.0.5:30303`],
+  ])("falls back and reports a build value with %s", (_, buildValue) => {
+    expect(resolveBuildBootnodes(buildValue)).toEqual({
+      enodes: FALLBACK_BOOTNODE_ENODES,
       source: BootnodeSource.FALLBACK,
       problem: BootnodeConfigProblem.INVALID_BUILD_VALUE,
     });
   });
+});
 
-  it("falls back and reports an invalid build value", () => {
-    expect(resolveBootnodeConfig("enode://stale@10.0.0.5:30303")).toEqual({
-      enode: FALLBACK_BOOTNODE_ENODE,
+describe("isBootnodeList", () => {
+  it("accepts a list of valid enodes", () => {
+    expect(isBootnodeList([ENODE, SECOND_ENODE])).toBe(true);
+  });
+
+  it.each([
+    ["an empty list", []],
+    ["a string", ENODE],
+    ["a non-string entry", [ENODE, 1]],
+    ["an invalid enode", [ENODE, OFF_CURVE_ENODE]],
+    ["too many entries", Array(MAX_BOOTNODES + 1).fill(ENODE)],
+  ])("rejects %s", (_, value) => {
+    expect(isBootnodeList(value)).toBe(false);
+  });
+});
+
+describe("resolveBootnodeConfig", () => {
+  const BUILD_DEFAULTS = resolveBuildBootnodes(SECOND_ENODE);
+  const FALLBACK_DEFAULTS = resolveBuildBootnodes(undefined);
+
+  it("prefers the saved user list over the build value", () => {
+    expect(resolveBootnodeConfig([ENODE], BUILD_DEFAULTS)).toEqual({
+      enodes: [ENODE],
+      source: BootnodeSource.USER,
+      problem: null,
+    });
+  });
+
+  it("uses the build value when the user saved nothing", () => {
+    expect(resolveBootnodeConfig(undefined, BUILD_DEFAULTS)).toBe(
+      BUILD_DEFAULTS,
+    );
+  });
+
+  it("uses the fallback when neither the user nor the build sets bootnodes", () => {
+    expect(resolveBootnodeConfig([], FALLBACK_DEFAULTS)).toEqual({
+      enodes: FALLBACK_BOOTNODE_ENODES,
       source: BootnodeSource.FALLBACK,
-      problem: BootnodeConfigProblem.INVALID_BUILD_VALUE,
+      problem: null,
+    });
+  });
+
+  it.each([
+    ["an invalid enode", [OFF_CURVE_ENODE]],
+    ["a non-list value", ENODE],
+  ])("ignores and reports a saved value with %s", (_, userValue) => {
+    expect(resolveBootnodeConfig(userValue, BUILD_DEFAULTS)).toEqual({
+      ...BUILD_DEFAULTS,
+      problem: BootnodeConfigProblem.INVALID_USER_VALUE,
     });
   });
 });

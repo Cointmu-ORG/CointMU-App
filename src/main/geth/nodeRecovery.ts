@@ -1,15 +1,18 @@
 import { BrowserWindow } from "electron";
 import ms from "ms";
 import { GethRecovery } from "../services/gethRecovery";
-import { PeerWatchdog, isTcpReachable } from "../services/peerWatchdog";
+import {
+  PeerWatchdog,
+  isAnyBootnodeReachable,
+  isTcpReachable,
+} from "../services/peerWatchdog";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
 import {
   reportPeerHint,
   reportRecoveryEvent,
 } from "../diagnostics/gethReporting";
 import { callGethRpc } from "../utils/rpcUtils";
-import { parseEnode } from "./bootnode";
-import { BOOTNODE_CONFIG } from "./bootnodeWatcher";
+import { getActiveBootnodeConfig } from "./bootnodeWatcher";
 import {
   hasGethExited,
   isGethRunning,
@@ -66,16 +69,14 @@ async function getPeerCount(): Promise<number | null> {
 }
 
 /**
- * Probes the configured bootnode's TCP port.
- * @returns {Promise<boolean>} True when a TCP connection could be opened.
+ * Probes the TCP port of each bootnode the running node was started with,
+ * custom ones included.
+ * @returns {Promise<boolean>} True when any bootnode accepted a connection.
  */
 async function isBootnodeReachable(): Promise<boolean> {
-  const bootnode = parseEnode(BOOTNODE_CONFIG.enode);
-  if (!bootnode) return false;
-  return isTcpReachable(
-    bootnode.host,
-    bootnode.port,
-    BOOTNODE_PROBE_TIMEOUT_MS,
+  const enodes = getActiveBootnodeConfig()?.enodes ?? [];
+  return isAnyBootnodeReachable(enodes, (host, port) =>
+    isTcpReachable(host, port, BOOTNODE_PROBE_TIMEOUT_MS),
   );
 }
 
