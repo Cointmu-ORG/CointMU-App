@@ -5,7 +5,7 @@ import ms from "ms";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
 import { getNetworkId, resolveDataDir } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
-import { clearPendingBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
+import { forgetRunningBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethBinaryPath } from "./gethInit";
 import { parseGethLogChunk } from "../utils/gethLogParser";
@@ -227,7 +227,7 @@ export function killGethProcess(): Promise<void> {
     clearTimeout(gethRestartTimer);
     gethRestartTimer = null;
   }
-  clearPendingBootnodes();
+  forgetRunningBootnodes();
 
   if (!gethProcess) {
     return Promise.resolve();

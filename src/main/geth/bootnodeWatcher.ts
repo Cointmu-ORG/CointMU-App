@@ -31,7 +31,7 @@ if (DEFAULT_BOOTNODE_CONFIG.problem) {
 
 let bootnodeWatcher: NodeJS.Timeout | null = null;
 let pendingBootnodeEnodes: readonly string[] = [];
-// The config the running geth was started with; the peer watchdog probes it.
+// The config the running geth was started with (null while stopped); the peer watchdog probes it.
 let activeBootnodeConfig: BootnodeConfig | null = null;
 
 /**
@@ -60,8 +60,13 @@ export function getActiveBootnodeConfig(): BootnodeConfig | null {
   return activeBootnodeConfig;
 }
 
-/** Clears the DNS retry list and stops the watcher; called when geth stops. */
-export function clearPendingBootnodes(): void {
+/**
+ * Forgets the stopped node's bootnodes and stops the DNS retries; called when
+ * geth stops. Until the next start, the settings view then shows what that
+ * start will dial instead of the old list as "pending".
+ */
+export function forgetRunningBootnodes(): void {
+  activeBootnodeConfig = null;
   pendingBootnodeEnodes = [];
   stopBootnodeWatcher();
 }
