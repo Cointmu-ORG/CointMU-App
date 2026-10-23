@@ -28,6 +28,7 @@ import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
 import { registerSettingsHandlers } from "./ipc/settingsIpc";
+import { registerBootnodeHandlers } from "./ipc/bootnodeIpc";
 import { registerWalletHandlers } from "./ipc/walletIpc";
 import { registerAppHandlers } from "./ipc/appIpc";
 import { registerNetworkHandlers } from "./ipc/networkIpc";
@@ -75,6 +76,7 @@ app.whenReady().then(async () => {
   registerSystemHandlers();
   registerNetworkHandlers(store);
   registerNodeControlHandlers(store);
+  registerBootnodeHandlers(store);
   registerWindowHandlers();
 
   await resolveGethPorts();
