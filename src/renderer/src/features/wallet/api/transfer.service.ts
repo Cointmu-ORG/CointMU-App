@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { ethers } from "ethers";
 import { STANDARD_ERC20_ABI } from "./token.service";
 import { call, createNodeProvider, getSetting } from "@/shared/api";
@@ -32,7 +33,8 @@ export async function resolveWallet(
   }
 
   const encryptedPayload = await getSetting<string | null>("encryptedPayload");
-  if (!encryptedPayload) throw new Error("Wallet is not unlocked.");
+  if (!encryptedPayload)
+    throw new Error(i18next.t("wallet:errors.notUnlocked"));
 
   const secretKey = await decryptSecret(encryptedPayload, password);
 
@@ -186,7 +188,7 @@ export async function executeErc20Transfer(
  */
 export function requireSessionPassword(): string {
   const password = getSessionPassword();
-  if (!password) throw new Error("Wallet is locked. Please log in again.");
+  if (!password) throw new Error(i18next.t("wallet:index.walletLocked"));
   return password;
 }
 
@@ -197,21 +199,20 @@ export function requireSessionPassword(): string {
  * @returns A concise, user-facing error string.
  */
 export function parseTransferError(error: unknown): string {
-  if (!(error instanceof Error)) return "An unexpected error occurred.";
+  if (!(error instanceof Error)) return i18next.t("wallet:errors.unexpected");
 
   const msg = error.message.toLowerCase();
 
   if (msg.includes("insufficient funds"))
-    return "Insufficient funds to cover amount and network fee.";
-  if (msg.includes("out of gas"))
-    return "Transaction ran out of gas. Try increasing the gas limit.";
+    return i18next.t("wallet:errors.insufficientFunds");
+  if (msg.includes("out of gas")) return i18next.t("wallet:errors.outOfGas");
   if (msg.includes("nonce too low"))
-    return "Nonce conflict. Please wait for pending transactions to settle.";
-  if (msg.includes("revert")) return "Transaction reverted by the contract.";
+    return i18next.t("wallet:errors.nonceConflict");
+  if (msg.includes("revert")) return i18next.t("wallet:errors.reverted");
   if (msg.includes("user rejected") || msg.includes("user denied"))
-    return "Transaction rejected.";
+    return i18next.t("wallet:errors.rejected");
   if (msg.includes("invalid transaction hash"))
-    return "Node rejected the transaction. Check the recipient address.";
+    return i18next.t("wallet:errors.nodeRejected");
 
   return error.message;
 }

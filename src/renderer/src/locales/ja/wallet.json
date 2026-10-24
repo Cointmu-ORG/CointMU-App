@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "{{asset}} を {{to}} に送信しました",
       "notifFailedTitle": "トランザクションが失敗しました",
       "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした"
+    },
+    "importKeystore": {
+      "title": "キーストアをインポート",
+      "description": "このキーストアファイルのパスワードを入力して、アカウントを復号しインポートします。",
+      "passwordLabel": "キーストアのパスワード",
+      "passwordPlaceholder": "キーストアのパスワードを入力",
+      "passwordRequired": "キーストアのパスワードを入力してください。",
+      "decryptFailed": "キーストアを復号できませんでした。パスワードを確認してもう一度お試しください。",
+      "decrypting": "復号中...",
+      "submit": "復号してインポート"
+    },
+    "addToken": {
+      "title": "カスタムトークンを追加",
+      "description": "追跡したい ERC-20 トークンのコントラクトアドレスを入力してください。",
+      "addressLabel": "トークンのコントラクトアドレス",
+      "addressRequired": "トークンのコントラクトアドレスを入力してください。",
+      "invalidAddress": "Ethereum アドレスの形式が正しくありません。",
+      "detailsFailed": "トークンの詳細を取得できませんでした。このネットワーク上の有効な ERC-20 コントラクトか確認してください。",
+      "addFailed": "トークンの追加中にエラーが発生しました。",
+      "verifying": "確認中..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "すべてのウォレット"
+  },
+  "errors": {
+    "notUnlocked": "ウォレットのロックが解除されていません。",
+    "noRecoveryPhrase": "このウォレットにはリカバリフレーズがありません。",
+    "unexpected": "予期しないエラーが発生しました。",
+    "insufficientFunds": "金額とネットワーク手数料に対して残高が不足しています。",
+    "outOfGas": "トランザクションのガスが不足しました。ガスリミットを増やしてください。",
+    "nonceConflict": "nonce の競合です。保留中のトランザクションが完了するまでお待ちください。",
+    "reverted": "トランザクションはコントラクトによってリバートされました。",
+    "rejected": "トランザクションは拒否されました。",
+    "nodeRejected": "ノードがトランザクションを拒否しました。受取人アドレスを確認してください。"
   }
 }
