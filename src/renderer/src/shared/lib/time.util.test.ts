@@ -30,8 +30,8 @@ describe("formatAge", () => {
     );
   });
 
-  it("clamps a timestamp from the future to zero seconds", () => {
-    expect(formatAge(NOW_SECONDS + 30, "en")).toBe("0 seconds ago");
+  it("clamps a timestamp from the future to now", () => {
+    expect(formatAge(NOW_SECONDS + 30, "en")).toBe("now");
   });
 
   it("returns the placeholder for a missing timestamp", () => {

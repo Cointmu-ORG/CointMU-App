@@ -110,7 +110,10 @@
     "success": "Успешно",
     "failed": "Не удалась",
     "pending": "В обработке",
-    "confirmedWithCount": "Подтверждено - {{count}} подтверждений",
+    "confirmedWithCount_one": "Подтверждено - {{count}} подтверждение",
+    "confirmedWithCount_few": "Подтверждено - {{count}} подтверждения",
+    "confirmedWithCount_many": "Подтверждено - {{count}} подтверждений",
+    "confirmedWithCount_other": "Подтверждено - {{count}} подтверждения",
     "confirmed": "Подтверждено",
     "loading": "Загрузка транзакции...",
     "txHash": "Хеш транзакции:",
@@ -142,5 +145,22 @@
     "estPast12": "Прим. 12 блоков",
     "current": "Текущая",
     "offline": "Офлайн"
+  },
+  "timeline": {
+    "title": "Хронология цепочки",
+    "subtitle_one": "Последний {{count}} блок — новейший справа",
+    "subtitle_few": "Последние {{count}} блока — новейший справа",
+    "subtitle_many": "Последние {{count}} блоков — новейший справа",
+    "subtitle_other": "Последние {{count}} блока — новейший справа",
+    "updating": "Обновление каждые {{seconds}} с",
+    "nodeOffline": "Узел не в сети",
+    "nodeOfflineHint": "Запустите узел или включите RPC в настройках, чтобы видеть активность сети."
+  },
+  "minerDistribution": {
+    "title": "Распределение майнеров",
+    "subtitle": "Доля добытых блоков · за последние 24 часа",
+    "empty": "За последние 24 часа не добыто ни одного блока",
+    "others": "Другие",
+    "addressYou": "{{address}} (вы)"
   }
 }

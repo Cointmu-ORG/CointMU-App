@@ -9,7 +9,7 @@ import { getAddressSummary } from "../api/explorer.service";
 import { AccountIcon, type DerivedAccount } from "@/features/wallet";
 import { getTransactions } from "@/features/wallet";
 import { usePagination } from "@/shared/lib";
-import { formatTxAge } from "../lib/explorer.utils";
+import { formatAge } from "@/shared/lib";
 import { Sparkline, Pagination, type ActivityData } from "@/shared/ui";
 import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
@@ -37,7 +37,7 @@ function AddressDetail({
   onAddressSelect,
   onTxHashSelect,
 }: AddressDetailProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [balance, setBalance] = useState<string>("0.00");
   const [isContract, setIsContract] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<ActivityData[]>([]);
@@ -346,7 +346,7 @@ function AddressDetail({
                     <td className="px-2 py-2.5 text-right">
                       <div className="flex flex-col items-end whitespace-nowrap">
                         <span className="text-[10px] text-slate-700 dark:text-gray-300 font-medium">
-                          {formatTxAge(tx.timestamp)}
+                          {formatAge(tx.timestamp, i18n.language)}
                         </span>
                         <span className="text-[9px] text-slate-500 dark:text-gray-500 mt-0.5">
                           {tx.timestampStr}

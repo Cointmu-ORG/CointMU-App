@@ -51,8 +51,8 @@ function formatElapsed(elapsedMs: number): string {
 
 /**
  * Formats a Unix timestamp expressed in seconds as a relative age in the given
- * language, rounded down to the largest whole unit (e.g. '5 seconds ago',
- * 'vor 3 Minuten'). Intl picks the plural form for each language.
+ * language, rounded down to the largest whole unit (e.g. 'now', '5 seconds ago',
+ * 'vor 3 Minuten', 'yesterday'). Intl picks the plural form for each language.
  * @param timestampSeconds - The Unix timestamp in seconds.
  * @param locale - BCP 47 language tag, usually i18n.language.
  * @returns The relative age, or '--' for a missing timestamp.
@@ -66,7 +66,7 @@ function formatAge(timestampSeconds: number, locale: string): string {
     0,
     Math.floor(Date.now() / MILLISECONDS_PER_SECOND - timestampSeconds),
   );
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: "always" });
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const match = RELATIVE_TIME_UNITS.find(
     ({ seconds }) => ageSeconds >= seconds,
   );

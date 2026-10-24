@@ -1,4 +1,10 @@
-import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../config/explorer.constants";
+import {
+  CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS,
+  CHAIN_TIMELINE_BLOCK_COUNT,
+  INSIGHTS_POLL_INTERVAL_MS,
+} from "../config/explorer.constants";
+import { useTranslation } from "react-i18next";
+import { formatAge } from "@/shared/lib";
 import { type JSX, useEffect, useState } from "react";
 import { useAppStore } from "@/shared/model";
 import { X, AlertTriangle, Check, Box } from "lucide-react";
@@ -18,16 +24,7 @@ interface ChainTimelineProps {
   onBlockClick?: (blockNum: number) => void;
 }
 
-function formatAge(timestamp: number, now: number): string {
-  const diff = Math.floor(now / 1000) - timestamp;
-  if (diff < 0) return "Just now";
-  if (diff < 60) return `${diff}s ago`;
-  const m = Math.floor(diff / 60);
-  const s = diff % 60;
-  if (m < 60) return `${m}m ${s}s ago`;
-  const h = Math.floor(m / 60);
-  return `${h}h ago`;
-}
+const MS_PER_SECOND = 1000;
 
 /**
  * A horizontal timeline component rendering recent blocks as cards.
@@ -40,7 +37,9 @@ export function ChainTimeline({
   isOnline,
   onBlockClick,
 }: ChainTimelineProps): JSX.Element {
-  const [now, setNow] = useState<number>(Date.now());
+  const { t, i18n } = useTranslation();
+  // Re-renders every tick so the block ages stay current.
+  const [, setNow] = useState<number>(Date.now());
   const balances = useAppStore((s) => s.balances);
 
   const checkIfMinedByMe = (
@@ -64,10 +63,12 @@ export function ChainTimeline({
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="text-base font-bold text-slate-800 dark:text-gray-100">
-            Chain timeline
+            {t("explorer:timeline.title")}
           </h3>
           <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-            Latest 12 blocks — newest on the right
+            {t("explorer:timeline.subtitle", {
+              count: CHAIN_TIMELINE_BLOCK_COUNT,
+            })}
           </p>
         </div>
         <div
@@ -79,7 +80,11 @@ export function ChainTimeline({
             <X width={10} height={10} strokeWidth={3} />
           )}
           <span className="text-[10px] font-bold">
-            {isOnline ? "Updating - 3s" : "Offline"}
+            {isOnline
+              ? t("explorer:timeline.updating", {
+                  seconds: INSIGHTS_POLL_INTERVAL_MS / MS_PER_SECOND,
+                })
+              : t("explorer:insights.offline")}
           </span>
         </div>
       </div>
@@ -94,11 +99,10 @@ export function ChainTimeline({
               strokeWidth={1.5}
             />
             <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
-              Node is offline
+              {t("explorer:timeline.nodeOffline")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-500 mt-1 max-w-xs">
-              Please start the node or enable RPC in Settings to view network
-              activity.
+              {t("explorer:timeline.nodeOfflineHint")}
             </p>
           </div>
         ) : blocks.length > 0 ? (
@@ -146,7 +150,7 @@ export function ChainTimeline({
                   <span
                     className={`text-[8px] font-bold tracking-widest uppercase mb-1 ${labelStyle}`}
                   >
-                    Block
+                    {t("explorer:blockDetail.block")}
                   </span>
                   <span className="text-sm font-bold font-mono">
                     #{block.number}
@@ -156,7 +160,7 @@ export function ChainTimeline({
                   </span>
                 </div>
                 <span className="text-[10px] font-semibold text-slate-400 dark:text-gray-400 whitespace-nowrap">
-                  {formatAge(block.timestamp, now)}
+                  {formatAge(block.timestamp, i18n.language)}
                 </span>
               </div>
             );
@@ -170,7 +174,7 @@ export function ChainTimeline({
               strokeWidth={1.5}
             />
             <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-              Awaiting network activity
+              {t("explorer:dataTabs.awaitingActivity")}
             </p>
           </div>
         )}

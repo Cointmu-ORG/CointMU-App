@@ -110,7 +110,8 @@
     "success": "Success",
     "failed": "Failed",
     "pending": "Pending",
-    "confirmedWithCount": "Confirmed - {{count}} confirmations",
+    "confirmedWithCount_one": "Confirmed - {{count}} confirmation",
+    "confirmedWithCount_other": "Confirmed - {{count}} confirmations",
     "confirmed": "Confirmed",
     "loading": "Loading transaction...",
     "txHash": "Transaction hash:",
@@ -142,5 +143,20 @@
     "estPast12": "Est. past 12 blocks",
     "current": "Current",
     "offline": "Offline"
+  },
+  "timeline": {
+    "title": "Chain timeline",
+    "subtitle_one": "Latest {{count}} block — newest on the right",
+    "subtitle_other": "Latest {{count}} blocks — newest on the right",
+    "updating": "Updating - {{seconds}}s",
+    "nodeOffline": "Node is offline",
+    "nodeOfflineHint": "Please start the node or enable RPC in Settings to view network activity."
+  },
+  "minerDistribution": {
+    "title": "Miner distribution",
+    "subtitle": "Share of blocks mined · past 24 hours",
+    "empty": "No blocks mined in the past 24 hours",
+    "others": "Others",
+    "addressYou": "{{address}} (you)"
   }
 }

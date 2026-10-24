@@ -110,7 +110,7 @@
     "success": "Sukses",
     "failed": "Gagal",
     "pending": "Tertunda",
-    "confirmedWithCount": "Dikonfirmasi - {{count}} konfirmasi",
+    "confirmedWithCount_other": "Dikonfirmasi - {{count}} konfirmasi",
     "confirmed": "Dikonfirmasi",
     "loading": "Memuat transaksi...",
     "txHash": "Hash transaksi:",
@@ -142,5 +142,19 @@
     "estPast12": "Est. 12 blok terakhir",
     "current": "Saat ini",
     "offline": "Luring"
+  },
+  "timeline": {
+    "title": "Linimasa chain",
+    "subtitle_other": "{{count}} blok terakhir — terbaru di kanan",
+    "updating": "Memperbarui tiap {{seconds}} dtk",
+    "nodeOffline": "Node sedang offline",
+    "nodeOfflineHint": "Jalankan node atau aktifkan RPC di Pengaturan untuk melihat aktivitas jaringan."
+  },
+  "minerDistribution": {
+    "title": "Distribusi miner",
+    "subtitle": "Porsi blok yang ditambang · 24 jam terakhir",
+    "empty": "Tidak ada blok yang ditambang dalam 24 jam terakhir",
+    "others": "Lainnya",
+    "addressYou": "{{address}} (Anda)"
   }
 }

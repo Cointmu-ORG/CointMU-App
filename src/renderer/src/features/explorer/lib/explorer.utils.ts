@@ -1,31 +1,9 @@
 import {
-  SECONDS_PER_MINUTE,
-  SECONDS_PER_HOUR,
   ASCII_PRINTABLE_MIN,
   ASCII_PRINTABLE_MAX,
   HEX_RADIX,
   HEX_CHARS_PER_BYTE,
 } from "../config/explorer.constants";
-
-/**
- * Formats a unix timestamp as a coarse relative age string for explorer tables,
- * using seconds, minutes, or hours.
- * @param timestamp - The unix timestamp in seconds.
- * @returns A human-readable relative age label.
- */
-export function formatTxAge(timestamp: number): string {
-  const diff = Math.floor(Date.now() / 1000) - timestamp;
-  if (diff < 0) {
-    return "Just now";
-  }
-  if (diff < SECONDS_PER_MINUTE) {
-    return `${diff} secs ago`;
-  }
-  if (diff < SECONDS_PER_HOUR) {
-    return `${Math.floor(diff / SECONDS_PER_MINUTE)} mins ago`;
-  }
-  return `${Math.floor(diff / SECONDS_PER_HOUR)} hrs ago`;
-}
 
 /**
  * Decodes a hex string into its printable ASCII representation, skipping any

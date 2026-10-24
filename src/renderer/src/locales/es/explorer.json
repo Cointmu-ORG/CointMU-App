@@ -110,7 +110,9 @@
     "success": "Éxito",
     "failed": "Fallido",
     "pending": "Pendiente",
-    "confirmedWithCount": "Confirmado - {{count}} confirmaciones",
+    "confirmedWithCount_one": "Confirmado - {{count}} confirmación",
+    "confirmedWithCount_many": "Confirmado - {{count}} confirmaciones",
+    "confirmedWithCount_other": "Confirmado - {{count}} confirmaciones",
     "confirmed": "Confirmado",
     "loading": "Cargando transacción...",
     "txHash": "Hash de transacción:",
@@ -142,5 +144,21 @@
     "estPast12": "Est. últimos 12 bloques",
     "current": "Actual",
     "offline": "Fuera de línea"
+  },
+  "timeline": {
+    "title": "Línea de tiempo de la cadena",
+    "subtitle_one": "Último {{count}} bloque — el más reciente a la derecha",
+    "subtitle_many": "Últimos {{count}} bloques — el más reciente a la derecha",
+    "subtitle_other": "Últimos {{count}} bloques — el más reciente a la derecha",
+    "updating": "Actualizando cada {{seconds}} s",
+    "nodeOffline": "El nodo está desconectado",
+    "nodeOfflineHint": "Inicia el nodo o activa RPC en Ajustes para ver la actividad de la red."
+  },
+  "minerDistribution": {
+    "title": "Distribución de mineros",
+    "subtitle": "Proporción de bloques minados · últimas 24 horas",
+    "empty": "No se minaron bloques en las últimas 24 horas",
+    "others": "Otros",
+    "addressYou": "{{address}} (tú)"
   }
 }

@@ -110,7 +110,8 @@
     "success": "Erfolgreich",
     "failed": "Fehlgeschlagen",
     "pending": "Ausstehend",
-    "confirmedWithCount": "Bestätigt - {{count}} Bestätigungen",
+    "confirmedWithCount_one": "Bestätigt - {{count}} Bestätigung",
+    "confirmedWithCount_other": "Bestätigt - {{count}} Bestätigungen",
     "confirmed": "Bestätigt",
     "loading": "Transaktion wird geladen...",
     "txHash": "Transaktions-Hash:",
@@ -142,5 +143,20 @@
     "estPast12": "Gesch. letzte 12 Blöcke",
     "current": "Gegenwärtig",
     "offline": "Offline"
+  },
+  "timeline": {
+    "title": "Chain-Zeitleiste",
+    "subtitle_one": "Letzter {{count}} Block — der neueste rechts",
+    "subtitle_other": "Letzte {{count}} Blöcke — der neueste rechts",
+    "updating": "Aktualisiert alle {{seconds}} s",
+    "nodeOffline": "Node ist offline",
+    "nodeOfflineHint": "Starte den Node oder aktiviere RPC in den Einstellungen, um die Netzwerkaktivität zu sehen."
+  },
+  "minerDistribution": {
+    "title": "Miner-Verteilung",
+    "subtitle": "Anteil geminter Blöcke · letzte 24 Stunden",
+    "empty": "In den letzten 24 Stunden wurden keine Blöcke gemint",
+    "others": "Andere",
+    "addressYou": "{{address}} (du)"
   }
 }

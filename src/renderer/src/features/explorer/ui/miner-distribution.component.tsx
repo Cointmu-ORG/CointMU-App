@@ -8,6 +8,7 @@ import { AccountIcon } from "@/features/wallet";
 import { fetchMinerDistribution, type MinerEntry } from "@/features/mining";
 import { MiningCacheService } from "@/features/mining";
 import { Activity } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface MinerDistributionProps {
   activeWalletAddress: string | null;
@@ -43,6 +44,7 @@ function MinerRow({
   index: number;
   activeWalletAddress: string | null;
 }): JSX.Element {
+  const { t } = useTranslation();
   const isOthers = entry.address === "others";
   const isYou =
     !isOthers &&
@@ -51,8 +53,12 @@ function MinerRow({
 
   const colorClass = BAR_COLORS[index] ?? "bg-slate-400";
   const label = isOthers
-    ? "Others"
-    : `${shortAddress(entry.address)}${isYou ? " (you)" : ""}`;
+    ? t("explorer:minerDistribution.others")
+    : isYou
+      ? t("explorer:minerDistribution.addressYou", {
+          address: shortAddress(entry.address),
+        })
+      : shortAddress(entry.address);
 
   return (
     <div className="flex items-center gap-3">
@@ -92,6 +98,7 @@ export function MinerDistribution({
   activeWalletAddress,
   isConnected,
 }: MinerDistributionProps): JSX.Element {
+  const { t } = useTranslation();
   const cached = MiningCacheService.getMinerDistribution();
   const [entries, setEntries] = useState<MinerEntry[]>(cached ?? []);
   const [isLoading, setIsLoading] = useState(cached === undefined);
@@ -123,10 +130,10 @@ export function MinerDistribution({
   return (
     <div className="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm flex flex-col">
       <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
-        Miner distribution
+        {t("explorer:minerDistribution.title")}
       </h3>
       <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5 mb-5">
-        Share of blocks mined · past 24 hours
+        {t("explorer:minerDistribution.subtitle")}
       </p>
 
       {isLoading ? (
@@ -150,10 +157,10 @@ export function MinerDistribution({
             strokeWidth={1.5}
           />
           <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-            Awaiting network activity
+            {t("explorer:dataTabs.awaitingActivity")}
           </p>
           <p className="text-xs text-slate-400 dark:text-gray-500 mt-0.5">
-            No blocks mined in the past 24 hours
+            {t("explorer:minerDistribution.empty")}
           </p>
         </div>
       ) : (

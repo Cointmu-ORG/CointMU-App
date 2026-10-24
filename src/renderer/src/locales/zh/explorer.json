@@ -110,7 +110,7 @@
     "success": "成功",
     "failed": "失败",
     "pending": "待处理",
-    "confirmedWithCount": "已确认 - {{count}} 次确认",
+    "confirmedWithCount_other": "已确认 - {{count}} 次确认",
     "confirmed": "已确认",
     "loading": "正在加载交易...",
     "txHash": "交易哈希：",
@@ -142,5 +142,19 @@
     "estPast12": "估算过去 12 个区块",
     "current": "当前",
     "offline": "离线"
+  },
+  "timeline": {
+    "title": "链时间线",
+    "subtitle_other": "最近 {{count}} 个区块 — 最新的在右侧",
+    "updating": "每 {{seconds}} 秒更新",
+    "nodeOffline": "节点已离线",
+    "nodeOfflineHint": "请启动节点或在设置中启用 RPC 以查看网络活动。"
+  },
+  "minerDistribution": {
+    "title": "矿工分布",
+    "subtitle": "已挖区块占比 · 过去 24 小时",
+    "empty": "过去 24 小时内没有挖出区块",
+    "others": "其他",
+    "addressYou": "{{address}}（你）"
   }
 }
