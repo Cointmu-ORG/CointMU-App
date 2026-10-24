@@ -14,9 +14,7 @@
     "logAwaiting": "等待节点活动...",
     "tabFound": "已找到",
     "tabLog": "日志",
-    "tabActivity": "活动",
-    "blocksValidated": "个已验证区块",
-    "miningOperations": "次挖矿操作"
+    "tabActivity": "活动"
   },
   "header": {
     "workspace": "工作区",
@@ -29,7 +27,6 @@
     "rewardsToday": "今日奖励",
     "miningWithThreads": "正在使用 {{count}} 个线程挖矿",
     "stopping": "正在停止...",
-    "stopMining": "停止挖矿",
     "targetDifficulty": "目标难度",
     "blockReward": "区块奖励",
     "initializing": "正在初始化",

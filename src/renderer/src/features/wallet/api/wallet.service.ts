@@ -1,6 +1,6 @@
 import { GRADIENTS } from "../config/wallet.constants";
 import { Wallet, HDNodeWallet } from "ethers";
-import { getSetting, setSetting } from "@/features/settings";
+import { getSetting, setSetting } from "@/shared/api";
 
 export interface DerivedAccount {
   index: number;

@@ -28,26 +28,10 @@
       },
       "notFound": "This request is no longer available. It may have expired or been answered already."
     },
-    "mining": {
-      "heatmap": {
-        "blocksValidated": "blocks validated",
-        "miningOperations": "mining operations",
-        "less": "Less",
-        "more": "More"
-      }
-    },
     "wallet": {
-      "setupNetwork": "Setup Network",
-      "linkToApp": "Link to CointMU App",
-      "customRpc": "Custom RPC",
-      "balance": "Balance",
       "approveTx": "Approve Transaction",
       "rejectTx": "Reject",
-      "connected": "Connected to CointMU",
-      "syncing": "Syncing...",
-      "connectionFailed": "Failed to connect to Desktop App",
       "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
       "importPrivKey": "Import Private Key",
       "privKeyPlaceholder": "Enter Private Key (0x...)",
       "importBtn": "Login",

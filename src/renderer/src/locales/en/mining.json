@@ -14,9 +14,7 @@
     "logAwaiting": "Awaiting node activity...",
     "tabFound": "Found",
     "tabLog": "Log",
-    "tabActivity": "Activity",
-    "blocksValidated": "blocks validated",
-    "miningOperations": "mining operations"
+    "tabActivity": "Activity"
   },
   "header": {
     "workspace": "Workspace",
@@ -29,7 +27,6 @@
     "rewardsToday": "Rewards today",
     "miningWithThreads": "Mining with {{count}} threads",
     "stopping": "Stopping...",
-    "stopMining": "Stop mining",
     "targetDifficulty": "Target difficulty",
     "blockReward": "Block reward",
     "initializing": "Initializing",

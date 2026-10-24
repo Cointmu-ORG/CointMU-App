@@ -56,14 +56,6 @@ export const ACTIVITY_TABS = [
   ACTIVITY_TAB_ACTIVITY,
 ];
 
-export const HEATMAP_INTENSITY_LEGEND = [
-  "bg-slate-100",
-  "bg-green-200",
-  "bg-green-400",
-  "bg-green-600",
-];
-export const HEATMAP_HALF_YEAR_LENGTH = 182;
-
 export const SECONDS_IN_DAY = 86400;
 export const TOP_MINERS_LIMIT = 5;
 export const MAX_BLOCKS_TO_SCAN = 5000;

@@ -14,9 +14,7 @@
     "logAwaiting": "Ожидание активности узла...",
     "tabFound": "Найдено",
     "tabLog": "Журнал",
-    "tabActivity": "Активность",
-    "blocksValidated": "проверенных блоков",
-    "miningOperations": "операций майнинга"
+    "tabActivity": "Активность"
   },
   "header": {
     "workspace": "Рабочая область",
@@ -29,7 +27,6 @@
     "rewardsToday": "Награды за сегодня",
     "miningWithThreads": "Майнинг с {{count}} потоками",
     "stopping": "Остановка...",
-    "stopMining": "Остановить майнинг",
     "targetDifficulty": "Целевая сложность",
     "blockReward": "Награда за блок",
     "initializing": "Инициализация",

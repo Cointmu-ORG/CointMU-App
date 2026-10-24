@@ -14,9 +14,7 @@
     "logAwaiting": "Esperando actividad del nodo...",
     "tabFound": "Encontrado",
     "tabLog": "Registro",
-    "tabActivity": "Actividad",
-    "blocksValidated": "bloques validados",
-    "miningOperations": "operaciones de minería"
+    "tabActivity": "Actividad"
   },
   "header": {
     "workspace": "Espacio de Trabajo",
@@ -29,7 +27,6 @@
     "rewardsToday": "Recompensas de hoy",
     "miningWithThreads": "Minando con {{count}} hilos",
     "stopping": "Deteniendo...",
-    "stopMining": "Detener minería",
     "targetDifficulty": "Dificultad objetivo",
     "blockReward": "Recompensa de bloque",
     "initializing": "Inicializando",

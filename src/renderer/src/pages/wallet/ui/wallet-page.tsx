@@ -9,8 +9,7 @@ import {
   getSessionPassword,
   type DerivedAccount,
 } from "@/features/wallet";
-import { getSetting, setSetting } from "@/features/settings";
-import { call } from "@/shared/api";
+import { call, getSetting, setSetting } from "@/shared/api";
 import { ethers } from "ethers";
 import { useAppStore } from "@/shared/model";
 import { useWalletUiStore } from "@/features/wallet";

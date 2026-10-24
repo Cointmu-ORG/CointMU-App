@@ -4,7 +4,7 @@ import {
   NOTIFICATIONS_HISTORY_KEY,
 } from "../config/notification.constants";
 import { create } from "zustand";
-import { getSetting, setSetting } from "@/features/settings";
+import { getSetting, setSetting } from "@/shared/api";
 
 export type NotificationType = "transaction" | "mining" | "security" | "info";
 

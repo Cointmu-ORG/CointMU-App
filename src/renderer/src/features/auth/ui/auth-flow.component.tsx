@@ -12,7 +12,7 @@ import {
   verifyPassword,
   unlockSession,
 } from "@/features/wallet";
-import { getSetting, setSetting } from "@/features/settings";
+import { getSetting, setSetting } from "@/shared/api";
 import { useAuthStore } from "../model/auth.store";
 import {
   ImportKeystoreModal,
