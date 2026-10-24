@@ -54,8 +54,11 @@
       "chainIdLabel": "チェーンID",
       "currencySymbolLabel": "通貨記号",
       "saveBtn": "保存",
-      "cancelBtn": "キャンセル"
-    }
+      "cancelBtn": "キャンセル",
+      "rpcUrlInvalid": "RPC URL は有効な HTTP/HTTPS URL である必要があります",
+      "examplePlaceholder": "例: {{example}}"
+    },
+    "addNetworkOption": "+ ネットワークを追加"
   },
   "mining": {
     "title": "マイニング"
@@ -81,7 +84,8 @@
     "statusConnected": "アクティブに接続されています",
     "statusConnectedDesc": "ブラウザ拡張機能がリンクされており、リクエストをブリッジしています。",
     "statusDisconnected": "切断されています",
-    "statusDisconnectedDesc": "ブラウザ拡張機能は現在リンクされていません。"
+    "statusDisconnectedDesc": "ブラウザ拡張機能は現在リンクされていません。",
+    "active": "有効"
   },
   "externalSources": {
     "title": "外部ソース",
@@ -115,7 +119,8 @@
     "openDataDesc": "ファイルエクスプローラーでデータディレクトリを表示します",
     "purgeWalletsBtn": "セカンダリアカウントを削除する",
     "purgeWalletsConfirm": "本当によろしいですか？ これにより、このデバイスからすべての非プライマリアカウントが削除されます。",
-    "purgeSuccess": "セカンダリアカウントが削除されました。"
+    "purgeSuccess": "セカンダリアカウントが削除されました。",
+    "dangerZone": "危険な操作"
   },
   "about": {
     "releaseNotes": "リリースノート",
@@ -156,7 +161,9 @@
     "openLink": "開く ›",
     "reportIssueTitle": "問題を報告する",
     "latestVersion": "最新バージョンを使用しています",
-    "uptimeLoading": "読み込み中..."
+    "uptimeLoading": "読み込み中...",
+    "versionLine": "バージョン {{version}}（ビルド {{build}}）",
+    "unknownPlatform": "不明"
   },
   "resetToDefaults": "デフォルトにリセット",
   "resetModal": {
@@ -235,7 +242,7 @@
     "worker": "ワーカー",
     "cpuThreadsTitle": "CPUスレッド",
     "cpuThreadsDesc": "ハッシュ化に使用される最大コア数（{{count}}/{{max}} 割り当て済み）",
-    "coresSuffix": "コア",
+    "coreCount_other": "{{count}} コア",
     "intensityTitle": "強度",
     "intensityDesc": "スレッドあたりのCPU使用率を制限する",
     "pauseTitle": "バッテリー駆動時に一時停止",
@@ -314,5 +321,54 @@
       "turnOff": "オフにする",
       "acknowledge": "了解"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "パスワード",
+    "passwordPlaceholder": "ウォレットのパスワードを入力",
+    "passwordRequired": "パスワードを入力してください。",
+    "verifying": "確認中...",
+    "copy": "クリップボードにコピー",
+    "copied": "クリップボードにコピーしました",
+    "copyFailed": "クリップボードにコピーできませんでした。",
+    "done": "完了"
+  },
+  "recoveryPhraseModal": {
+    "description": "12 語のシードフレーズで、このウォレットへの完全なアクセスを復元できます。",
+    "warning": "リカバリフレーズは絶対に共有しないでください。これを持つ人はウォレットを完全に支配し、資金をすべて盗むことができます。オフラインで保管し、ウェブサイトには決して入力しないでください。",
+    "reveal": "リカバリフレーズを表示",
+    "revealFailed": "リカバリフレーズを表示できませんでした。",
+    "autoHide": "このフレーズは {{seconds}} 秒後に自動的に非表示になります。"
+  },
+  "revealKeyModal": {
+    "description": "アカウントの秘密鍵を復号して表示します。",
+    "warning": "秘密鍵は絶対に共有しないでください。これを持つ人はこのアカウントを完全に支配し、資金をすべて盗むことができます。CointMU のサポートが秘密鍵を尋ねることはありません。",
+    "accountLabel": "アカウント",
+    "noAccounts": "利用できるアカウントがありません",
+    "selectAccount": "表示するアカウントを選択してください。",
+    "revealFailed": "秘密鍵を表示できませんでした。",
+    "privateKeyLabel": "秘密鍵",
+    "show": "表示",
+    "hide": "非表示",
+    "autoHide": "この鍵は {{seconds}} 秒後に自動的に非表示になります。"
+  },
+  "exportKeystoreModal": {
+    "description": "アクティブなアカウントの暗号化された JSON キーストアを保存します。同じパスワードで他のウォレットにインポートできます。",
+    "noAccount": "エクスポートできるアカウントがありません。",
+    "canceled": "エクスポートをキャンセルしました。",
+    "saveFailed": "キーストアを保存できませんでした。",
+    "exportFailed": "キーストアをエクスポートできませんでした。",
+    "exporting": "エクスポート中...",
+    "saved": "キーストアを保存しました"
+  },
+  "resetWalletModal": {
+    "description": "このデバイスからすべてのアカウントと鍵を完全に削除します。",
+    "warning": "この操作は元に戻せません。リカバリフレーズや秘密鍵をバックアップしていない場合、資金は永久に失われます。CointMU が復元することはできません。",
+    "typeToConfirm": "確認のため {{word}} と入力してください",
+    "noWallet": "リセットするウォレットが見つかりません。",
+    "incorrectPassword": "パスワードが正しくありません。",
+    "clearFailed": "ウォレットのデータを削除できませんでした。",
+    "resetFailed": "ウォレットをリセットできませんでした。",
+    "resetting": "リセット中...",
+    "submit": "ウォレットを完全にリセット"
   }
 }

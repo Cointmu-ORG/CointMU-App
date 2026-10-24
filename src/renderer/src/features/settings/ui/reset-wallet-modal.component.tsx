@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { RESET_CONFIRM_WORD } from "../config/settings.constants";
 import { useState, type SyntheticEvent, type JSX } from "react";
 import { AlertTriangle, Eye, EyeOff, X } from "lucide-react";
@@ -19,6 +20,7 @@ interface ResetWalletModalProps {
 export function ResetWalletModal({
   onClose,
 }: ResetWalletModalProps): JSX.Element {
+  const { t } = useTranslation();
   const [confirmWord, setConfirmWord] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,22 +40,28 @@ export function ResetWalletModal({
         "encryptedPayload",
       );
       if (!encryptedPayload) {
-        throw new Error("No wallet found to reset.");
+        throw new Error(t("settings:resetWalletModal.noWallet"));
       }
       const valid = await verifyPassword(encryptedPayload, password);
       if (!valid) {
-        setError("Incorrect password.");
+        setError(t("settings:resetWalletModal.incorrectPassword"));
         setLoading(false);
         return;
       }
       const result = await window.api.clearAllData();
       if (!result.success) {
-        throw new Error(result.error ?? "Failed to clear wallet data.");
+        throw new Error(
+          result.error ?? t("settings:resetWalletModal.clearFailed"),
+        );
       }
       lockSession();
       window.location.reload();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to reset wallet.");
+      setError(
+        e instanceof Error
+          ? e.message
+          : t("settings:resetWalletModal.resetFailed"),
+      );
       setLoading(false);
     }
   };
@@ -74,26 +82,26 @@ export function ResetWalletModal({
               <AlertTriangle width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-              Reset wallet
+              {t("settings:security.resetTitle")}
             </h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-            This permanently removes all accounts and keys from this device.
+            {t("settings:resetWalletModal.description")}
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-red-700 dark:text-red-400">
             <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
-              This action is irreversible. If you have not backed up your
-              recovery phrase or private keys, your funds will be lost forever.
-              CointMU cannot recover them for you.
+              {t("settings:resetWalletModal.warning")}
             </p>
           </div>
 
           <form onSubmit={handleReset} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                Type {RESET_CONFIRM_WORD} to confirm
+                {t("settings:resetWalletModal.typeToConfirm", {
+                  word: RESET_CONFIRM_WORD,
+                })}
               </label>
               <input
                 type="text"
@@ -107,7 +115,7 @@ export function ResetWalletModal({
 
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                Password
+                {t("settings:securityModal.passwordLabel")}
               </label>
               <div className="relative">
                 <input
@@ -115,7 +123,7 @@ export function ResetWalletModal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
-                  placeholder="Enter your wallet password"
+                  placeholder={t("settings:securityModal.passwordPlaceholder")}
                 />
                 <button
                   type="button"
@@ -140,7 +148,9 @@ export function ResetWalletModal({
               disabled={!canSubmit}
               className="w-full py-3.5 bg-red-600 text-white font-bold rounded-xl shadow-sm shadow-red-200 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? "Resetting..." : "Permanently reset wallet"}
+              {loading
+                ? t("settings:resetWalletModal.resetting")
+                : t("settings:resetWalletModal.submit")}
             </button>
           </form>
         </div>

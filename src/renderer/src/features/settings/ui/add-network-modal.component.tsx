@@ -44,10 +44,7 @@ export function AddNetworkModal({
         throw new Error("Invalid protocol");
       }
     } catch {
-      setError(
-        t("settings:network.addNetwork.rpcUrlLabel") +
-          " must be a valid HTTP/HTTPS URL",
-      );
+      setError(t("settings:network.addNetwork.rpcUrlInvalid"));
       return;
     }
 
@@ -110,7 +107,9 @@ export function AddNetworkModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Local Ganache"
+              placeholder={t("settings:network.addNetwork.examplePlaceholder", {
+                example: "Local Ganache",
+              })}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
             />
           </div>
@@ -149,7 +148,9 @@ export function AddNetworkModal({
               type="text"
               value={symbol}
               onChange={(e) => setSymbol(e.target.value)}
-              placeholder="e.g. ETH"
+              placeholder={t("settings:network.addNetwork.examplePlaceholder", {
+                example: "ETH",
+              })}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all uppercase"
             />
           </div>

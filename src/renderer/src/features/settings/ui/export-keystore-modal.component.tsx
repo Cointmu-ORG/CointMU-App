@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState, type SyntheticEvent, type JSX } from "react";
 import { FileText, Eye, EyeOff, Check, X } from "lucide-react";
 import { generateKeystore, type DerivedAccount } from "@/features/wallet";
@@ -19,6 +20,7 @@ interface ExportKeystoreModalProps {
 export function ExportKeystoreModal({
   onClose,
 }: ExportKeystoreModalProps): JSX.Element {
+  const { t } = useTranslation();
   const activeAccount = useAppStore((s) => s.activeAccount);
 
   const [accounts, setAccounts] = useState<DerivedAccount[]>([]);
@@ -47,11 +49,11 @@ export function ExportKeystoreModal({
       accounts.find((a) => a.address === activeAccount) ??
       (accounts.length > 0 ? accounts[0] : null);
     if (!account) {
-      setError("No account available to export.");
+      setError(t("settings:exportKeystoreModal.noAccount"));
       return;
     }
     if (!password) {
-      setError("Enter your password.");
+      setError(t("settings:securityModal.passwordRequired"));
       return;
     }
     setLoading(true);
@@ -62,12 +64,16 @@ export function ExportKeystoreModal({
       if (result.success && result.path) {
         setSavedPath(result.path);
       } else if (result.canceled) {
-        setError("Export canceled.");
+        setError(t("settings:exportKeystoreModal.canceled"));
       } else {
-        setError(result.error ?? "Failed to save keystore.");
+        setError(result.error ?? t("settings:exportKeystoreModal.saveFailed"));
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to export keystore.");
+      setError(
+        e instanceof Error
+          ? e.message
+          : t("settings:exportKeystoreModal.exportFailed"),
+      );
     } finally {
       setLoading(false);
     }
@@ -91,19 +97,18 @@ export function ExportKeystoreModal({
               <FileText width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-              Export keystore
+              {t("settings:security.exportTitle")}
             </h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-            Save an encrypted JSON keystore for your active account. You can
-            import it into other wallets using this same password.
+            {t("settings:exportKeystoreModal.description")}
           </p>
 
           {!isDone ? (
             <form onSubmit={handleExport} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                  Password
+                  {t("settings:securityModal.passwordLabel")}
                 </label>
                 <div className="relative">
                   <input
@@ -111,7 +116,9 @@ export function ExportKeystoreModal({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                    placeholder="Enter your wallet password"
+                    placeholder={t(
+                      "settings:securityModal.passwordPlaceholder",
+                    )}
                     autoFocus
                   />
                   <button
@@ -137,7 +144,9 @@ export function ExportKeystoreModal({
                 disabled={loading || accounts.length === 0}
                 className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? "Exporting..." : "Export keystore"}
+                {loading
+                  ? t("settings:exportKeystoreModal.exporting")
+                  : t("settings:security.exportTitle")}
               </button>
             </form>
           ) : (
@@ -150,7 +159,9 @@ export function ExportKeystoreModal({
                   className="mt-0.5 shrink-0"
                 />
                 <div className="min-w-0">
-                  <p className="text-sm font-bold">Keystore saved</p>
+                  <p className="text-sm font-bold">
+                    {t("settings:exportKeystoreModal.saved")}
+                  </p>
                   <p className="text-xs font-mono break-all mt-0.5">
                     {savedPath}
                   </p>
@@ -161,7 +172,7 @@ export function ExportKeystoreModal({
                 onClick={onClose}
                 className="w-full py-3.5 bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-gray-300 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
               >
-                Done
+                {t("settings:securityModal.done")}
               </button>
             </div>
           )}

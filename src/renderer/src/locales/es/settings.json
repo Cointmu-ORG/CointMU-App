@@ -54,8 +54,11 @@
       "chainIdLabel": "ID de cadena",
       "currencySymbolLabel": "Símbolo de moneda",
       "saveBtn": "Guardar",
-      "cancelBtn": "Cancelar"
-    }
+      "cancelBtn": "Cancelar",
+      "rpcUrlInvalid": "La URL de RPC debe ser una URL HTTP/HTTPS válida",
+      "examplePlaceholder": "p. ej. {{example}}"
+    },
+    "addNetworkOption": "+ Añadir red"
   },
   "mining": {
     "title": "Minería"
@@ -81,7 +84,8 @@
     "statusConnected": "Conectado Activamente",
     "statusConnectedDesc": "La extensión del navegador está vinculada y conectando solicitudes.",
     "statusDisconnected": "Desconectado",
-    "statusDisconnectedDesc": "La extensión del navegador no está vinculada actualmente."
+    "statusDisconnectedDesc": "La extensión del navegador no está vinculada actualmente.",
+    "active": "Activo"
   },
   "externalSources": {
     "title": "Fuentes Externas",
@@ -115,7 +119,8 @@
     "openDataDesc": "Revelar el directorio en tu explorador de archivos",
     "purgeWalletsBtn": "Eliminar cuentas secundarias",
     "purgeWalletsConfirm": "¿Estás seguro? Esto eliminará todas las cuentas no principales de este dispositivo.",
-    "purgeSuccess": "Cuentas secundarias eliminadas."
+    "purgeSuccess": "Cuentas secundarias eliminadas.",
+    "dangerZone": "Zona de peligro"
   },
   "about": {
     "releaseNotes": "Notas de la versión",
@@ -156,7 +161,9 @@
     "readyUpdateTitle": "Actualización lista para instalar",
     "readyUpdateDesc": "Se ha descargado la versión {{version}}.",
     "restartUpdateBtn": "Reiniciar e instalar",
-    "uptimeLoading": "Cargando..."
+    "uptimeLoading": "Cargando...",
+    "versionLine": "Versión {{version}} (compilación {{build}})",
+    "unknownPlatform": "Desconocida"
   },
   "resetToDefaults": "Restablecer valores",
   "resetModal": {
@@ -235,7 +242,9 @@
     "worker": "Trabajador",
     "cpuThreadsTitle": "Hilos de CPU",
     "cpuThreadsDesc": "Núcleos máximos usados para hashing ({{count}}/{{max}} asignados)",
-    "coresSuffix": "núcleos",
+    "coreCount_one": "{{count}} núcleo",
+    "coreCount_many": "{{count}} núcleos",
+    "coreCount_other": "{{count}} núcleos",
     "intensityTitle": "Intensidad",
     "intensityDesc": "Limitar uso de CPU por hilo",
     "pauseTitle": "Pausar con batería",
@@ -314,5 +323,54 @@
       "turnOff": "Desactivar",
       "acknowledge": "Entendido"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Introduce la contraseña de tu billetera",
+    "passwordRequired": "Introduce tu contraseña.",
+    "verifying": "Verificando...",
+    "copy": "Copiar al portapapeles",
+    "copied": "Copiado al portapapeles",
+    "copyFailed": "No se pudo copiar al portapapeles.",
+    "done": "Listo"
+  },
+  "recoveryPhraseModal": {
+    "description": "Tu frase semilla de 12 palabras restaura el acceso completo a esta billetera.",
+    "warning": "Nunca compartas tu frase de recuperación. Quien la tenga puede tomar el control total de tu billetera y robar todos tus fondos. Guárdala sin conexión y nunca la escribas en un sitio web.",
+    "reveal": "Mostrar frase de recuperación",
+    "revealFailed": "No se pudo mostrar la frase de recuperación.",
+    "autoHide": "Esta frase se ocultará automáticamente en {{seconds}} s."
+  },
+  "revealKeyModal": {
+    "description": "Descifra y muestra la clave privada de una de tus cuentas.",
+    "warning": "Nunca compartas tu clave privada. Quien la tenga obtiene el control total de esta cuenta y puede robar todos sus fondos. El soporte de CointMU nunca te la pedirá.",
+    "accountLabel": "Cuenta",
+    "noAccounts": "No hay cuentas disponibles",
+    "selectAccount": "Selecciona una cuenta.",
+    "revealFailed": "No se pudo mostrar la clave privada.",
+    "privateKeyLabel": "Clave privada",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "autoHide": "Esta clave se ocultará automáticamente en {{seconds}} s."
+  },
+  "exportKeystoreModal": {
+    "description": "Guarda un almacén de claves JSON cifrado de tu cuenta activa. Puedes importarlo en otras billeteras con la misma contraseña.",
+    "noAccount": "No hay ninguna cuenta para exportar.",
+    "canceled": "Exportación cancelada.",
+    "saveFailed": "No se pudo guardar el almacén de claves.",
+    "exportFailed": "No se pudo exportar el almacén de claves.",
+    "exporting": "Exportando...",
+    "saved": "Almacén de claves guardado"
+  },
+  "resetWalletModal": {
+    "description": "Esto elimina de forma permanente todas las cuentas y claves de este dispositivo.",
+    "warning": "Esta acción es irreversible. Si no has respaldado tu frase de recuperación o tus claves privadas, perderás tus fondos para siempre. CointMU no puede recuperarlos por ti.",
+    "typeToConfirm": "Escribe {{word}} para confirmar",
+    "noWallet": "No se encontró ninguna billetera para restablecer.",
+    "incorrectPassword": "Contraseña incorrecta.",
+    "clearFailed": "No se pudieron borrar los datos de la billetera.",
+    "resetFailed": "No se pudo restablecer la billetera.",
+    "resetting": "Restableciendo...",
+    "submit": "Restablecer la billetera de forma permanente"
   }
 }

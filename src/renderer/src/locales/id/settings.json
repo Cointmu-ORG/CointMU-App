@@ -54,8 +54,11 @@
       "chainIdLabel": "ID Chain",
       "currencySymbolLabel": "Simbol Mata Uang",
       "saveBtn": "Simpan",
-      "cancelBtn": "Batal"
-    }
+      "cancelBtn": "Batal",
+      "rpcUrlInvalid": "URL RPC harus berupa URL HTTP/HTTPS yang valid",
+      "examplePlaceholder": "mis. {{example}}"
+    },
+    "addNetworkOption": "+ Tambah jaringan"
   },
   "mining": {
     "title": "Penambangan"
@@ -81,7 +84,8 @@
     "statusConnected": "Aktif Terhubung",
     "statusConnectedDesc": "Ekstensi peramban terhubung dan menjembatani permintaan.",
     "statusDisconnected": "Terputus",
-    "statusDisconnectedDesc": "Ekstensi peramban saat ini tidak terhubung."
+    "statusDisconnectedDesc": "Ekstensi peramban saat ini tidak terhubung.",
+    "active": "Aktif"
   },
   "externalSources": {
     "title": "Sumber Eksternal",
@@ -115,7 +119,8 @@
     "openDataDesc": "Tampilkan datadir di penjelajah berkas Anda",
     "purgeWalletsBtn": "Hapus akun sekunder",
     "purgeWalletsConfirm": "Apakah Anda yakin? Ini akan menghapus semua akun non-utama dari perangkat ini.",
-    "purgeSuccess": "Akun sekunder telah dihapus."
+    "purgeSuccess": "Akun sekunder telah dihapus.",
+    "dangerZone": "Zona berbahaya"
   },
   "about": {
     "releaseNotes": "Catatan rilis",
@@ -156,7 +161,9 @@
     "readyUpdateTitle": "Pembaruan siap dipasang",
     "readyUpdateDesc": "Versi {{version}} telah diunduh.",
     "restartUpdateBtn": "Mulai Ulang & Pasang",
-    "uptimeLoading": "Memuat..."
+    "uptimeLoading": "Memuat...",
+    "versionLine": "Versi {{version}} (build {{build}})",
+    "unknownPlatform": "Tidak diketahui"
   },
   "resetToDefaults": "Kembalikan ke awal",
   "resetModal": {
@@ -235,7 +242,7 @@
     "worker": "Pekerja",
     "cpuThreadsTitle": "Utas CPU",
     "cpuThreadsDesc": "Core maksimum yang digunakan untuk hashing ({{count}}/{{max}} dialokasikan)",
-    "coresSuffix": "core",
+    "coreCount_other": "{{count}} core",
     "intensityTitle": "Intensitas",
     "intensityDesc": "Batasi penggunaan CPU per utas",
     "pauseTitle": "Jeda pada baterai",
@@ -314,5 +321,54 @@
       "turnOff": "Matikan",
       "acknowledge": "Mengerti"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "Kata sandi",
+    "passwordPlaceholder": "Masukkan kata sandi dompet",
+    "passwordRequired": "Masukkan kata sandi Anda.",
+    "verifying": "Memverifikasi...",
+    "copy": "Salin ke papan klip",
+    "copied": "Tersalin ke papan klip",
+    "copyFailed": "Gagal menyalin ke papan klip.",
+    "done": "Selesai"
+  },
+  "recoveryPhraseModal": {
+    "description": "Frasa seed 12 kata Anda memulihkan akses penuh ke dompet ini.",
+    "warning": "Jangan pernah membagikan frasa pemulihan Anda. Siapa pun yang memilikinya dapat mengambil alih dompet Anda dan mencuri seluruh dana. Simpan secara offline dan jangan pernah mengetiknya di situs web.",
+    "reveal": "Tampilkan frasa pemulihan",
+    "revealFailed": "Gagal menampilkan frasa pemulihan.",
+    "autoHide": "Frasa ini akan disembunyikan otomatis dalam {{seconds}} dtk."
+  },
+  "revealKeyModal": {
+    "description": "Dekripsi dan tampilkan kunci pribadi salah satu akun Anda.",
+    "warning": "Jangan pernah membagikan kunci pribadi Anda. Siapa pun yang memilikinya mendapat kendali penuh atas akun ini dan dapat mencuri seluruh dananya. Dukungan CointMU tidak akan pernah memintanya.",
+    "accountLabel": "Akun",
+    "noAccounts": "Tidak ada akun",
+    "selectAccount": "Pilih akun yang akan ditampilkan.",
+    "revealFailed": "Gagal menampilkan kunci pribadi.",
+    "privateKeyLabel": "Kunci pribadi",
+    "show": "Tampilkan",
+    "hide": "Sembunyikan",
+    "autoHide": "Kunci ini akan disembunyikan otomatis dalam {{seconds}} dtk."
+  },
+  "exportKeystoreModal": {
+    "description": "Simpan keystore JSON terenkripsi untuk akun aktif Anda. Anda dapat mengimpornya ke dompet lain dengan kata sandi yang sama.",
+    "noAccount": "Tidak ada akun untuk diekspor.",
+    "canceled": "Ekspor dibatalkan.",
+    "saveFailed": "Gagal menyimpan keystore.",
+    "exportFailed": "Gagal mengekspor keystore.",
+    "exporting": "Mengekspor...",
+    "saved": "Keystore tersimpan"
+  },
+  "resetWalletModal": {
+    "description": "Ini menghapus semua akun dan kunci dari perangkat ini secara permanen.",
+    "warning": "Tindakan ini tidak dapat dibatalkan. Jika Anda belum mencadangkan frasa pemulihan atau kunci pribadi, dana Anda akan hilang selamanya. CointMU tidak dapat memulihkannya untuk Anda.",
+    "typeToConfirm": "Ketik {{word}} untuk mengonfirmasi",
+    "noWallet": "Tidak ada dompet yang dapat direset.",
+    "incorrectPassword": "Kata sandi salah.",
+    "clearFailed": "Gagal menghapus data dompet.",
+    "resetFailed": "Gagal mereset dompet.",
+    "resetting": "Mereset...",
+    "submit": "Reset dompet secara permanen"
   }
 }

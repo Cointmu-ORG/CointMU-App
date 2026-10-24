@@ -100,7 +100,7 @@ export function NetworkSettings({
                     if (option === "+ Add Network") {
                       return (
                         <span className="text-blue-500 font-bold">
-                          {option}
+                          {t("settings:network.addNetworkOption")}
                         </span>
                       );
                     }

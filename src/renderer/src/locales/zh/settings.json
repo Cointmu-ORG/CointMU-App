@@ -54,8 +54,11 @@
       "chainIdLabel": "链 ID",
       "currencySymbolLabel": "货币符号",
       "saveBtn": "保存",
-      "cancelBtn": "取消"
-    }
+      "cancelBtn": "取消",
+      "rpcUrlInvalid": "RPC URL 必须是有效的 HTTP/HTTPS 地址",
+      "examplePlaceholder": "例如 {{example}}"
+    },
+    "addNetworkOption": "+ 添加网络"
   },
   "mining": {
     "title": "挖矿"
@@ -81,7 +84,8 @@
     "statusConnected": "活跃连接",
     "statusConnectedDesc": "浏览器扩展已链接并正在桥接请求。",
     "statusDisconnected": "已断开连接",
-    "statusDisconnectedDesc": "浏览器扩展当前未链接。"
+    "statusDisconnectedDesc": "浏览器扩展当前未链接。",
+    "active": "活跃"
   },
   "externalSources": {
     "title": "外部来源",
@@ -115,7 +119,8 @@
     "openDataDesc": "在文件浏览器中显示数据目录",
     "purgeWalletsBtn": "删除辅助账户",
     "purgeWalletsConfirm": "您确定吗？这将从此设备中删除所有非主要账户。",
-    "purgeSuccess": "已删除辅助账户。"
+    "purgeSuccess": "已删除辅助账户。",
+    "dangerZone": "危险区域"
   },
   "about": {
     "releaseNotes": "发行说明",
@@ -156,7 +161,9 @@
     "readyUpdateTitle": "更新已准备好安装",
     "readyUpdateDesc": "已下载版本 {{version}}。",
     "restartUpdateBtn": "重启并安装",
-    "uptimeLoading": "加载中..."
+    "uptimeLoading": "加载中...",
+    "versionLine": "版本 {{version}}（构建 {{build}}）",
+    "unknownPlatform": "未知"
   },
   "resetToDefaults": "恢复默认值",
   "resetModal": {
@@ -235,7 +242,7 @@
     "worker": "工作线程",
     "cpuThreadsTitle": "CPU 线程数",
     "cpuThreadsDesc": "用于哈希计算的最大核心数（已分配 {{count}}/{{max}}）",
-    "coresSuffix": "核",
+    "coreCount_other": "{{count}} 核",
     "intensityTitle": "强度",
     "intensityDesc": "限制每个线程的 CPU 使用率",
     "pauseTitle": "使用电池时暂停",
@@ -314,5 +321,54 @@
       "turnOff": "关闭",
       "acknowledge": "知道了"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "输入钱包密码",
+    "passwordRequired": "请输入密码。",
+    "verifying": "正在验证...",
+    "copy": "复制到剪贴板",
+    "copied": "已复制到剪贴板",
+    "copyFailed": "无法复制到剪贴板。",
+    "done": "完成"
+  },
+  "recoveryPhraseModal": {
+    "description": "你的 12 个单词的种子短语可恢复对此钱包的完全访问权限。",
+    "warning": "切勿分享你的恢复短语。任何拥有它的人都能完全控制你的钱包并盗走所有资金。请离线保存，切勿在任何网站上输入。",
+    "reveal": "显示恢复短语",
+    "revealFailed": "无法显示恢复短语。",
+    "autoHide": "此短语将在 {{seconds}} 秒后自动隐藏。"
+  },
+  "revealKeyModal": {
+    "description": "解密并显示你某个账户的私钥。",
+    "warning": "切勿分享你的私钥。任何拥有它的人都能完全控制此账户并盗走其所有资金。CointMU 支持人员绝不会向你索要私钥。",
+    "accountLabel": "账户",
+    "noAccounts": "没有可用的账户",
+    "selectAccount": "请选择要显示的账户。",
+    "revealFailed": "无法显示私钥。",
+    "privateKeyLabel": "私钥",
+    "show": "显示",
+    "hide": "隐藏",
+    "autoHide": "此私钥将在 {{seconds}} 秒后自动隐藏。"
+  },
+  "exportKeystoreModal": {
+    "description": "为当前账户保存加密的 JSON 密钥库。你可以使用相同密码将其导入其他钱包。",
+    "noAccount": "没有可导出的账户。",
+    "canceled": "已取消导出。",
+    "saveFailed": "无法保存密钥库。",
+    "exportFailed": "无法导出密钥库。",
+    "exporting": "正在导出...",
+    "saved": "密钥库已保存"
+  },
+  "resetWalletModal": {
+    "description": "这将从此设备上永久删除所有账户和密钥。",
+    "warning": "此操作无法撤销。如果你没有备份恢复短语或私钥，资金将永久丢失。CointMU 无法为你恢复。",
+    "typeToConfirm": "输入 {{word}} 以确认",
+    "noWallet": "未找到可重置的钱包。",
+    "incorrectPassword": "密码错误。",
+    "clearFailed": "无法清除钱包数据。",
+    "resetFailed": "无法重置钱包。",
+    "resetting": "正在重置...",
+    "submit": "永久重置钱包"
   }
 }

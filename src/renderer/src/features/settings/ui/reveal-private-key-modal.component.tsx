@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
   useEffect,
@@ -37,6 +38,7 @@ function shortenAddress(address: string): string {
 export function RevealPrivateKeyModal({
   onClose,
 }: RevealPrivateKeyModalProps): JSX.Element {
+  const { t } = useTranslation();
   const activeAccount = useAppStore((s) => s.activeAccount);
 
   const [accounts, setAccounts] = useState<DerivedAccount[]>([]);
@@ -119,11 +121,11 @@ export function RevealPrivateKeyModal({
     setError("");
     const account = accounts.find((a) => a.address === selectedAddress);
     if (!account) {
-      setError("Select an account to reveal.");
+      setError(t("settings:revealKeyModal.selectAccount"));
       return;
     }
     if (!password) {
-      setError("Enter your password.");
+      setError(t("settings:securityModal.passwordRequired"));
       return;
     }
     setLoading(true);
@@ -133,7 +135,9 @@ export function RevealPrivateKeyModal({
       startAutoHide();
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "Failed to reveal private key.",
+        e instanceof Error
+          ? e.message
+          : t("settings:revealKeyModal.revealFailed"),
       );
     } finally {
       setLoading(false);
@@ -146,7 +150,7 @@ export function RevealPrivateKeyModal({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setError("Failed to copy to clipboard.");
+      setError(t("settings:securityModal.copyFailed"));
     }
   };
 
@@ -168,19 +172,17 @@ export function RevealPrivateKeyModal({
               <Key width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-              Reveal private key
+              {t("settings:security.revealTitle")}
             </h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-            Decrypt and display the raw private key for one of your accounts.
+            {t("settings:revealKeyModal.description")}
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-red-700 dark:text-red-400">
             <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
-              Never share your private key. Anyone who has it gains full control
-              of this account and can steal all of its funds. CointMU support
-              will never ask for it.
+              {t("settings:revealKeyModal.warning")}
             </p>
           </div>
 
@@ -188,7 +190,7 @@ export function RevealPrivateKeyModal({
             <form onSubmit={handleReveal} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                  Account
+                  {t("settings:revealKeyModal.accountLabel")}
                 </label>
                 <select
                   value={selectedAddress}
@@ -196,7 +198,9 @@ export function RevealPrivateKeyModal({
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   {accounts.length === 0 && (
-                    <option value="">No accounts available</option>
+                    <option value="">
+                      {t("settings:revealKeyModal.noAccounts")}
+                    </option>
                   )}
                   {accounts.map((a) => (
                     <option key={a.address} value={a.address}>
@@ -208,7 +212,7 @@ export function RevealPrivateKeyModal({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                  Password
+                  {t("settings:securityModal.passwordLabel")}
                 </label>
                 <div className="relative">
                   <input
@@ -216,7 +220,9 @@ export function RevealPrivateKeyModal({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                    placeholder="Enter your wallet password"
+                    placeholder={t(
+                      "settings:securityModal.passwordPlaceholder",
+                    )}
                     autoFocus
                   />
                   <button
@@ -242,7 +248,9 @@ export function RevealPrivateKeyModal({
                 disabled={loading || accounts.length === 0}
                 className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? "Verifying..." : "Reveal private key"}
+                {loading
+                  ? t("settings:securityModal.verifying")
+                  : t("settings:security.revealTitle")}
               </button>
             </form>
           ) : (
@@ -250,7 +258,7 @@ export function RevealPrivateKeyModal({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400">
-                    Private key
+                    {t("settings:revealKeyModal.privateKeyLabel")}
                   </label>
                   <button
                     type="button"
@@ -262,7 +270,9 @@ export function RevealPrivateKeyModal({
                     ) : (
                       <Eye width={14} height={14} />
                     )}
-                    {unmasked ? "Hide" : "Show"}
+                    {unmasked
+                      ? t("settings:revealKeyModal.hide")
+                      : t("settings:revealKeyModal.show")}
                   </button>
                 </div>
                 <div className="px-4 py-3 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl font-mono text-sm text-slate-800 dark:text-gray-100 break-all select-all">
@@ -280,11 +290,15 @@ export function RevealPrivateKeyModal({
                 ) : (
                   <Copy width={16} height={16} strokeWidth={2.5} />
                 )}
-                {copied ? "Copied to clipboard" : "Copy to clipboard"}
+                {copied
+                  ? t("settings:securityModal.copied")
+                  : t("settings:securityModal.copy")}
               </button>
 
               <p className="text-center text-xs text-slate-400 dark:text-gray-500">
-                This key will be hidden automatically in {secondsLeft}s.
+                {t("settings:revealKeyModal.autoHide", {
+                  seconds: secondsLeft,
+                })}
               </p>
             </div>
           )}

@@ -123,7 +123,7 @@ function ConnectedSitesSettings(): JSX.Element {
                 <div className="flex items-center gap-3">
                   <div className="px-3 py-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 rounded-lg flex-shrink-0 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse" />
-                    Active
+                    {t("settings:connectedSites.active")}
                   </div>
                   <button
                     type="button"

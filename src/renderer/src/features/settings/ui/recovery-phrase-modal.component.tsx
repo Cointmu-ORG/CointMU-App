@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
   useEffect,
@@ -25,6 +26,7 @@ interface RecoveryPhraseModalProps {
 export function RecoveryPhraseModal({
   onClose,
 }: RecoveryPhraseModalProps): JSX.Element {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -82,7 +84,7 @@ export function RecoveryPhraseModal({
     event.preventDefault();
     setError("");
     if (!password) {
-      setError("Enter your password.");
+      setError(t("settings:securityModal.passwordRequired"));
       return;
     }
     setLoading(true);
@@ -92,7 +94,9 @@ export function RecoveryPhraseModal({
       startAutoHide();
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "Failed to reveal recovery phrase.",
+        e instanceof Error
+          ? e.message
+          : t("settings:recoveryPhraseModal.revealFailed"),
       );
     } finally {
       setLoading(false);
@@ -105,7 +109,7 @@ export function RecoveryPhraseModal({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setError("Failed to copy to clipboard.");
+      setError(t("settings:securityModal.copyFailed"));
     }
   };
 
@@ -128,19 +132,17 @@ export function RecoveryPhraseModal({
               <Key width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-              Recovery phrase
+              {t("settings:security.recoveryPhraseTitle")}
             </h3>
           </div>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-            Your 12-word seed phrase restores full access to this wallet.
+            {t("settings:recoveryPhraseModal.description")}
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-red-700 dark:text-red-400">
             <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
-              Never share your recovery phrase. Anyone who has it can take full
-              control of your wallet and steal all of your funds. Store it
-              offline and never type it into a website.
+              {t("settings:recoveryPhraseModal.warning")}
             </p>
           </div>
 
@@ -148,7 +150,7 @@ export function RecoveryPhraseModal({
             <form onSubmit={handleReveal} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
-                  Password
+                  {t("settings:securityModal.passwordLabel")}
                 </label>
                 <div className="relative">
                   <input
@@ -156,7 +158,9 @@ export function RecoveryPhraseModal({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                    placeholder="Enter your wallet password"
+                    placeholder={t(
+                      "settings:securityModal.passwordPlaceholder",
+                    )}
                     autoFocus
                   />
                   <button
@@ -182,7 +186,9 @@ export function RecoveryPhraseModal({
                 disabled={loading}
                 className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? "Verifying..." : "Reveal recovery phrase"}
+                {loading
+                  ? t("settings:securityModal.verifying")
+                  : t("settings:recoveryPhraseModal.reveal")}
               </button>
             </form>
           ) : (
@@ -213,11 +219,15 @@ export function RecoveryPhraseModal({
                 ) : (
                   <Copy width={16} height={16} strokeWidth={2.5} />
                 )}
-                {copied ? "Copied to clipboard" : "Copy to clipboard"}
+                {copied
+                  ? t("settings:securityModal.copied")
+                  : t("settings:securityModal.copy")}
               </button>
 
               <p className="text-center text-xs text-slate-400 dark:text-gray-500">
-                This phrase will be hidden automatically in {secondsLeft}s.
+                {t("settings:recoveryPhraseModal.autoHide", {
+                  seconds: secondsLeft,
+                })}
               </p>
             </div>
           )}

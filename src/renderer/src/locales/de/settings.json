@@ -54,8 +54,11 @@
       "chainIdLabel": "Ketten-ID",
       "currencySymbolLabel": "Währungssymbol",
       "saveBtn": "Speichern",
-      "cancelBtn": "Abbrechen"
-    }
+      "cancelBtn": "Abbrechen",
+      "rpcUrlInvalid": "Die RPC-URL muss eine gültige HTTP/HTTPS-URL sein",
+      "examplePlaceholder": "z. B. {{example}}"
+    },
+    "addNetworkOption": "+ Netzwerk hinzufügen"
   },
   "mining": {
     "title": "Mining"
@@ -81,7 +84,8 @@
     "statusConnected": "Aktiv Verbunden",
     "statusConnectedDesc": "Die Browser-Erweiterung ist verknüpft und überbrückt Anfragen.",
     "statusDisconnected": "Getrennt",
-    "statusDisconnectedDesc": "Die Browser-Erweiterung ist derzeit nicht verknüpft."
+    "statusDisconnectedDesc": "Die Browser-Erweiterung ist derzeit nicht verknüpft.",
+    "active": "Aktiv"
   },
   "externalSources": {
     "title": "Externe Quellen",
@@ -115,7 +119,8 @@
     "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen",
     "purgeWalletsBtn": "Sekundäre Konten entfernen",
     "purgeWalletsConfirm": "Sind Sie sicher? Dadurch werden alle nicht primären Konten von diesem Gerät gelöscht.",
-    "purgeSuccess": "Sekundäre Konten entfernt."
+    "purgeSuccess": "Sekundäre Konten entfernt.",
+    "dangerZone": "Gefahrenbereich"
   },
   "about": {
     "releaseNotes": "Versionshinweise",
@@ -156,7 +161,9 @@
     "readyUpdateTitle": "Update zur Installation bereit",
     "readyUpdateDesc": "Version {{version}} wurde heruntergeladen.",
     "restartUpdateBtn": "Neu starten & installieren",
-    "uptimeLoading": "Laden..."
+    "uptimeLoading": "Laden...",
+    "versionLine": "Version {{version}} (Build {{build}})",
+    "unknownPlatform": "Unbekannt"
   },
   "resetToDefaults": "Auf Standard zurücksetzen",
   "resetModal": {
@@ -235,7 +242,8 @@
     "worker": "Worker",
     "cpuThreadsTitle": "CPU-Threads",
     "cpuThreadsDesc": "Maximale Kerne, die für das Hashing verwendet werden ({{count}}/{{max}} zugewiesen)",
-    "coresSuffix": "Kerne",
+    "coreCount_one": "{{count}} Kern",
+    "coreCount_other": "{{count}} Kerne",
     "intensityTitle": "Intensität",
     "intensityDesc": "CPU-Nutzung pro Thread begrenzen",
     "pauseTitle": "Im Akkubetrieb pausieren",
@@ -314,5 +322,54 @@
       "turnOff": "Ausschalten",
       "acknowledge": "Verstanden"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Wallet-Passwort eingeben",
+    "passwordRequired": "Gib dein Passwort ein.",
+    "verifying": "Wird geprüft...",
+    "copy": "In die Zwischenablage kopieren",
+    "copied": "In die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen.",
+    "done": "Fertig"
+  },
+  "recoveryPhraseModal": {
+    "description": "Deine 12-Wort-Seed-Phrase stellt den vollen Zugriff auf diese Wallet wieder her.",
+    "warning": "Gib deine Wiederherstellungsphrase niemals weiter. Wer sie hat, kann die volle Kontrolle über deine Wallet übernehmen und dein gesamtes Guthaben stehlen. Bewahre sie offline auf und tippe sie niemals auf einer Website ein.",
+    "reveal": "Wiederherstellungsphrase anzeigen",
+    "revealFailed": "Wiederherstellungsphrase konnte nicht angezeigt werden.",
+    "autoHide": "Diese Phrase wird in {{seconds}} s automatisch ausgeblendet."
+  },
+  "revealKeyModal": {
+    "description": "Entschlüssle den privaten Schlüssel eines deiner Konten und zeige ihn an.",
+    "warning": "Gib deinen privaten Schlüssel niemals weiter. Wer ihn hat, erhält die volle Kontrolle über dieses Konto und kann das gesamte Guthaben stehlen. Der CointMU-Support wird nie danach fragen.",
+    "accountLabel": "Konto",
+    "noAccounts": "Keine Konten verfügbar",
+    "selectAccount": "Wähle ein Konto aus.",
+    "revealFailed": "Privater Schlüssel konnte nicht angezeigt werden.",
+    "privateKeyLabel": "Privater Schlüssel",
+    "show": "Anzeigen",
+    "hide": "Ausblenden",
+    "autoHide": "Dieser Schlüssel wird in {{seconds}} s automatisch ausgeblendet."
+  },
+  "exportKeystoreModal": {
+    "description": "Speichere einen verschlüsselten JSON-Keystore für dein aktives Konto. Du kannst ihn mit demselben Passwort in andere Wallets importieren.",
+    "noAccount": "Kein Konto zum Exportieren vorhanden.",
+    "canceled": "Export abgebrochen.",
+    "saveFailed": "Keystore konnte nicht gespeichert werden.",
+    "exportFailed": "Keystore konnte nicht exportiert werden.",
+    "exporting": "Wird exportiert...",
+    "saved": "Keystore gespeichert"
+  },
+  "resetWalletModal": {
+    "description": "Dadurch werden alle Konten und Schlüssel dauerhaft von diesem Gerät entfernt.",
+    "warning": "Diese Aktion kann nicht rückgängig gemacht werden. Wenn du deine Wiederherstellungsphrase oder privaten Schlüssel nicht gesichert hast, ist dein Guthaben für immer verloren. CointMU kann es nicht für dich wiederherstellen.",
+    "typeToConfirm": "Gib {{word}} zur Bestätigung ein",
+    "noWallet": "Keine Wallet zum Zurücksetzen gefunden.",
+    "incorrectPassword": "Falsches Passwort.",
+    "clearFailed": "Wallet-Daten konnten nicht gelöscht werden.",
+    "resetFailed": "Wallet konnte nicht zurückgesetzt werden.",
+    "resetting": "Wird zurückgesetzt...",
+    "submit": "Wallet dauerhaft zurücksetzen"
   }
 }
