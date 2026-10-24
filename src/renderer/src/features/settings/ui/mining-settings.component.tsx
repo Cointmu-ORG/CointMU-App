@@ -246,7 +246,9 @@ export function MiningSettings({
                   </p>
                 </div>
                 <span className="text-sm font-bold font-mono text-slate-800 dark:text-gray-100 bg-slate-100 dark:bg-gray-800 px-2 py-1 rounded">
-                  {config.cpuThreads} {t("settings:miningSettings.coresSuffix")}
+                  {t("settings:miningSettings.coreCount", {
+                    count: config.cpuThreads,
+                  })}
                 </span>
               </div>
 
@@ -261,7 +263,9 @@ export function MiningSettings({
                           ? "bg-emerald-500 hover:bg-emerald-600"
                           : "bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700"
                       }`}
-                      title={`${core} cores`}
+                      title={t("settings:miningSettings.coreCount", {
+                        count: core,
+                      })}
                     />
                   ),
                 )}

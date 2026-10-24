@@ -41,7 +41,7 @@ function ManageHiddenModal({
       <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
         {hiddenAccounts.length === 0 ? (
           <p className="text-sm text-gray-400 dark:text-gray-400 text-center py-8">
-            No hidden accounts.
+            {t("wallet:modals.manageHidden.noHidden")}
           </p>
         ) : (
           hiddenAccounts.map((acc, i) => (
@@ -68,7 +68,7 @@ function ManageHiddenModal({
                 <button
                   onClick={() => setAccountToDelete(acc)}
                   className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600 text-slate-500 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all flex items-center justify-center shadow-sm"
-                  title="Delete Account"
+                  title={t("wallet:modals.manageHidden.deleteTitle")}
                 >
                   <Trash2 width={14} height={14} strokeWidth={2.5} />
                 </button>

@@ -29,6 +29,63 @@ export function basePluralKey(key: string): string {
   return key.replace(PLURAL_SUFFIX, "");
 }
 
+/** A plural key missing a form its locale's plural rules require. */
+export interface PluralGap {
+  readonly locale: string;
+  readonly namespace: string;
+  readonly key: string;
+  readonly missing: readonly string[];
+}
+
+/**
+ * Lists the dot-notation leaf keys of a namespace exactly as written,
+ * plural suffixes kept.
+ * @param value - Parsed namespace JSON.
+ * @param prefix - Key path of the current level.
+ * @returns Every leaf key.
+ */
+function rawLeafKeys(value: unknown, prefix = ""): string[] {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return prefix ? [prefix] : [];
+  }
+  return Object.entries(value).flatMap(([key, child]) =>
+    rawLeafKeys(child, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+/**
+ * Finds plural keys lacking a form the locale needs. i18next does not fall
+ * back from a missing form (e.g. ru `_few`) to `_other`, so every category
+ * Intl.PluralRules reports for the locale must exist.
+ * @param locale - Locale code, e.g. "ru".
+ * @param namespace - Namespace name, used in the result.
+ * @param value - Parsed namespace JSON.
+ * @returns One entry per incomplete plural key.
+ */
+export function findPluralGaps(
+  locale: string,
+  namespace: string,
+  value: unknown,
+): PluralGap[] {
+  const required = new Intl.PluralRules(locale).resolvedOptions()
+    .pluralCategories;
+  const forms = new Map<string, Set<string>>();
+  for (const key of rawLeafKeys(value)) {
+    const match = PLURAL_SUFFIX.exec(key);
+    if (!match) continue;
+    const base = basePluralKey(key);
+    forms.set(base, (forms.get(base) ?? new Set()).add(match[1]));
+  }
+  return [...forms]
+    .map(([key, present]) => ({
+      locale,
+      namespace,
+      key,
+      missing: required.filter((category) => !present.has(category)),
+    }))
+    .filter((gap) => gap.missing.length > 0);
+}
+
 /**
  * Flattens a nested translation object into dot-notation leaf keys.
  * @param value - Parsed namespace JSON.

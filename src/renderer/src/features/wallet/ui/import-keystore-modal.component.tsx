@@ -1,6 +1,7 @@
 import { useState, type SyntheticEvent, type JSX } from "react";
 import { importKeystore } from "@/features/wallet";
 import { FileText, Eye, EyeOff, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ImportKeystoreResult {
   privateKey: string;
@@ -27,6 +28,7 @@ export function ImportKeystoreModal({
   onClose,
   onImported,
 }: ImportKeystoreModalProps): JSX.Element {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +38,7 @@ export function ImportKeystoreModal({
     event.preventDefault();
     setError("");
     if (!password) {
-      setError("Enter the keystore password.");
+      setError(t("wallet:modals.importKeystore.passwordRequired"));
       return;
     }
     setIsDecrypting(true);
@@ -44,9 +46,7 @@ export function ImportKeystoreModal({
       const result = await importKeystore(keystoreJson, password);
       await onImported(result);
     } catch {
-      setError(
-        "Could not decrypt the keystore. Check the password and try again.",
-      );
+      setError(t("wallet:modals.importKeystore.decryptFailed"));
     } finally {
       setIsDecrypting(false);
     }
@@ -69,18 +69,17 @@ export function ImportKeystoreModal({
               <FileText width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800">
-              Import keystore
+              {t("wallet:modals.importKeystore.title")}
             </h3>
           </div>
           <p className="text-sm text-slate-500 mb-6">
-            Enter the password for this keystore file to decrypt and import the
-            account.
+            {t("wallet:modals.importKeystore.description")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5">
-                Keystore password
+                {t("wallet:modals.importKeystore.passwordLabel")}
               </label>
               <div className="relative">
                 <input
@@ -89,7 +88,9 @@ export function ImportKeystoreModal({
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isDecrypting}
                   className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all disabled:opacity-50"
-                  placeholder="Enter the keystore password"
+                  placeholder={t(
+                    "wallet:modals.importKeystore.passwordPlaceholder",
+                  )}
                   autoFocus
                 />
                 <button
@@ -115,7 +116,9 @@ export function ImportKeystoreModal({
               disabled={isDecrypting}
               className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isDecrypting ? "Decrypting..." : "Decrypt & Import"}
+              {isDecrypting
+                ? t("wallet:modals.importKeystore.decrypting")
+                : t("wallet:modals.importKeystore.submit")}
             </button>
           </form>
         </div>

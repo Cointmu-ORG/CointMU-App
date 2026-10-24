@@ -18,5 +18,34 @@
     "copyRecent": "复制最近日志",
     "copied": "日志已复制",
     "copyFailed": "复制失败"
+  },
+  "pagination": {
+    "pageOf": "第 {{current}} / {{total}} 页",
+    "previous": "上一页",
+    "next": "下一页"
+  },
+  "dropdown": {
+    "search": "搜索...",
+    "noResults": "未找到结果"
+  },
+  "rpc": {
+    "unknownError": "未知 RPC 错误",
+    "nodeUnreachable": "无法连接节点",
+    "setEtherbaseFailed": "无法在节点上设置 etherbase 地址",
+    "startMinerFailed": "无法在节点上启动矿工",
+    "stopMinerFailed": "无法在节点上停止矿工",
+    "txReverted": "交易已在链上回滚。",
+    "confirmationTimeout": "等待确认超时。"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "全部标为已读",
+    "clearAll": "全部清除",
+    "empty": "暂无通知",
+    "emptyHint": "事件发生时会显示在这里"
+  },
+  "activity": {
+    "sentCmu": "已发送 CMU",
+    "to": "发送至 {{address}}"
   }
 }

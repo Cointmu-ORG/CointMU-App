@@ -8,9 +8,6 @@ export const SPARKLINE_BUCKET_MS = ms("10m");
 export const SPARKLINE_WINDOW_MS = ms("1h");
 export const TARGET_BLOCK_TIME_SECONDS = 30;
 
-export const SECONDS_PER_MINUTE = 60;
-export const SECONDS_PER_HOUR = 3600;
 export const CMU_PER_MINED_BLOCK = 10;
 
 export const ACTIVITY_CSV_FILENAME = "cointmu-activity.csv";
-export const CONSENSUS_LABEL = "PoW - Block 30s";

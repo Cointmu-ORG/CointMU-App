@@ -7,6 +7,7 @@
     "pairingRequest": "扩展连接请求",
     "pairingDesc": "是否允许 CointMU Browser Extension 连接到您的钱包？",
     "approve": "批准",
-    "reject": "拒绝"
+    "reject": "拒绝",
+    "pending": "待处理"
   }
 }

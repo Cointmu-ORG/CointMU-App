@@ -14,18 +14,23 @@
     "logAwaiting": "Awaiting node activity...",
     "tabFound": "Found",
     "tabLog": "Log",
-    "tabActivity": "Activity"
+    "tabActivity": "Activity",
+    "logSealed": "Block #{{number}} sealed - {{reward}} rewarded",
+    "logSynced_one": "Synced block #{{number}} - {{count}} tx",
+    "logSynced_other": "Synced block #{{number}} - {{count}} txs"
   },
   "header": {
     "workspace": "Workspace",
     "title": "Mining",
     "statusMining": "Mining",
     "statusStopped": "Stopped",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "pausedBattery": "Paused (Battery)"
   },
   "hero": {
     "rewardsToday": "Rewards today",
-    "miningWithThreads": "Mining with {{count}} threads",
+    "miningWithThreads_one": "Mining with {{count}} thread",
+    "miningWithThreads_other": "Mining with {{count}} threads",
     "stopping": "Stopping...",
     "targetDifficulty": "Target difficulty",
     "blockReward": "Block reward",
@@ -45,7 +50,8 @@
     "noPeersTooltip": "No peers connected",
     "starting": "Starting...",
     "startMiningBtn": "Start mining",
-    "stopMiningbtn": "Stop mining"
+    "stopMiningbtn": "Stop mining",
+    "difficultyLoading": "Loading..."
   },
   "stats": {
     "sessionTime": "Session Time",
@@ -65,12 +71,15 @@
     "title": "Worker configuration",
     "subtitle": "Current internal node configuration",
     "workerThreads": "Worker threads",
-    "ofCores": "of {{count}} cores",
+    "ofCores_one": "{{threads}} of {{count}} core",
+    "ofCores_other": "{{threads}} of {{count}} cores",
     "intensityTitle": "Intensity",
     "higherMoreHeat": "Higher = more heat, faster solves",
     "rewardAddressTitle": "Reward address",
     "blockRewardsCreditedHere": "Block rewards are credited here",
-    "setInMiningSettings": "Set in Mining Settings"
+    "setInMiningSettings": "Set in Mining Settings",
+    "threadTitle_one": "{{count}} Thread",
+    "threadTitle_other": "{{count}} Threads"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "Bootnode unreachable — make sure you are connected to the campus network or VPN.",
@@ -100,5 +109,12 @@
     },
     "retry": "Retry",
     "retrying": "Retrying..."
+  },
+  "controls": {
+    "toggleFailed": "Failed to toggle miner"
+  },
+  "notification": {
+    "blockMinedTitle": "Block mined",
+    "blockMinedMessage": "You sealed block #{{number}}"
   }
 }

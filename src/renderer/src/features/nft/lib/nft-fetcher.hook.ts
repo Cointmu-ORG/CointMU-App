@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { useState, useEffect, useRef, useCallback } from "react";
 import ms from "ms";
 import {
@@ -152,7 +153,9 @@ function useNFTFetcher(walletAddress: string | null): NFTFetcherResult {
       } catch (err) {
         if (controller.signal.aborted) return;
         const message =
-          err instanceof Error ? err.message : "NFT discovery failed";
+          err instanceof Error
+            ? err.message
+            : i18next.t("walletTabs:nft.discoveryFailed");
         console.error("[useNFTFetcher]", message);
         setState((prev) => ({ ...prev, isFetching: false, error: message }));
       }

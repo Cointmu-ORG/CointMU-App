@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { findCatalogGaps, flattenKeys, type Catalog } from "./locale-catalog";
+import {
+  findCatalogGaps,
+  findPluralGaps,
+  flattenKeys,
+  type Catalog,
+} from "./locale-catalog";
 
 function catalogOf(locales: Record<string, Record<string, string[]>>): Catalog {
   return new Map(
@@ -61,5 +66,22 @@ describe("findCatalogGaps", () => {
     });
 
     expect(findCatalogGaps(catalog, ["common"])).toEqual([]);
+  });
+});
+
+describe("findPluralGaps", () => {
+  it("accepts every form the locale's plural rules need", () => {
+    const ru = { n_one: "", n_few: "", n_many: "", n_other: "" };
+
+    expect(findPluralGaps("ru", "common", { a: ru })).toEqual([]);
+    expect(findPluralGaps("ja", "common", { n_other: "" })).toEqual([]);
+  });
+
+  it("reports the forms a locale is missing", () => {
+    const value = { n_one: "", n_other: "", plain: "" };
+
+    expect(findPluralGaps("ru", "common", value)).toEqual([
+      { locale: "ru", namespace: "common", key: "n", missing: ["few", "many"] },
+    ]);
   });
 });

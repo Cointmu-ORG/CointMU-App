@@ -5,7 +5,7 @@ import { AccountIcon } from "@/features/wallet";
 import { useAppStore } from "@/shared/model";
 import { SkeletonTable, Pagination, type ActivityData } from "@/shared/ui";
 import { MinerDistribution } from "./miner-distribution.component";
-import { formatTxAge } from "../lib/explorer.utils";
+import { formatAge } from "@/shared/lib";
 
 type TabState = "blocks" | "transactions" | "accounts";
 
@@ -64,7 +64,7 @@ function ExplorerDataTabs({
   onTxPageChange,
   activeWalletAddress,
 }: ExplorerDataTabsProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const balances = useAppStore((s) => s.balances);
 
   const checkIfMinedByMe = (
@@ -174,7 +174,8 @@ function ExplorerDataTabs({
                               {block.miner.substring(block.miner.length - 8)}
                             </p>
                             <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-                              Hash: {block.hash.substring(0, 14)}...
+                              {t("explorer:blockDetail.hash")}{" "}
+                              {block.hash.substring(0, 14)}...
                             </p>
                           </div>
                           {checkIfMinedByMe(block.miner, balances) && (
@@ -201,7 +202,7 @@ function ExplorerDataTabs({
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <p className="text-[10px] text-slate-500 dark:text-gray-400">
-                          {formatTxAge(block.timestamp)}
+                          {formatAge(block.timestamp, i18n.language)}
                         </p>
                       </td>
                     </tr>
@@ -305,7 +306,7 @@ function ExplorerDataTabs({
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex flex-col items-end whitespace-nowrap">
                           <p className="text-[10px] text-slate-700 dark:text-gray-300 font-medium">
-                            {formatTxAge(tx.timestamp)}
+                            {formatAge(tx.timestamp, i18n.language)}
                           </p>
                           <p className="text-[9px] text-slate-500 dark:text-gray-500 mt-0.5">
                             {tx.timestampStr}

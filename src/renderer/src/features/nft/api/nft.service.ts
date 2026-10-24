@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { call, createNodeProvider } from "@/shared/api";
 
 const ERC721_TRANSFER_TOPIC =
@@ -353,7 +354,7 @@ export async function resolveNFTMetadata(
     standard === "ERC-721" ? ERC721_ABI_FRAGMENTS : ERC1155_ABI_FRAGMENTS;
   const contract = new ethers.Contract(contractAddress, abi, provider);
 
-  let collectionName = "Unknown Collection";
+  let collectionName = i18next.t("walletTabs:nft.unknownCollection");
   let tokenUri = "";
 
   try {
@@ -376,7 +377,7 @@ export async function resolveNFTMetadata(
 
   const resolvedUri = normalizeUri(tokenUri);
 
-  let name = `Token #${tokenId}`;
+  let name = i18next.t("walletTabs:nft.fallbackName", { id: tokenId });
   let description = "";
   let image = "";
 

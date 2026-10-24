@@ -8,6 +8,7 @@ import {
 import {
   buildKeyIndex,
   findCatalogGaps,
+  findPluralGaps,
   loadCatalog,
 } from "./i18n/locale-catalog";
 
@@ -50,6 +51,36 @@ function auditCatalog(): number {
 }
 
 /**
+ * Reports plural keys missing a form their locale's plural rules require.
+ * @returns The number of incomplete plural keys.
+ */
+function auditPluralForms(): number {
+  let gaps = 0;
+  for (const locale of readdirSync(LOCALES_DIR)) {
+    const localeDir = path.join(LOCALES_DIR, locale);
+    for (const file of readdirSync(localeDir).filter((f) =>
+      f.endsWith(".json"),
+    )) {
+      const value: unknown = JSON.parse(
+        readFileSync(path.join(localeDir, file), "utf8"),
+      );
+      for (const gap of findPluralGaps(
+        locale,
+        path.basename(file, ".json"),
+        value,
+      )) {
+        gaps++;
+        console.log(
+          `  [${gap.locale}/${gap.namespace}.json] ${gap.key} lacks _${gap.missing.join(", _")}`,
+        );
+      }
+    }
+  }
+  console.log(`Plural forms: ${gaps} incomplete plural key(s).`);
+  return gaps;
+}
+
+/**
  * Reports t()/<Trans> keys in renderer source that no locale defines.
  * @returns The number of unresolved references.
  */
@@ -77,5 +108,5 @@ function auditKeyUsage(): number {
   return unresolved;
 }
 
-const failures = auditCatalog() + auditKeyUsage();
+const failures = auditCatalog() + auditPluralForms() + auditKeyUsage();
 process.exit(failures > 0 ? 1 : 0);

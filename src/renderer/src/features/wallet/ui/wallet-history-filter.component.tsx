@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, type JSX } from "react";
 import { CustomDropdown } from "@/shared/ui";
 import { HISTORY_FILTER_ALL, type HistoryFilter } from "@/shared/model";
@@ -15,8 +16,6 @@ interface WalletHistoryFilterProps {
   className?: string;
   compact?: boolean;
 }
-
-const ALL_WALLETS_LABEL = "All Wallets";
 
 /**
  * Abbreviates a wallet address for compact display in the filter dropdown.
@@ -40,6 +39,7 @@ function WalletHistoryFilter({
   className,
   compact,
 }: WalletHistoryFilterProps): JSX.Element {
+  const { t } = useTranslation();
   useEffect(() => {
     if (value !== HISTORY_FILTER_ALL) {
       const activeAccount = accounts.find((acc) => acc.address === value);
@@ -52,7 +52,7 @@ function WalletHistoryFilter({
   const visibleAccounts = accounts.filter((account) => !account.isHidden);
 
   const options = [
-    { value: HISTORY_FILTER_ALL, label: ALL_WALLETS_LABEL },
+    { value: HISTORY_FILTER_ALL, label: t("wallet:historyFilter.allWallets") },
     ...visibleAccounts.map((account) => ({
       value: account.address,
       label: account.label || abbreviate(account.address),

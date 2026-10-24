@@ -28,7 +28,8 @@
     "currentNetwork": "Текущая сеть",
     "gasAvg": "Gas (средн.)",
     "suggestedPrice": "Рекомендуемая цена",
-    "blocksPastHour": "Блоков за последний час"
+    "blocksPastHour": "Блоков за последний час",
+    "consensus": "PoW - блок {{seconds}} с"
   },
   "walletOverview": {
     "copy": "Копировать",

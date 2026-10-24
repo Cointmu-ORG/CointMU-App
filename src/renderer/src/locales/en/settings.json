@@ -54,8 +54,11 @@
       "chainIdLabel": "Chain ID",
       "currencySymbolLabel": "Currency Symbol",
       "saveBtn": "Save",
-      "cancelBtn": "Cancel"
-    }
+      "cancelBtn": "Cancel",
+      "rpcUrlInvalid": "RPC URL must be a valid HTTP/HTTPS URL",
+      "examplePlaceholder": "e.g. {{example}}"
+    },
+    "addNetworkOption": "+ Add Network"
   },
   "mining": {
     "title": "Mining"
@@ -81,7 +84,8 @@
     "statusConnected": "Actively Connected",
     "statusConnectedDesc": "The browser extension is linked and bridging requests.",
     "statusDisconnected": "Disconnected",
-    "statusDisconnectedDesc": "The browser extension is not currently linked."
+    "statusDisconnectedDesc": "The browser extension is not currently linked.",
+    "active": "Active"
   },
   "externalSources": {
     "title": "External Sources",
@@ -115,7 +119,8 @@
     "openDataDesc": "Reveal the datadir in your file explorer",
     "purgeWalletsBtn": "Remove secondary accounts",
     "purgeWalletsConfirm": "Are you sure? This will delete all non-primary accounts from this device.",
-    "purgeSuccess": "Secondary accounts removed."
+    "purgeSuccess": "Secondary accounts removed.",
+    "dangerZone": "Danger Zone"
   },
   "about": {
     "releaseNotes": "Release notes",
@@ -156,7 +161,9 @@
     "openLink": "Open ›",
     "reportIssueTitle": "Report an issue",
     "latestVersion": "You are on the latest version",
-    "uptimeLoading": "Loading..."
+    "uptimeLoading": "Loading...",
+    "versionLine": "Version {{version}} (build {{build}})",
+    "unknownPlatform": "Unknown"
   },
   "resetToDefaults": "Reset to defaults",
   "resetModal": {
@@ -235,7 +242,8 @@
     "worker": "Worker",
     "cpuThreadsTitle": "CPU threads",
     "cpuThreadsDesc": "Maximum cores used for hashing ({{count}}/{{max}} allocated)",
-    "coresSuffix": "cores",
+    "coreCount_one": "{{count}} core",
+    "coreCount_other": "{{count}} cores",
     "intensityTitle": "Intensity",
     "intensityDesc": "Limit CPU usage per thread",
     "pauseTitle": "Pause on battery",
@@ -314,5 +322,54 @@
       "turnOff": "Turn off",
       "acknowledge": "Got it"
     }
+  },
+  "securityModal": {
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your wallet password",
+    "passwordRequired": "Enter your password.",
+    "verifying": "Verifying...",
+    "copy": "Copy to clipboard",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Failed to copy to clipboard.",
+    "done": "Done"
+  },
+  "recoveryPhraseModal": {
+    "description": "Your 12-word seed phrase restores full access to this wallet.",
+    "warning": "Never share your recovery phrase. Anyone who has it can take full control of your wallet and steal all of your funds. Store it offline and never type it into a website.",
+    "reveal": "Reveal recovery phrase",
+    "revealFailed": "Failed to reveal recovery phrase.",
+    "autoHide": "This phrase will be hidden automatically in {{seconds}}s."
+  },
+  "revealKeyModal": {
+    "description": "Decrypt and display the raw private key for one of your accounts.",
+    "warning": "Never share your private key. Anyone who has it gains full control of this account and can steal all of its funds. CointMU support will never ask for it.",
+    "accountLabel": "Account",
+    "noAccounts": "No accounts available",
+    "selectAccount": "Select an account to reveal.",
+    "revealFailed": "Failed to reveal private key.",
+    "privateKeyLabel": "Private key",
+    "show": "Show",
+    "hide": "Hide",
+    "autoHide": "This key will be hidden automatically in {{seconds}}s."
+  },
+  "exportKeystoreModal": {
+    "description": "Save an encrypted JSON keystore for your active account. You can import it into other wallets using this same password.",
+    "noAccount": "No account available to export.",
+    "canceled": "Export canceled.",
+    "saveFailed": "Failed to save keystore.",
+    "exportFailed": "Failed to export keystore.",
+    "exporting": "Exporting...",
+    "saved": "Keystore saved"
+  },
+  "resetWalletModal": {
+    "description": "This permanently removes all accounts and keys from this device.",
+    "warning": "This action is irreversible. If you have not backed up your recovery phrase or private keys, your funds will be lost forever. CointMU cannot recover them for you.",
+    "typeToConfirm": "Type {{word}} to confirm",
+    "noWallet": "No wallet found to reset.",
+    "incorrectPassword": "Incorrect password.",
+    "clearFailed": "Failed to clear wallet data.",
+    "resetFailed": "Failed to reset wallet.",
+    "resetting": "Resetting...",
+    "submit": "Permanently reset wallet"
   }
 }

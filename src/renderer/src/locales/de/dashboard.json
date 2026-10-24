@@ -28,7 +28,8 @@
     "currentNetwork": "Aktuelles Netzwerk",
     "gasAvg": "Gas (Durchschn.)",
     "suggestedPrice": "Empfohlener Preis",
-    "blocksPastHour": "Blöcke der letzten Stunde"
+    "blocksPastHour": "Blöcke der letzten Stunde",
+    "consensus": "PoW - Block alle {{seconds}} s"
   },
   "walletOverview": {
     "copy": "Kopieren",

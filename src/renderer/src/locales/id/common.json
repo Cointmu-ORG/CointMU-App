@@ -18,5 +18,34 @@
     "copyRecent": "Salin log terbaru",
     "copied": "Log disalin",
     "copyFailed": "Gagal menyalin"
+  },
+  "pagination": {
+    "pageOf": "Halaman {{current}} dari {{total}}",
+    "previous": "Halaman sebelumnya",
+    "next": "Halaman berikutnya"
+  },
+  "dropdown": {
+    "search": "Cari...",
+    "noResults": "Tidak ada hasil"
+  },
+  "rpc": {
+    "unknownError": "Galat RPC tidak dikenal",
+    "nodeUnreachable": "Node tidak dapat dijangkau",
+    "setEtherbaseFailed": "Gagal mengatur alamat etherbase di node",
+    "startMinerFailed": "Gagal memulai miner di node",
+    "stopMinerFailed": "Gagal menghentikan miner di node",
+    "txReverted": "Transaksi dibatalkan (revert) di on-chain.",
+    "confirmationTimeout": "Waktu habis saat menunggu konfirmasi."
+  },
+  "notifications": {
+    "title": "Notifikasi",
+    "markAllRead": "Tandai semua dibaca",
+    "clearAll": "Hapus semua",
+    "empty": "Tidak ada notifikasi",
+    "emptyHint": "Peristiwa akan muncul di sini saat terjadi"
+  },
+  "activity": {
+    "sentCmu": "CMU terkirim",
+    "to": "Ke {{address}}"
   }
 }

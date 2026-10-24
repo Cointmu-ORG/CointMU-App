@@ -11,16 +11,31 @@ import { Layers } from "lucide-react";
  * @param {number} seconds - The total uptime in seconds.
  * @returns {string} The formatted uptime string.
  */
-const formatUptime = (seconds: number): string => {
-  const d = Math.floor(seconds / 86400);
-  const h = Math.floor((seconds % 86400) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
+const SECONDS_PER_MINUTE = 60;
+const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;
+const SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR;
 
-  if (d > 0) return `${d} days ${h} hours`;
-  if (h > 0) return `${h} hours ${m} minutes`;
-  if (m > 0) return `${m} minutes ${s} seconds`;
-  return `${s} seconds`;
+/**
+ * Formats an uptime as its two largest units in the given language
+ * (e.g. '2 days, 3 hours', '5 Minuten, 12 Sekunden').
+ * @param seconds - Uptime in seconds.
+ * @param locale - The active UI locale.
+ * @returns The localized duration.
+ */
+const formatUptime = (seconds: number, locale: string): string => {
+  const days = Math.floor(seconds / SECONDS_PER_DAY);
+  const hours = Math.floor((seconds % SECONDS_PER_DAY) / SECONDS_PER_HOUR);
+  const minutes = Math.floor((seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+  const secs = Math.floor(seconds % SECONDS_PER_MINUTE);
+  const duration =
+    days > 0
+      ? { days, hours }
+      : hours > 0
+        ? { hours, minutes }
+        : minutes > 0
+          ? { minutes, seconds: secs }
+          : { seconds: secs };
+  return new Intl.DurationFormat(locale, { style: "long" }).format(duration);
 };
 
 /**
@@ -46,10 +61,8 @@ const formatBytes = (bytes: number): string => {
  * @returns {JSX.Element} The About Settings view component.
  */
 export function AboutSettings(): JSX.Element {
-  const { t } = useTranslation();
-  const [uptimeStr, setUptimeStr] = useState<string>(
-    t("settings:about.uptimeLoading"),
-  );
+  const { t, i18n } = useTranslation();
+  const [uptimeSeconds, setUptimeSeconds] = useState<number | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
   const [isEditingChain, setIsEditingChain] = useState<boolean>(false);
   const [newChainIdInput, setNewChainIdInput] = useState<string>("");
@@ -69,7 +82,7 @@ export function AboutSettings(): JSX.Element {
 
   useEffect(() => {
     const updateUptime = (): void => {
-      setUptimeStr(formatUptime(sysInfo.getUptime()));
+      setUptimeSeconds(sysInfo.getUptime());
     };
     updateUptime();
     const interval = setInterval(updateUptime, UPTIME_REFRESH_MS);
@@ -125,12 +138,16 @@ export function AboutSettings(): JSX.Element {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
           <p className="text-sm font-medium text-slate-600 mt-1">
-            Version {window.systemInfo?.version || "0.0.1"}
-            {window.systemInfo?.codename
-              ? `-${window.systemInfo.codename}`
-              : ""}{" "}
-            (build {window.systemInfo?.build || "00000000"}) {"\u2022"}{" "}
-            {window.systemInfo?.platform || "Unknown"}
+            {t("settings:about.versionLine", {
+              version: `${window.systemInfo?.version || "0.0.1"}${
+                window.systemInfo?.codename
+                  ? `-${window.systemInfo.codename}`
+                  : ""
+              }`,
+              build: window.systemInfo?.build || "00000000",
+            })}{" "}
+            {"\u2022"}{" "}
+            {window.systemInfo?.platform || t("settings:about.unknownPlatform")}
           </p>
           <p className="text-sm font-medium text-slate-400 mt-1">
             {"\u00A9"} 2026 CointMU Foundation {"\u2022"} MIT License
@@ -350,7 +367,9 @@ export function AboutSettings(): JSX.Element {
                 {t("settings:about.uptime")}
               </p>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {uptimeStr}
+                {uptimeSeconds === null
+                  ? t("settings:about.uptimeLoading")
+                  : formatUptime(uptimeSeconds, i18n.language)}
               </span>
             </div>
           </div>

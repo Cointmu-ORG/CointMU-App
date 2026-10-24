@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "{{asset}} an {{to}} gesendet",
       "notifFailedTitle": "Transaktion fehlgeschlagen",
       "notifFailedDesc": "Übertragung von {{asset}} an {{to}} konnte nicht bestätigt werden"
+    },
+    "importKeystore": {
+      "title": "Keystore importieren",
+      "description": "Gib das Passwort dieser Keystore-Datei ein, um das Konto zu entschlüsseln und zu importieren.",
+      "passwordLabel": "Keystore-Passwort",
+      "passwordPlaceholder": "Keystore-Passwort eingeben",
+      "passwordRequired": "Gib das Keystore-Passwort ein.",
+      "decryptFailed": "Der Keystore konnte nicht entschlüsselt werden. Prüfe das Passwort und versuche es erneut.",
+      "decrypting": "Wird entschlüsselt...",
+      "submit": "Entschlüsseln & importieren"
+    },
+    "addToken": {
+      "title": "Eigenen Token hinzufügen",
+      "description": "Gib die Contract-Adresse des ERC-20-Tokens ein, den du verfolgen möchtest.",
+      "addressLabel": "Token-Contract-Adresse",
+      "addressRequired": "Bitte gib eine Token-Contract-Adresse ein.",
+      "invalidAddress": "Ungültiges Ethereum-Adressformat.",
+      "detailsFailed": "Token-Details konnten nicht abgerufen werden. Stelle sicher, dass es ein gültiger ERC-20-Contract in diesem Netzwerk ist.",
+      "addFailed": "Beim Hinzufügen des Tokens ist ein Fehler aufgetreten.",
+      "verifying": "Wird geprüft..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "Alle Wallets"
+  },
+  "errors": {
+    "notUnlocked": "Die Wallet ist nicht entsperrt.",
+    "noRecoveryPhrase": "Diese Wallet hat keine Wiederherstellungsphrase.",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+    "insufficientFunds": "Unzureichendes Guthaben für Betrag und Netzwerkgebühr.",
+    "outOfGas": "Der Transaktion ist das Gas ausgegangen. Erhöhe das Gaslimit.",
+    "nonceConflict": "Nonce-Konflikt. Warte, bis ausstehende Transaktionen abgeschlossen sind.",
+    "reverted": "Die Transaktion wurde vom Contract rückgängig gemacht.",
+    "rejected": "Transaktion abgelehnt.",
+    "nodeRejected": "Der Node hat die Transaktion abgelehnt. Prüfe die Empfängeradresse."
   }
 }

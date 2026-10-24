@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkline } from "@/shared/ui";
-import { CONSENSUS_LABEL } from "../config/dashboard.constants";
+import { TARGET_BLOCK_TIME_SECONDS } from "../config/dashboard.constants";
 
 interface NetworkHealthPanelProps {
   isConnected: boolean;
@@ -44,7 +44,9 @@ function NetworkHealthPanel({
           </p>
         </div>
         <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
-          {CONSENSUS_LABEL}
+          {t("dashboard:networkHealth.consensus", {
+            seconds: TARGET_BLOCK_TIME_SECONDS,
+          })}
         </span>
       </div>
 

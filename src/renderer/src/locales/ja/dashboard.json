@@ -28,7 +28,8 @@
     "currentNetwork": "現在のネットワーク",
     "gasAvg": "ガス代（平均）",
     "suggestedPrice": "推奨価格",
-    "blocksPastHour": "過去1時間のブロック数"
+    "blocksPastHour": "過去1時間のブロック数",
+    "consensus": "PoW - ブロック {{seconds}} 秒"
   },
   "walletOverview": {
     "copy": "コピー",

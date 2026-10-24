@@ -99,7 +99,7 @@ export function useUpdater(): Updater {
               status: "error",
               info: prev.info,
               progress: null,
-              error: event.error ?? "Update failed",
+              error: event.error ?? null,
             };
           default:
             return prev;

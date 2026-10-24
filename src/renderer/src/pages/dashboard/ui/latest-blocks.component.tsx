@@ -1,9 +1,8 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData } from "@/shared/lib";
+import { type BlockData, formatAge } from "@/shared/lib";
 import { useAppStore } from "@/shared/model";
 import { ChevronRight, Square, Box } from "lucide-react";
-import { formatRelativeAge } from "../lib/dashboard.utils";
 
 interface LatestBlocksProps {
   isConnected: boolean;
@@ -25,7 +24,7 @@ function LatestBlocks({
   onViewAll,
 }: LatestBlocksProps): JSX.Element {
   const balances = useAppStore((s) => s.balances);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const checkIfMinedByMe = (
     minerAddress: string,
@@ -86,7 +85,7 @@ function LatestBlocks({
             </div>
             <div className="text-right">
               <p className="text-xs text-slate-500">
-                {formatRelativeAge(block.timestamp)}
+                {formatAge(block.timestamp, i18n.language)}
               </p>
               <p className="text-[10px] text-slate-400 font-mono">
                 {block.miner.substring(0, 8)}...

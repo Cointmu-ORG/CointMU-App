@@ -18,5 +18,34 @@
     "copyRecent": "最近のログをコピー",
     "copied": "ログをコピーしました",
     "copyFailed": "コピーに失敗しました"
+  },
+  "pagination": {
+    "pageOf": "{{current}} / {{total}} ページ",
+    "previous": "前のページ",
+    "next": "次のページ"
+  },
+  "dropdown": {
+    "search": "検索...",
+    "noResults": "結果が見つかりません"
+  },
+  "rpc": {
+    "unknownError": "不明な RPC エラー",
+    "nodeUnreachable": "ノードに接続できません",
+    "setEtherbaseFailed": "ノードで etherbase アドレスを設定できませんでした",
+    "startMinerFailed": "ノードでマイナーを開始できませんでした",
+    "stopMinerFailed": "ノードでマイナーを停止できませんでした",
+    "txReverted": "トランザクションはオンチェーンでリバートされました。",
+    "confirmationTimeout": "承認の待機中にタイムアウトしました。"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "すべて既読にする",
+    "clearAll": "すべて消去",
+    "empty": "通知はありません",
+    "emptyHint": "イベントが発生するとここに表示されます"
+  },
+  "activity": {
+    "sentCmu": "CMU を送信",
+    "to": "宛先 {{address}}"
   }
 }

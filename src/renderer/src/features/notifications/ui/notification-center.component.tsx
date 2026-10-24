@@ -1,11 +1,14 @@
 import { NOTIFICATION_COLORS_BY_TYPE } from "../config/notification.constants";
 import { type JSX, useState, useRef, useEffect } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { useTranslation } from "react-i18next";
+import { formatAge } from "@/shared/lib";
 import {
   useNotificationStore,
   type NotificationItem,
 } from "../model/notification.store";
 import { Bell } from "lucide-react";
+
+const MS_PER_SECOND = 1000;
 
 interface NotificationRowProps {
   notification: NotificationItem;
@@ -22,6 +25,7 @@ function NotificationRow({
   notification,
   onSelect,
 }: NotificationRowProps): JSX.Element {
+  const { i18n } = useTranslation();
   return (
     <button
       onClick={() => onSelect(notification.id)}
@@ -47,7 +51,7 @@ function NotificationRow({
           {notification.message}
         </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-1">
-          {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
+          {formatAge(notification.timestamp / MS_PER_SECOND, i18n.language)}
         </p>
       </div>
     </button>
@@ -62,6 +66,7 @@ function NotificationRow({
  * @returns The notification center control.
  */
 export function NotificationCenter(): JSX.Element {
+  const { t } = useTranslation();
   const notifications = useNotificationStore((s) => s.notifications);
   const markAsRead = useNotificationStore((s) => s.markAsRead);
   const markAllAsRead = useNotificationStore((s) => s.markAllAsRead);
@@ -90,7 +95,7 @@ export function NotificationCenter(): JSX.Element {
       <button
         onClick={() => setIsOpen((v) => !v)}
         className="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors focus:outline-none"
-        aria-label="Notifications"
+        aria-label={t("common:notifications.title")}
       >
         <Bell width={18} height={18} />
         {unreadCount > 0 && (
@@ -104,7 +109,7 @@ export function NotificationCenter(): JSX.Element {
         <div className="absolute left-full top-0 ml-4 w-80 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-gray-800">
             <p className="text-sm font-bold text-slate-800 dark:text-white">
-              Notifications
+              {t("common:notifications.title")}
             </p>
             <div className="flex items-center gap-3">
               <button
@@ -112,14 +117,14 @@ export function NotificationCenter(): JSX.Element {
                 disabled={unreadCount === 0}
                 className="text-[11px] font-semibold text-accent hover:opacity-80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Mark all read
+                {t("common:notifications.markAllRead")}
               </button>
               <button
                 onClick={() => clearAll()}
                 disabled={notifications.length === 0}
                 className="text-[11px] font-semibold text-accent hover:opacity-80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Clear All
+                {t("common:notifications.clearAll")}
               </button>
             </div>
           </div>
@@ -142,10 +147,10 @@ export function NotificationCenter(): JSX.Element {
                   strokeWidth={1.5}
                 />
                 <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                  No notifications
+                  {t("common:notifications.empty")}
                 </p>
                 <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
-                  Events will appear here as they happen
+                  {t("common:notifications.emptyHint")}
                 </p>
               </div>
             )}

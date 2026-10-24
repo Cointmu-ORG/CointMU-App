@@ -4,6 +4,7 @@ import {
   DROPDOWN_ITEM_HEIGHT_PX,
 } from "./ui.constants";
 import { type JSX, useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 
 /**
@@ -46,6 +47,7 @@ export function CustomDropdown<T>({
   enableSearch = false,
   compact = false,
 }: CustomDropdownProps<T>): JSX.Element {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ export function CustomDropdown<T>({
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search..."
+                placeholder={t("common:dropdown.search")}
                 className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-800 text-slate-700 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 outline-none focus:ring-1 focus:ring-slate-300"
               />
             </div>
@@ -127,7 +129,7 @@ export function CustomDropdown<T>({
           >
             {filteredOptions.length === 0 ? (
               <p className="px-4 py-3 text-xs text-slate-400">
-                No results found
+                {t("common:dropdown.noResults")}
               </p>
             ) : (
               filteredOptions.map((option, idx) => (

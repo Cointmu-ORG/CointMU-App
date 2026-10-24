@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "Enviado {{asset}} a {{to}}",
       "notifFailedTitle": "Transacción fallida",
       "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada"
+    },
+    "importKeystore": {
+      "title": "Importar almacén de claves",
+      "description": "Introduce la contraseña de este archivo de almacén de claves para descifrar e importar la cuenta.",
+      "passwordLabel": "Contraseña del almacén de claves",
+      "passwordPlaceholder": "Introduce la contraseña del almacén de claves",
+      "passwordRequired": "Introduce la contraseña del almacén de claves.",
+      "decryptFailed": "No se pudo descifrar el almacén de claves. Revisa la contraseña e inténtalo de nuevo.",
+      "decrypting": "Descifrando...",
+      "submit": "Descifrar e importar"
+    },
+    "addToken": {
+      "title": "Añadir token personalizado",
+      "description": "Introduce la dirección del contrato del token ERC-20 que quieres seguir.",
+      "addressLabel": "Dirección del contrato del token",
+      "addressRequired": "Introduce la dirección del contrato del token.",
+      "invalidAddress": "Formato de dirección de Ethereum no válido.",
+      "detailsFailed": "No se pudieron obtener los detalles del token. Asegúrate de que sea un contrato ERC-20 válido en esta red.",
+      "addFailed": "Se produjo un error al añadir el token.",
+      "verifying": "Verificando..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "Todas las billeteras"
+  },
+  "errors": {
+    "notUnlocked": "La billetera no está desbloqueada.",
+    "noRecoveryPhrase": "Esta billetera no tiene frase de recuperación.",
+    "unexpected": "Se produjo un error inesperado.",
+    "insufficientFunds": "Fondos insuficientes para cubrir el importe y la comisión de red.",
+    "outOfGas": "La transacción se quedó sin gas. Intenta aumentar el límite de gas.",
+    "nonceConflict": "Conflicto de nonce. Espera a que se completen las transacciones pendientes.",
+    "reverted": "El contrato revirtió la transacción.",
+    "rejected": "Transacción rechazada.",
+    "nodeRejected": "El nodo rechazó la transacción. Revisa la dirección del destinatario."
   }
 }

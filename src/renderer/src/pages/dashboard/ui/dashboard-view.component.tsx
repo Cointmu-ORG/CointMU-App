@@ -186,7 +186,7 @@ function DashboardPage({
       account.address.toLowerCase() ===
       (activeWalletAddress ?? "").toLowerCase(),
   );
-  const walletLabel = activeAccount?.label ?? "Wallet";
+  const walletLabel = activeAccount?.label ?? t("common:sidebar.wallet");
 
   /**
    * Opens the wallet receive flow by priming the wallet modal state and routing

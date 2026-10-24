@@ -105,7 +105,7 @@ function FoundBlocksPanel({
   historyFilter,
   onFilterChange,
 }: FoundBlocksPanelProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div>
@@ -155,7 +155,7 @@ function FoundBlocksPanel({
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                      {formatAge(block.timestamp)}
+                      {formatAge(block.timestamp, i18n.language)}
                     </p>
                   </div>
                 </div>

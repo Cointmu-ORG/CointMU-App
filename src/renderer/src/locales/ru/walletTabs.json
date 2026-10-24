@@ -3,5 +3,21 @@
   "tokens": "Токены",
   "nfts": "NFTs",
   "scanningNfts": "Сканирование блокчейна на наличие NFT...",
-  "noNftsFound": "NFT не найдены"
+  "noNftsFound": "NFT не найдены",
+  "addToken": "Добавить токен",
+  "refresh": "Обновить",
+  "noActivity": "Пока нет активности",
+  "noActivityHint": "Транзакции появятся здесь, когда вы отправите или получите CMU",
+  "table": {
+    "token": "Токен",
+    "price": "Цена",
+    "balance": "Баланс",
+    "value": "Стоимость"
+  },
+  "nft": {
+    "tokenId": "ID токена: {{id}}",
+    "unknownCollection": "Неизвестная коллекция",
+    "fallbackName": "Токен #{{id}}",
+    "discoveryFailed": "Не удалось найти NFT"
+  }
 }

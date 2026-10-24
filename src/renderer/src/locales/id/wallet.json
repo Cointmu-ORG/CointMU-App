@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "Mengirim {{asset}} ke {{to}}",
       "notifFailedTitle": "Transaksi gagal",
       "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi"
+    },
+    "importKeystore": {
+      "title": "Impor keystore",
+      "description": "Masukkan kata sandi file keystore ini untuk mendekripsi dan mengimpor akun.",
+      "passwordLabel": "Kata sandi keystore",
+      "passwordPlaceholder": "Masukkan kata sandi keystore",
+      "passwordRequired": "Masukkan kata sandi keystore.",
+      "decryptFailed": "Keystore tidak dapat didekripsi. Periksa kata sandi lalu coba lagi.",
+      "decrypting": "Mendekripsi...",
+      "submit": "Dekripsi & impor"
+    },
+    "addToken": {
+      "title": "Tambah token kustom",
+      "description": "Masukkan alamat kontrak token ERC-20 yang ingin Anda pantau.",
+      "addressLabel": "Alamat kontrak token",
+      "addressRequired": "Masukkan alamat kontrak token.",
+      "invalidAddress": "Format alamat Ethereum tidak valid.",
+      "detailsFailed": "Gagal mengambil detail token. Pastikan ini kontrak ERC-20 yang valid di jaringan ini.",
+      "addFailed": "Terjadi galat saat menambahkan token.",
+      "verifying": "Memverifikasi..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "Semua dompet"
+  },
+  "errors": {
+    "notUnlocked": "Dompet belum dibuka.",
+    "noRecoveryPhrase": "Dompet ini tidak memiliki frasa pemulihan.",
+    "unexpected": "Terjadi galat yang tidak terduga.",
+    "insufficientFunds": "Dana tidak cukup untuk jumlah dan biaya jaringan.",
+    "outOfGas": "Transaksi kehabisan gas. Coba naikkan batas gas.",
+    "nonceConflict": "Konflik nonce. Tunggu hingga transaksi tertunda selesai.",
+    "reverted": "Transaksi dibatalkan (revert) oleh kontrak.",
+    "rejected": "Transaksi ditolak.",
+    "nodeRejected": "Node menolak transaksi. Periksa alamat penerima."
   }
 }

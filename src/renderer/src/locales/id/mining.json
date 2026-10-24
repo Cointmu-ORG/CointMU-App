@@ -14,18 +14,21 @@
     "logAwaiting": "Menunggu aktivitas node...",
     "tabFound": "Ditemukan",
     "tabLog": "Log",
-    "tabActivity": "Aktivitas"
+    "tabActivity": "Aktivitas",
+    "logSealed": "Blok #{{number}} disegel - hadiah {{reward}}",
+    "logSynced_other": "Blok #{{number}} tersinkron - {{count}} tx"
   },
   "header": {
     "workspace": "Ruang Kerja",
     "title": "Penambangan",
     "statusMining": "Menambang",
     "statusStopped": "Berhenti",
-    "preferences": "Preferensi"
+    "preferences": "Preferensi",
+    "pausedBattery": "Dijeda (baterai)"
   },
   "hero": {
     "rewardsToday": "Hadiah hari ini",
-    "miningWithThreads": "Menambang dengan {{count}} thread",
+    "miningWithThreads_other": "Menambang dengan {{count}} thread",
     "stopping": "Menghentikan...",
     "targetDifficulty": "Target kesulitan",
     "blockReward": "Hadiah blok",
@@ -45,7 +48,8 @@
     "noPeersTooltip": "Tidak ada peer yang terhubung",
     "starting": "Memulai...",
     "startMiningBtn": "Mulai menambang",
-    "stopMiningbtn": "Berhenti menambang"
+    "stopMiningbtn": "Berhenti menambang",
+    "difficultyLoading": "Memuat..."
   },
   "stats": {
     "sessionTime": "Waktu Sesi",
@@ -65,12 +69,13 @@
     "title": "Konfigurasi pekerja",
     "subtitle": "Konfigurasi internal node saat ini",
     "workerThreads": "Thread pekerja",
-    "ofCores": "dari {{count}} core",
+    "ofCores_other": "{{threads}} dari {{count}} core",
     "intensityTitle": "Intensitas",
     "higherMoreHeat": "Lebih tinggi = lebih panas, lebih cepat selesai",
     "rewardAddressTitle": "Alamat hadiah",
     "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
-    "setInMiningSettings": "Atur di Pengaturan Penambangan"
+    "setInMiningSettings": "Atur di Pengaturan Penambangan",
+    "threadTitle_other": "{{count}} thread"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "Bootnode tidak terjangkau — pastikan terhubung ke jaringan kampus atau VPN.",
@@ -100,5 +105,12 @@
     },
     "retry": "Coba lagi",
     "retrying": "Mencoba lagi..."
+  },
+  "controls": {
+    "toggleFailed": "Gagal mengubah status miner"
+  },
+  "notification": {
+    "blockMinedTitle": "Blok ditambang",
+    "blockMinedMessage": "Anda menyegel blok #{{number}}"
   }
 }

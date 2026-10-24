@@ -7,6 +7,8 @@ export const EMPTY_STAT_LABEL = "--";
 export const INSIGHTS_POLL_INTERVAL_MS = ms("3s");
 export const EXPLORER_VIEW_TICK_INTERVAL_MS = ms("5s");
 export const CHAIN_TIMELINE_TICK_INTERVAL_MS = ms("1s");
+/** Blocks per insights payload; mirrors INSIGHTS_BLOCK_WINDOW in main/services/activityScanner.ts. */
+export const CHAIN_TIMELINE_BLOCK_COUNT = 12;
 
 export const ADDRESS_TX_PAGE_SIZE = 8;
 export const MOCK_USD_RATE = 0.42;
@@ -50,8 +52,6 @@ export const BAR_SEGMENT_COLORS = [
   "#0ea5e9",
 ];
 
-export const SECONDS_PER_MINUTE = 60;
-export const SECONDS_PER_HOUR = 3600;
 export const ASCII_PRINTABLE_MIN = 0;
 export const ASCII_PRINTABLE_MAX = 127;
 export const HEX_RADIX = 16;

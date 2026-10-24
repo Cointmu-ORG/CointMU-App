@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   useState,
   useEffect,
@@ -26,6 +27,7 @@ function AddTokenModal({
   onClose,
   onTokenAdded,
 }: AddTokenModalProps): JSX.Element {
+  const { t } = useTranslation();
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,12 +48,12 @@ function AddTokenModal({
     setError(null);
 
     if (!address) {
-      setError("Please enter a token contract address.");
+      setError(t("wallet:modals.addToken.addressRequired"));
       return;
     }
 
     if (!ethers.isAddress(address)) {
-      setError("Invalid Ethereum address format.");
+      setError(t("wallet:modals.addToken.invalidAddress"));
       return;
     }
 
@@ -60,9 +62,7 @@ function AddTokenModal({
     try {
       const details = await TokenService.fetchTokenDetails(address);
       if (!details || !details.symbol) {
-        setError(
-          "Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.",
-        );
+        setError(t("wallet:modals.addToken.detailsFailed"));
         setIsLoading(false);
         return;
       }
@@ -71,7 +71,7 @@ function AddTokenModal({
       onTokenAdded();
       onClose();
     } catch {
-      setError("An error occurred while adding the token.");
+      setError(t("wallet:modals.addToken.addFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -94,16 +94,16 @@ function AddTokenModal({
 
         <div className="p-8">
           <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-1">
-            Add Custom Token
+            {t("wallet:modals.addToken.title")}
           </h3>
           <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-            Enter the contract address of the ERC-20 token you want to track.
+            {t("wallet:modals.addToken.description")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-gray-300 mb-1.5">
-                Token Contract Address
+                {t("wallet:modals.addToken.addressLabel")}
               </label>
               <input
                 ref={inputRef}
@@ -132,7 +132,9 @@ function AddTokenModal({
               disabled={isLoading || !address}
               className="w-full py-3.5 bg-accent hover:opacity-90 text-white border-transparent text-sm font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Verifying..." : "Add Token"}
+              {isLoading
+                ? t("wallet:modals.addToken.verifying")
+                : t("walletTabs:addToken")}
             </button>
           </form>
         </div>

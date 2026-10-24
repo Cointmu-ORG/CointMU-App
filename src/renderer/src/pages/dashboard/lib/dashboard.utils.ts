@@ -1,27 +1,4 @@
-import {
-  SECONDS_PER_MINUTE,
-  SECONDS_PER_HOUR,
-  CMU_PER_MINED_BLOCK,
-} from "../config/dashboard.constants";
-
-/**
- * Formats a unix timestamp as a coarse relative age string using seconds,
- * minutes, or an hours-and-minutes breakdown.
- * @param timestamp - The unix timestamp in seconds.
- * @returns A human-readable relative age label.
- */
-export function formatRelativeAge(timestamp: number): string {
-  const diff = Math.floor(Date.now() / 1000) - timestamp;
-  if (diff < SECONDS_PER_MINUTE) {
-    return `${diff} secs ago`;
-  }
-  if (diff < SECONDS_PER_HOUR) {
-    return `${Math.floor(diff / SECONDS_PER_MINUTE)} min ago`;
-  }
-  const hours = Math.floor(diff / SECONDS_PER_HOUR);
-  const minutes = Math.floor((diff % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
-  return `${hours}h ${minutes}m ago`;
-}
+import { CMU_PER_MINED_BLOCK } from "../config/dashboard.constants";
 
 /**
  * Derives the approximate number of self-mined blocks implied by a balance,

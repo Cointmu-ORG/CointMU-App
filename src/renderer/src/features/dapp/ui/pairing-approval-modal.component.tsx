@@ -47,7 +47,7 @@ export function PairingApprovalModal(): JSX.Element | null {
           <div className="flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
             <span className="text-xs font-semibold text-amber-700">
-              Pending
+              {t("ui:pairing.pending")}
             </span>
           </div>
         </div>

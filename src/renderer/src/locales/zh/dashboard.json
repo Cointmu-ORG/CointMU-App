@@ -28,7 +28,8 @@
     "currentNetwork": "当前网络",
     "gasAvg": "Gas（平均）",
     "suggestedPrice": "建议价格",
-    "blocksPastHour": "过去一小时的区块"
+    "blocksPastHour": "过去一小时的区块",
+    "consensus": "PoW - 出块 {{seconds}} 秒"
   },
   "walletOverview": {
     "copy": "复制",

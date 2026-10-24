@@ -18,5 +18,34 @@
     "copyRecent": "Aktuelle Logs kopieren",
     "copied": "Logs kopiert",
     "copyFailed": "Kopieren fehlgeschlagen"
+  },
+  "pagination": {
+    "pageOf": "Seite {{current}} von {{total}}",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite"
+  },
+  "dropdown": {
+    "search": "Suchen...",
+    "noResults": "Keine Ergebnisse gefunden"
+  },
+  "rpc": {
+    "unknownError": "Unbekannter RPC-Fehler",
+    "nodeUnreachable": "Node nicht erreichbar",
+    "setEtherbaseFailed": "Etherbase-Adresse konnte auf dem Node nicht gesetzt werden",
+    "startMinerFailed": "Miner konnte auf dem Node nicht gestartet werden",
+    "stopMinerFailed": "Miner konnte auf dem Node nicht gestoppt werden",
+    "txReverted": "Transaktion wurde on-chain rückgängig gemacht.",
+    "confirmationTimeout": "Zeitüberschreitung beim Warten auf die Bestätigung."
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "clearAll": "Alle löschen",
+    "empty": "Keine Benachrichtigungen",
+    "emptyHint": "Ereignisse erscheinen hier, sobald sie eintreten"
+  },
+  "activity": {
+    "sentCmu": "CMU gesendet",
+    "to": "An {{address}}"
   }
 }

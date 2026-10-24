@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { CONFIG_SYNC_INTERVAL_MS } from "../config/mining.constants";
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -60,7 +61,11 @@ function useMiningControls(): MiningControls {
     try {
       await setMiningEnabled(enabled);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to toggle miner");
+      setError(
+        err instanceof Error
+          ? err.message
+          : i18next.t("mining:controls.toggleFailed"),
+      );
     } finally {
       setToggling(false);
     }

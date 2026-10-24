@@ -18,5 +18,34 @@
     "copyRecent": "Copiar registros recientes",
     "copied": "Registros copiados",
     "copyFailed": "Error al copiar"
+  },
+  "pagination": {
+    "pageOf": "Página {{current}} de {{total}}",
+    "previous": "Página anterior",
+    "next": "Página siguiente"
+  },
+  "dropdown": {
+    "search": "Buscar...",
+    "noResults": "No se encontraron resultados"
+  },
+  "rpc": {
+    "unknownError": "Error de RPC desconocido",
+    "nodeUnreachable": "Nodo inaccesible",
+    "setEtherbaseFailed": "No se pudo establecer la dirección etherbase en el nodo",
+    "startMinerFailed": "No se pudo iniciar el minero en el nodo",
+    "stopMinerFailed": "No se pudo detener el minero en el nodo",
+    "txReverted": "La transacción fue revertida en la cadena.",
+    "confirmationTimeout": "Se agotó el tiempo de espera de la confirmación."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "clearAll": "Borrar todo",
+    "empty": "No hay notificaciones",
+    "emptyHint": "Los eventos aparecerán aquí a medida que ocurran"
+  },
+  "activity": {
+    "sentCmu": "CMU enviado",
+    "to": "Para {{address}}"
   }
 }

@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "已发送 {{asset}} 到 {{to}}",
       "notifFailedTitle": "交易失败",
       "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认"
+    },
+    "importKeystore": {
+      "title": "导入密钥库",
+      "description": "输入此密钥库文件的密码以解密并导入账户。",
+      "passwordLabel": "密钥库密码",
+      "passwordPlaceholder": "输入密钥库密码",
+      "passwordRequired": "请输入密钥库密码。",
+      "decryptFailed": "无法解密密钥库。请检查密码后重试。",
+      "decrypting": "正在解密...",
+      "submit": "解密并导入"
+    },
+    "addToken": {
+      "title": "添加自定义代币",
+      "description": "输入你要跟踪的 ERC-20 代币的合约地址。",
+      "addressLabel": "代币合约地址",
+      "addressRequired": "请输入代币合约地址。",
+      "invalidAddress": "以太坊地址格式无效。",
+      "detailsFailed": "无法获取代币详情。请确认它是此网络上有效的 ERC-20 合约。",
+      "addFailed": "添加代币时出错。",
+      "verifying": "正在验证..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "所有钱包"
+  },
+  "errors": {
+    "notUnlocked": "钱包未解锁。",
+    "noRecoveryPhrase": "此钱包没有恢复短语。",
+    "unexpected": "发生意外错误。",
+    "insufficientFunds": "余额不足以支付金额和网络费用。",
+    "outOfGas": "交易 Gas 不足。请尝试提高 Gas 上限。",
+    "nonceConflict": "Nonce 冲突。请等待待处理的交易完成。",
+    "reverted": "交易被合约回滚。",
+    "rejected": "交易已被拒绝。",
+    "nodeRejected": "节点拒绝了交易。请检查收款地址。"
   }
 }

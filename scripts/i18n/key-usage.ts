@@ -24,6 +24,8 @@ const NS_SEPARATOR = ":";
 const TEMPLATE_HOLE = "${…}";
 /** A template like `mining:peerHint.${code}` built outside t() and passed in later. */
 const KEY_TEMPLATE_PREFIX = /^[a-zA-Z]+:[\w.]+\.$/;
+/** A full key like `settings:privacy.sendingHeld` kept in a map and passed to t() later. */
+const KEY_LITERAL = /^[a-zA-Z]+:\w+(\.\w+)+$/;
 
 function isNode(value: unknown): value is AstNode {
   return (
@@ -162,9 +164,20 @@ function isKeyTemplateOutsideT(node: AstNode, parent: AstNode | null): boolean {
   return KEY_TEMPLATE_PREFIX.test(templateParts(node).quasis[0]);
 }
 
+function isKeyLiteralOutsideT(node: AstNode): boolean {
+  const literal = stringValue(node);
+  return literal !== null && KEY_LITERAL.test(literal);
+}
+
+/** Records the offsets of every node inside a t()/i18nKey argument. */
+function markConsumed(node: unknown, consumed: Set<number>): void {
+  walk(node, (inner) => consumed.add(inner.start));
+}
+
 /**
  * Finds translation keys referenced by a source file: t()/i18n.t() first
- * arguments, `<Trans i18nKey>`, and `ns:prefix.${…}` templates built for t().
+ * arguments, `<Trans i18nKey>`, `ns:prefix.${…}` templates built for t(), and
+ * namespaced literals with a dotted path (`ns:a.b`) kept in maps for t().
  * Non-literal arguments (plain variables) cannot be checked and are skipped.
  * @param file - Path used in the returned references.
  * @param source - File contents.
@@ -179,17 +192,23 @@ export function collectKeyRefs(file: string, source: string): KeyRef[] {
   const lineOf = (offset: number): number =>
     source.slice(0, offset).split("\n").length;
   const refs = new Map<string, KeyRef>();
+  const consumed = new Set<number>();
   walk(result.program, (node, parent) => {
     let found: Omit<KeyRef, "file" | "line">[] = [];
     if (node.type === "CallExpression" && calleeName(node) === "t") {
-      found = keysFromArgument((node.arguments as unknown[])[0], defaults);
+      const [argument] = node.arguments as unknown[];
+      found = keysFromArgument(argument, defaults);
+      markConsumed(argument, consumed);
     } else if (
       node.type === "JSXAttribute" &&
       isNode(node.name) &&
       node.name.name === "i18nKey"
     ) {
       found = keysFromArgument(node.value, defaults);
+      markConsumed(node.value, consumed);
     } else if (isKeyTemplateOutsideT(node, parent)) {
+      found = keysFromArgument(node, defaults);
+    } else if (!consumed.has(node.start) && isKeyLiteralOutsideT(node)) {
       found = keysFromArgument(node, defaults);
     }
     for (const ref of found) {

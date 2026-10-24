@@ -18,5 +18,34 @@
     "copyRecent": "Скопировать последние логи",
     "copied": "Логи скопированы",
     "copyFailed": "Не удалось скопировать"
+  },
+  "pagination": {
+    "pageOf": "Страница {{current}} из {{total}}",
+    "previous": "Предыдущая страница",
+    "next": "Следующая страница"
+  },
+  "dropdown": {
+    "search": "Поиск...",
+    "noResults": "Ничего не найдено"
+  },
+  "rpc": {
+    "unknownError": "Неизвестная ошибка RPC",
+    "nodeUnreachable": "Узел недоступен",
+    "setEtherbaseFailed": "Не удалось задать адрес etherbase на узле",
+    "startMinerFailed": "Не удалось запустить майнер на узле",
+    "stopMinerFailed": "Не удалось остановить майнер на узле",
+    "txReverted": "Транзакция отменена в сети (revert).",
+    "confirmationTimeout": "Истекло время ожидания подтверждения."
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "markAllRead": "Отметить все как прочитанные",
+    "clearAll": "Очистить все",
+    "empty": "Нет уведомлений",
+    "emptyHint": "Здесь будут появляться события по мере их возникновения"
+  },
+  "activity": {
+    "sentCmu": "Отправлено CMU",
+    "to": "Кому: {{address}}"
   }
 }

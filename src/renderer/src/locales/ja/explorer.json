@@ -110,7 +110,7 @@
     "success": "成功",
     "failed": "失敗",
     "pending": "保留中",
-    "confirmedWithCount": "確認済み - {{count}} 件の確認",
+    "confirmedWithCount_other": "確認済み - {{count}} 件の確認",
     "confirmed": "確認済み",
     "loading": "トランザクションを読み込み中...",
     "txHash": "トランザクションハッシュ:",
@@ -142,5 +142,19 @@
     "estPast12": "推定過去12ブロック",
     "current": "現在",
     "offline": "オフライン"
+  },
+  "timeline": {
+    "title": "チェーンタイムライン",
+    "subtitle_other": "最新 {{count}} ブロック — 右が最新",
+    "updating": "{{seconds}} 秒ごとに更新",
+    "nodeOffline": "ノードはオフラインです",
+    "nodeOfflineHint": "ネットワークのアクティビティを表示するには、ノードを起動するか、設定で RPC を有効にしてください。"
+  },
+  "minerDistribution": {
+    "title": "マイナー分布",
+    "subtitle": "採掘されたブロックの割合 · 過去 24 時間",
+    "empty": "過去 24 時間に採掘されたブロックはありません",
+    "others": "その他",
+    "addressYou": "{{address}}（あなた）"
   }
 }

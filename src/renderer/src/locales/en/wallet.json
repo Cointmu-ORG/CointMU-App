@@ -96,6 +96,40 @@
       "notifConfirmedDesc": "Sent {{asset}} to {{to}}",
       "notifFailedTitle": "Transaction failed",
       "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed"
+    },
+    "importKeystore": {
+      "title": "Import keystore",
+      "description": "Enter the password for this keystore file to decrypt and import the account.",
+      "passwordLabel": "Keystore password",
+      "passwordPlaceholder": "Enter the keystore password",
+      "passwordRequired": "Enter the keystore password.",
+      "decryptFailed": "Could not decrypt the keystore. Check the password and try again.",
+      "decrypting": "Decrypting...",
+      "submit": "Decrypt & Import"
+    },
+    "addToken": {
+      "title": "Add Custom Token",
+      "description": "Enter the contract address of the ERC-20 token you want to track.",
+      "addressLabel": "Token Contract Address",
+      "addressRequired": "Please enter a token contract address.",
+      "invalidAddress": "Invalid Ethereum address format.",
+      "detailsFailed": "Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.",
+      "addFailed": "An error occurred while adding the token.",
+      "verifying": "Verifying..."
     }
+  },
+  "historyFilter": {
+    "allWallets": "All Wallets"
+  },
+  "errors": {
+    "notUnlocked": "Wallet is not unlocked.",
+    "noRecoveryPhrase": "This wallet has no recovery phrase.",
+    "unexpected": "An unexpected error occurred.",
+    "insufficientFunds": "Insufficient funds to cover amount and network fee.",
+    "outOfGas": "Transaction ran out of gas. Try increasing the gas limit.",
+    "nonceConflict": "Nonce conflict. Please wait for pending transactions to settle.",
+    "reverted": "Transaction reverted by the contract.",
+    "rejected": "Transaction rejected.",
+    "nodeRejected": "Node rejected the transaction. Check the recipient address."
   }
 }

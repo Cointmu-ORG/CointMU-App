@@ -215,7 +215,7 @@ export function AdvancedSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-3">
-            Danger Zone
+            {t("settings:advanced.dangerZone")}
           </h3>
           <div className="bg-white border border-red-100 rounded-xl shadow-sm">
             <div className="flex items-center justify-between p-4">

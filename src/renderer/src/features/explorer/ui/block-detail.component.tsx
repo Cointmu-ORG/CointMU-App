@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { hexToAscii, formatTxAge } from "../lib/explorer.utils";
+import { hexToAscii } from "../lib/explorer.utils";
+import { formatAge } from "@/shared/lib";
 import { ChevronLeft, Square, File } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 
@@ -25,7 +26,7 @@ function BlockDetail({
   onTransactionSelect,
   onAddressSelect,
 }: BlockDetailProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const blockNumber = parseInt(block.number, 16);
 
   return (
@@ -298,7 +299,7 @@ function BlockDetail({
                   </td>
                   <td className="px-2 py-3.5 text-right">
                     <span className="text-[10px] text-slate-500 dark:text-gray-400">
-                      {formatTxAge(parseInt(block.timestamp, 16))}
+                      {formatAge(parseInt(block.timestamp, 16), i18n.language)}
                     </span>
                   </td>
                 </tr>

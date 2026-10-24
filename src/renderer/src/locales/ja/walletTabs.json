@@ -3,5 +3,21 @@
   "tokens": "トークン",
   "nfts": "NFT",
   "scanningNfts": "ブロックチェーンでNFTをスキャン中...",
-  "noNftsFound": "NFTが見つかりません"
+  "noNftsFound": "NFTが見つかりません",
+  "addToken": "トークンを追加",
+  "refresh": "更新",
+  "noActivity": "アクティビティはまだありません",
+  "noActivityHint": "CMU を送受信すると、ここにトランザクションが表示されます",
+  "table": {
+    "token": "トークン",
+    "price": "価格",
+    "balance": "残高",
+    "value": "評価額"
+  },
+  "nft": {
+    "tokenId": "トークン ID: {{id}}",
+    "unknownCollection": "不明なコレクション",
+    "fallbackName": "トークン #{{id}}",
+    "discoveryFailed": "NFT の検出に失敗しました"
+  }
 }

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { GRADIENTS } from "../config/wallet.constants";
 import { Wallet, HDNodeWallet } from "ethers";
 import { getSetting, setSetting } from "@/shared/api";
@@ -125,7 +126,7 @@ export async function revealPrivateKey(
       "encryptedPayload",
     );
     if (!encryptedPayload) {
-      throw new Error("Wallet is not unlocked");
+      throw new Error(i18next.t("wallet:errors.notUnlocked"));
     }
     secret = await decryptSecret(encryptedPayload, password);
   }
@@ -153,11 +154,11 @@ export async function revealPrivateKey(
 export async function revealRecoveryPhrase(password: string): Promise<string> {
   const encryptedPayload = await getSetting<string | null>("encryptedPayload");
   if (!encryptedPayload) {
-    throw new Error("Wallet is not unlocked");
+    throw new Error(i18next.t("wallet:errors.notUnlocked"));
   }
   const secret = await decryptSecret(encryptedPayload, password);
   if (secret.split(" ").length !== 12) {
-    throw new Error("This wallet has no recovery phrase.");
+    throw new Error(i18next.t("wallet:errors.noRecoveryPhrase"));
   }
   return secret;
 }
