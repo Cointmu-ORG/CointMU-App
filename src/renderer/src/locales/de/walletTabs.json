@@ -3,5 +3,21 @@
   "tokens": "Token",
   "nfts": "NFTs",
   "scanningNfts": "Blockchain wird nach NFTs durchsucht...",
-  "noNftsFound": "Keine NFTs gefunden"
+  "noNftsFound": "Keine NFTs gefunden",
+  "addToken": "Token hinzufügen",
+  "refresh": "Aktualisieren",
+  "noActivity": "Noch keine Aktivität",
+  "noActivityHint": "Transaktionen erscheinen hier, sobald du CMU sendest oder empfängst",
+  "table": {
+    "token": "Token",
+    "price": "Preis",
+    "balance": "Guthaben",
+    "value": "Wert"
+  },
+  "nft": {
+    "tokenId": "Token-ID: {{id}}",
+    "unknownCollection": "Unbekannte Sammlung",
+    "fallbackName": "Token #{{id}}",
+    "discoveryFailed": "NFT-Suche fehlgeschlagen"
+  }
 }

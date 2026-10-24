@@ -1,6 +1,6 @@
 import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { format } from "date-fns";
+import type { TFunction } from "i18next";
 import { ActivityItem, type ActivityData } from "@/shared/ui";
 import { getTransactions } from "@/features/wallet";
 import {
@@ -11,6 +11,7 @@ import {
 import { WalletCacheService } from "@/features/wallet";
 import { ActivityCacheService } from "@/features/wallet";
 import { SkeletonList, SkeletonTable, Pagination } from "@/shared/ui";
+import { formatDateTime } from "@/shared/lib";
 import { AddTokenModal, TokenIcon } from "@/features/wallet";
 import { NFTGrid } from "@/features/nft";
 import { Zap, Plus } from "lucide-react";
@@ -44,17 +45,23 @@ function shortenAddress(address: string): string {
  * Maps an in-flight pending transaction from the global store into the
  * ActivityData shape so it can render alongside confirmed history rows.
  * @param tx - The pending transaction record.
+ * @param t - Translator for the row labels.
+ * @param locale - Language tag for the timestamp.
  * @returns The activity row representation flagged as pending.
  */
-function mapPendingToActivity(tx: PendingTransaction): ActivityData {
+function mapPendingToActivity(
+  tx: PendingTransaction,
+  t: TFunction,
+  locale: string,
+): ActivityData {
   return {
     id: tx.hash,
     type: "send",
-    title: "Sent CMU",
-    subtitle: `To ${shortenAddress(tx.to)}`,
+    title: t("common:activity.sentCmu"),
+    subtitle: t("common:activity.to", { address: shortenAddress(tx.to) }),
     amount: tx.amount.toLocaleString("en-US", { maximumFractionDigits: 4 }),
     timestamp: tx.timestamp,
-    timestampStr: format(tx.timestamp, "MMM d, yyyy, h:mm a"),
+    timestampStr: formatDateTime(tx.timestamp, locale),
     hash: tx.hash,
     from: tx.from,
     to: tx.to,
@@ -115,11 +122,11 @@ function WalletTabs({
   const nftFetcher = useNFTFetcher(
     activeTab === "nfts" ? activeWalletAddress : null,
   );
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
-    .map(mapPendingToActivity);
+    .map((tx) => mapPendingToActivity(tx, t, i18n.language));
   const activities = [...pendingActivities, ...transactions];
 
   const itemsPerPage = 10;
@@ -206,7 +213,7 @@ function WalletTabs({
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-gray-200 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-300 dark:hover:border-gray-600 transition-all duration-150 shadow-sm"
           >
             <Plus width={12} height={12} strokeWidth={2.5} />
-            Add Token
+            {t("walletTabs:addToken")}
           </button>
         )}
         {activeTab === "nfts" && (
@@ -215,7 +222,7 @@ function WalletTabs({
             onClick={nftFetcher.refresh}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-gray-200 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-300 dark:hover:border-gray-600 transition-all duration-150 shadow-sm"
           >
-            Refresh
+            {t("walletTabs:refresh")}
           </button>
         )}
       </div>
@@ -238,10 +245,10 @@ function WalletTabs({
                   strokeWidth={1.5}
                 />
                 <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                  No activity yet
+                  {t("walletTabs:noActivity")}
                 </p>
                 <p className="text-xs text-slate-400 dark:text-gray-400 mt-1">
-                  Transactions will appear here once you send or receive CMU
+                  {t("walletTabs:noActivityHint")}
                 </p>
               </div>
             )}
@@ -264,16 +271,16 @@ function WalletTabs({
             <thead>
               <tr className="border-b border-slate-100 dark:border-gray-800">
                 <th className="text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  Token
+                  {t("walletTabs:table.token")}
                 </th>
                 <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  Price
+                  {t("walletTabs:table.price")}
                 </th>
                 <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  Balance
+                  {t("walletTabs:table.balance")}
                 </th>
                 <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  Value
+                  {t("walletTabs:table.value")}
                 </th>
               </tr>
             </thead>

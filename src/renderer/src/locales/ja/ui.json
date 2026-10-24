@@ -7,6 +7,7 @@
     "pairingRequest": "拡張機能リンクのリクエスト",
     "pairingDesc": "CointMU Browser Extensionがあなたのウォレットに接続することを許可しますか？",
     "approve": "承認する",
-    "reject": "拒否する"
+    "reject": "拒否する",
+    "pending": "保留中"
   }
 }

@@ -7,6 +7,7 @@
     "pairingRequest": "Запрос на связь с расширением",
     "pairingDesc": "Разрешить CointMU Browser Extension подключиться к вашему кошельку?",
     "approve": "Подтвердить",
-    "reject": "Отклонить"
+    "reject": "Отклонить",
+    "pending": "В обработке"
   }
 }

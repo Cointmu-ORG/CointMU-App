@@ -7,6 +7,7 @@
     "pairingRequest": "Solicitud de Vinculación de Extensión",
     "pairingDesc": "¿Deseas permitir que la CointMU Browser Extension se conecte a tu wallet?",
     "approve": "Aprobar",
-    "reject": "Rechazar"
+    "reject": "Rechazar",
+    "pending": "Pendiente"
   }
 }

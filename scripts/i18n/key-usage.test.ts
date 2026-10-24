@@ -58,6 +58,20 @@ describe("collectKeyRefs + isResolvable", () => {
 
     expect(unresolved(source)).toEqual(["1:settings:missing"]);
   });
+
+  it("checks namespaced keys kept in a map outside t()", () => {
+    const source = `
+      const KEYS = { ok: "settings:general.title", gone: "settings:privacy.gone" } as const;
+      const store = "mining.isMiningEnabled"; const url = "http://x.y";`;
+
+    expect(unresolved(source)).toEqual(["2:settings:privacy.gone"]);
+  });
+
+  it("reports a key once when a multi-line t() argument holds it", () => {
+    const source = `t(\n  ok\n    ? "settings:general.title"\n    : "settings:gone.title",\n);`;
+
+    expect(unresolved(source)).toEqual(["1:settings:gone.title"]);
+  });
 });
 
 describe("readRegisteredNamespaces", () => {

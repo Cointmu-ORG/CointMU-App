@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 const HEX_RADIX = 16;
 const WEI_PER_GWEI = 1_000_000_000;
 const WEI_PER_CMU = 1e18;
@@ -36,13 +38,18 @@ async function callRaw(
       return {
         result: null,
         hasError: true,
-        errorMessage: envelope.error.message || "Unknown RPC error",
+        errorMessage:
+          envelope.error.message || i18next.t("common:rpc.unknownError"),
       };
     }
 
     return { result: envelope.result, ...RPC_SUCCESS_NO_ERROR };
   } catch {
-    return { result: null, hasError: true, errorMessage: "Node unreachable" };
+    return {
+      result: null,
+      hasError: true,
+      errorMessage: i18next.t("common:rpc.nodeUnreachable"),
+    };
   }
 }
 
@@ -206,7 +213,7 @@ async function setEtherbase(address: string): Promise<void> {
   const response = await callRaw("miner_setEtherbase", [address]);
   if (response.hasError) {
     throw new Error(
-      response.errorMessage || "Failed to set etherbase address on the node",
+      response.errorMessage || i18next.t("common:rpc.setEtherbaseFailed"),
     );
   }
 }
@@ -223,7 +230,7 @@ async function startMiner(threads: number): Promise<void> {
   const response = await callRaw("miner_start", [Math.floor(threads)]);
   if (response.hasError) {
     throw new Error(
-      response.errorMessage || "Failed to start miner on the node",
+      response.errorMessage || i18next.t("common:rpc.startMinerFailed"),
     );
   }
 }
@@ -237,7 +244,7 @@ async function stopMiner(): Promise<void> {
   const response = await callRaw("miner_stop");
   if (response.hasError) {
     throw new Error(
-      response.errorMessage || "Failed to stop miner on the node",
+      response.errorMessage || i18next.t("common:rpc.stopMinerFailed"),
     );
   }
 }
@@ -290,7 +297,7 @@ async function waitForTransactionReceipt(
       receipt.blockNumber !== null
     ) {
       if (receipt.status === TX_STATUS_FAILED) {
-        throw new Error("Transaction reverted on-chain.");
+        throw new Error(i18next.t("common:rpc.txReverted"));
       }
 
       if (confirmations <= DEFAULT_CONFIRMATIONS) {
@@ -310,7 +317,7 @@ async function waitForTransactionReceipt(
     await delay(pollIntervalMs);
   }
 
-  throw new Error("Timed out waiting for confirmation.");
+  throw new Error(i18next.t("common:rpc.confirmationTimeout"));
 }
 
 export {

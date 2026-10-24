@@ -1,4 +1,5 @@
 import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
@@ -19,6 +20,7 @@ function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps): JSX.Element | null {
+  const { t } = useTranslation();
   if (totalPages <= 1) {
     return null;
   }
@@ -29,13 +31,16 @@ function Pagination({
   return (
     <div className="flex items-center justify-between pt-3">
       <span className="text-[10px] font-medium text-slate-400">
-        Page {currentPage} of {totalPages}
+        {t("common:pagination.pageOf", {
+          current: currentPage,
+          total: totalPages,
+        })}
       </span>
       <div className="flex items-center gap-1">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!canPrev}
-          aria-label="Previous page"
+          aria-label={t("common:pagination.previous")}
           className="flex items-center justify-center w-7 h-7 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <ChevronLeft width={14} height={14} strokeWidth={2.5} />
@@ -43,7 +48,7 @@ function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!canNext}
-          aria-label="Next page"
+          aria-label={t("common:pagination.next")}
           className="flex items-center justify-center w-7 h-7 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <ChevronRight width={14} height={14} strokeWidth={2.5} />

@@ -28,7 +28,8 @@
     "currentNetwork": "Jaringan saat ini",
     "gasAvg": "Gas (Rata-rata)",
     "suggestedPrice": "Harga yang disarankan",
-    "blocksPastHour": "Blok jam terakhir"
+    "blocksPastHour": "Blok jam terakhir",
+    "consensus": "PoW - Blok {{seconds}} dtk"
   },
   "walletOverview": {
     "copy": "Salin",

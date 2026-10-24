@@ -1,12 +1,19 @@
-import {
-  intervalToDuration,
-  formatDistanceToNowStrict,
-  isAfter,
-  subDays,
-} from "date-fns";
+import { intervalToDuration, isAfter, subDays } from "date-fns";
 
 const IDLE_DURATION_PLACEHOLDER = "--";
 const MILLISECONDS_PER_SECOND = 1000;
+
+/** Largest unit first: an age uses the first unit it reaches. */
+const RELATIVE_TIME_UNITS: ReadonlyArray<{
+  unit: Intl.RelativeTimeFormatUnit;
+  seconds: number;
+}> = [
+  { unit: "year", seconds: 365 * 24 * 60 * 60 },
+  { unit: "month", seconds: 30 * 24 * 60 * 60 },
+  { unit: "day", seconds: 24 * 60 * 60 },
+  { unit: "hour", seconds: 60 * 60 },
+  { unit: "minute", seconds: 60 },
+];
 
 /**
  * Left-pads a numeric value to two digits for fixed-width clock display.
@@ -43,22 +50,42 @@ function formatElapsed(elapsedMs: number): string {
 }
 
 /**
- * Formats a Unix timestamp expressed in seconds into a human-readable relative
- * age string using date-fns formatDistanceToNowStrict.
- * @param {any} timestampSeconds - The Unix timestamp in seconds.
- * @returns {any} A relative age string such as '5 seconds ago'.
+ * Formats a Unix timestamp expressed in seconds as a relative age in the given
+ * language, rounded down to the largest whole unit (e.g. '5 seconds ago',
+ * 'vor 3 Minuten'). Intl picks the plural form for each language.
+ * @param timestampSeconds - The Unix timestamp in seconds.
+ * @param locale - BCP 47 language tag, usually i18n.language.
+ * @returns The relative age, or '--' for a missing timestamp.
  */
-function formatAge(timestampSeconds: number): string {
+function formatAge(timestampSeconds: number, locale: string): string {
   if (!Number.isFinite(timestampSeconds) || timestampSeconds <= 0) {
     return IDLE_DURATION_PLACEHOLDER;
   }
 
-  return formatDistanceToNowStrict(
-    new Date(timestampSeconds * MILLISECONDS_PER_SECOND),
-    {
-      addSuffix: true,
-    },
+  const ageSeconds = Math.max(
+    0,
+    Math.floor(Date.now() / MILLISECONDS_PER_SECOND - timestampSeconds),
   );
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: "always" });
+  const match = RELATIVE_TIME_UNITS.find(
+    ({ seconds }) => ageSeconds >= seconds,
+  );
+  if (!match) return format.format(-ageSeconds, "second");
+  return format.format(-Math.floor(ageSeconds / match.seconds), match.unit);
+}
+
+/**
+ * Formats a timestamp as a medium date with a short time in the given
+ * language (e.g. 'Oct 24, 2026, 1:05 PM', '2026/10/24 13:05').
+ * @param timestampMs - Milliseconds since the epoch.
+ * @param locale - BCP 47 language tag, usually i18n.language.
+ * @returns The formatted date and time.
+ */
+function formatDateTime(timestampMs: number, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(timestampMs);
 }
 
 /**
@@ -76,4 +103,4 @@ function isWithinLastDay(timestampSeconds: number): boolean {
   return isAfter(date, subDays(new Date(), 1));
 }
 
-export { formatElapsed, formatAge, isWithinLastDay };
+export { formatElapsed, formatAge, formatDateTime, isWithinLastDay };

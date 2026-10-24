@@ -3,5 +3,21 @@
   "tokens": "Token",
   "nfts": "NFT",
   "scanningNfts": "Memindai blockchain untuk NFT...",
-  "noNftsFound": "Tidak ada NFT yang ditemukan"
+  "noNftsFound": "Tidak ada NFT yang ditemukan",
+  "addToken": "Tambah token",
+  "refresh": "Muat ulang",
+  "noActivity": "Belum ada aktivitas",
+  "noActivityHint": "Transaksi akan muncul di sini setelah Anda mengirim atau menerima CMU",
+  "table": {
+    "token": "Token",
+    "price": "Harga",
+    "balance": "Saldo",
+    "value": "Nilai"
+  },
+  "nft": {
+    "tokenId": "ID token: {{id}}",
+    "unknownCollection": "Koleksi tidak dikenal",
+    "fallbackName": "Token #{{id}}",
+    "discoveryFailed": "Pencarian NFT gagal"
+  }
 }

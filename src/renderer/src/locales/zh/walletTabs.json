@@ -3,5 +3,21 @@
   "tokens": "代币",
   "nfts": "NFTs",
   "scanningNfts": "正在扫描区块链中的 NFT...",
-  "noNftsFound": "未找到 NFT"
+  "noNftsFound": "未找到 NFT",
+  "addToken": "添加代币",
+  "refresh": "刷新",
+  "noActivity": "暂无活动",
+  "noActivityHint": "发送或接收 CMU 后，交易将显示在这里",
+  "table": {
+    "token": "代币",
+    "price": "价格",
+    "balance": "余额",
+    "value": "价值"
+  },
+  "nft": {
+    "tokenId": "代币 ID：{{id}}",
+    "unknownCollection": "未知合集",
+    "fallbackName": "代币 #{{id}}",
+    "discoveryFailed": "NFT 搜索失败"
+  }
 }
