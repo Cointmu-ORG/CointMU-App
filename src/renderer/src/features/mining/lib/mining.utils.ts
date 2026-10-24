@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { DEFAULT_CONCURRENCY } from "../config/mining.constants";
 import { type BlockData } from "@/shared/lib";
 
@@ -67,5 +68,7 @@ export function formatRewards(balance: string): string {
  * @returns The hex-formatted difficulty label or a loading placeholder.
  */
 export function formatDifficultyLabel(difficulty: number): string {
-  return difficulty > 0 ? "0x" + difficulty.toString(16) : "Loading...";
+  return difficulty > 0
+    ? "0x" + difficulty.toString(16)
+    : i18next.t("mining:hero.difficultyLoading");
 }

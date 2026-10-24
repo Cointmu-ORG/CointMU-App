@@ -14,18 +14,21 @@
     "logAwaiting": "ノードのアクティビティを待機しています...",
     "tabFound": "発見",
     "tabLog": "ログ",
-    "tabActivity": "アクティビティ"
+    "tabActivity": "アクティビティ",
+    "logSealed": "ブロック #{{number}} を封印 - {{reward}} の報酬",
+    "logSynced_other": "ブロック #{{number}} を同期 - {{count}} tx"
   },
   "header": {
     "workspace": "ワークスペース",
     "title": "マイニング",
     "statusMining": "マイニング中",
     "statusStopped": "停止中",
-    "preferences": "設定"
+    "preferences": "設定",
+    "pausedBattery": "一時停止中（バッテリー）"
   },
   "hero": {
     "rewardsToday": "今日の報酬",
-    "miningWithThreads": "{{count}} スレッドでマイニング中",
+    "miningWithThreads_other": "{{count}} スレッドでマイニング中",
     "stopping": "停止しています...",
     "targetDifficulty": "目標難易度",
     "blockReward": "ブロック報酬",
@@ -45,7 +48,8 @@
     "noPeersTooltip": "ピアに接続されていません",
     "starting": "開始中...",
     "startMiningBtn": "マイニングを開始",
-    "stopMiningbtn": "マイニングを停止"
+    "stopMiningbtn": "マイニングを停止",
+    "difficultyLoading": "読み込み中..."
   },
   "stats": {
     "sessionTime": "セッション時間",
@@ -65,12 +69,13 @@
     "title": "ワーカー設定",
     "subtitle": "現在の内部ノード構成",
     "workerThreads": "ワーカースレッド",
-    "ofCores": "{{count}} コア中",
+    "ofCores_other": "{{count}} コア中 {{threads}}",
     "intensityTitle": "強度",
     "higherMoreHeat": "高い = より多くの熱、より速い解決",
     "rewardAddressTitle": "報酬アドレス",
     "blockRewardsCreditedHere": "ブロック報酬はここにクレジットされます",
-    "setInMiningSettings": "マイニング設定で設定します"
+    "setInMiningSettings": "マイニング設定で設定します",
+    "threadTitle_other": "{{count}} スレッド"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "ブートノードに到達できません。キャンパスネットワークまたは VPN に接続していることを確認してください。",
@@ -100,5 +105,12 @@
     },
     "retry": "再試行",
     "retrying": "再試行中..."
+  },
+  "controls": {
+    "toggleFailed": "マイナーの切り替えに失敗しました"
+  },
+  "notification": {
+    "blockMinedTitle": "ブロックを採掘しました",
+    "blockMinedMessage": "ブロック #{{number}} を封印しました"
   }
 }

@@ -4,6 +4,7 @@ import {
   BLOCK_REWARD_LABEL,
 } from "../config/mining.constants";
 import { useState, useEffect, useRef } from "react";
+import i18next from "i18next";
 import { format } from "date-fns";
 import { useMiningStore } from "../model/mining.store";
 import { dispatchNotification } from "@/features/notifications";
@@ -37,8 +38,14 @@ function buildLogEntries(blocks: BlockData[], owned: Set<string>): LogEntry[] {
       timestamp,
       level: isMine ? "OK" : "INFO",
       message: isMine
-        ? `Block #${block.number} sealed - ${BLOCK_REWARD_LABEL} rewarded`
-        : `Synced block #${block.number} - ${block.txCount} txs`,
+        ? i18next.t("mining:activity.logSealed", {
+            number: block.number,
+            reward: BLOCK_REWARD_LABEL,
+          })
+        : i18next.t("mining:activity.logSynced", {
+            number: block.number,
+            count: block.txCount,
+          }),
       color: isMine ? "text-emerald-500" : "text-blue-400",
     };
   });
@@ -105,8 +112,10 @@ function useMiningActivity(
       selfMined.forEach((block) => {
         dispatchNotification(
           "mining",
-          "Block mined",
-          `You sealed block #${block.number}`,
+          i18next.t("mining:notification.blockMinedTitle"),
+          i18next.t("mining:notification.blockMinedMessage", {
+            number: block.number,
+          }),
           { hash: block.hash, number: block.number },
         );
       });

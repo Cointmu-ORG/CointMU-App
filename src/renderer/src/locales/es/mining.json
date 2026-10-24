@@ -14,18 +14,25 @@
     "logAwaiting": "Esperando actividad del nodo...",
     "tabFound": "Encontrado",
     "tabLog": "Registro",
-    "tabActivity": "Actividad"
+    "tabActivity": "Actividad",
+    "logSealed": "Bloque #{{number}} sellado - {{reward}} de recompensa",
+    "logSynced_one": "Bloque #{{number}} sincronizado - {{count}} tx",
+    "logSynced_many": "Bloque #{{number}} sincronizado - {{count}} txs",
+    "logSynced_other": "Bloque #{{number}} sincronizado - {{count}} txs"
   },
   "header": {
     "workspace": "Espacio de Trabajo",
     "title": "Minería",
     "statusMining": "Minando",
     "statusStopped": "Detenido",
-    "preferences": "Preferencias"
+    "preferences": "Preferencias",
+    "pausedBattery": "En pausa (batería)"
   },
   "hero": {
     "rewardsToday": "Recompensas de hoy",
-    "miningWithThreads": "Minando con {{count}} hilos",
+    "miningWithThreads_one": "Minando con {{count}} hilo",
+    "miningWithThreads_many": "Minando con {{count}} hilos",
+    "miningWithThreads_other": "Minando con {{count}} hilos",
     "stopping": "Deteniendo...",
     "targetDifficulty": "Dificultad objetivo",
     "blockReward": "Recompensa de bloque",
@@ -45,7 +52,8 @@
     "noPeersTooltip": "No hay pares conectados",
     "starting": "Iniciando...",
     "startMiningBtn": "Iniciar minería",
-    "stopMiningbtn": "Detener la minería"
+    "stopMiningbtn": "Detener la minería",
+    "difficultyLoading": "Cargando..."
   },
   "stats": {
     "sessionTime": "Tiempo de Sesión",
@@ -65,12 +73,17 @@
     "title": "Configuración del trabajador",
     "subtitle": "Configuración actual del nodo interno",
     "workerThreads": "Hilos de trabajo",
-    "ofCores": "de {{count}} núcleos",
+    "ofCores_one": "{{threads}} de {{count}} núcleo",
+    "ofCores_many": "{{threads}} de {{count}} núcleos",
+    "ofCores_other": "{{threads}} de {{count}} núcleos",
     "intensityTitle": "Intensidad",
     "higherMoreHeat": "Mayor = más calor, resolución más rápida",
     "rewardAddressTitle": "Dirección de recompensa",
     "blockRewardsCreditedHere": "Las recompensas de bloque se acreditan aquí",
-    "setInMiningSettings": "Establecido en Ajustes de Minería"
+    "setInMiningSettings": "Establecido en Ajustes de Minería",
+    "threadTitle_one": "{{count}} hilo",
+    "threadTitle_many": "{{count}} hilos",
+    "threadTitle_other": "{{count}} hilos"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "Bootnode inaccesible: asegúrate de estar conectado a la red del campus o a la VPN.",
@@ -100,5 +113,12 @@
     },
     "retry": "Reintentar",
     "retrying": "Reintentando..."
+  },
+  "controls": {
+    "toggleFailed": "No se pudo cambiar el estado del minero"
+  },
+  "notification": {
+    "blockMinedTitle": "Bloque minado",
+    "blockMinedMessage": "Has sellado el bloque #{{number}}"
   }
 }

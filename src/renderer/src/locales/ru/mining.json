@@ -14,18 +14,27 @@
     "logAwaiting": "Ожидание активности узла...",
     "tabFound": "Найдено",
     "tabLog": "Журнал",
-    "tabActivity": "Активность"
+    "tabActivity": "Активность",
+    "logSealed": "Блок #{{number}} запечатан - награда {{reward}}",
+    "logSynced_one": "Блок #{{number}} синхронизирован - {{count}} транзакция",
+    "logSynced_few": "Блок #{{number}} синхронизирован - {{count}} транзакции",
+    "logSynced_many": "Блок #{{number}} синхронизирован - {{count}} транзакций",
+    "logSynced_other": "Блок #{{number}} синхронизирован - {{count}} транзакции"
   },
   "header": {
     "workspace": "Рабочая область",
     "title": "Майнинг",
     "statusMining": "Майнинг",
     "statusStopped": "Остановлен",
-    "preferences": "Предпочтения"
+    "preferences": "Предпочтения",
+    "pausedBattery": "Пауза (батарея)"
   },
   "hero": {
     "rewardsToday": "Награды за сегодня",
-    "miningWithThreads": "Майнинг с {{count}} потоками",
+    "miningWithThreads_one": "Майнинг с {{count}} потоком",
+    "miningWithThreads_few": "Майнинг с {{count}} потоками",
+    "miningWithThreads_many": "Майнинг с {{count}} потоками",
+    "miningWithThreads_other": "Майнинг с {{count}} потока",
     "stopping": "Остановка...",
     "targetDifficulty": "Целевая сложность",
     "blockReward": "Награда за блок",
@@ -45,7 +54,8 @@
     "noPeersTooltip": "Нет подключённых пиров",
     "starting": "Запуск...",
     "startMiningBtn": "Начать майнинг",
-    "stopMiningbtn": "Остановить майнинг"
+    "stopMiningbtn": "Остановить майнинг",
+    "difficultyLoading": "Загрузка..."
   },
   "stats": {
     "sessionTime": "Время сессии",
@@ -65,12 +75,19 @@
     "title": "Конфигурация воркера",
     "subtitle": "Текущая внутренняя конфигурация узла",
     "workerThreads": "Рабочие потоки",
-    "ofCores": "из {{count}} ядер",
+    "ofCores_one": "{{threads}} из {{count}} ядра",
+    "ofCores_few": "{{threads}} из {{count}} ядер",
+    "ofCores_many": "{{threads}} из {{count}} ядер",
+    "ofCores_other": "{{threads}} из {{count}} ядра",
     "intensityTitle": "Интенсивность",
     "higherMoreHeat": "Выше = больше нагрев, быстрее решение",
     "rewardAddressTitle": "Адрес вознаграждения",
     "blockRewardsCreditedHere": "Награды за блоки зачисляются сюда",
-    "setInMiningSettings": "Установлено в настройках майнинга"
+    "setInMiningSettings": "Установлено в настройках майнинга",
+    "threadTitle_one": "{{count}} поток",
+    "threadTitle_few": "{{count}} потока",
+    "threadTitle_many": "{{count}} потоков",
+    "threadTitle_other": "{{count}} потока"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "Bootnode недоступен — убедитесь, что вы подключены к сети кампуса или VPN.",
@@ -100,5 +117,12 @@
     },
     "retry": "Повторить",
     "retrying": "Повтор..."
+  },
+  "controls": {
+    "toggleFailed": "Не удалось переключить майнер"
+  },
+  "notification": {
+    "blockMinedTitle": "Блок добыт",
+    "blockMinedMessage": "Вы запечатали блок #{{number}}"
   }
 }

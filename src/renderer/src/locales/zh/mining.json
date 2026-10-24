@@ -14,18 +14,21 @@
     "logAwaiting": "等待节点活动...",
     "tabFound": "已找到",
     "tabLog": "日志",
-    "tabActivity": "活动"
+    "tabActivity": "活动",
+    "logSealed": "区块 #{{number}} 已封装 - 获得 {{reward}} 奖励",
+    "logSynced_other": "已同步区块 #{{number}} - {{count}} 笔交易"
   },
   "header": {
     "workspace": "工作区",
     "title": "挖矿",
     "statusMining": "挖矿中",
     "statusStopped": "已停止",
-    "preferences": "偏好设置"
+    "preferences": "偏好设置",
+    "pausedBattery": "已暂停（电池）"
   },
   "hero": {
     "rewardsToday": "今日奖励",
-    "miningWithThreads": "正在使用 {{count}} 个线程挖矿",
+    "miningWithThreads_other": "正在使用 {{count}} 个线程挖矿",
     "stopping": "正在停止...",
     "targetDifficulty": "目标难度",
     "blockReward": "区块奖励",
@@ -45,7 +48,8 @@
     "noPeersTooltip": "未连接到任何节点",
     "starting": "正在启动...",
     "startMiningBtn": "开始挖矿",
-    "stopMiningbtn": "停止挖矿"
+    "stopMiningbtn": "停止挖矿",
+    "difficultyLoading": "加载中..."
   },
   "stats": {
     "sessionTime": "会话时间",
@@ -65,12 +69,13 @@
     "title": "矿工配置",
     "subtitle": "当前内部节点配置",
     "workerThreads": "工作线程",
-    "ofCores": "共 {{count}} 个核心",
+    "ofCores_other": "{{count}} 个核心中的 {{threads}} 个",
     "intensityTitle": "强度",
     "higherMoreHeat": "越高 = 越热，求解更快",
     "rewardAddressTitle": "奖励地址",
     "blockRewardsCreditedHere": "区块奖励将发送到此地址",
-    "setInMiningSettings": "在挖矿设置中配置"
+    "setInMiningSettings": "在挖矿设置中配置",
+    "threadTitle_other": "{{count}} 个线程"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "无法连接到引导节点——请确认已连接到校园网络或 VPN。",
@@ -100,5 +105,12 @@
     },
     "retry": "重试",
     "retrying": "正在重试..."
+  },
+  "controls": {
+    "toggleFailed": "无法切换矿工状态"
+  },
+  "notification": {
+    "blockMinedTitle": "已挖出区块",
+    "blockMinedMessage": "你封装了区块 #{{number}}"
   }
 }

@@ -43,7 +43,7 @@ function MiningHeader({
             pulse
           />
         ) : powerStatus === "Paused (Battery)" ? (
-          <StatusPill tone="warning" label={powerStatus} />
+          <StatusPill tone="warning" label={t("mining:header.pausedBattery")} />
         ) : (
           <StatusPill
             tone="neutral"

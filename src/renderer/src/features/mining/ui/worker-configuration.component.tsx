@@ -43,7 +43,10 @@ function WorkerConfiguration({
               {t("mining:worker.workerThreads")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
-              {cpuThreads} {t("mining:worker.ofCores", { count: maxCores })}
+              {t("mining:worker.ofCores", {
+                threads: cpuThreads,
+                count: maxCores,
+              })}
             </p>
           </div>
           <div className="flex items-center gap-1">
@@ -51,7 +54,7 @@ function WorkerConfiguration({
               <div
                 key={i}
                 className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? "bg-emerald-400" : "bg-slate-200 dark:bg-gray-800"}`}
-                title={`${i + 1} Thread${i === 0 ? "" : "s"}`}
+                title={t("mining:worker.threadTitle", { count: i + 1 })}
               />
             ))}
           </div>

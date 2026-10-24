@@ -14,18 +14,23 @@
     "logAwaiting": "Warte auf Node-Aktivität...",
     "tabFound": "Gefunden",
     "tabLog": "Protokoll",
-    "tabActivity": "Aktivität"
+    "tabActivity": "Aktivität",
+    "logSealed": "Block #{{number}} versiegelt - {{reward}} erhalten",
+    "logSynced_one": "Block #{{number}} synchronisiert - {{count}} Tx",
+    "logSynced_other": "Block #{{number}} synchronisiert - {{count}} Tx"
   },
   "header": {
     "workspace": "Arbeitsbereich",
     "title": "Mining",
     "statusMining": "Mining",
     "statusStopped": "Gestoppt",
-    "preferences": "Einstellungen"
+    "preferences": "Einstellungen",
+    "pausedBattery": "Pausiert (Akku)"
   },
   "hero": {
     "rewardsToday": "Heutige Belohnungen",
-    "miningWithThreads": "Mining mit {{count}} Threads",
+    "miningWithThreads_one": "Mining mit {{count}} Thread",
+    "miningWithThreads_other": "Mining mit {{count}} Threads",
     "stopping": "Wird gestoppt...",
     "targetDifficulty": "Zielschwierigkeit",
     "blockReward": "Blockbelohnung",
@@ -45,7 +50,8 @@
     "noPeersTooltip": "Keine Peers verbunden",
     "starting": "Wird gestartet...",
     "startMiningBtn": "Mining starten",
-    "stopMiningbtn": "Mining stoppen"
+    "stopMiningbtn": "Mining stoppen",
+    "difficultyLoading": "Wird geladen..."
   },
   "stats": {
     "sessionTime": "Sitzungszeit",
@@ -65,12 +71,15 @@
     "title": "Worker-Konfiguration",
     "subtitle": "Aktuelle interne Node-Konfiguration",
     "workerThreads": "Worker-Threads",
-    "ofCores": "von {{count}} Kernen",
+    "ofCores_one": "{{threads}} von {{count}} Kern",
+    "ofCores_other": "{{threads}} von {{count}} Kernen",
     "intensityTitle": "Intensität",
     "higherMoreHeat": "Höher = mehr Wärme, schnellere Lösung",
     "rewardAddressTitle": "Belohnungsadresse",
     "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
-    "setInMiningSettings": "In Mining-Einstellungen festgelegt"
+    "setInMiningSettings": "In Mining-Einstellungen festgelegt",
+    "threadTitle_one": "{{count}} Thread",
+    "threadTitle_other": "{{count}} Threads"
   },
   "peerHint": {
     "BOOTNODE_UNREACHABLE": "Bootnode nicht erreichbar – stellen Sie sicher, dass Sie mit dem Campusnetz oder dem VPN verbunden sind.",
@@ -100,5 +109,12 @@
     },
     "retry": "Erneut versuchen",
     "retrying": "Wird erneut versucht..."
+  },
+  "controls": {
+    "toggleFailed": "Miner konnte nicht umgeschaltet werden"
+  },
+  "notification": {
+    "blockMinedTitle": "Block gemint",
+    "blockMinedMessage": "Du hast Block #{{number}} versiegelt"
   }
 }
