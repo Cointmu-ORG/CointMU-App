@@ -1,8 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { FALLBACK_BUILD_ID, readAppInfo } from "./system";
+
+// The real module downloads the Electron binary on first require (#74).
+vi.mock("electron", () => ({ app: {}, ipcMain: {} }));
 
 describe("readAppInfo", () => {
   let appRoot: string;
