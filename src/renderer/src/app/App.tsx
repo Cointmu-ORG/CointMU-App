@@ -11,7 +11,7 @@ import {
 } from "@/features/settings";
 import { getSetting } from "@/shared/api";
 import { useUpdater } from "@/shared/lib";
-import { useMiningLogStream, NodeRecoveryBanner } from "@/features/mining";
+import { useMiningLogStream } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
 
@@ -166,8 +166,10 @@ function App(): JSX.Element {
           </div>
         }
       >
+        {/* Frameless window: without the title bar there is no way to close,
+            minimize or drag it before login (#56). */}
         <div className="fixed inset-x-0 top-0 z-50">
-          <NodeRecoveryBanner />
+          <AppHeader />
         </div>
         <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
         <FirstRunNotice />
