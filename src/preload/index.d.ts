@@ -1,6 +1,7 @@
 import type {
   BootnodeSaveResult,
   BootnodeState,
+  DialogText,
   JsonRpcEnvelope,
   NodePeerHint,
   NodeRecoveryEvent,
@@ -75,6 +76,7 @@ interface CointmuAPI {
   saveKeystore: (
     keystoreJson: string,
     filename: string,
+    dialogText: DialogText,
   ) => Promise<{
     success: boolean;
     path?: string;
@@ -82,11 +84,11 @@ interface CointmuAPI {
     error?: string;
   }>;
   clearAllData: () => Promise<{ success: boolean; error?: string }>;
-  exportExtensionZip: () => Promise<boolean>;
+  exportExtensionZip: (dialogText: DialogText) => Promise<boolean>;
   getDatadir: () => Promise<string>;
   getChainDbSize: () => Promise<number>;
   openDataFolder: () => Promise<string>;
-  openKeystoreFile: () => Promise<{
+  openKeystoreFile: (dialogText: DialogText) => Promise<{
     success: boolean;
     data?: string;
     canceled?: boolean;

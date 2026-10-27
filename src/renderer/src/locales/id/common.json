@@ -47,5 +47,12 @@
   "activity": {
     "sentCmu": "CMU terkirim",
     "to": "Ke {{address}}"
+  },
+  "dialog": {
+    "exportExtensionTitle": "Ekspor Ekstensi Peramban Pendamping",
+    "zipFilter": "Arsip ZIP",
+    "exportKeystoreTitle": "Ekspor keystore",
+    "importKeystoreTitle": "Impor keystore",
+    "jsonFilter": "JSON"
   }
 }

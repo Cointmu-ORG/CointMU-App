@@ -4,6 +4,12 @@ import { existsSync } from "fs";
 import { copyFile } from "fs/promises";
 import { resolveDataDir } from "../geth/networkConfig";
 import { getDirectorySize } from "../services/directorySize";
+import { resolveDialogText } from "./dialogText";
+
+const EXPORT_EXTENSION_DIALOG = {
+  title: "Export Companion Browser Extension",
+  filterName: "ZIP Archive",
+};
 
 /**
  * Registers the app file handlers: the extension ZIP export and the chain data
@@ -11,7 +17,7 @@ import { getDirectorySize } from "../services/directorySize";
  * @returns {void}
  */
 export function registerAppHandlers(): void {
-  ipcMain.handle("export-extension-zip", async () => {
+  ipcMain.handle("export-extension-zip", async (_, dialogText: unknown) => {
     const sourcePath = app.isPackaged
       ? join(process.resourcesPath, "extension.zip")
       : join(app.getAppPath(), "resources", "extension.zip");
@@ -21,10 +27,11 @@ export function registerAppHandlers(): void {
       return false;
     }
 
+    const text = resolveDialogText(dialogText, EXPORT_EXTENSION_DIALOG);
     const result = await dialog.showSaveDialog({
-      title: "Export Companion Browser Extension",
+      title: text.title,
       defaultPath: "CointMU-Extension.zip",
-      filters: [{ name: "ZIP Archive", extensions: ["zip"] }],
+      filters: [{ name: text.filterName, extensions: ["zip"] }],
     });
 
     if (result.canceled || !result.filePath) {

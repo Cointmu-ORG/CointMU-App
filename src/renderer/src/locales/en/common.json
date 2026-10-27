@@ -47,5 +47,12 @@
   "activity": {
     "sentCmu": "Sent CMU",
     "to": "To {{address}}"
+  },
+  "dialog": {
+    "exportExtensionTitle": "Export Companion Browser Extension",
+    "zipFilter": "ZIP Archive",
+    "exportKeystoreTitle": "Export Keystore",
+    "importKeystoreTitle": "Import Keystore",
+    "jsonFilter": "JSON"
   }
 }

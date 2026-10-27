@@ -141,3 +141,13 @@ export type BootnodeSaveResult =
       readonly error: BootnodeSaveError;
       readonly invalid: readonly InvalidBootnodeEntry[];
     };
+
+/**
+ * Localized text for a native file dialog, sent by the renderer because main
+ * has no i18n runtime. Main validates it and keeps the file extensions itself.
+ */
+export interface DialogText {
+  readonly title: string;
+  /** Label of the single file-type filter, e.g. "JSON". */
+  readonly filterName: string;
+}

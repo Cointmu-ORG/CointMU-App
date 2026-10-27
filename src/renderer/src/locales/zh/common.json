@@ -47,5 +47,12 @@
   "activity": {
     "sentCmu": "已发送 CMU",
     "to": "发送至 {{address}}"
+  },
+  "dialog": {
+    "exportExtensionTitle": "导出伴侣浏览器扩展",
+    "zipFilter": "ZIP 压缩包",
+    "exportKeystoreTitle": "导出密钥库",
+    "importKeystoreTitle": "导入密钥库",
+    "jsonFilter": "JSON"
   }
 }

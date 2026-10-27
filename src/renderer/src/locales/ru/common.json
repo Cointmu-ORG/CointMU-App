@@ -47,5 +47,12 @@
   "activity": {
     "sentCmu": "Отправлено CMU",
     "to": "Кому: {{address}}"
+  },
+  "dialog": {
+    "exportExtensionTitle": "Экспорт расширения для браузера",
+    "zipFilter": "Архив ZIP",
+    "exportKeystoreTitle": "Экспорт keystore",
+    "importKeystoreTitle": "Импорт keystore",
+    "jsonFilter": "JSON"
   }
 }
