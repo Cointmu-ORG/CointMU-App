@@ -1,11 +1,13 @@
 import type {
   BootnodeSaveResult,
   BootnodeState,
+  DialogText,
   JsonRpcEnvelope,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
   TelemetryState,
+  WalletActivity,
 } from "../bridge/types";
 
 interface UpdaterProgress {
@@ -75,6 +77,7 @@ interface CointmuAPI {
   saveKeystore: (
     keystoreJson: string,
     filename: string,
+    dialogText: DialogText,
   ) => Promise<{
     success: boolean;
     path?: string;
@@ -82,11 +85,11 @@ interface CointmuAPI {
     error?: string;
   }>;
   clearAllData: () => Promise<{ success: boolean; error?: string }>;
-  exportExtensionZip: () => Promise<boolean>;
+  exportExtensionZip: (dialogText: DialogText) => Promise<boolean>;
   getDatadir: () => Promise<string>;
   getChainDbSize: () => Promise<number>;
   openDataFolder: () => Promise<string>;
-  openKeystoreFile: () => Promise<{
+  openKeystoreFile: (dialogText: DialogText) => Promise<{
     success: boolean;
     data?: string;
     canceled?: boolean;
@@ -96,21 +99,7 @@ interface CointmuAPI {
     encrypt: (secret: string, password: string) => Promise<string>;
     decrypt: (payload: string, password: string) => Promise<string>;
     verify: (payload: string, password: string) => Promise<boolean>;
-    getActivity: (addresses: string[]) => Promise<
-      {
-        id: string;
-        type: "mining" | "send" | "receive" | "contract";
-        title: string;
-        subtitle: string;
-        amount: string;
-        timestamp: number;
-        timestampStr: string;
-        blockNumber?: number;
-        hash?: string;
-        from?: string;
-        to?: string;
-      }[]
-    >;
+    getActivity: (addresses: string[]) => Promise<WalletActivity[]>;
   };
   updater: {
     check: () => Promise<void>;

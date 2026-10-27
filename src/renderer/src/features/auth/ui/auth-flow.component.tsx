@@ -91,7 +91,10 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
 
   const handleSelectKeystore = async (): Promise<void> => {
     setError(null);
-    const result = await window.api.openKeystoreFile();
+    const result = await window.api.openKeystoreFile({
+      title: t("common:dialog.importKeystoreTitle"),
+      filterName: t("common:dialog.jsonFilter"),
+    });
     if (!result.success || !result.data) return;
     setKeystoreJson(result.data);
   };

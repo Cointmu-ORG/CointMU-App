@@ -213,7 +213,10 @@ function WalletPage({
 
   const handleImportKeystoreFile = async (): Promise<void> => {
     setModalState("NONE");
-    const result = await window.api.openKeystoreFile();
+    const result = await window.api.openKeystoreFile({
+      title: t("common:dialog.importKeystoreTitle"),
+      filterName: t("common:dialog.jsonFilter"),
+    });
     if (!result.success || !result.data) return;
     setKeystoreJson(result.data);
   };

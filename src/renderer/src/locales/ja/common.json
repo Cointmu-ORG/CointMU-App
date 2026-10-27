@@ -46,6 +46,28 @@
   },
   "activity": {
     "sentCmu": "CMU を送信",
-    "to": "宛先 {{address}}"
+    "to": "宛先 {{address}}",
+    "receivedCmu": "CMU を受信",
+    "contractCall": "コントラクト呼び出し",
+    "contractDeployment": "コントラクトのデプロイ",
+    "miningReward": "マイニング報酬",
+    "from": "送信元 {{address}}",
+    "hash": "ハッシュ {{hash}}...",
+    "fromMiningPool": "マイニングプールから · ブロック #{{block}}",
+    "confirmations_other": "{{count}} 件の確認"
+  },
+  "dialog": {
+    "exportExtensionTitle": "コンパニオンブラウザ拡張機能をエクスポート",
+    "zipFilter": "ZIP アーカイブ",
+    "exportKeystoreTitle": "キーストアをエクスポート",
+    "importKeystoreTitle": "キーストアをインポート",
+    "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "ウォレットデータが破損しています。",
+    "WALLET_UNSUPPORTED_FORMAT": "このウォレット形式はサポートされていません。",
+    "WALLET_INCORRECT_PASSWORD": "パスワードが正しくありません。",
+    "MINING_NO_REWARD_ADDRESS": "マイニングの報酬アドレスが設定されていません。マイニング設定で設定してください。",
+    "decryptFailed": "ウォレットを復号できませんでした。"
   }
 }

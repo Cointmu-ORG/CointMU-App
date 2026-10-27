@@ -2,6 +2,10 @@ import { ipcMain, dialog } from "electron";
 import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 import type { AppStore } from "../services/appStore";
+import { resolveDialogText } from "./dialogText";
+
+const EXPORT_KEYSTORE_DIALOG = { title: "Export Keystore", filterName: "JSON" };
+const IMPORT_KEYSTORE_DIALOG = { title: "Import Keystore", filterName: "JSON" };
 
 /**
  * Registers keystore export/import dialogs and the wipe of stored wallet data.
@@ -11,11 +15,12 @@ import type { AppStore } from "../services/appStore";
 export function registerWalletHandlers(store: AppStore): void {
   ipcMain.handle(
     "dialog:saveKeystore",
-    async (_, keystoreJson: string, filename: string) => {
+    async (_, keystoreJson: string, filename: string, dialogText: unknown) => {
+      const text = resolveDialogText(dialogText, EXPORT_KEYSTORE_DIALOG);
       const result = await dialog.showSaveDialog({
-        title: "Export Keystore",
+        title: text.title,
         defaultPath: filename,
-        filters: [{ name: "JSON", extensions: ["json"] }],
+        filters: [{ name: text.filterName, extensions: ["json"] }],
       });
       if (result.canceled || !result.filePath) {
         return { success: false, canceled: true };
@@ -41,11 +46,12 @@ export function registerWalletHandlers(store: AppStore): void {
     }
   });
 
-  ipcMain.handle("app:openKeystore", async () => {
+  ipcMain.handle("app:openKeystore", async (_, dialogText: unknown) => {
+    const text = resolveDialogText(dialogText, IMPORT_KEYSTORE_DIALOG);
     const result = await dialog.showOpenDialog({
-      title: "Import Keystore",
+      title: text.title,
       properties: ["openFile"],
-      filters: [{ name: "JSON", extensions: ["json"] }],
+      filters: [{ name: text.filterName, extensions: ["json"] }],
     });
     if (result.canceled || result.filePaths.length === 0) {
       return { success: false, canceled: true };

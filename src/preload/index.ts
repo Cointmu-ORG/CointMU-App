@@ -12,11 +12,13 @@ import type {
   AppInfo,
   BootnodeSaveResult,
   BootnodeState,
+  DialogText,
   JsonRpcEnvelope,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
   TelemetryState,
+  WalletActivity,
 } from "../bridge/types";
 
 const appInfo: AppInfo = ipcRenderer.sendSync(SYSTEM_CHANNELS.GET_APP_INFO);
@@ -97,27 +99,36 @@ const api = {
   saveKeystore: (
     keystoreJson: string,
     filename: string,
+    dialogText: DialogText,
   ): Promise<{
     success: boolean;
     path?: string;
     canceled?: boolean;
     error?: string;
-  }> => ipcRenderer.invoke("dialog:saveKeystore", keystoreJson, filename),
+  }> =>
+    ipcRenderer.invoke(
+      "dialog:saveKeystore",
+      keystoreJson,
+      filename,
+      dialogText,
+    ),
   clearAllData: (): Promise<{ success: boolean; error?: string }> =>
     ipcRenderer.invoke("wallet:clearAllData"),
-  exportExtensionZip: (): Promise<boolean> =>
-    ipcRenderer.invoke("export-extension-zip"),
+  exportExtensionZip: (dialogText: DialogText): Promise<boolean> =>
+    ipcRenderer.invoke("export-extension-zip", dialogText),
   getDatadir: (): Promise<string> => ipcRenderer.invoke("app:getDatadir"),
   getChainDbSize: (): Promise<number> =>
     ipcRenderer.invoke("app:getChainDbSize"),
   openDataFolder: (): Promise<string> =>
     ipcRenderer.invoke("app:openDataFolder"),
-  openKeystoreFile: (): Promise<{
+  openKeystoreFile: (
+    dialogText: DialogText,
+  ): Promise<{
     success: boolean;
     data?: string;
     canceled?: boolean;
     error?: string;
-  }> => ipcRenderer.invoke("app:openKeystore"),
+  }> => ipcRenderer.invoke("app:openKeystore", dialogText),
   wallet: {
     encrypt: (secret: string, password: string): Promise<string> =>
       ipcRenderer.invoke("wallet:encrypt", secret, password),
@@ -125,7 +136,7 @@ const api = {
       ipcRenderer.invoke("wallet:decrypt", payload, password),
     verify: (payload: string, password: string): Promise<boolean> =>
       ipcRenderer.invoke("wallet:verify", payload, password),
-    getActivity: (addresses: string[]): Promise<any[]> =>
+    getActivity: (addresses: string[]): Promise<WalletActivity[]> =>
       ipcRenderer.invoke("wallet:getActivity", addresses),
   },
   updater: {

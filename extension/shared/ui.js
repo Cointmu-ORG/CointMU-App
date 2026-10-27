@@ -1,6 +1,6 @@
 "use strict";
 
-import { loadTranslations } from "./locale.js";
+import { formatMessage, loadTranslations } from "./locale.js";
 import { renderApprovalView } from "./approval-popup.js";
 
 /** Translation keys for bridge refusal codes sent by the desktop app. */
@@ -77,7 +77,7 @@ export async function initPopup() {
   const sendAmountInput = document.getElementById("send-amount-input");
 
   const btnApproveConfirm = document.getElementById("btn-approve-confirm");
-  const rejectTxBtn = document.getElementById("extension.wallet.rejectTx");
+  const rejectTxBtn = document.getElementById("reject-tx-btn");
 
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
@@ -117,7 +117,7 @@ export async function initPopup() {
     approvalView.classList.remove("hidden");
 
     const approvalElements = {
-      title: document.getElementById("extension.wallet.approveTx"),
+      title: document.getElementById("approval-title"),
       rows: document.getElementById("approval-rows"),
       warning: document.getElementById("approval-warning"),
       approve: btnApproveConfirm,
@@ -197,7 +197,10 @@ export async function initPopup() {
 
   const showConfirmModal = (message, title) => {
     return new Promise((resolve) => {
-      confirmModalTitle.textContent = title || "Are you sure?";
+      confirmModalTitle.textContent =
+        title ||
+        translations["extension.wallet.confirmTitle"] ||
+        "Are you sure?";
       confirmModalMessage.textContent = message;
       confirmModal.classList.remove("hidden");
 
@@ -229,7 +232,8 @@ export async function initPopup() {
     ];
     networkOptions.innerHTML = "";
 
-    let activeNetName = "Unknown Network";
+    let activeNetName =
+      translations["extension.wallet.unknownNetwork"] || "Unknown Network";
     [...baseNetworks, ...(res.customNetworks || [])].forEach((net) => {
       const li = document.createElement("li");
       li.dataset.value = net.id;
@@ -258,7 +262,8 @@ export async function initPopup() {
         const kebabBtn = document.createElement("button");
         kebabBtn.className = "kebab-trigger";
         kebabBtn.innerHTML = "&#8942;";
-        kebabBtn.title = "Options";
+        kebabBtn.title =
+          translations["extension.wallet.networkOptions"] || "Options";
 
         wrapper.appendChild(nameSpan);
         wrapper.appendChild(kebabBtn);
@@ -268,7 +273,8 @@ export async function initPopup() {
         actionsDiv.className = "kebab-actions hidden";
 
         const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
+        editBtn.textContent =
+          translations["extension.wallet.editBtn"] || "Edit";
         editBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           actionsDiv.classList.add("hidden");
@@ -284,13 +290,16 @@ export async function initPopup() {
 
         const deleteBtn = document.createElement("button");
         deleteBtn.className = "kebab-delete";
-        deleteBtn.textContent = "Delete";
+        deleteBtn.textContent =
+          translations["extension.wallet.deleteBtn"] || "Delete";
         deleteBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
           actionsDiv.classList.add("hidden");
           const confirmed = await showConfirmModal(
-            "Are you sure you want to delete this network?",
-            "Delete Network",
+            translations["extension.wallet.deleteNetworkConfirm"] ||
+              "Are you sure you want to delete this network?",
+            translations["extension.wallet.deleteNetworkBtn"] ||
+              "Delete Network",
           );
           if (confirmed) {
             chrome.runtime.sendMessage({
@@ -499,12 +508,18 @@ export async function initPopup() {
           .catch((err) => {
             console.error("Failed to fetch from custom RPC", err);
             if (currentAccountAddress === currentAddress) {
-              renderAssets("--", "Offline");
+              renderAssets(
+                "--",
+                translations["extension.wallet.offline"] || "Offline",
+              );
             }
           });
       } catch (err) {
         console.error("Failed to initialize provider", err);
-        renderAssets("--", "Offline");
+        renderAssets(
+          "--",
+          translations["extension.wallet.offline"] || "Offline",
+        );
       }
     } else if (
       res.activeNetworkId === "desktop_connection" &&
@@ -586,6 +601,7 @@ export async function initPopup() {
           "Link to Desktop App";
         alert(
           (res && res.error) ||
+            translations["extension.wallet.desktopUnreachable"] ||
             "Could not reach CointMU Desktop App. Make sure it's running and try again.",
         );
       }
@@ -629,7 +645,9 @@ export async function initPopup() {
     const chainId = document.getElementById("chain-id-input").value.trim();
     if (!name || !rpcUrl) {
       if (networkErrorMsg) {
-        networkErrorMsg.textContent = "Name and RPC URL are required.";
+        networkErrorMsg.textContent =
+          translations["extension.wallet.networkFieldsRequired"] ||
+          "Name and RPC URL are required.";
         networkErrorMsg.classList.remove("hidden");
       }
       return;
@@ -639,6 +657,7 @@ export async function initPopup() {
     if (!chainId || isNaN(parsedChainId) || parsedChainId <= 0) {
       if (networkErrorMsg) {
         networkErrorMsg.textContent =
+          translations["extension.wallet.chainIdInvalid"] ||
           "Chain ID must be a valid positive number.";
         networkErrorMsg.classList.remove("hidden");
       }
@@ -684,7 +703,10 @@ export async function initPopup() {
       const to = sendToInput.value.trim();
       const amount = sendAmountInput.value.trim();
       if (!to || !amount || isNaN(amount)) {
-        alert("Valid recipient and amount are required");
+        alert(
+          translations["extension.wallet.sendFieldsRequired"] ||
+            "Valid recipient and amount are required",
+        );
         return;
       }
 
@@ -707,16 +729,28 @@ export async function initPopup() {
             translations["extension.wallet.sendConfirmBtn"] || "Confirm";
           if (res && res.success) {
             alert(
-              (translations["extension.wallet.sendSuccess"] ||
-                "Transaction Sent!") + (res.hash ? " Hash: " + res.hash : ""),
+              res.hash
+                ? formatMessage(
+                    translations["extension.wallet.sendSuccessWithHash"] ||
+                      "Transaction Sent! Hash: {{hash}}",
+                    { hash: res.hash },
+                  )
+                : translations["extension.wallet.sendSuccess"] ||
+                    "Transaction Sent!",
             );
             sendCancelBtn.click();
           } else {
             alert(
-              (translations["extension.wallet.sendFailed"] ||
-                "Transaction Failed") +
-                ": " +
-                (res?.error || "Unknown error"),
+              formatMessage(
+                translations["extension.wallet.sendFailedWithReason"] ||
+                  "Transaction Failed: {{reason}}",
+                {
+                  reason:
+                    res?.error ||
+                    translations["extension.wallet.unknownError"] ||
+                    "Unknown error",
+                },
+              ),
             );
           }
         },

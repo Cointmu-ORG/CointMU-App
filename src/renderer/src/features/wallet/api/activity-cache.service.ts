@@ -1,6 +1,6 @@
-import { type ActivityData } from "@/shared/ui";
+import type { WalletActivity } from "@bridge/types";
 
-const activityCache = new Map<string, ActivityData[]>();
+const activityCache = new Map<string, WalletActivity[]>();
 const activityPollingIntervals = new Map<
   string,
   ReturnType<typeof setInterval>
@@ -13,19 +13,19 @@ export const ActivityCacheService = {
   /**
    * Retrieves the cached activity list for a given wallet address.
    * @param address - The wallet address used as the cache key.
-   * @returns The cached array of ActivityData, or undefined if not cached.
+   * @returns The cached array of WalletActivity, or undefined if not cached.
    */
-  getActivity: (address: string): ActivityData[] | undefined => {
+  getActivity: (address: string): WalletActivity[] | undefined => {
     return activityCache.get(address);
   },
 
   /**
    * Caches the activity list for a given wallet address.
    * @param address - The wallet address used as the cache key.
-   * @param data - The array of ActivityData to cache.
+   * @param data - The array of WalletActivity to cache.
    * @returns void
    */
-  setActivity: (address: string, data: ActivityData[]): void => {
+  setActivity: (address: string, data: WalletActivity[]): void => {
     activityCache.set(address, data);
   },
 
@@ -40,8 +40,8 @@ export const ActivityCacheService = {
    */
   startActivityPolling: (
     address: string,
-    fetcher: () => Promise<ActivityData[]>,
-    onData: (data: ActivityData[]) => void,
+    fetcher: () => Promise<WalletActivity[]>,
+    onData: (data: WalletActivity[]) => void,
     intervalMs: number,
   ): void => {
     if (activityPollingIntervals.has(address)) return;

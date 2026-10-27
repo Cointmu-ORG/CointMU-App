@@ -2,9 +2,6 @@ import type { JsonRpcEnvelope } from "../../bridge/types";
 import { isPrivilegedNodeMethod } from "../security/rpcMethodPolicy";
 import { callGethIpc, internalErrorEnvelope } from "./gethIpcClient";
 
-const SECONDS_PER_MINUTE = 60;
-const SECONDS_PER_HOUR = 3600;
-const SECONDS_PER_DAY = 86400;
 const GETH_IPC_DEFAULT_TIMEOUT_MS = 10_000;
 
 let gethIpcPath: string | null = null;
@@ -113,21 +110,4 @@ export function safeParseHex(val: string | undefined | null): number {
   if (!val || typeof val !== "string") return 0;
   const parsed = parseInt(val, 16);
   return isNaN(parsed) ? 0 : parsed;
-}
-
-/**
- * Formats a Unix timestamp in seconds into a human-readable relative age string
- * using second, minute, hour, and day granularities.
- * @param {number} timestamp - The Unix timestamp in seconds.
- * @returns {string} A relative age string such as '5s ago', '3m ago', '2h ago', or '1d ago'.
- */
-export function formatTimeAgo(timestamp: number): string {
-  const now = Math.floor(Date.now() / 1000);
-  const diff = now - timestamp;
-  if (diff < SECONDS_PER_MINUTE) return `${Math.max(1, diff)}s ago`;
-  if (diff < SECONDS_PER_HOUR)
-    return `${Math.floor(diff / SECONDS_PER_MINUTE)}m ago`;
-  if (diff < SECONDS_PER_DAY)
-    return `${Math.floor(diff / SECONDS_PER_HOUR)}h ago`;
-  return `${Math.floor(diff / SECONDS_PER_DAY)}d ago`;
 }

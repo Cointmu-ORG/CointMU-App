@@ -141,3 +141,66 @@ export type BootnodeSaveResult =
       readonly error: BootnodeSaveError;
       readonly invalid: readonly InvalidBootnodeEntry[];
     };
+
+/**
+ * Localized text for a native file dialog, sent by the renderer because main
+ * has no i18n runtime. Main validates it and keeps the file extensions itself.
+ */
+export interface DialogText {
+  readonly title: string;
+  /** Label of the single file-type filter, e.g. "JSON". */
+  readonly filterName: string;
+}
+
+/**
+ * Error codes main throws across `ipcMain.handle` in place of English text.
+ * Electron wraps the message on the way to the renderer, so the renderer finds
+ * the code anywhere in the message and localizes it.
+ */
+export const IpcErrorCode = {
+  WALLET_CORRUPT: "WALLET_CORRUPT",
+  WALLET_UNSUPPORTED_FORMAT: "WALLET_UNSUPPORTED_FORMAT",
+  WALLET_INCORRECT_PASSWORD: "WALLET_INCORRECT_PASSWORD",
+  MINING_NO_REWARD_ADDRESS: "MINING_NO_REWARD_ADDRESS",
+} as const;
+
+export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
+
+/** Payload of the `mining:status-changed` event. */
+export const MiningPowerStatus = {
+  MINING: "MINING",
+  PAUSED_BATTERY: "PAUSED_BATTERY",
+} as const;
+
+export type MiningPowerStatus =
+  (typeof MiningPowerStatus)[keyof typeof MiningPowerStatus];
+
+/** What a wallet activity row is; also the raw value of the CSV type column. */
+export const ActivityKind = {
+  SEND: "send",
+  RECEIVE: "receive",
+  CONTRACT_CALL: "contract_call",
+  CONTRACT_DEPLOY: "contract_deploy",
+  MINING_REWARD: "mining_reward",
+} as const;
+
+export type ActivityKind = (typeof ActivityKind)[keyof typeof ActivityKind];
+
+/**
+ * One wallet activity event from the main block scan. Data only: the
+ * renderer builds the localized title, subtitle and age from it.
+ */
+export interface WalletActivity {
+  readonly id: string;
+  readonly kind: ActivityKind;
+  /** CMU, two decimals. */
+  readonly amount: string;
+  /** Unix seconds of the containing block. */
+  readonly timestamp: number;
+  readonly blockNumber: number;
+  readonly confirmations: number;
+  readonly hash?: string;
+  readonly from?: string;
+  /** Empty for a contract deployment; the miner for a mining reward. */
+  readonly to: string;
+}

@@ -24,7 +24,9 @@ export function flattenObject(obj, prefix = "") {
 
 /**
  * Loads the English translation JSON file and flattens it for UI consumption.
- * Simultaneously updates all DOM elements with matching IDs.
+ * Sets the text of every `[data-i18n]` element, the title of every
+ * `[data-i18n-title]` element and the placeholder of every
+ * `[data-i18n-placeholder]` element whose key exists.
  * @returns {Promise<Object>} The flattened translations object.
  */
 export async function loadTranslations() {
@@ -34,18 +36,34 @@ export async function loadTranslations() {
     const json = await response.json();
     const translations = flattenObject(json);
 
-    document.querySelectorAll("[id]").forEach((el) => {
-      if (translations[el.id]) {
-        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-          el.placeholder = translations[el.id];
-        } else {
-          el.textContent = translations[el.id];
-        }
-      }
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const text = translations[el.dataset.i18n];
+      if (text) el.textContent = text;
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const text = translations[el.dataset.i18nTitle];
+      if (text) el.title = text;
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const text = translations[el.dataset.i18nPlaceholder];
+      if (text) el.placeholder = text;
     });
     return translations;
   } catch (err) {
     console.error("Error loading translations:", err);
     return {};
   }
+}
+
+/**
+ * Fills `{{name}}` placeholders in a translated message, i18next style, so a
+ * locale can move the value anywhere in the sentence.
+ * @param {string} template - The translated message.
+ * @param {Object<string, string>} values - Placeholder values by name.
+ * @returns {string} The message with every known placeholder replaced.
+ */
+export function formatMessage(template, values) {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, name) =>
+    name in values ? String(values[name]) : match,
+  );
 }

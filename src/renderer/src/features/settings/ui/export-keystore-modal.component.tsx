@@ -60,7 +60,10 @@ export function ExportKeystoreModal({
     try {
       const keystoreJson = await generateKeystore(account, password);
       const filename = `cointmu-keystore-${account.address}.json`;
-      const result = await window.api.saveKeystore(keystoreJson, filename);
+      const result = await window.api.saveKeystore(keystoreJson, filename, {
+        title: t("common:dialog.exportKeystoreTitle"),
+        filterName: t("common:dialog.jsonFilter"),
+      });
       if (result.success && result.path) {
         setSavedPath(result.path);
       } else if (result.canceled) {

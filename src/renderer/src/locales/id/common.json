@@ -46,6 +46,28 @@
   },
   "activity": {
     "sentCmu": "CMU terkirim",
-    "to": "Ke {{address}}"
+    "to": "Ke {{address}}",
+    "receivedCmu": "CMU diterima",
+    "contractCall": "Panggilan kontrak",
+    "contractDeployment": "Deploy kontrak",
+    "miningReward": "Hadiah mining",
+    "from": "Dari {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "Dari mining pool · blok #{{block}}",
+    "confirmations_other": "{{count}} konfirmasi"
+  },
+  "dialog": {
+    "exportExtensionTitle": "Ekspor Ekstensi Peramban Pendamping",
+    "zipFilter": "Arsip ZIP",
+    "exportKeystoreTitle": "Ekspor keystore",
+    "importKeystoreTitle": "Impor keystore",
+    "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "Data dompet rusak.",
+    "WALLET_UNSUPPORTED_FORMAT": "Format dompet ini tidak didukung.",
+    "WALLET_INCORRECT_PASSWORD": "Kata sandi salah.",
+    "MINING_NO_REWARD_ADDRESS": "Alamat hadiah mining belum diatur. Atur di Pengaturan Mining.",
+    "decryptFailed": "Dompet tidak dapat didekripsi."
   }
 }

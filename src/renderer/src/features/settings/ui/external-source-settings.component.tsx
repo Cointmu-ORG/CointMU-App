@@ -20,7 +20,10 @@ function ExternalSourceSettings(): JSX.Element {
   const handleExport = async (): Promise<void> => {
     setIsExporting(true);
     try {
-      await window.api.exportExtensionZip();
+      await window.api.exportExtensionZip({
+        title: t("common:dialog.exportExtensionTitle"),
+        filterName: t("common:dialog.zipFilter"),
+      });
     } finally {
       setIsExporting(false);
     }

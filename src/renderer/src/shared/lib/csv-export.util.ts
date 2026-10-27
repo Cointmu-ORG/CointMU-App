@@ -34,7 +34,7 @@ export function downloadActivityCsv(
   if (!history || history.length === 0) return;
 
   const rows = history.map((item) => [
-    item.type,
+    item.kind,
     item.title,
     item.subtitle,
     item.amount,

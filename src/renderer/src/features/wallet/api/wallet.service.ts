@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { GRADIENTS } from "../config/wallet.constants";
 import { Wallet, HDNodeWallet } from "ethers";
 import { getSetting, setSetting } from "@/shared/api";
+import { localizeIpcError } from "@/shared/lib";
 
 export interface DerivedAccount {
   index: number;
@@ -83,11 +84,18 @@ export function encryptSecret(
  * @param password - The password used to derive the decryption key.
  * @returns The recovered plaintext secret.
  */
-export function decryptSecret(
+export async function decryptSecret(
   payload: string,
   password: string,
 ): Promise<string> {
-  return window.api.wallet.decrypt(payload, password);
+  try {
+    return await window.api.wallet.decrypt(payload, password);
+  } catch (err) {
+    // Main rejects with a code; callers show err.message as-is.
+    throw new Error(localizeIpcError(err, "common:errors.decryptFailed"), {
+      cause: err,
+    });
+  }
 }
 
 /**
@@ -108,7 +116,7 @@ export function verifyPassword(
  * relevant secret with the supplied password and deriving at the account's
  * BIP44 index when the secret is a mnemonic. Imported accounts carry their own
  * encryptedKey; mnemonic-derived accounts decrypt the shared wallet payload.
- * Rejects with 'Incorrect password.' when decryption fails, and with 'Wallet is
+ * Rejects with the localized incorrect-password error when decryption fails, and with 'Wallet is
  * not unlocked' when no wallet payload is present.
  * @param account - The account whose private key should be revealed.
  * @param password - The password used to decrypt the wallet secret.
@@ -145,7 +153,7 @@ export async function revealPrivateKey(
 
 /**
  * Decrypts and returns the wallet's 12-word BIP39 recovery phrase. Rejects with
- * 'Incorrect password.' on a wrong password, 'Wallet is not unlocked' when no
+ * the localized incorrect-password error on a wrong password, 'Wallet is not unlocked' when no
  * vault is present, and 'This wallet has no recovery phrase.' for wallets that
  * were imported from a raw private key rather than a mnemonic.
  * @param password - The password used to decrypt the wallet vault.

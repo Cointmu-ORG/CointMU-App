@@ -46,6 +46,29 @@
   },
   "activity": {
     "sentCmu": "Sent CMU",
-    "to": "To {{address}}"
+    "to": "To {{address}}",
+    "receivedCmu": "Received CMU",
+    "contractCall": "Contract call",
+    "contractDeployment": "Contract deployment",
+    "miningReward": "Mining reward",
+    "from": "From {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "From mining pool · block #{{block}}",
+    "confirmations_one": "{{count}} confirmation",
+    "confirmations_other": "{{count}} confirmations"
+  },
+  "dialog": {
+    "exportExtensionTitle": "Export Companion Browser Extension",
+    "zipFilter": "ZIP Archive",
+    "exportKeystoreTitle": "Export Keystore",
+    "importKeystoreTitle": "Import Keystore",
+    "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "The wallet data is corrupt.",
+    "WALLET_UNSUPPORTED_FORMAT": "This wallet format is not supported.",
+    "WALLET_INCORRECT_PASSWORD": "Incorrect password.",
+    "MINING_NO_REWARD_ADDRESS": "No mining reward address configured. Set one in Mining Settings.",
+    "decryptFailed": "Could not decrypt the wallet."
   }
 }

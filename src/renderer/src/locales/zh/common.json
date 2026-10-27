@@ -46,6 +46,28 @@
   },
   "activity": {
     "sentCmu": "已发送 CMU",
-    "to": "发送至 {{address}}"
+    "to": "发送至 {{address}}",
+    "receivedCmu": "已收到 CMU",
+    "contractCall": "合约调用",
+    "contractDeployment": "合约部署",
+    "miningReward": "挖矿奖励",
+    "from": "来自 {{address}}",
+    "hash": "哈希 {{hash}}...",
+    "fromMiningPool": "来自矿池 · 区块 #{{block}}",
+    "confirmations_other": "{{count}} 次确认"
+  },
+  "dialog": {
+    "exportExtensionTitle": "导出伴侣浏览器扩展",
+    "zipFilter": "ZIP 压缩包",
+    "exportKeystoreTitle": "导出密钥库",
+    "importKeystoreTitle": "导入密钥库",
+    "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "钱包数据已损坏。",
+    "WALLET_UNSUPPORTED_FORMAT": "不支持此钱包格式。",
+    "WALLET_INCORRECT_PASSWORD": "密码错误。",
+    "MINING_NO_REWARD_ADDRESS": "未配置挖矿奖励地址。请在挖矿设置中设置。",
+    "decryptFailed": "无法解密钱包。"
   }
 }

@@ -24,6 +24,7 @@ import { detectSearchType } from "@/features/explorer";
 import { type DerivedAccount } from "@/features/wallet";
 import { formatBlockNumber } from "@/shared/lib";
 import { type ActivityData } from "@/shared/ui";
+import { ActivityKind } from "@bridge/types";
 import { Insights } from "@/features/explorer";
 import { ChainTimeline } from "@/features/explorer";
 import { Skeleton, SkeletonCard } from "@/shared/ui";
@@ -92,6 +93,7 @@ function ExplorerPage({
           const amountCmu = (parseInt(tx.value, 16) / 1e18).toFixed(4);
           txs.push({
             id: tx.hash,
+            kind: tx.to ? ActivityKind.SEND : ActivityKind.CONTRACT_DEPLOY,
             type: tx.to ? "send" : "contract",
             title: tx.to
               ? t("explorer:index.transaction")

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui";
 import { StatusPill } from "./status-pill.component";
 import { Settings } from "lucide-react";
+import { MiningPowerStatus } from "@bridge/types";
 
 interface MiningHeaderProps {
   isMining: boolean;
@@ -42,7 +43,7 @@ function MiningHeader({
             label={t("mining:header.statusMining")}
             pulse
           />
-        ) : powerStatus === "Paused (Battery)" ? (
+        ) : powerStatus === MiningPowerStatus.PAUSED_BATTERY ? (
           <StatusPill tone="warning" label={t("mining:header.pausedBattery")} />
         ) : (
           <StatusPill
