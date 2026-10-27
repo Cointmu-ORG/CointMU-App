@@ -1,5 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { rejectBridgeRpcMethod } from "./extensionBridgeRpc";
+
+// The real module downloads the Electron binary on first require (#74).
+vi.mock("electron", () => ({ BrowserWindow: { getAllWindows: vi.fn() } }));
 
 const EIP1193_UNSUPPORTED_METHOD = 4200;
 
