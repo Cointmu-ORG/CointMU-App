@@ -1,13 +1,25 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { loadTranslations } from "./locale.js";
+import { formatMessage, loadTranslations } from "./locale.js";
 
 const LOCALE = {
-  extension: { wallet: { send: "Send", deleteWalletBtn: "Delete Wallet" } },
+  extension: {
+    wallet: {
+      send: "Send",
+      deleteWalletBtn: "Delete Wallet",
+      networkNamePlaceholder: "e.g. My Testnet",
+    },
+  },
+};
+
+const DATASET_KEYS = {
+  "[data-i18n]": "i18n",
+  "[data-i18n-title]": "i18nTitle",
+  "[data-i18n-placeholder]": "i18nPlaceholder",
 };
 
 /** Stands in for an element with the given data-* attributes. */
 function fakeElement(dataset) {
-  return { dataset, textContent: "old", title: "old" };
+  return { dataset, textContent: "old", title: "old", placeholder: "old" };
 }
 
 function stubPage(elements) {
@@ -17,11 +29,7 @@ function stubPage(elements) {
   }));
   vi.stubGlobal("document", {
     querySelectorAll: (selector) =>
-      elements.filter((el) =>
-        selector === "[data-i18n]"
-          ? "i18n" in el.dataset
-          : "i18nTitle" in el.dataset,
-      ),
+      elements.filter((el) => DATASET_KEYS[selector] in el.dataset),
   });
 }
 
@@ -43,6 +51,17 @@ describe("loadTranslations", () => {
     expect(translations["extension.wallet.send"]).toBe("Send");
   });
 
+  it("sets data-i18n-placeholder placeholders", async () => {
+    const input = fakeElement({
+      i18nPlaceholder: "extension.wallet.networkNamePlaceholder",
+    });
+    stubPage([input]);
+
+    await loadTranslations();
+
+    expect(input.placeholder).toBe("e.g. My Testnet");
+  });
+
   it("keeps the markup text for a key en.json lacks", async () => {
     const label = fakeElement({ i18n: "extension.wallet.nope" });
     stubPage([label]);
@@ -50,5 +69,20 @@ describe("loadTranslations", () => {
     await loadTranslations();
 
     expect(label.textContent).toBe("old");
+  });
+});
+
+describe("formatMessage", () => {
+  it("fills named placeholders wherever the locale puts them", () => {
+    expect(
+      formatMessage("送金失敗：{{reason}}（{{code}}）", {
+        reason: "nonce",
+        code: 7,
+      }),
+    ).toBe("送金失敗：nonce（7）");
+  });
+
+  it("leaves an unknown placeholder in place", () => {
+    expect(formatMessage("Hash: {{hash}}", {})).toBe("Hash: {{hash}}");
   });
 });

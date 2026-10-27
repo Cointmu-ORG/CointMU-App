@@ -69,7 +69,24 @@
       "sendCancelBtn": "Cancel",
       "sendInProgress": "Sending...",
       "sendSuccess": "Transaction Sent!",
-      "sendFailed": "Transaction Failed"
+      "privKeyLabel": "Private Key",
+      "approveBtn": "Approve",
+      "networkNamePlaceholder": "e.g. My Testnet",
+      "confirmTitle": "Are you sure?",
+      "confirmBtn": "Confirm",
+      "unknownNetwork": "Unknown Network",
+      "networkOptions": "Options",
+      "editBtn": "Edit",
+      "deleteBtn": "Delete",
+      "deleteNetworkConfirm": "Are you sure you want to delete this network?",
+      "offline": "Offline",
+      "desktopUnreachable": "Could not reach CointMU Desktop App. Make sure it's running and try again.",
+      "networkFieldsRequired": "Name and RPC URL are required.",
+      "chainIdInvalid": "Chain ID must be a valid positive number.",
+      "sendFieldsRequired": "Valid recipient and amount are required",
+      "sendSuccessWithHash": "Transaction Sent! Hash: {{hash}}",
+      "sendFailedWithReason": "Transaction Failed: {{reason}}",
+      "unknownError": "Unknown error"
     }
   }
 }
