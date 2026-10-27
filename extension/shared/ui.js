@@ -77,7 +77,7 @@ export async function initPopup() {
   const sendAmountInput = document.getElementById("send-amount-input");
 
   const btnApproveConfirm = document.getElementById("btn-approve-confirm");
-  const rejectTxBtn = document.getElementById("extension.wallet.rejectTx");
+  const rejectTxBtn = document.getElementById("reject-tx-btn");
 
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
@@ -117,7 +117,7 @@ export async function initPopup() {
     approvalView.classList.remove("hidden");
 
     const approvalElements = {
-      title: document.getElementById("extension.wallet.approveTx"),
+      title: document.getElementById("approval-title"),
       rows: document.getElementById("approval-rows"),
       warning: document.getElementById("approval-warning"),
       approve: btnApproveConfirm,
@@ -290,7 +290,8 @@ export async function initPopup() {
           actionsDiv.classList.add("hidden");
           const confirmed = await showConfirmModal(
             "Are you sure you want to delete this network?",
-            "Delete Network",
+            translations["extension.wallet.deleteNetworkBtn"] ||
+              "Delete Network",
           );
           if (confirmed) {
             chrome.runtime.sendMessage({

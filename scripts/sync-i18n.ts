@@ -5,6 +5,7 @@ import {
   isResolvable,
   readRegisteredNamespaces,
 } from "./i18n/key-usage";
+import { findExtensionKeyGaps } from "./i18n/extension-keys";
 import {
   buildKeyIndex,
   findCatalogGaps,
@@ -17,6 +18,10 @@ const LOCALES_DIR = path.join(RENDERER_DIR, "locales");
 const I18N_CONFIG = path.join(RENDERER_DIR, "app/i18n.ts");
 const SOURCE_FILE = /\.tsx?$/;
 const EXCLUDED_FILE = /\.(test|spec)\.tsx?$|\.d\.ts$/;
+const EXTENSION_DIR = path.join(__dirname, "../extension");
+const EXTENSION_SOURCE_DIRS = ["popup", "shared", "background", "content"];
+const EXTENSION_SOURCE_FILE = /\.(js|html)$/;
+const EXTENSION_EXCLUDED_FILE = /\.test\.js$/;
 
 /**
  * Lists renderer source files that can reference translation keys.
@@ -108,5 +113,34 @@ function auditKeyUsage(): number {
   return unresolved;
 }
 
-const failures = auditCatalog() + auditPluralForms() + auditKeyUsage();
+/**
+ * Reports extension keys that its HTML/JS reference but en.json lacks, and
+ * en.json keys nothing references. The extension ships English only.
+ * @returns The number of missing plus unused keys.
+ */
+function auditExtensionKeys(): number {
+  const sources = EXTENSION_SOURCE_DIRS.flatMap((dir) =>
+    readdirSync(path.join(EXTENSION_DIR, dir))
+      .filter(
+        (file) =>
+          EXTENSION_SOURCE_FILE.test(file) &&
+          !EXTENSION_EXCLUDED_FILE.test(file),
+      )
+      .map((file) => readFileSync(path.join(EXTENSION_DIR, dir, file), "utf8")),
+  );
+  const locale: unknown = JSON.parse(
+    readFileSync(path.join(EXTENSION_DIR, "locales/en.json"), "utf8"),
+  );
+  const { missing, unused } = findExtensionKeyGaps(sources, locale);
+  for (const key of missing)
+    console.log(`  [extension/en.json] missing ${key}`);
+  for (const key of unused) console.log(`  [extension/en.json] unused ${key}`);
+  console.log(
+    `Extension keys: ${missing.length} missing, ${unused.length} unused.`,
+  );
+  return missing.length + unused.length;
+}
+
+const failures =
+  auditCatalog() + auditPluralForms() + auditKeyUsage() + auditExtensionKeys();
 process.exit(failures > 0 ? 1 : 0);

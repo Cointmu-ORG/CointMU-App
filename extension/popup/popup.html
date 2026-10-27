@@ -23,7 +23,7 @@
       </div>
       <div class="login-content">
         <div class="form-card">
-          <h2 id="extension.wallet.importPrivKey" class="login-title">
+          <h2 data-i18n="extension.wallet.importPrivKey" class="login-title">
             Import Private Key
           </h2>
           <div class="input-group">
@@ -36,10 +36,10 @@
             />
           </div>
           <button id="import-btn" class="btn primary-btn mt-4">
-            <span id="extension.wallet.importBtn">Login</span>
+            <span data-i18n="extension.wallet.importBtn">Login</span>
           </button>
           <button id="cancel-import-btn" class="btn secondary-btn mt-2">
-            <span id="extension.wallet.cancel">Cancel</span>
+            <span data-i18n="extension.wallet.cancel">Cancel</span>
           </button>
         </div>
       </div>
@@ -59,24 +59,27 @@
       </div>
       <div class="login-content">
         <div class="form-card">
-          <h2 id="extension.wallet.addWalletSelectionTitle" class="login-title">
+          <h2
+            data-i18n="extension.wallet.addWalletSelectionTitle"
+            class="login-title"
+          >
             Choose Wallet Type
           </h2>
           <p id="bridge-notice" class="bridge-notice hidden" role="status"></p>
           <div class="choice-list">
             <button id="select-import-btn" class="btn primary-btn">
-              <span id="extension.wallet.selectImportBtn"
+              <span data-i18n="extension.wallet.selectImportBtn"
                 >Import Private Key</span
               >
             </button>
             <button id="select-link-btn" class="btn secondary-btn">
-              <span id="extension.wallet.selectLinkBtn"
+              <span data-i18n="extension.wallet.selectLinkBtn"
                 >Link to Desktop App</span
               >
             </button>
           </div>
           <button id="cancel-selection-btn" class="btn text-btn">
-            <span id="extension.wallet.cancelSelectionBtn">Cancel</span>
+            <span data-i18n="extension.wallet.cancelSelectionBtn">Cancel</span>
           </button>
         </div>
       </div>
@@ -166,6 +169,7 @@
           id="delete-wallet-btn"
           class="icon-btn icon-btn--danger hidden"
           title="Delete Wallet"
+          data-i18n-title="extension.wallet.deleteWalletBtn"
         >
           <svg
             width="15"
@@ -186,7 +190,7 @@
 
       <!-- Balance -->
       <div class="hero-card">
-        <p class="balance-label" id="extension.wallet.totalBalance">
+        <p class="balance-label" data-i18n="extension.wallet.totalBalance">
           Total balance
         </p>
         <div id="balance-value" class="balance-display">0.00 CMU</div>
@@ -207,7 +211,7 @@
                 d="M5 10l7-7m0 0l7 7m-7-7v18"
               />
             </svg>
-            <span id="extension.wallet.send">Send</span>
+            <span data-i18n="extension.wallet.send">Send</span>
           </button>
           <button class="action-btn" id="action-receive">
             <svg
@@ -222,7 +226,7 @@
                 d="M19 14l-7 7m0 0l-7-7m7 7V3"
               />
             </svg>
-            <span id="extension.wallet.receive">Receive</span>
+            <span data-i18n="extension.wallet.receive">Receive</span>
           </button>
           <button class="action-btn" id="action-swap">
             <svg
@@ -237,7 +241,7 @@
                 d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
               />
             </svg>
-            <span id="extension.wallet.swap">Swap</span>
+            <span data-i18n="extension.wallet.swap">Swap</span>
           </button>
         </div>
       </div>
@@ -245,7 +249,9 @@
       <!-- Assets -->
       <div class="assets-section">
         <div class="assets-header">
-          <span id="extension.wallet.assets" class="assets-title">Assets</span>
+          <span data-i18n="extension.wallet.assets" class="assets-title"
+            >Assets</span
+          >
           <span id="assets-count" class="assets-count">0</span>
         </div>
         <div id="assets-list" class="assets-list">
@@ -279,7 +285,9 @@
             />
           </svg>
         </div>
-        <h2 id="extension.wallet.approveTx">Approve Transaction</h2>
+        <h2 id="approval-title" data-i18n="extension.wallet.approveTx">
+          Approve Transaction
+        </h2>
       </div>
 
       <div class="tx-content">
@@ -292,7 +300,11 @@
       </div>
 
       <div class="action-footer">
-        <button id="extension.wallet.rejectTx" class="btn danger-btn">
+        <button
+          id="reject-tx-btn"
+          class="btn danger-btn"
+          data-i18n="extension.wallet.rejectTx"
+        >
           Reject
         </button>
         <button id="btn-approve-confirm" class="btn success-btn">
@@ -315,11 +327,13 @@
       </div>
       <div class="login-content">
         <div class="form-card">
-          <h2 id="extension.wallet.addNetwork" class="login-title">
+          <h2 data-i18n="extension.wallet.addNetwork" class="login-title">
             Add Network
           </h2>
           <div class="input-group">
-            <label class="input-label">Network Name</label>
+            <label class="input-label" data-i18n="extension.wallet.networkName"
+              >Network Name</label
+            >
             <input
               type="text"
               id="network-name-input"
@@ -328,7 +342,9 @@
             />
           </div>
           <div class="input-group">
-            <label class="input-label">RPC URL</label>
+            <label class="input-label" data-i18n="extension.wallet.rpcUrl"
+              >RPC URL</label
+            >
             <input
               type="text"
               id="rpc-url-input"
@@ -337,7 +353,9 @@
             />
           </div>
           <div class="input-group">
-            <label class="input-label">Chain ID</label>
+            <label class="input-label" data-i18n="extension.wallet.chainId"
+              >Chain ID</label
+            >
             <input
               type="text"
               id="chain-id-input"
@@ -347,10 +365,10 @@
           </div>
           <div id="network-error-msg" class="hidden"></div>
           <button id="save-network-btn" class="btn primary-btn mt-4">
-            <span id="extension.wallet.saveNetwork">Save Network</span>
+            <span data-i18n="extension.wallet.saveNetwork">Save Network</span>
           </button>
           <button id="cancel-network-btn" class="btn secondary-btn mt-2">
-            <span id="extension.wallet.cancel">Cancel</span>
+            <span data-i18n="extension.wallet.cancel">Cancel</span>
           </button>
         </div>
       </div>
@@ -370,11 +388,13 @@
       </div>
       <div class="login-content">
         <div class="form-card">
-          <h2 id="extension.wallet.sendTitle" class="login-title">
+          <h2 data-i18n="extension.wallet.sendTitle" class="login-title">
             Send Asset
           </h2>
           <div class="input-group">
-            <label class="input-label">Recipient Address</label>
+            <label class="input-label" data-i18n="extension.wallet.sendToLabel"
+              >Recipient Address</label
+            >
             <input
               type="text"
               id="send-to-input"
@@ -383,7 +403,11 @@
             />
           </div>
           <div class="input-group">
-            <label class="input-label">Amount</label>
+            <label
+              class="input-label"
+              data-i18n="extension.wallet.sendAmountLabel"
+              >Amount</label
+            >
             <input
               type="number"
               id="send-amount-input"
@@ -393,10 +417,10 @@
             />
           </div>
           <button id="send-confirm-btn" class="btn primary-btn mt-4">
-            <span id="extension.wallet.sendConfirmBtn">Confirm</span>
+            <span data-i18n="extension.wallet.sendConfirmBtn">Confirm</span>
           </button>
           <button id="send-cancel-btn" class="btn secondary-btn mt-2">
-            <span id="extension.wallet.sendCancelBtn">Cancel</span>
+            <span data-i18n="extension.wallet.sendCancelBtn">Cancel</span>
           </button>
         </div>
       </div>

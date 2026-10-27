@@ -24,7 +24,8 @@ export function flattenObject(obj, prefix = "") {
 
 /**
  * Loads the English translation JSON file and flattens it for UI consumption.
- * Simultaneously updates all DOM elements with matching IDs.
+ * Sets the text of every `[data-i18n]` element and the title of every
+ * `[data-i18n-title]` element whose key exists.
  * @returns {Promise<Object>} The flattened translations object.
  */
 export async function loadTranslations() {
@@ -34,14 +35,13 @@ export async function loadTranslations() {
     const json = await response.json();
     const translations = flattenObject(json);
 
-    document.querySelectorAll("[id]").forEach((el) => {
-      if (translations[el.id]) {
-        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-          el.placeholder = translations[el.id];
-        } else {
-          el.textContent = translations[el.id];
-        }
-      }
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const text = translations[el.dataset.i18n];
+      if (text) el.textContent = text;
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const text = translations[el.dataset.i18nTitle];
+      if (text) el.title = text;
     });
     return translations;
   } catch (err) {
