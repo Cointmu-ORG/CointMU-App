@@ -46,7 +46,16 @@
   },
   "activity": {
     "sentCmu": "Sent CMU",
-    "to": "To {{address}}"
+    "to": "To {{address}}",
+    "receivedCmu": "Received CMU",
+    "contractCall": "Contract call",
+    "contractDeployment": "Contract deployment",
+    "miningReward": "Mining reward",
+    "from": "From {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "From mining pool · block #{{block}}",
+    "confirmations_one": "{{count}} confirmation",
+    "confirmations_other": "{{count}} confirmations"
   },
   "dialog": {
     "exportExtensionTitle": "Export Companion Browser Extension",

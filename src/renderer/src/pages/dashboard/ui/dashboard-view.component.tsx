@@ -17,7 +17,8 @@ import { useWalletUiStore } from "@/features/wallet";
 import { getTransactions } from "@/features/wallet";
 import { ActivityCacheService } from "@/features/wallet";
 import { type DerivedAccount } from "@/features/wallet";
-import { type ActivityData } from "@/shared/ui";
+import type { WalletActivity } from "@bridge/types";
+import { toActivityRow } from "@/features/wallet";
 import {
   formatBlockNumber,
   formatHashrate,
@@ -63,7 +64,7 @@ function DashboardPage({
   const loading = useAppStore((s) => s.loading);
   const balance = useAppStore((s) => s.balance);
   const recentBlocks = useRecentBlocks(blockHeight, isConnected);
-  const { t } = useTranslation(["common", "dashboard"]);
+  const { t, i18n } = useTranslation(["common", "dashboard"]);
 
   const { config } = useMiningControls();
   const telemetry = useMiningStats(config.cpuThreads);
@@ -74,7 +75,7 @@ function DashboardPage({
   const historyAddresses = resolveHistoryAddresses(historyFilter, accounts);
   const historyKey = historyAddresses.join(",");
 
-  const [activity, setActivity] = useState<ActivityData[]>([]);
+  const [activity, setActivity] = useState<WalletActivity[]>([]);
   useEffect(() => {
     const addresses = historyKey.length > 0 ? historyKey.split(",") : [];
     if (addresses.length === 0) {
@@ -88,8 +89,8 @@ function DashboardPage({
       setActivity(cached);
     }
 
-    const fetcher = (): Promise<ActivityData[]> => getTransactions(addresses);
-    const onData = (data: ActivityData[]): void => setActivity(data);
+    const fetcher = (): Promise<WalletActivity[]> => getTransactions(addresses);
+    const onData = (data: WalletActivity[]): void => setActivity(data);
 
     ActivityCacheService.startActivityPolling(
       combinedKey,
@@ -103,7 +104,11 @@ function DashboardPage({
     };
   }, [historyKey]);
 
-  const activityPagination = usePagination(activity, ACTIVITY_PAGE_SIZE);
+  // Built every render: the dashboard tick keeps the ages current.
+  const activityRows = activity.map((item) =>
+    toActivityRow(item, t, i18n.language),
+  );
+  const activityPagination = usePagination(activityRows, ACTIVITY_PAGE_SIZE);
 
   const [, setCurrentTime] = useState<number>(Date.now());
   useEffect(() => {
@@ -297,7 +302,7 @@ function DashboardPage({
           />
           <ActivityFeed
             isConnected={isConnected}
-            activity={activity}
+            activity={activityRows}
             pageItems={activityPagination.pageItems}
             currentPage={activityPagination.currentPage}
             totalPages={activityPagination.totalPages}

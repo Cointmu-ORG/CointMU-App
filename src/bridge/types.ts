@@ -174,3 +174,33 @@ export const MiningPowerStatus = {
 
 export type MiningPowerStatus =
   (typeof MiningPowerStatus)[keyof typeof MiningPowerStatus];
+
+/** What a wallet activity row is; also the raw value of the CSV type column. */
+export const ActivityKind = {
+  SEND: "send",
+  RECEIVE: "receive",
+  CONTRACT_CALL: "contract_call",
+  CONTRACT_DEPLOY: "contract_deploy",
+  MINING_REWARD: "mining_reward",
+} as const;
+
+export type ActivityKind = (typeof ActivityKind)[keyof typeof ActivityKind];
+
+/**
+ * One wallet activity event from the main block scan. Data only: the
+ * renderer builds the localized title, subtitle and age from it.
+ */
+export interface WalletActivity {
+  readonly id: string;
+  readonly kind: ActivityKind;
+  /** CMU, two decimals. */
+  readonly amount: string;
+  /** Unix seconds of the containing block. */
+  readonly timestamp: number;
+  readonly blockNumber: number;
+  readonly confirmations: number;
+  readonly hash?: string;
+  readonly from?: string;
+  /** Empty for a contract deployment; the miner for a mining reward. */
+  readonly to: string;
+}

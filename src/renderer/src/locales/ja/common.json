@@ -46,7 +46,15 @@
   },
   "activity": {
     "sentCmu": "CMU を送信",
-    "to": "宛先 {{address}}"
+    "to": "宛先 {{address}}",
+    "receivedCmu": "CMU を受信",
+    "contractCall": "コントラクト呼び出し",
+    "contractDeployment": "コントラクトのデプロイ",
+    "miningReward": "マイニング報酬",
+    "from": "送信元 {{address}}",
+    "hash": "ハッシュ {{hash}}...",
+    "fromMiningPool": "マイニングプールから · ブロック #{{block}}",
+    "confirmations_other": "{{count}} 件の確認"
   },
   "dialog": {
     "exportExtensionTitle": "コンパニオンブラウザ拡張機能をエクスポート",

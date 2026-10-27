@@ -1,4 +1,4 @@
-import { type ActivityData } from "@/shared/ui";
+import type { WalletActivity } from "@bridge/types";
 
 /**
  * Retrieves the aggregated local transaction history across the supplied wallet
@@ -10,7 +10,7 @@ import { type ActivityData } from "@/shared/ui";
  */
 export async function getTransactions(
   addresses: string[],
-): Promise<ActivityData[]> {
+): Promise<WalletActivity[]> {
   if (!addresses || addresses.length === 0) return [];
   try {
     const activities = await window.api.wallet.getActivity(addresses);

@@ -46,7 +46,15 @@
   },
   "activity": {
     "sentCmu": "已发送 CMU",
-    "to": "发送至 {{address}}"
+    "to": "发送至 {{address}}",
+    "receivedCmu": "已收到 CMU",
+    "contractCall": "合约调用",
+    "contractDeployment": "合约部署",
+    "miningReward": "挖矿奖励",
+    "from": "来自 {{address}}",
+    "hash": "哈希 {{hash}}...",
+    "fromMiningPool": "来自矿池 · 区块 #{{block}}",
+    "confirmations_other": "{{count}} 次确认"
   },
   "dialog": {
     "exportExtensionTitle": "导出伴侣浏览器扩展",

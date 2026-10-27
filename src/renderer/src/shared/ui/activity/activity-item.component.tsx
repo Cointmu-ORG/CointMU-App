@@ -1,11 +1,14 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
+import type { ActivityKind } from "@bridge/types";
 import { ContractIcon, MiningIcon, ReceiveIcon, SendIcon } from "../icons";
 
 export type ActivityType = "mining" | "send" | "receive" | "contract";
 
 export interface ActivityData {
   id: string;
+  /** Raw kind code; exported as-is in the CSV type column. */
+  kind: ActivityKind;
   type: ActivityType;
   title: string;
   subtitle: string;

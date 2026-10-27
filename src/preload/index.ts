@@ -18,6 +18,7 @@ import type {
   NodeRecoveryEvent,
   QueuedReport,
   TelemetryState,
+  WalletActivity,
 } from "../bridge/types";
 
 const appInfo: AppInfo = ipcRenderer.sendSync(SYSTEM_CHANNELS.GET_APP_INFO);
@@ -135,7 +136,7 @@ const api = {
       ipcRenderer.invoke("wallet:decrypt", payload, password),
     verify: (payload: string, password: string): Promise<boolean> =>
       ipcRenderer.invoke("wallet:verify", payload, password),
-    getActivity: (addresses: string[]): Promise<any[]> =>
+    getActivity: (addresses: string[]): Promise<WalletActivity[]> =>
       ipcRenderer.invoke("wallet:getActivity", addresses),
   },
   updater: {

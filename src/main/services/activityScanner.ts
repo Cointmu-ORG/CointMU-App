@@ -1,32 +1,10 @@
-import {
-  callGethRpc,
-  toHex,
-  safeParseHex,
-  formatTimeAgo,
-} from "../utils/rpcUtils";
+import { ActivityKind, type WalletActivity } from "../../bridge/types";
+import { callGethRpc, toHex, safeParseHex } from "../utils/rpcUtils";
 
 const ACTIVITY_BLOCK_SCAN_DEPTH = 500;
 const MINING_BLOCK_REWARD = "2.00";
 const INSIGHTS_BLOCK_WINDOW = 12;
 const BLOCK_TIME_REFERENCE_DEPTH = 100;
-
-/**
- * A single wallet activity event representing a mining reward, a token transfer,
- * or a contract interaction extracted from on-chain block data.
- */
-interface ActivityItem {
-  id: string;
-  type: "mining" | "contract" | "send" | "receive";
-  title: string;
-  subtitle: string;
-  amount: string;
-  timestamp: number;
-  blockNumber: number;
-  timestampStr: string;
-  hash?: string;
-  from?: string;
-  to: string;
-}
 
 /**
  * A summarized block record returned as part of the network insights payload.
@@ -64,26 +42,39 @@ const OFFLINE_INSIGHTS: NetworkInsights = {
   coinbase: "",
 };
 
+/** Block fields every activity row of that block shares. */
+interface BlockContext {
+  timestamp: number;
+  blockNumber: number;
+  confirmations: number;
+}
+
+function classifyKind(
+  tx: { to?: string | null; input?: string },
+  isFrom: boolean,
+): ActivityKind {
+  if (!isFrom) return ActivityKind.RECEIVE;
+  if (!tx.to) return ActivityKind.CONTRACT_DEPLOY;
+  if (tx.input && tx.input !== "0x") return ActivityKind.CONTRACT_CALL;
+  return ActivityKind.SEND;
+}
+
 /**
- * Classifies a raw RPC transaction object into a typed ActivityItem based on its
+ * Classifies a raw RPC transaction into a WalletActivity based on its
  * direction and input data relative to the given set of owned addresses.
  * Returns null when neither the sender nor the recipient belongs to the owned set.
  * @param {any} tx - The raw RPC transaction object from eth_getBlockByNumber.
  * @param {Set<string>} targets - The lowercased set of owned wallet addresses.
- * @param {number} timestamp - The Unix timestamp of the containing block.
- * @param {number} blockNum - The block number of the containing block.
- * @param {string} timestampStr - The pre-formatted timestamp display string.
- * @returns {ActivityItem | null} The classified activity item, or null when not relevant.
+ * @param {BlockContext} block - Timestamp, number and confirmations of the block.
+ * @returns {WalletActivity | null} The classified activity, or null when not relevant.
  */
 function classifyTransaction(
   tx: any,
   targets: Set<string>,
-  timestamp: number,
-  blockNum: number,
-  timestampStr: string,
-): ActivityItem | null {
-  const isFrom = tx.from && targets.has(tx.from.toLowerCase());
-  const isTo = tx.to && targets.has(tx.to.toLowerCase());
+  block: BlockContext,
+): WalletActivity | null {
+  const isFrom = Boolean(tx.from && targets.has(tx.from.toLowerCase()));
+  const isTo = Boolean(tx.to && targets.has(tx.to.toLowerCase()));
   if (!isFrom && !isTo) return null;
 
   let amount = "0.00";
@@ -91,66 +82,14 @@ function classifyTransaction(
     amount = (parseInt(tx.value, 16) / 1e18).toFixed(2);
   }
 
-  if (isFrom && !tx.to) {
-    return {
-      id: tx.hash,
-      type: "contract",
-      title: "Contract deployment",
-      subtitle: `Hash ${tx.hash.substring(0, 8)}...`,
-      amount,
-      timestamp,
-      blockNumber: blockNum,
-      timestampStr,
-      hash: tx.hash,
-      from: tx.from,
-      to: "",
-    };
-  }
-
-  if (isFrom && tx.to && tx.input && tx.input !== "0x") {
-    return {
-      id: tx.hash,
-      type: "contract",
-      title: "Contract call",
-      subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
-      amount,
-      timestamp,
-      blockNumber: blockNum,
-      timestampStr,
-      hash: tx.hash,
-      from: tx.from,
-      to: tx.to,
-    };
-  }
-
-  if (isFrom) {
-    return {
-      id: tx.hash,
-      type: "send",
-      title: "Sent CMU",
-      subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
-      amount,
-      timestamp,
-      blockNumber: blockNum,
-      timestampStr,
-      hash: tx.hash,
-      from: tx.from,
-      to: tx.to,
-    };
-  }
-
   return {
     id: tx.hash,
-    type: "receive",
-    title: "Received CMU",
-    subtitle: `From ${tx.from.substring(0, 6)}...${tx.from.substring(tx.from.length - 4)}`,
+    kind: classifyKind(tx, isFrom),
     amount,
-    timestamp,
-    blockNumber: blockNum,
-    timestampStr,
+    ...block,
     hash: tx.hash,
     from: tx.from,
-    to: tx.to,
+    to: tx.to ?? "",
   };
 }
 
@@ -160,12 +99,12 @@ function classifyTransaction(
  * transaction and mining reward found. Results are sorted newest-first.
  * @param {number} rpcPort - The resolved RPC port of the running Geth node.
  * @param {string[]} addresses - The wallet addresses to scan activity for.
- * @returns {Promise<ActivityItem[]>} The wallet activity items, newest first.
+ * @returns {Promise<WalletActivity[]>} The wallet activity items, newest first.
  */
 export async function scanWalletActivity(
   rpcPort: number,
   addresses: string[],
-): Promise<ActivityItem[]> {
+): Promise<WalletActivity[]> {
   try {
     if (!Array.isArray(addresses) || addresses.length === 0) return [];
     const targets = new Set(addresses.map((addr) => addr.toLowerCase()));
@@ -175,7 +114,7 @@ export async function scanWalletActivity(
     const latest = parseInt(latestBlockHex, 16);
     const start = Math.max(0, latest - ACTIVITY_BLOCK_SCAN_DEPTH);
 
-    const activities: ActivityItem[] = [];
+    const activities: WalletActivity[] = [];
 
     for (let i = latest; i > start; i--) {
       const block = await callGethRpc(rpcPort, "eth_getBlockByNumber", [
@@ -185,33 +124,25 @@ export async function scanWalletActivity(
       if (!block) continue;
 
       const blockNum = parseInt(block.number, 16);
-      const timestamp = parseInt(block.timestamp, 16);
-      const confs = latest - blockNum + 1;
-      const timestampStr = `${formatTimeAgo(timestamp)} · ${confs} confs`;
+      const context: BlockContext = {
+        timestamp: parseInt(block.timestamp, 16),
+        blockNumber: blockNum,
+        confirmations: latest - blockNum + 1,
+      };
 
       if (block.miner && targets.has(block.miner.toLowerCase())) {
         activities.push({
           id: `block-${block.number}`,
-          type: "mining",
-          title: "Mining reward",
-          subtitle: `From mining pool · block #${blockNum}`,
+          kind: ActivityKind.MINING_REWARD,
           amount: MINING_BLOCK_REWARD,
-          timestamp,
-          blockNumber: blockNum,
-          timestampStr,
+          ...context,
           to: block.miner,
         });
       }
 
       if (block.transactions && Array.isArray(block.transactions)) {
         for (const tx of block.transactions) {
-          const item = classifyTransaction(
-            tx,
-            targets,
-            timestamp,
-            blockNum,
-            timestampStr,
-          );
+          const item = classifyTransaction(tx, targets, context);
           if (item) activities.push(item);
         }
       }
@@ -372,4 +303,4 @@ export async function fetchNetworkInsights(
   }
 }
 
-export type { ActivityItem, NetworkInsights, InsightBlock };
+export type { NetworkInsights, InsightBlock };

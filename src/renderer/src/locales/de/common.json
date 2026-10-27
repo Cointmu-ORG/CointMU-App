@@ -46,7 +46,16 @@
   },
   "activity": {
     "sentCmu": "CMU gesendet",
-    "to": "An {{address}}"
+    "to": "An {{address}}",
+    "receivedCmu": "CMU empfangen",
+    "contractCall": "Vertragsaufruf",
+    "contractDeployment": "Vertragsbereitstellung",
+    "miningReward": "Mining-Belohnung",
+    "from": "Von {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "Vom Mining-Pool · Block #{{block}}",
+    "confirmations_one": "{{count}} Bestätigung",
+    "confirmations_other": "{{count}} Bestätigungen"
   },
   "dialog": {
     "exportExtensionTitle": "Companion-Browser-Erweiterung exportieren",

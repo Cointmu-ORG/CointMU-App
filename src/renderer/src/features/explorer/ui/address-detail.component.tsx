@@ -7,10 +7,11 @@ import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { getAddressSummary } from "../api/explorer.service";
 import { AccountIcon, type DerivedAccount } from "@/features/wallet";
-import { getTransactions } from "@/features/wallet";
+import { getTransactions, toActivityRow } from "@/features/wallet";
+import type { WalletActivity } from "@bridge/types";
 import { usePagination } from "@/shared/lib";
 import { formatAge } from "@/shared/lib";
-import { Sparkline, Pagination, type ActivityData } from "@/shared/ui";
+import { Sparkline, Pagination } from "@/shared/ui";
 import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 
@@ -40,7 +41,7 @@ function AddressDetail({
   const { t, i18n } = useTranslation();
   const [balance, setBalance] = useState<string>("0.00");
   const [isContract, setIsContract] = useState<boolean>(false);
-  const [transactions, setTransactions] = useState<ActivityData[]>([]);
+  const [activity, setActivity] = useState<WalletActivity[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ function AddressDetail({
       }
       setBalance(summary.balance);
       setIsContract(summary.isContract);
-      setTransactions(txs);
+      setActivity(txs);
       setLoading(false);
     };
 
@@ -66,6 +67,11 @@ function AddressDetail({
       mounted = false;
     };
   }, [address]);
+
+  const transactions = useMemo(
+    () => activity.map((tx) => toActivityRow(tx, t, i18n.language)),
+    [activity, t, i18n.language],
+  );
 
   const chartData = useMemo(() => {
     const currentBalance = parseFloat(balance.replace(/,/g, "")) || 0;

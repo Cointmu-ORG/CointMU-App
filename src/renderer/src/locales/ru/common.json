@@ -46,7 +46,18 @@
   },
   "activity": {
     "sentCmu": "Отправлено CMU",
-    "to": "Кому: {{address}}"
+    "to": "Кому: {{address}}",
+    "receivedCmu": "Получено CMU",
+    "contractCall": "Вызов контракта",
+    "contractDeployment": "Развёртывание контракта",
+    "miningReward": "Награда за майнинг",
+    "from": "От: {{address}}",
+    "hash": "Хеш {{hash}}...",
+    "fromMiningPool": "Из майнинг-пула · блок #{{block}}",
+    "confirmations_one": "{{count}} подтверждение",
+    "confirmations_few": "{{count}} подтверждения",
+    "confirmations_many": "{{count}} подтверждений",
+    "confirmations_other": "{{count}} подтверждения"
   },
   "dialog": {
     "exportExtensionTitle": "Экспорт расширения для браузера",

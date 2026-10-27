@@ -2,7 +2,12 @@ import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import { ActivityItem, type ActivityData } from "@/shared/ui";
-import { getTransactions } from "@/features/wallet";
+import {
+  getTransactions,
+  shortenAddress,
+  toActivityRow,
+} from "@/features/wallet";
+import { ActivityKind, type WalletActivity } from "@bridge/types";
 import {
   TokenService,
   getTokenBalance,
@@ -37,10 +42,6 @@ interface WalletTabsProps {
  * @param address - The full 0x-prefixed address.
  * @returns The truncated address (first six and last four characters).
  */
-function shortenAddress(address: string): string {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
-
 /**
  * Maps an in-flight pending transaction from the global store into the
  * ActivityData shape so it can render alongside confirmed history rows.
@@ -56,6 +57,7 @@ function mapPendingToActivity(
 ): ActivityData {
   return {
     id: tx.hash,
+    kind: ActivityKind.SEND,
     type: "send",
     title: t("common:activity.sentCmu"),
     subtitle: t("common:activity.to", { address: shortenAddress(tx.to) }),
@@ -80,12 +82,12 @@ function mapPendingToActivity(
  * @returns A new array containing only activities that belong to the address.
  */
 function filterActivitiesForAddress(
-  activities: ActivityData[],
+  activities: WalletActivity[],
   walletAddress: string,
-): ActivityData[] {
+): WalletActivity[] {
   const target = walletAddress.toLowerCase();
   return activities.filter((activity) => {
-    if (activity.type === "mining") {
+    if (activity.kind === ActivityKind.MINING_REWARD) {
       return activity.to?.toLowerCase() === target;
     }
     return (
@@ -108,7 +110,7 @@ function WalletTabs({
   activeTab,
   onTabChange,
 }: WalletTabsProps): JSX.Element {
-  const [transactions, setTransactions] = useState<ActivityData[]>([]);
+  const [transactions, setTransactions] = useState<WalletActivity[]>([]);
   const [knownTokens, setKnownTokens] = useState<TokenInfo[]>([]);
   const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
     {},
@@ -127,7 +129,10 @@ function WalletTabs({
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
     .map((tx) => mapPendingToActivity(tx, t, i18n.language));
-  const activities = [...pendingActivities, ...transactions];
+  const activities = [
+    ...pendingActivities,
+    ...transactions.map((tx) => toActivityRow(tx, t, i18n.language)),
+  ];
 
   const itemsPerPage = 10;
   const totalPages = Math.max(1, Math.ceil(activities.length / itemsPerPage));

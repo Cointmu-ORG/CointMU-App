@@ -20,6 +20,7 @@ export * from "./config/wallet.constants";
 
 export * from "./model/wallet-ui.store";
 export * from "./lib/history.util";
+export { toActivityRow, shortenAddress } from "./lib/activity-row.util";
 
 export { AccountHeroCard } from "./ui/account-hero-card.component";
 export { AccountSidebar } from "./ui/account-sidebar.component";

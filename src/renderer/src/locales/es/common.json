@@ -46,7 +46,17 @@
   },
   "activity": {
     "sentCmu": "CMU enviado",
-    "to": "Para {{address}}"
+    "to": "Para {{address}}",
+    "receivedCmu": "CMU recibido",
+    "contractCall": "Llamada a contrato",
+    "contractDeployment": "Despliegue de contrato",
+    "miningReward": "Recompensa de minería",
+    "from": "De {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "Del pool de minería · bloque #{{block}}",
+    "confirmations_one": "{{count}} confirmación",
+    "confirmations_many": "{{count}} confirmaciones",
+    "confirmations_other": "{{count}} confirmaciones"
   },
   "dialog": {
     "exportExtensionTitle": "Exportar extensión de navegador complementaria",

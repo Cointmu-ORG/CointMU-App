@@ -46,7 +46,15 @@
   },
   "activity": {
     "sentCmu": "CMU terkirim",
-    "to": "Ke {{address}}"
+    "to": "Ke {{address}}",
+    "receivedCmu": "CMU diterima",
+    "contractCall": "Panggilan kontrak",
+    "contractDeployment": "Deploy kontrak",
+    "miningReward": "Hadiah mining",
+    "from": "Dari {{address}}",
+    "hash": "Hash {{hash}}...",
+    "fromMiningPool": "Dari mining pool · blok #{{block}}",
+    "confirmations_other": "{{count}} konfirmasi"
   },
   "dialog": {
     "exportExtensionTitle": "Ekspor Ekstensi Peramban Pendamping",
