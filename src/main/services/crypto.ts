@@ -5,6 +5,7 @@ import {
   createCipheriv,
   createDecipheriv,
 } from "node:crypto";
+import { IpcErrorCode } from "../../bridge/types";
 
 /**
  * Versioned, self-describing encrypted blob persisted to electron-store. Stores
@@ -93,7 +94,7 @@ async function encryptSecret(
 
 /**
  * Decrypts a serialized EncryptedPayload with the supplied password. A wrong
- * password fails the GCM auth tag check and throws 'Incorrect password.'.
+ * password fails the GCM auth tag check and throws WALLET_INCORRECT_PASSWORD.
  * @param payloadJson - The serialized EncryptedPayload string.
  * @param password - The password used to derive the decryption key.
  * @returns A promise resolving to the recovered plaintext secret.
@@ -106,10 +107,10 @@ async function decryptSecret(
   try {
     payload = JSON.parse(payloadJson) as EncryptedPayload;
   } catch {
-    throw new Error("Corrupt wallet data.");
+    throw new Error(IpcErrorCode.WALLET_CORRUPT);
   }
   if (payload.v !== 1 || payload.kdf !== "scrypt") {
-    throw new Error("Unsupported wallet format.");
+    throw new Error(IpcErrorCode.WALLET_UNSUPPORTED_FORMAT);
   }
   const salt = Buffer.from(payload.salt, "base64");
   const iv = Buffer.from(payload.iv, "base64");
@@ -128,7 +129,7 @@ async function decryptSecret(
     return plaintext.toString("utf8");
   } catch {
     // A GCM auth failure on final() means a wrong password or tampered data.
-    throw new Error("Incorrect password.");
+    throw new Error(IpcErrorCode.WALLET_INCORRECT_PASSWORD);
   }
 }
 

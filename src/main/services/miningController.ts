@@ -2,6 +2,7 @@ import { BrowserWindow, ipcMain, powerMonitor } from "electron";
 import { callGethRpc } from "../utils/rpcUtils";
 import { scanWalletActivity, fetchNetworkInsights } from "./activityScanner";
 import type { AppStore } from "./appStore";
+import { IpcErrorCode, MiningPowerStatus } from "../../bridge/types";
 
 /**
  * Central controller for managing the underlying Geth mining process.
@@ -39,9 +40,7 @@ export class MiningController {
     if (enabled) {
       const rewardAddress = this.store.get("mining.poolAddress");
       if (!rewardAddress) {
-        throw new Error(
-          "No mining reward address configured. Set one in Mining Settings.",
-        );
+        throw new Error(IpcErrorCode.MINING_NO_REWARD_ADDRESS);
       }
 
       await callGethRpc(this.rpcPort, "miner_setEtherbase", [rewardAddress]);
@@ -89,7 +88,7 @@ export class MiningController {
         if (this.win) {
           this.win.webContents.send(
             "mining:status-changed",
-            "Paused (Battery)",
+            MiningPowerStatus.PAUSED_BATTERY,
           );
         }
       }
@@ -103,7 +102,10 @@ export class MiningController {
         console.log("[power] On AC - resuming miner with", threads, "threads");
         await callGethRpc(this.rpcPort, "miner_start", [threads]);
         if (this.win) {
-          this.win.webContents.send("mining:status-changed", "Mining");
+          this.win.webContents.send(
+            "mining:status-changed",
+            MiningPowerStatus.MINING,
+          );
         }
       }
     });

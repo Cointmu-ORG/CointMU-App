@@ -151,3 +151,26 @@ export interface DialogText {
   /** Label of the single file-type filter, e.g. "JSON". */
   readonly filterName: string;
 }
+
+/**
+ * Error codes main throws across `ipcMain.handle` in place of English text.
+ * Electron wraps the message on the way to the renderer, so the renderer finds
+ * the code anywhere in the message and localizes it.
+ */
+export const IpcErrorCode = {
+  WALLET_CORRUPT: "WALLET_CORRUPT",
+  WALLET_UNSUPPORTED_FORMAT: "WALLET_UNSUPPORTED_FORMAT",
+  WALLET_INCORRECT_PASSWORD: "WALLET_INCORRECT_PASSWORD",
+  MINING_NO_REWARD_ADDRESS: "MINING_NO_REWARD_ADDRESS",
+} as const;
+
+export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
+
+/** Payload of the `mining:status-changed` event. */
+export const MiningPowerStatus = {
+  MINING: "MINING",
+  PAUSED_BATTERY: "PAUSED_BATTERY",
+} as const;
+
+export type MiningPowerStatus =
+  (typeof MiningPowerStatus)[keyof typeof MiningPowerStatus];

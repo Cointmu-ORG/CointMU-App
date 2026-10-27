@@ -54,5 +54,12 @@
     "exportKeystoreTitle": "Keystore exportieren",
     "importKeystoreTitle": "Keystore importieren",
     "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "Die Wallet-Daten sind beschädigt.",
+    "WALLET_UNSUPPORTED_FORMAT": "Dieses Wallet-Format wird nicht unterstützt.",
+    "WALLET_INCORRECT_PASSWORD": "Falsches Passwort.",
+    "MINING_NO_REWARD_ADDRESS": "Keine Belohnungsadresse für das Mining festgelegt. Lege eine in den Mining-Einstellungen fest.",
+    "decryptFailed": "Die Wallet konnte nicht entschlüsselt werden."
   }
 }

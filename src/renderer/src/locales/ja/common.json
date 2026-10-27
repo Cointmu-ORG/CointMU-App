@@ -54,5 +54,12 @@
     "exportKeystoreTitle": "キーストアをエクスポート",
     "importKeystoreTitle": "キーストアをインポート",
     "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "ウォレットデータが破損しています。",
+    "WALLET_UNSUPPORTED_FORMAT": "このウォレット形式はサポートされていません。",
+    "WALLET_INCORRECT_PASSWORD": "パスワードが正しくありません。",
+    "MINING_NO_REWARD_ADDRESS": "マイニングの報酬アドレスが設定されていません。マイニング設定で設定してください。",
+    "decryptFailed": "ウォレットを復号できませんでした。"
   }
 }

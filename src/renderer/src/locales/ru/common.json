@@ -54,5 +54,12 @@
     "exportKeystoreTitle": "Экспорт keystore",
     "importKeystoreTitle": "Импорт keystore",
     "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "Данные кошелька повреждены.",
+    "WALLET_UNSUPPORTED_FORMAT": "Этот формат кошелька не поддерживается.",
+    "WALLET_INCORRECT_PASSWORD": "Неверный пароль.",
+    "MINING_NO_REWARD_ADDRESS": "Адрес вознаграждения за майнинг не задан. Укажите его в настройках майнинга.",
+    "decryptFailed": "Не удалось расшифровать кошелёк."
   }
 }

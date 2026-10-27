@@ -54,5 +54,12 @@
     "exportKeystoreTitle": "Exportar almacén de claves",
     "importKeystoreTitle": "Importar almacén de claves",
     "jsonFilter": "JSON"
+  },
+  "errors": {
+    "WALLET_CORRUPT": "Los datos de la billetera están dañados.",
+    "WALLET_UNSUPPORTED_FORMAT": "Este formato de billetera no es compatible.",
+    "WALLET_INCORRECT_PASSWORD": "Contraseña incorrecta.",
+    "MINING_NO_REWARD_ADDRESS": "No hay una dirección de recompensa de minería configurada. Establece una en los ajustes de minería.",
+    "decryptFailed": "No se pudo descifrar la billetera."
   }
 }
