@@ -12,3 +12,4 @@ resources/bin/geth.exe
 .claude/
 .vscode/
 graphify-out/
+build-info.json

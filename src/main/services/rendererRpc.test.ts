@@ -1,5 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { rejectRendererRpc } from "./rendererRpc";
+
+// The real module downloads the Electron binary on first require (#74).
+vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
 
 describe("rejectRendererRpc", () => {
   it("accepts an allowed method with array params", () => {
