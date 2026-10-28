@@ -248,8 +248,6 @@
     "pauseTitle": "Jeda pada baterai",
     "pauseDesc": "Hentikan penambangan saat laptop dicabut dari daya",
     "rewards": "Hadiah",
-    "modeTitle": "Mode",
-    "modeDesc": "Penambangan Solo vs pool",
     "rewardAddressTitle": "Alamat hadiah",
     "rewardAddressDesc": "Ke mana hadiah coinbase dikirim (bawaannya adalah dompet utama)",
     "customAddress": "Alamat khusus...",

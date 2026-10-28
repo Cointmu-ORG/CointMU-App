@@ -250,8 +250,6 @@
     "pauseTitle": "Pausar con batería",
     "pauseDesc": "Detener minería cuando la laptop se desconecta de la corriente",
     "rewards": "Recompensas",
-    "modeTitle": "Modo",
-    "modeDesc": "Minería Solo vs pool",
     "rewardAddressTitle": "Dirección de recompensa",
     "rewardAddressDesc": "A dónde se envían las recompensas coinbase (por defecto billetera principal)",
     "customAddress": "Dirección personalizada...",

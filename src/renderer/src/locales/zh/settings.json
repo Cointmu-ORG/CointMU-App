@@ -248,8 +248,6 @@
     "pauseTitle": "使用电池时暂停",
     "pauseDesc": "断开笔记本电源时停止挖矿",
     "rewards": "奖励",
-    "modeTitle": "模式",
-    "modeDesc": "独立挖矿 vs 矿池挖矿",
     "rewardAddressTitle": "奖励地址",
     "rewardAddressDesc": "接收 Coinbase 奖励的地方（默认为主钱包）",
     "customAddress": "自定义地址...",

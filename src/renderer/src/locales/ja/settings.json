@@ -248,8 +248,6 @@
     "pauseTitle": "バッテリー駆動時に一時停止",
     "pauseDesc": "ラップトップが電源から切断されたときにマイニングを停止します",
     "rewards": "報酬",
-    "modeTitle": "モード",
-    "modeDesc": "ソロマイニング対プールマイニング",
     "rewardAddressTitle": "報酬アドレス",
     "rewardAddressDesc": "コインベースの報酬が送信される場所（デフォルトはメインウォレット）",
     "customAddress": "カスタムアドレス...",

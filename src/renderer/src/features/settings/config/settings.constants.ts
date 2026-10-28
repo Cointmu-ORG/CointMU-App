@@ -21,8 +21,6 @@ export const RECOMMENDED_MAX_PEERS = 14;
 
 export const SYNC_MODE_OPTIONS = Object.values(SyncMode);
 
-export const MINING_MODE_OPTIONS = ["Solo", "campuspool.cmu", "Custom pool..."];
-
 export const LANGUAGE_OPTIONS = [
   { label: "English", value: "en" },
   { label: "Bahasa Indonesia", value: "id" },
