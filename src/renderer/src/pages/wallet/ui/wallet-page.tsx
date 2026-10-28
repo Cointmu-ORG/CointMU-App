@@ -1,14 +1,16 @@
-import type { DerivedAccount } from "@/entities/account";
-import { COPY_FEEDBACK_MS } from "@/features/wallet";
-import { useEffect, useState, type JSX, type MouseEvent } from "react";
-import { useTranslation } from "react-i18next";
 import {
   deriveAccount,
   deriveAccountFromPrivateKey,
   encryptSecret,
   decryptSecret,
   getSessionPassword,
-} from "@/features/wallet";
+  ImportKeystoreModal,
+  type ImportKeystoreResult,
+} from "@/entities/wallet";
+import type { DerivedAccount } from "@/entities/account";
+import { COPY_FEEDBACK_MS } from "@/features/wallet";
+import { useEffect, useState, type JSX, type MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { call, getSetting, setSetting } from "@/shared/api";
 import { ethers } from "ethers";
 import { useAppStore } from "@/shared/model";
@@ -18,10 +20,6 @@ import { AccountSidebar } from "@/features/wallet";
 import { AccountHeroCard } from "@/features/wallet";
 import { WalletTabs, type WalletTab } from "@/widgets/wallet-layout";
 import { WalletModals } from "@/features/wallet";
-import {
-  ImportKeystoreModal,
-  type ImportKeystoreResult,
-} from "@/features/wallet";
 
 interface WalletProps {
   accounts: DerivedAccount[];

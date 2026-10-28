@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { Wallet, HDNodeWallet } from "ethers";
 import { getSetting, setSetting } from "@/shared/api";
 import { localizeIpcError } from "@/shared/lib";
-import type { DerivedAccount } from "@/entities/account";
+import type { DerivedAccount } from "@/entities/account/@x/wallet";
 
 /**
  * Generates a new 12-word BIP39 mnemonic seed phrase.

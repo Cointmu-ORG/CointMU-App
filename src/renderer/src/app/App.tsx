@@ -19,7 +19,7 @@ import { useAuthStore } from "@/features/auth";
 import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport } from "@/features/notifications";
-import { useAutoLock } from "@/features/auth";
+import { useAutoLock } from "./lib/auto-lock.hook";
 import { FirstRunNotice } from "@/features/error-reporting";
 
 const Miner = lazy(() =>

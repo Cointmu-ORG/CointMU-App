@@ -1,4 +1,4 @@
-import { LANGUAGE_OPTIONS } from "../config/settings.constants";
+import { LANGUAGE_OPTIONS } from "@/features/settings";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { CustomDropdown } from "@/shared/ui";

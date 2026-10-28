@@ -1,14 +1,7 @@
 export { TokenIcon } from "./ui/token-icon.component";
-export { WalletHistoryFilter } from "./ui/wallet-history-filter.component";
 export { AddTokenModal } from "./ui/add-token-modal.component";
-export {
-  ImportKeystoreModal,
-  type ImportKeystoreResult,
-} from "./ui/import-keystore-modal.component";
 export { WalletModals } from "./ui/wallet-modals.component";
 
-export * from "./api/wallet.service";
-export * from "./api/wallet-session.service";
 export * from "./api/token.service";
 export * from "./api/transfer.service";
 export * from "./api/wallet-cache.service";

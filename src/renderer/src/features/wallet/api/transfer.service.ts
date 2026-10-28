@@ -1,10 +1,9 @@
 import i18next from "i18next";
+import { getSessionPassword, decryptSecret } from "@/entities/wallet";
 import type { DerivedAccount } from "@/entities/account";
 import { ethers } from "ethers";
 import { STANDARD_ERC20_ABI } from "./token.service";
 import { call, createNodeProvider, getSetting } from "@/shared/api";
-import { getSessionPassword } from "./wallet-session.service";
-import { decryptSecret } from "./wallet.service";
 
 /**
  * Resolves the local node provider, relayed through the main process.

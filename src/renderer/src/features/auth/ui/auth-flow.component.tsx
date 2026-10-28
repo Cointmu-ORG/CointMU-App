@@ -1,23 +1,21 @@
 import {
-  MIN_PASSWORD_LENGTH,
-  COPY_FEEDBACK_MS,
-} from "../config/auth.constants";
-import { useEffect, useState, type JSX } from "react";
-import { useTranslation } from "react-i18next";
-import {
   generateMnemonic,
   deriveAccount,
   deriveAccountFromPrivateKey,
   encryptSecret,
   verifyPassword,
   unlockSession,
-} from "@/features/wallet";
-import { getSetting, setSetting } from "@/shared/api";
-import { useAuthStore } from "../model/auth.store";
-import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
-} from "@/features/wallet";
+} from "@/entities/wallet";
+import {
+  MIN_PASSWORD_LENGTH,
+  COPY_FEEDBACK_MS,
+} from "../config/auth.constants";
+import { useEffect, useState, type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { getSetting, setSetting } from "@/shared/api";
+import { useAuthStore } from "../model/auth.store";
 import { AuthShell } from "./auth-shell.component";
 import { WelcomeStep } from "./welcome-step.component";
 import { LoginStep } from "./login-step.component";

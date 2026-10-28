@@ -1,9 +1,8 @@
-import { UPTIME_REFRESH_MS } from "../config/settings.constants";
+import { UPTIME_REFRESH_MS, EXTERNAL_LINKS } from "@/features/settings";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useUpdater } from "@/shared/lib";
 import { useAppStore } from "@/shared/model";
-import { EXTERNAL_LINKS } from "../config/links.constant";
 import { Layers } from "lucide-react";
 
 /**

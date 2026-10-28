@@ -1,9 +1,9 @@
+import { WalletHistoryFilter } from "@/entities/wallet";
 import type { DerivedAccount } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityItem, type ActivityData } from "@/shared/ui";
 import { Pagination } from "@/shared/ui";
-import { WalletHistoryFilter } from "@/features/wallet";
 import { ChevronRight, Clock } from "lucide-react";
 import { downloadActivityCsv } from "@/shared/lib";
 import { type HistoryFilter } from "@/shared/model";

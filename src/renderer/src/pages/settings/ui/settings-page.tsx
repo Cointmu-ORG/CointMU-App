@@ -1,17 +1,19 @@
+import {
+  GeneralSettings,
+  AppearanceSettings,
+  NetworkSettings,
+  MiningSettings,
+  SecuritySettings,
+  ConnectedSitesSettings,
+  ExternalSourceSettings,
+  AdvancedSettings,
+  AboutSettings,
+  NotificationSettings,
+} from "@/widgets/settings-panels";
 import { useNotificationStore } from "@/entities/notification";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type SettingsStore } from "@/features/settings";
-import { GeneralSettings } from "@/features/settings";
-import { AppearanceSettings } from "@/features/settings";
-import { NetworkSettings } from "@/features/settings";
-import { MiningSettings } from "@/features/settings";
-import { SecuritySettings } from "@/features/settings";
-import { ConnectedSitesSettings } from "@/features/settings";
-import { ExternalSourceSettings } from "@/features/settings";
-import { AdvancedSettings } from "@/features/settings";
-import { AboutSettings } from "@/features/settings";
-import { NotificationSettings } from "@/features/settings";
 import { resetAllSettings } from "@/features/settings";
 import { getAllSettings, setSetting } from "@/shared/api";
 import { useAppearanceStore } from "@/features/settings";

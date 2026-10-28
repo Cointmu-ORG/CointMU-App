@@ -1,7 +1,7 @@
+import { useBootnodeSettings } from "@/features/settings";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle } from "lucide-react";
-import { useBootnodeSettings } from "../lib/bootnode-settings.hook";
 import { BootnodeFeedback } from "./bootnode-feedback.component";
 
 const SECTION_TITLE =
