@@ -3,9 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 6
-SUBLEVEL = 18
-EXTRAVERSION = Medusa
+PATCHLEVEL = 7
+SUBLEVEL = 0
+EXTRAVERSION = Quartz
 
 help:
 	@echo "============================================="
