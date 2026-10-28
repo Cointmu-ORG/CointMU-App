@@ -54,6 +54,13 @@ export function buildGenesis(): GenesisBlock {
 const GETH_DATA_DIR = join(app.getPath("userData"), "cointmu-chaindata");
 
 /**
+ * @returns The folder holding the geth datadir of every network.
+ */
+export function resolveDataRoot(): string {
+  return GETH_DATA_DIR;
+}
+
+/**
  * Resolves the absolute geth data directory for the active network:
  * <userData>/cointmu-chaindata/<networkId>.
  * @returns {string} The absolute data directory path.
