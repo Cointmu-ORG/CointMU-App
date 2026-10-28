@@ -9,7 +9,17 @@ const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 // electron-vite externalizes "dependencies" for main and preload by default
 // (build.externalizeDeps), so they need no plugin of their own.
 export default defineConfig({
-  main: {},
+  main: {
+    build: {
+      rolldownOptions: {
+        // The geth watcher runs as its own process (gethWatcherProcess.ts).
+        input: {
+          index: resolve("src/main/index.ts"),
+          gethWatcher: resolve("src/main/geth/gethWatcher.ts"),
+        },
+      },
+    },
+  },
   preload: {
     // Bundled rather than required at runtime, so the preload keeps working
     // once the renderer is sandboxed (a sandboxed preload cannot require them).
