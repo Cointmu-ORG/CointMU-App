@@ -96,8 +96,8 @@ jobs:
         continue-on-error: true
         run: npx --no oxlint -f json > oxlint.json
 
+      # Blocking: the renderer is at 0 FSD errors and warnings.
       - name: steiger
-        continue-on-error: true
         run: npx --no steiger ./src/renderer/src --reporter json > steiger.json
 
       - name: Summary
