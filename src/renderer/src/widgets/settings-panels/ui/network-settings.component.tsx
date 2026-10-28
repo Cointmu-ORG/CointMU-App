@@ -3,7 +3,7 @@ import {
   MAX_PEERS_OPTIONS,
   RECOMMENDED_MAX_PEERS,
   SYNC_MODE_OPTIONS,
-} from "../config/settings.constants";
+} from "@/features/settings";
 import type { SyncMode } from "@bridge/setting-values";
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";

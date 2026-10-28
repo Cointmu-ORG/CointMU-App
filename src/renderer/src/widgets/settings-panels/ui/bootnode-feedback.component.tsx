@@ -1,10 +1,7 @@
+import { BootnodeNotice, type BootnodeRejection } from "@/features/settings";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { BootnodeSaveError } from "@bridge/types";
-import {
-  BootnodeNotice,
-  type BootnodeRejection,
-} from "../lib/bootnode-settings.hook";
 
 interface BootnodeFeedbackProps {
   readonly rejection: BootnodeRejection | null;

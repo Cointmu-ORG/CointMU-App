@@ -1,6 +1,6 @@
+import { AUTO_HIDE_SECONDS } from "@/features/settings";
 import { revealRecoveryPhrase } from "@/entities/wallet";
 import { useTranslation } from "react-i18next";
-import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
   useEffect,
   useRef,

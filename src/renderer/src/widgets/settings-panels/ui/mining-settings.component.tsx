@@ -1,7 +1,4 @@
-import {
-  MINING_DEBOUNCE_DELAY_MS,
-  MAX_CORES,
-} from "../config/settings.constants";
+import { MINING_DEBOUNCE_DELAY_MS, MAX_CORES } from "@/features/settings";
 import { useState, useEffect, useRef, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "@/features/settings";

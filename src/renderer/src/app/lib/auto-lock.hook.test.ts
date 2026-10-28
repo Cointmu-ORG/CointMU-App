@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAppStore } from "@/shared/model";
-import { INACTIVITY_TIMEOUT_MS } from "../config/auth.constants";
-import { useAutoLock } from "./auto-lock.hook";
+import { INACTIVITY_TIMEOUT_MS, useAutoLock } from "./auto-lock.hook";
 
 // Runs the hook's effect once, the way React would on mount, and keeps its
 // cleanup; no DOM renderer is needed.

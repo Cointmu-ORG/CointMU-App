@@ -1,7 +1,6 @@
-import { COLORS } from "../config/settings.constants";
+import { COLORS, useAppearanceStore } from "@/features/settings";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppearanceStore } from "../model/appearance.store";
 import { DENSITY_LABEL_KEYS } from "@/shared/lib";
 import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
 

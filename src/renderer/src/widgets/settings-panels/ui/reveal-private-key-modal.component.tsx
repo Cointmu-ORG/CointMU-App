@@ -1,7 +1,7 @@
+import { AUTO_HIDE_SECONDS } from "@/features/settings";
 import { revealPrivateKey } from "@/entities/wallet";
 import type { DerivedAccount } from "@/entities/account";
 import { useTranslation } from "react-i18next";
-import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
   useEffect,
   useRef,

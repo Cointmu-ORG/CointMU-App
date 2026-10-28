@@ -1,8 +1,11 @@
-import { CONNECT_FEEDBACK_MS } from "../config/settings.constants";
 import { useEffect, useRef, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useSecurityStore } from "../model/security.store";
-import { useBiometrics, useHardwareDetection } from "@/features/settings";
+import {
+  useBiometrics,
+  useHardwareDetection,
+  CONNECT_FEEDBACK_MS,
+  useSecurityStore,
+} from "@/features/settings";
 import { ShieldCheck } from "lucide-react";
 import { RevealPrivateKeyModal } from "./reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "./recovery-phrase-modal.component";
