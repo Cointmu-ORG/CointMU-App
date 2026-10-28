@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 7
-SUBLEVEL = 0
-EXTRAVERSION = Quartz
+SUBLEVEL = 1
+EXTRAVERSION = Onyx
 
 help:
 	@echo "============================================="
