@@ -250,8 +250,6 @@
     "pauseTitle": "Pausar con batería",
     "pauseDesc": "Detener minería cuando la laptop se desconecta de la corriente",
     "rewards": "Recompensas",
-    "modeTitle": "Modo",
-    "modeDesc": "Minería Solo vs pool",
     "rewardAddressTitle": "Dirección de recompensa",
     "rewardAddressDesc": "A dónde se envían las recompensas coinbase (por defecto billetera principal)",
     "customAddress": "Dirección personalizada...",
@@ -372,5 +370,34 @@
     "resetFailed": "No se pudo restablecer la billetera.",
     "resetting": "Restableciendo...",
     "submit": "Restablecer la billetera de forma permanente"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Eco",
+      "balanced": "Equilibrado",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Compacta",
+      "comfortable": "Cómoda",
+      "spacious": "Amplia"
+    },
+    "syncMode": {
+      "snap": "Snap (recomendado)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (nativa)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Información",
+      "debug": "Depuración",
+      "warn": "Advertencia",
+      "error": "Error"
+    },
+    "recommendedValue": "{{value}} (recomendado)"
   }
 }

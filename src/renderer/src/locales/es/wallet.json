@@ -29,7 +29,8 @@
     "walletLocked": "La billetera está bloqueada. Por favor, inicia sesión de nuevo.",
     "importedAccount": "Cuenta Importada",
     "importedSeedAccount": "Cuenta de Semilla Importada",
-    "failedToAdd": "Error al añadir cuenta"
+    "failedToAdd": "Error al añadir cuenta",
+    "mainAccountLabel": "Billetera principal"
   },
   "modals": {
     "addAccount": {

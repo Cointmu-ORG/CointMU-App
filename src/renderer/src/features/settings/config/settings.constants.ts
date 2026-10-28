@@ -1,4 +1,5 @@
 import ms from "ms";
+import { DisplayCurrency, LogLevel, SyncMode } from "@bridge/setting-values";
 
 export const SECURITY_SETTINGS_KEY = "security";
 export const ADVANCED_SETTINGS_KEY = "advanced";
@@ -15,16 +16,10 @@ export const NETWORK_OPTIONS = [
   "Localhost 8545",
 ];
 
-export const MAX_PEERS_OPTIONS = [
-  { label: "10", value: 10 },
-  { label: "14 (recommended)", value: 14 },
-  { label: "25", value: 25 },
-  { label: "50", value: 50 },
-];
+export const MAX_PEERS_OPTIONS = [10, 14, 25, 50];
+export const RECOMMENDED_MAX_PEERS = 14;
 
-export const SYNC_MODE_OPTIONS = ["Snap (recommended)", "Full", "Light"];
-
-export const MINING_MODE_OPTIONS = ["Solo", "campuspool.cmu", "Custom pool..."];
+export const SYNC_MODE_OPTIONS = Object.values(SyncMode);
 
 export const LANGUAGE_OPTIONS = [
   { label: "English", value: "en" },
@@ -36,7 +31,7 @@ export const LANGUAGE_OPTIONS = [
   { label: "日本語", value: "ja" },
 ];
 
-export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR (€)"];
+export const CURRENCY_OPTIONS = Object.values(DisplayCurrency);
 
 export const COLORS = [
   { id: "#3b82f6", color: "bg-blue-500", name: "blue" },
@@ -47,6 +42,6 @@ export const COLORS = [
   { id: "#ef4444", color: "bg-red-500", name: "red" },
 ];
 
-export const LOG_LEVELS = ["Info", "Debug", "Warn", "Error"];
+export const LOG_LEVELS = Object.values(LogLevel);
 
 export const CONNECTED_SITES_SETTINGS_KEY = "connectedSites";

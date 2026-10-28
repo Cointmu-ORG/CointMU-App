@@ -29,7 +29,8 @@
     "walletLocked": "钱包已锁定，请重新登录。",
     "importedAccount": "导入的账户",
     "importedSeedAccount": "导入的助记词账户",
-    "failedToAdd": "添加账户失败"
+    "failedToAdd": "添加账户失败",
+    "mainAccountLabel": "主钱包"
   },
   "modals": {
     "addAccount": {

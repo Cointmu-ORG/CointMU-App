@@ -1,5 +1,4 @@
 import {
-  MINING_MODE_OPTIONS,
   MINING_DEBOUNCE_DELAY_MS,
   MAX_CORES,
 } from "../config/settings.constants";
@@ -9,6 +8,8 @@ import type { SettingsStore } from "@/features/settings";
 import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
+import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
+import { MiningIntensity } from "@bridge/setting-values";
 
 interface MiningSettingsProps {
   config: SettingsStore["mining"];
@@ -287,7 +288,7 @@ export function MiningSettings({
                 </p>
               </div>
               <div className="flex items-center bg-slate-100 dark:bg-gray-800 rounded-lg p-1">
-                {["Eco", "Balanced", "Turbo"].map((opt) => (
+                {Object.values(MiningIntensity).map((opt) => (
                   <button
                     key={opt}
                     onClick={() => onUpdate("intensity", opt)}
@@ -297,7 +298,7 @@ export function MiningSettings({
                         : "text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200"
                     }`}
                   >
-                    {opt}
+                    {t(INTENSITY_LABEL_KEYS[opt])}
                   </button>
                 ))}
               </div>
@@ -331,29 +332,6 @@ export function MiningSettings({
             {t("settings:miningSettings.rewards")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:miningSettings.modeTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:miningSettings.modeDesc")}
-                </p>
-              </div>
-              <div className="w-56 flex-shrink-0">
-                <CustomDropdown<string>
-                  options={MINING_MODE_OPTIONS}
-                  selected={config.miningMode}
-                  onSelect={(val) => onUpdate("miningMode", val)}
-                  renderSelected={(selected) =>
-                    selected || MINING_MODE_OPTIONS[0]
-                  }
-                  renderOption={(option) => option}
-                  compact
-                />
-              </div>
-            </div>
-
             <div className="p-4 flex flex-col gap-3">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100 mb-0.5">

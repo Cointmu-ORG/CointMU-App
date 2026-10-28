@@ -1,4 +1,5 @@
 import ms from "ms";
+import { MiningIntensity } from "@bridge/setting-values";
 
 // Store
 export const MAX_FOUND_BLOCKS = 500;
@@ -35,7 +36,7 @@ export const LOG_TIME_FORMAT = "HH:mm:ss";
 export const BLOCK_REWARD_LABEL = "2.00 CMU";
 
 // Components
-export const INTENSITY_OPTIONS = ["Eco", "Balanced", "Turbo"] as const;
+export const INTENSITY_OPTIONS = Object.values(MiningIntensity);
 
 export const FOUND_BLOCKS_PAGE_SIZE = 8;
 

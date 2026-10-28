@@ -158,9 +158,12 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
     }
 
     try {
+      // The name is stored as the user's own label, so existing accounts keep
+      // the language they were created in.
+      const label = t("wallet:index.mainAccountLabel");
       const firstAccount = isPrivateKey
-        ? deriveAccountFromPrivateKey(secretKey, "Main wallet")
-        : deriveAccount(secretKey, 0, "Main wallet");
+        ? deriveAccountFromPrivateKey(secretKey, label)
+        : deriveAccount(secretKey, 0, label);
 
       const encryptedPayload = await encryptSecret(secretKey, password);
 

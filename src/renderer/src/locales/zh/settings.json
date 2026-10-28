@@ -248,8 +248,6 @@
     "pauseTitle": "使用电池时暂停",
     "pauseDesc": "断开笔记本电源时停止挖矿",
     "rewards": "奖励",
-    "modeTitle": "模式",
-    "modeDesc": "独立挖矿 vs 矿池挖矿",
     "rewardAddressTitle": "奖励地址",
     "rewardAddressDesc": "接收 Coinbase 奖励的地方（默认为主钱包）",
     "customAddress": "自定义地址...",
@@ -370,5 +368,34 @@
     "resetFailed": "无法重置钱包。",
     "resetting": "正在重置...",
     "submit": "永久重置钱包"
+  },
+  "options": {
+    "intensity": {
+      "eco": "节能",
+      "balanced": "均衡",
+      "turbo": "极速"
+    },
+    "density": {
+      "compact": "紧凑",
+      "comfortable": "舒适",
+      "spacious": "宽松"
+    },
+    "syncMode": {
+      "snap": "快照（Snap，推荐）",
+      "full": "完整（Full）",
+      "light": "轻量（Light）"
+    },
+    "currency": {
+      "cmu": "CMU（原生）",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "信息",
+      "debug": "调试",
+      "warn": "警告",
+      "error": "错误"
+    },
+    "recommendedValue": "{{value}}（推荐）"
   }
 }

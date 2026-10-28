@@ -249,8 +249,6 @@
     "pauseTitle": "Pause on battery",
     "pauseDesc": "Stop mining when laptop is disconnected from power",
     "rewards": "Rewards",
-    "modeTitle": "Mode",
-    "modeDesc": "Solo vs pool mining",
     "rewardAddressTitle": "Reward address",
     "rewardAddressDesc": "Where coinbase rewards are sent (defaults to main wallet)",
     "customAddress": "Custom address...",
@@ -371,5 +369,34 @@
     "resetFailed": "Failed to reset wallet.",
     "resetting": "Resetting...",
     "submit": "Permanently reset wallet"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Eco",
+      "balanced": "Balanced",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Compact",
+      "comfortable": "Comfortable",
+      "spacious": "Spacious"
+    },
+    "syncMode": {
+      "snap": "Snap (recommended)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (native)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Info",
+      "debug": "Debug",
+      "warn": "Warning",
+      "error": "Error"
+    },
+    "recommendedValue": "{{value}} (recommended)"
   }
 }
