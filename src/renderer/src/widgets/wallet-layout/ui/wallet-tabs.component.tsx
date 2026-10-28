@@ -1,12 +1,12 @@
-import { type JSX, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
-import { ActivityItem, type ActivityData } from "@/shared/ui";
 import {
   getTransactions,
   shortenAddress,
   toActivityRow,
-} from "@/features/wallet";
+} from "@/entities/transaction";
+import { type JSX, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
+import { ActivityItem, type ActivityData } from "@/shared/ui";
 import { ActivityKind, type WalletActivity } from "@bridge/types";
 import {
   TokenService,

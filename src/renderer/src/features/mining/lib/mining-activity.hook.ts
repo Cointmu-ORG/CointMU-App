@@ -1,3 +1,4 @@
+import { dispatchNotification } from "@/entities/notification";
 import {
   MAX_LOG_ENTRIES,
   LOG_TIME_FORMAT,
@@ -7,7 +8,6 @@ import { useState, useEffect, useRef } from "react";
 import i18next from "i18next";
 import { format } from "date-fns";
 import { useMiningStore } from "../model/mining.store";
-import { dispatchNotification } from "@/features/notifications";
 import { type BlockData } from "@/shared/lib";
 
 interface LogEntry {

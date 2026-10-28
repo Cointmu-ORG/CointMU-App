@@ -1,3 +1,5 @@
+import { dispatchNotification } from "@/entities/notification";
+import type { DerivedAccount } from "@/entities/account";
 import {
   GAS_ESTIMATION_DEBOUNCE_MS,
   GAS_BUFFER_MULTIPLIER,
@@ -23,11 +25,9 @@ import {
   parseTransferError,
 } from "@/features/wallet";
 import { call, waitForTransactionReceipt } from "@/shared/api";
-import { dispatchNotification } from "@/features/notifications";
 import { Check, AlertCircle } from "lucide-react";
 import { CustomDropdown } from "@/shared/ui";
 import { TokenIcon } from "@/features/wallet";
-import type { DerivedAccount } from "../api/wallet.service";
 
 interface SendModalProps {
   activeAccount: DerivedAccount | undefined;

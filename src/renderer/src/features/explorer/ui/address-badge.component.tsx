@@ -1,6 +1,6 @@
+import { AccountIcon } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { AccountIcon } from "@/features/wallet";
 import { Copy } from "lucide-react";
 
 interface AddressBadgeProps {

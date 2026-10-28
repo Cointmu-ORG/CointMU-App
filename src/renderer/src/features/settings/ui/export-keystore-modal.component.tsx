@@ -1,7 +1,8 @@
+import type { DerivedAccount } from "@/entities/account";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, type SyntheticEvent, type JSX } from "react";
 import { FileText, Eye, EyeOff, Check, X } from "lucide-react";
-import { generateKeystore, type DerivedAccount } from "@/features/wallet";
+import { generateKeystore } from "@/features/wallet";
 import { getSetting } from "@/shared/api";
 import { useAppStore } from "@/shared/model";
 

@@ -3,7 +3,7 @@ import {
   SECONDS_IN_DAY,
   TOP_MINERS_LIMIT,
   MAX_BLOCKS_TO_SCAN,
-} from "../config/mining.constants";
+} from "../config/miner.constants";
 
 /**
  * Represents a single entry in the miner distribution report.

@@ -5,7 +5,7 @@ import { formatAge } from "@/shared/lib";
 import {
   useNotificationStore,
   type NotificationItem,
-} from "../model/notification.store";
+} from "@/entities/notification";
 import { Bell } from "lucide-react";
 
 const MS_PER_SECOND = 1000;

@@ -1,3 +1,4 @@
+import type { DerivedAccount } from "@/entities/account";
 import {
   SELF_BLOCK_REWARD,
   ACTIVITY_WINDOW_MS,
@@ -17,7 +18,6 @@ import { Check, Box } from "lucide-react";
 import { formatAge } from "@/shared/lib";
 import { type FoundBlock } from "../model/mining.store";
 import { type HistoryFilter } from "@/shared/model";
-import { type DerivedAccount } from "@/features/wallet";
 import { MiningActivityLogs } from "./mining-activity-logs.component";
 
 export interface DayContribution {

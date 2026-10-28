@@ -1,3 +1,5 @@
+import { getTransactions, toActivityRow } from "@/entities/transaction";
+import type { DerivedAccount } from "@/entities/account";
 import {
   DASHBOARD_TICK_INTERVAL_MS,
   ACTIVITY_PAGE_SIZE,
@@ -14,11 +16,8 @@ import { useMiningStats, useMiningControls } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useMiningStore } from "@/features/mining";
 import { useWalletUiStore } from "@/features/wallet";
-import { getTransactions } from "@/features/wallet";
 import { ActivityCacheService } from "@/features/wallet";
-import { type DerivedAccount } from "@/features/wallet";
 import type { WalletActivity } from "@bridge/types";
-import { toActivityRow } from "@/features/wallet";
 import {
   formatBlockNumber,
   formatHashrate,

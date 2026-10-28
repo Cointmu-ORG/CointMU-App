@@ -1,3 +1,4 @@
+import type { DerivedAccount } from "@/entities/account";
 import { COPY_FEEDBACK_MS } from "@/features/wallet";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,7 +8,6 @@ import {
   encryptSecret,
   decryptSecret,
   getSessionPassword,
-  type DerivedAccount,
 } from "@/features/wallet";
 import { call, getSetting, setSetting } from "@/shared/api";
 import { ethers } from "ethers";
