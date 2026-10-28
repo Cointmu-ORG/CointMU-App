@@ -267,7 +267,7 @@
     "export": "Exportieren",
     "privateKeyTitle": "Privaten Schlüssel anzeigen",
     "privateKeyDesc": "Entschlüsseln und den rohen privaten Schlüssel für ein Konto anzeigen",
-    "hardwareDesc": "Ledger-Gerät über USB verbinden",
+    "hardwareDesc": "{{device}}-Gerät über USB verbinden",
     "noUsb": "Kein USB erkannt",
     "resetWalletTitle": "Wallet zurücksetzen",
     "resetWalletDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",

@@ -268,7 +268,7 @@
     "export": "Exportar",
     "privateKeyTitle": "Revelar clave privada",
     "privateKeyDesc": "Desencriptar y mostrar clave privada cruda de una cuenta",
-    "hardwareDesc": "Conectar dispositivo Ledger vía USB",
+    "hardwareDesc": "Conectar dispositivo {{device}} vía USB",
     "noUsb": "No se detectó USB",
     "resetWalletTitle": "Restablecer billetera",
     "resetWalletDesc": "Elimina cuentas y claves de este dispositivo. No se puede deshacer.",

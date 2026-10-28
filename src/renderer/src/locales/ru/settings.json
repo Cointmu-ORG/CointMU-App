@@ -269,7 +269,7 @@
     "export": "Экспорт",
     "privateKeyTitle": "Показать приватный ключ",
     "privateKeyDesc": "Расшифровать и показать сырой ключ",
-    "hardwareDesc": "Подключить устройство Ledger по USB",
+    "hardwareDesc": "Подключить устройство {{device}} по USB",
     "noUsb": "USB не обнаружен",
     "resetWalletTitle": "Сбросить кошелек",
     "resetWalletDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",

@@ -267,7 +267,7 @@
     "export": "Export",
     "privateKeyTitle": "Reveal private key",
     "privateKeyDesc": "Decrypt and display the raw private key for an account",
-    "hardwareDesc": "Connect a Ledger device via USB",
+    "hardwareDesc": "Connect a {{device}} device via USB",
     "noUsb": "No USB detected",
     "resetWalletTitle": "Reset wallet",
     "resetWalletDesc": "Removes all accounts and keys from this device. Cannot be undone.",

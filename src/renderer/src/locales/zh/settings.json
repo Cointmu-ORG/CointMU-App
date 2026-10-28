@@ -266,7 +266,7 @@
     "export": "导出",
     "privateKeyTitle": "显示私钥",
     "privateKeyDesc": "解密并显示账户的原始私钥",
-    "hardwareDesc": "通过 USB 连接 Ledger 设备",
+    "hardwareDesc": "通过 USB 连接 {{device}} 设备",
     "noUsb": "未检测到 USB",
     "resetWalletTitle": "重置钱包",
     "resetWalletDesc": "从该设备删除所有帐户和密钥。无法撤销。",
