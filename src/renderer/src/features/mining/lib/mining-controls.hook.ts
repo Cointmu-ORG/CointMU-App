@@ -1,6 +1,7 @@
 import { CONFIG_SYNC_INTERVAL_MS } from "../config/mining.constants";
 import { useState, useEffect, useCallback } from "react";
 import { localizeIpcError } from "@/shared/lib";
+import { MiningIntensity } from "@bridge/setting-values";
 import {
   getMiningConfig,
   setMiningEnabled,
@@ -17,7 +18,7 @@ interface MiningControls {
 const INITIAL_CONFIG: MiningConfig = {
   isMiningEnabled: false,
   cpuThreads: 4,
-  intensity: "Balanced",
+  intensity: MiningIntensity.BALANCED,
   poolAddress: "",
 };
 

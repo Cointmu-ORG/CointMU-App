@@ -29,7 +29,8 @@
     "walletLocked": "Кошелёк заблокирован. Пожалуйста, войдите снова.",
     "importedAccount": "Импортированный аккаунт",
     "importedSeedAccount": "Импортированный аккаунт из Seed-фразы",
-    "failedToAdd": "Не удалось добавить аккаунт"
+    "failedToAdd": "Не удалось добавить аккаунт",
+    "mainAccountLabel": "Основной кошелёк"
   },
   "modals": {
     "addAccount": {

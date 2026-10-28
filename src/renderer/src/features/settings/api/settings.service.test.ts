@@ -30,6 +30,21 @@ describe("resetAllSettings", () => {
     expect(set).toHaveBeenCalledWith("network.customNetworks", []);
   });
 
+  it("writes setting codes, not labels, and no language", async () => {
+    await resetAllSettings();
+
+    const written = Object.fromEntries(set.mock.calls);
+    expect(written["general"]).toMatchObject({ currency: "cmu" });
+    expect(written["general"]).not.toHaveProperty("language");
+    expect(written["appearance"]).toMatchObject({
+      theme: "light",
+      density: "comfortable",
+    });
+    expect(written["mining"]).toMatchObject({ intensity: "balanced" });
+    expect(written["advanced"]).toMatchObject({ logLevel: "info" });
+    expect(written["network.syncMode"]).toBe("snap");
+  });
+
   it("clears the bootnodes through the bootnode channel, after the other writes", async () => {
     await resetAllSettings();
 

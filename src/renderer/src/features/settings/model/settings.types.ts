@@ -1,3 +1,10 @@
+import type {
+  DisplayCurrency,
+  LogLevel,
+  MiningIntensity,
+  SyncMode,
+} from "@bridge/setting-values";
+
 export interface CustomNetwork {
   name: string;
   rpcUrl: string;
@@ -14,8 +21,7 @@ export interface SettingsStore {
     openInBackground: boolean;
     pushNotifications: boolean;
     notificationSound: boolean;
-    language: string;
-    currency: string;
+    currency: DisplayCurrency;
   };
   appearance: {
     theme: string;
@@ -30,7 +36,7 @@ export interface SettingsStore {
     maxPeers: number;
     discovery: boolean;
     listenPort: number;
-    syncMode: string;
+    syncMode: SyncMode;
     pruneOldState: boolean;
     customNetworks?: CustomNetwork[];
   };
@@ -38,7 +44,7 @@ export interface SettingsStore {
     isMiningEnabled: boolean;
     startAtLaunch: boolean;
     cpuThreads: number;
-    intensity: string;
+    intensity: MiningIntensity;
     pauseOnBattery: boolean;
     miningMode: string;
     poolAddress: string;
@@ -51,7 +57,7 @@ export interface SettingsStore {
     httpRpc: boolean;
     wsRpc: boolean;
     corsOrigins: string;
-    logLevel: string;
+    logLevel: LogLevel;
   };
   notifications: {
     transactionAlerts: boolean;

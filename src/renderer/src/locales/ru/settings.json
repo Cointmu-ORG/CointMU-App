@@ -251,8 +251,6 @@
     "pauseTitle": "Пауза от батареи",
     "pauseDesc": "Остановить майнинг при отключении питания",
     "rewards": "Награды",
-    "modeTitle": "Режим",
-    "modeDesc": "Соло или в пуле",
     "rewardAddressTitle": "Адрес вознаграждения",
     "rewardAddressDesc": "Куда отправлять награды (по умолчанию главный)",
     "customAddress": "Пользовательский адрес...",
@@ -373,5 +371,34 @@
     "resetFailed": "Не удалось сбросить кошелёк.",
     "resetting": "Сброс...",
     "submit": "Безвозвратно сбросить кошелёк"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Эко",
+      "balanced": "Сбалансированный",
+      "turbo": "Турбо"
+    },
+    "density": {
+      "compact": "Компактная",
+      "comfortable": "Удобная",
+      "spacious": "Просторная"
+    },
+    "syncMode": {
+      "snap": "Snap (рекомендуется)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (нативная)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Информация",
+      "debug": "Отладка",
+      "warn": "Предупреждение",
+      "error": "Ошибка"
+    },
+    "recommendedValue": "{{value}} (рекомендуется)"
   }
 }

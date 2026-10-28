@@ -29,7 +29,8 @@
     "walletLocked": "Dompet terkunci. Silakan masuk kembali.",
     "importedAccount": "Akun Diimpor",
     "importedSeedAccount": "Akun Seed Diimpor",
-    "failedToAdd": "Gagal menambahkan akun"
+    "failedToAdd": "Gagal menambahkan akun",
+    "mainAccountLabel": "Dompet utama"
   },
   "modals": {
     "addAccount": {

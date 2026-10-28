@@ -1,12 +1,13 @@
 import { ADVANCED_SETTINGS_KEY } from "../config/settings.constants";
 import { create } from "zustand";
 import { getSetting, setSetting } from "@/shared/api";
+import { LogLevel } from "@bridge/setting-values";
 
 export interface AdvancedSettings {
   httpRpc: boolean;
   wsRpc: boolean;
   corsOrigins: string;
-  logLevel: string;
+  logLevel: LogLevel;
 }
 
 export interface StorageInfo {
@@ -27,7 +28,7 @@ const DEFAULT_SETTINGS: AdvancedSettings = {
   httpRpc: true,
   wsRpc: false,
   corsOrigins: "https://*.cointmu.net",
-  logLevel: "Info",
+  logLevel: LogLevel.INFO,
 };
 
 const DEFAULT_STORAGE: StorageInfo = {

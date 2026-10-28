@@ -1,15 +1,20 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
+import {
+  APPEARANCE_STORAGE_VERSION,
+  migrateAppearance,
+} from "./appearance-migration";
 
 export interface AppearanceState {
-  theme: "Light" | "Dark" | "Auto";
+  theme: ThemeMode;
   accentColor: string;
-  density: "Compact" | "Comfortable" | "Spacious";
+  density: LayoutDensity;
   showSidebarColors: boolean;
   animatedTransitions: boolean;
-  setTheme: (theme: "Light" | "Dark" | "Auto") => void;
+  setTheme: (theme: ThemeMode) => void;
   setAccentColor: (color: string) => void;
-  setDensity: (density: "Compact" | "Comfortable" | "Spacious") => void;
+  setDensity: (density: LayoutDensity) => void;
   setShowSidebarColors: (show: boolean) => void;
   setAnimatedTransitions: (animate: boolean) => void;
   resetToDefaults: () => void;
@@ -18,9 +23,9 @@ export interface AppearanceState {
 export const useAppearanceStore = create<AppearanceState>()(
   persist(
     (set) => ({
-      theme: "Auto",
+      theme: ThemeMode.AUTO,
       accentColor: "#3b82f6",
-      density: "Comfortable",
+      density: LayoutDensity.COMFORTABLE,
       showSidebarColors: true,
       animatedTransitions: true,
       setTheme: (theme) => set({ theme }),
@@ -31,15 +36,17 @@ export const useAppearanceStore = create<AppearanceState>()(
         set({ animatedTransitions }),
       resetToDefaults: () =>
         set({
-          theme: "Light",
+          theme: ThemeMode.LIGHT,
           accentColor: "#3b82f6",
-          density: "Comfortable",
+          density: LayoutDensity.COMFORTABLE,
           showSidebarColors: true,
           animatedTransitions: true,
         }),
     }),
     {
       name: "cointmu-appearance-storage",
+      version: APPEARANCE_STORAGE_VERSION,
+      migrate: (persisted) => migrateAppearance(persisted),
     },
   ),
 );
@@ -49,8 +56,8 @@ const applyAppearanceEffects = (state: AppearanceState) => {
 
   // Handle Theme
   const isDark =
-    state.theme === "Dark" ||
-    (state.theme === "Auto" &&
+    state.theme === ThemeMode.DARK ||
+    (state.theme === ThemeMode.AUTO &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
   if (isDark) {
     root.classList.add("dark");
@@ -65,7 +72,7 @@ const applyAppearanceEffects = (state: AppearanceState) => {
   );
 
   // Handle Layout Attributes
-  root.setAttribute("data-density", state.density.toLowerCase());
+  root.setAttribute("data-density", state.density);
   root.setAttribute("data-animations", state.animatedTransitions.toString());
 };
 

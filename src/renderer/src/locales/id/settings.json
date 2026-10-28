@@ -248,8 +248,6 @@
     "pauseTitle": "Jeda pada baterai",
     "pauseDesc": "Hentikan penambangan saat laptop dicabut dari daya",
     "rewards": "Hadiah",
-    "modeTitle": "Mode",
-    "modeDesc": "Penambangan Solo vs pool",
     "rewardAddressTitle": "Alamat hadiah",
     "rewardAddressDesc": "Ke mana hadiah coinbase dikirim (bawaannya adalah dompet utama)",
     "customAddress": "Alamat khusus...",
@@ -370,5 +368,34 @@
     "resetFailed": "Gagal mereset dompet.",
     "resetting": "Mereset...",
     "submit": "Reset dompet secara permanen"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Hemat",
+      "balanced": "Seimbang",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Ringkas",
+      "comfortable": "Nyaman",
+      "spacious": "Lega"
+    },
+    "syncMode": {
+      "snap": "Snap (disarankan)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (bawaan)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Info",
+      "debug": "Debug",
+      "warn": "Peringatan",
+      "error": "Kesalahan"
+    },
+    "recommendedValue": "{{value}} (disarankan)"
   }
 }

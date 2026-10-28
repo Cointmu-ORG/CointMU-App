@@ -2,6 +2,8 @@ import { COLORS } from "../config/settings.constants";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppearanceStore } from "../model/appearance.store";
+import { DENSITY_LABEL_KEYS } from "@/shared/lib";
+import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
 
 /**
  * Appearance settings pane containing theme (light/dark/auto),
@@ -25,9 +27,9 @@ export function AppearanceSettings(): JSX.Element {
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-4 shadow-sm flex gap-4">
             <button
-              onClick={() => appearanceStore.setTheme("Light")}
+              onClick={() => appearanceStore.setTheme(ThemeMode.LIGHT)}
               className={`flex-1 rounded-xl border-2 transition-all p-1 text-left ${
-                appearanceStore.theme === "Light"
+                appearanceStore.theme === ThemeMode.LIGHT
                   ? "border-accent bg-accent/10"
                   : "border-transparent hover:bg-slate-50 dark:hover:bg-white/5"
               }`}
@@ -49,9 +51,9 @@ export function AppearanceSettings(): JSX.Element {
             </button>
 
             <button
-              onClick={() => appearanceStore.setTheme("Dark")}
+              onClick={() => appearanceStore.setTheme(ThemeMode.DARK)}
               className={`flex-1 rounded-xl border-2 transition-all p-1 text-left ${
-                appearanceStore.theme === "Dark"
+                appearanceStore.theme === ThemeMode.DARK
                   ? "border-accent bg-accent/10"
                   : "border-transparent hover:bg-slate-50 dark:hover:bg-white/5"
               }`}
@@ -73,9 +75,9 @@ export function AppearanceSettings(): JSX.Element {
             </button>
 
             <button
-              onClick={() => appearanceStore.setTheme("Auto")}
+              onClick={() => appearanceStore.setTheme(ThemeMode.AUTO)}
               className={`flex-1 rounded-xl border-2 transition-all p-1 text-left ${
-                appearanceStore.theme === "Auto"
+                appearanceStore.theme === ThemeMode.AUTO
                   ? "border-accent bg-accent/10"
                   : "border-transparent hover:bg-slate-50 dark:hover:bg-white/5"
               }`}
@@ -141,17 +143,17 @@ export function AppearanceSettings(): JSX.Element {
                 </p>
               </div>
               <div className="flex items-center bg-slate-100 dark:bg-black/20 rounded-lg p-1">
-                {["Compact", "Comfortable", "Spacious"].map((opt) => (
+                {Object.values(LayoutDensity).map((opt) => (
                   <button
                     key={opt}
-                    onClick={() => appearanceStore.setDensity(opt as any)}
+                    onClick={() => appearanceStore.setDensity(opt)}
                     className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                       appearanceStore.density === opt
                         ? "bg-white dark:bg-gray-800 text-slate-800 dark:text-gray-100 shadow-sm"
                         : "text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-100"
                     }`}
                   >
-                    {opt}
+                    {t(DENSITY_LABEL_KEYS[opt])}
                   </button>
                 ))}
               </div>

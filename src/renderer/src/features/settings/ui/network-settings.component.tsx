@@ -1,12 +1,15 @@
 import {
   NETWORK_OPTIONS,
   MAX_PEERS_OPTIONS,
+  RECOMMENDED_MAX_PEERS,
   SYNC_MODE_OPTIONS,
 } from "../config/settings.constants";
+import type { SyncMode } from "@bridge/setting-values";
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { CustomNetwork, SettingsStore } from "@/features/settings";
 import { CustomDropdown } from "@/shared/ui";
+import { SYNC_MODE_LABEL_KEYS } from "@/shared/lib";
 import { AddNetworkModal } from "./add-network-modal.component";
 import { BootnodeSettings } from "./bootnode-settings.component";
 
@@ -26,6 +29,10 @@ export function NetworkSettings({
   onUpdate,
 }: NetworkSettingsProps): JSX.Element {
   const { t } = useTranslation();
+  const maxPeersLabel = (peers: number): string =>
+    peers === RECOMMENDED_MAX_PEERS
+      ? t("settings:options.recommendedValue", { value: peers })
+      : String(peers);
   const [isSwitching, setIsSwitching] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -183,16 +190,18 @@ export function NetworkSettings({
                 </p>
               </div>
               <div className="w-56">
-                <CustomDropdown<{ label: string; value: number }>
+                <CustomDropdown<number>
                   options={MAX_PEERS_OPTIONS}
                   selected={
-                    MAX_PEERS_OPTIONS.find(
-                      (opt) => opt.value === config.maxPeers,
-                    ) || MAX_PEERS_OPTIONS[1]
+                    MAX_PEERS_OPTIONS.includes(config.maxPeers)
+                      ? config.maxPeers
+                      : RECOMMENDED_MAX_PEERS
                   }
-                  onSelect={(val) => onUpdate("maxPeers", val.value)}
-                  renderSelected={(selected) => selected?.label}
-                  renderOption={(option) => option.label}
+                  onSelect={(val) => onUpdate("maxPeers", val)}
+                  renderSelected={(selected) =>
+                    selected === null ? null : maxPeersLabel(selected)
+                  }
+                  renderOption={maxPeersLabel}
                   compact
                 />
               </div>
@@ -264,14 +273,14 @@ export function NetworkSettings({
                 </p>
               </div>
               <div className="w-56 flex-shrink-0">
-                <CustomDropdown<string>
+                <CustomDropdown<SyncMode>
                   options={SYNC_MODE_OPTIONS}
                   selected={config.syncMode}
                   onSelect={(val) => onUpdate("syncMode", val)}
                   renderSelected={(selected) =>
-                    selected || SYNC_MODE_OPTIONS[0]
+                    t(SYNC_MODE_LABEL_KEYS[selected ?? SYNC_MODE_OPTIONS[0]])
                   }
-                  renderOption={(option) => option}
+                  renderOption={(option) => t(SYNC_MODE_LABEL_KEYS[option])}
                   compact
                 />
               </div>

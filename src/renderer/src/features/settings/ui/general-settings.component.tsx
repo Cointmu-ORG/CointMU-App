@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "@/features/settings";
 import { LanguageSwitcher } from "./language-switcher.component";
 import { CustomDropdown } from "@/shared/ui";
+import { CURRENCY_LABEL_KEYS } from "@/shared/lib";
+import { DisplayCurrency } from "@bridge/setting-values";
 
 interface GeneralSettingsProps {
   config: SettingsStore["general"];
@@ -91,12 +93,14 @@ export function GeneralSettings({
                 </p>
               </div>
               <div className="w-48">
-                <CustomDropdown<string>
+                <CustomDropdown<DisplayCurrency>
                   options={CURRENCY_OPTIONS}
                   selected={config.currency}
                   onSelect={(val) => onUpdate("currency", val)}
-                  renderSelected={(selected) => selected || "CMU (native)"}
-                  renderOption={(option) => option}
+                  renderSelected={(selected) =>
+                    t(CURRENCY_LABEL_KEYS[selected ?? DisplayCurrency.CMU])
+                  }
+                  renderOption={(option) => t(CURRENCY_LABEL_KEYS[option])}
                   compact
                 />
               </div>

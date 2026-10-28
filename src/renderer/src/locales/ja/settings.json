@@ -248,8 +248,6 @@
     "pauseTitle": "バッテリー駆動時に一時停止",
     "pauseDesc": "ラップトップが電源から切断されたときにマイニングを停止します",
     "rewards": "報酬",
-    "modeTitle": "モード",
-    "modeDesc": "ソロマイニング対プールマイニング",
     "rewardAddressTitle": "報酬アドレス",
     "rewardAddressDesc": "コインベースの報酬が送信される場所（デフォルトはメインウォレット）",
     "customAddress": "カスタムアドレス...",
@@ -370,5 +368,34 @@
     "resetFailed": "ウォレットをリセットできませんでした。",
     "resetting": "リセット中...",
     "submit": "ウォレットを完全にリセット"
+  },
+  "options": {
+    "intensity": {
+      "eco": "エコ",
+      "balanced": "バランス",
+      "turbo": "ターボ"
+    },
+    "density": {
+      "compact": "コンパクト",
+      "comfortable": "標準",
+      "spacious": "ゆったり"
+    },
+    "syncMode": {
+      "snap": "Snap（推奨）",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU（ネイティブ）",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "情報",
+      "debug": "デバッグ",
+      "warn": "警告",
+      "error": "エラー"
+    },
+    "recommendedValue": "{{value}}（推奨）"
   }
 }

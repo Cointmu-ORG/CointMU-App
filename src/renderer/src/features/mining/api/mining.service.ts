@@ -1,5 +1,7 @@
 import { getAllSettings, setSetting } from "@/shared/api";
 import { type MiningLog } from "../model/mining.store";
+import { INTENSITY_OPTIONS } from "../config/mining.constants";
+import { MiningIntensity, toSettingCode } from "@bridge/setting-values";
 
 interface MiningStats {
   isMining: boolean;
@@ -11,7 +13,7 @@ interface MiningStats {
 interface MiningConfig {
   isMiningEnabled: boolean;
   cpuThreads: number;
-  intensity: string;
+  intensity: MiningIntensity;
   poolAddress: string;
 }
 
@@ -19,7 +21,6 @@ type Unsubscribe = () => void;
 
 const SETTINGS_KEY_MINING_ENABLED = "mining.isMiningEnabled";
 const DEFAULT_CPU_THREADS = 4;
-const DEFAULT_INTENSITY = "Balanced";
 
 /**
  * Reads the persisted mining configuration from the main process store and
@@ -35,10 +36,11 @@ async function getMiningConfig(): Promise<MiningConfig> {
       typeof config.cpuThreads === "number"
         ? config.cpuThreads
         : DEFAULT_CPU_THREADS,
-    intensity:
-      typeof config.intensity === "string"
-        ? config.intensity
-        : DEFAULT_INTENSITY,
+    intensity: toSettingCode(
+      config.intensity,
+      INTENSITY_OPTIONS,
+      MiningIntensity.BALANCED,
+    ),
     poolAddress:
       typeof config.poolAddress === "string" ? config.poolAddress : "",
   };

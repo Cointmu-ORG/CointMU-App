@@ -1,0 +1,72 @@
+{
+  "mnemonic": null,
+  "activeWalletAddress": "0x2BC096C7573c73f896DFb3fbb3b9BEa1C8FCE797",
+  "accounts": [
+    {
+      "index": 0,
+      "address": "0x2BC096C7573c73f896DFb3fbb3b9BEa1C8FCE797",
+      "label": "Main wallet"
+    }
+  ],
+  "general": {
+    "launchAtLogin": true,
+    "openInBackground": false,
+    "pushNotifications": true,
+    "notificationSound": false,
+    "language": "English",
+    "currency": "EUR ()"
+  },
+  "appearance": {
+    "theme": "Light",
+    "accentColor": "#3b82f6",
+    "density": "Comfortable",
+    "showSidebarColors": true,
+    "animatedTransitions": true
+  },
+  "network": {
+    "network": "CointMU Mainnet � chain ID 1912",
+    "rpcEndpoint": "https://rpc.cointmu.net",
+    "maxPeers": 25,
+    "discovery": true,
+    "listenPort": 30303,
+    "syncMode": "Full",
+    "pruneOldState": true,
+    "chainId": 1912
+  },
+  "mining": {
+    "isMiningEnabled": false,
+    "startAtLaunch": false,
+    "cpuThreads": 4,
+    "intensity": "Turbo",
+    "pauseOnBattery": true,
+    "miningMode": "Custom pool...",
+    "poolAddress": "0x2BC096C7573c73f896DFb3fbb3b9BEa1C8FCE797"
+  },
+  "security": {
+    "autoLock": true,
+    "requireBiometrics": false
+  },
+  "advanced": {
+    "httpRpc": true,
+    "wsRpc": false,
+    "corsOrigins": "https://*.cointmu.net",
+    "logLevel": "Debug"
+  },
+  "notifications": {
+    "global": true,
+    "transactions": true,
+    "mining": true,
+    "security": true,
+    "desktopOs": true,
+    "sound": false
+  },
+  "notificationHistory": [],
+  "telemetry": {
+    "enabled": true,
+    "noticeAcknowledged": false
+  },
+  "geth": {
+    "ipcInstallId": "90d0ecc0-cc7d-4d0a-b85c-74b85d33ec8e"
+  },
+  "encryptedPayload": "<redacted: scrypt keystore of a throwaway test key>"
+}
