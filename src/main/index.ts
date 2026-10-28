@@ -148,23 +148,3 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-
-process.on("SIGINT", () => {
-  if (isAppQuitting) return;
-  isAppQuitting = true;
-  killGethProcess()
-    .then(removeTemporaryIpcDir)
-    .then(() => {
-      app.exit();
-    });
-});
-
-process.on("SIGTERM", () => {
-  if (isAppQuitting) return;
-  isAppQuitting = true;
-  killGethProcess()
-    .then(removeTemporaryIpcDir)
-    .then(() => {
-      app.exit();
-    });
-});
