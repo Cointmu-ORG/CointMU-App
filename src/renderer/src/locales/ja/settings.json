@@ -266,7 +266,7 @@
     "export": "エクスポート",
     "privateKeyTitle": "秘密鍵の表示",
     "privateKeyDesc": "アカウントの生の秘密鍵を復号化して表示します",
-    "hardwareDesc": "USB経由でLedgerデバイスを接続します",
+    "hardwareDesc": "USB経由で{{device}}デバイスを接続します",
     "noUsb": "USBが検出されません",
     "resetWalletTitle": "ウォレットのリセット",
     "resetWalletDesc": "このデバイスからすべてのアカウントとキーを削除します。元に戻すことはできません。",

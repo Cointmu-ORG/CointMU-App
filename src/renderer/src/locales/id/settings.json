@@ -266,7 +266,7 @@
     "export": "Ekspor",
     "privateKeyTitle": "Tampilkan kunci pribadi",
     "privateKeyDesc": "Dekripsi dan tampilkan kunci pribadi mentah untuk akun",
-    "hardwareDesc": "Hubungkan perangkat Ledger melalui USB",
+    "hardwareDesc": "Hubungkan perangkat {{device}} melalui USB",
     "noUsb": "Tidak ada USB yang terdeteksi",
     "resetWalletTitle": "Reset dompet",
     "resetWalletDesc": "Menghapus semua akun dan kunci dari perangkat ini. Tidak dapat dibatalkan.",
