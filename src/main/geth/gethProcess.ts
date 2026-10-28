@@ -13,6 +13,7 @@ import {
   removeGethPidFile,
   writeGethPidFile,
 } from "./orphanedGeth";
+import { startGethWatcher } from "./gethWatcherProcess";
 import { parseGethLogChunk } from "../utils/gethLogParser";
 import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
@@ -191,6 +192,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     };
 
     gethProcess.stderr?.on("data", handleGethStderr);
+    startGethWatcher(gethProcess);
 
     gethProcess.on("error", (err: Error) => {
       console.error(
