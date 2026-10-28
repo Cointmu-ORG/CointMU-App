@@ -3,11 +3,16 @@ import { existsSync } from "fs";
 import { spawn, ChildProcess } from "child_process";
 import ms from "ms";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
-import { getNetworkId, resolveDataDir } from "./networkConfig";
+import { getNetworkId, resolveDataDir, resolveDataRoot } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
 import { forgetRunningBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethBinaryPath } from "./gethInit";
+import {
+  GETH_GRACEFUL_TIMEOUT_MS,
+  removeGethPidFile,
+  writeGethPidFile,
+} from "./orphanedGeth";
 import { parseGethLogChunk } from "../utils/gethLogParser";
 import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
@@ -16,7 +21,6 @@ import type { AppStore } from "../services/appStore";
 
 export const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
-const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
@@ -120,6 +124,10 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       detached: false,
     });
     lastSpawnedGeth = gethProcess;
+    const spawnedPid = gethProcess.pid;
+    if (spawnedPid !== undefined) {
+      writeGethPidFile(resolveDataRoot(), spawnedPid);
+    }
 
     /**
      * Broadcasts a parsed mining log object to every renderer window.
@@ -198,6 +206,9 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 
     gethProcess.on("close", (code: number | null) => {
       console.log(`[geth:close] Process exited with code ${code}`);
+      if (spawnedPid !== undefined) {
+        removeGethPidFile(resolveDataRoot(), spawnedPid);
+      }
       gethProcess = null;
       if (intentionalGethShutdown) {
         intentionalGethShutdown = false;
