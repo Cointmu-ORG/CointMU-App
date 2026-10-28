@@ -31,3 +31,67 @@ export function findExtensionKeyGaps(
     unused: [...defined].filter((key) => !referenced.has(key)).sort(),
   };
 }
+
+export interface ExtensionLocaleGaps {
+  /** In en.json but not in the translated file. */
+  readonly missing: string[];
+  /** In the translated file but not in en.json. */
+  readonly extra: string[];
+  /** Keys whose `{{placeholder}}` names differ from en.json. */
+  readonly placeholderMismatch: string[];
+}
+
+const PLACEHOLDER = /\{\{(\w+)\}\}/g;
+
+/**
+ * @param value - A parsed locale file.
+ * @param prefix - Key prefix of the current level.
+ * @returns Every leaf string by its dotted key.
+ */
+function flattenStrings(value: unknown, prefix = ""): Map<string, string> {
+  if (typeof value === "string") return new Map([[prefix, value]]);
+  if (typeof value !== "object" || value === null) return new Map();
+  return new Map(
+    Object.entries(value).flatMap(([key, child]) => [
+      ...flattenStrings(child, prefix ? `${prefix}.${key}` : key),
+    ]),
+  );
+}
+
+/**
+ * @param text - A translated message.
+ * @returns Its placeholder names, sorted, as one comparable string.
+ */
+function placeholderNames(text: string): string {
+  return [...text.matchAll(PLACEHOLDER)]
+    .map((match) => match[1])
+    .sort()
+    .join(",");
+}
+
+/**
+ * Compares a translated extension locale with en.json: same keys, and the
+ * same placeholders in each message so `formatMessage` can fill them.
+ * @param english - The parsed extension/locales/en.json.
+ * @param translated - Another parsed extension/locales/<lang>.json.
+ * @returns What the translated file lacks, adds, or names differently.
+ */
+export function findExtensionLocaleGaps(
+  english: unknown,
+  translated: unknown,
+): ExtensionLocaleGaps {
+  const base = flattenStrings(english);
+  const other = flattenStrings(translated);
+  return {
+    missing: [...base.keys()].filter((key) => !other.has(key)).sort(),
+    extra: [...other.keys()].filter((key) => !base.has(key)).sort(),
+    placeholderMismatch: [...base]
+      .filter(
+        ([key, text]) =>
+          other.has(key) &&
+          placeholderNames(text) !== placeholderNames(other.get(key) ?? ""),
+      )
+      .map(([key]) => key)
+      .sort(),
+  };
+}

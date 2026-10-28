@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "Запрос на подключение",
+        "message": "Подписать сообщение",
+        "typedData": "Подписать типизированные данные",
+        "sendTransaction": "Подтвердить транзакцию",
+        "signTransaction": "Подписать транзакцию"
+      },
+      "label": {
+        "site": "Сайт",
+        "account": "Аккаунт",
+        "permission": "Разрешение",
+        "message": "Сообщение",
+        "network": "ID цепи",
+        "type": "Тип",
+        "to": "Кому",
+        "value": "Сумма",
+        "data": "Данные"
+      },
+      "value": {
+        "accounts": "Видеть адрес вашего кошелька и запрашивать подтверждения",
+        "contractCreation": "Новый контракт (без получателя)"
+      },
+      "warning": {
+        "contractData": "Эта транзакция взаимодействует со смарт-контрактом. Подтверждайте её, только если доверяете этому сайту и понимаете, что она делает."
+      },
+      "notFound": "Этот запрос больше недоступен. Возможно, он истёк или на него уже ответили."
+    },
+    "wallet": {
+      "approveTx": "Подтвердить транзакцию",
+      "rejectTx": "Отклонить",
+      "waitingApproval": "Ожидание подтверждения в настольном приложении...",
+      "importPrivKey": "Импорт приватного ключа",
+      "importBtn": "Войти",
+      "totalBalance": "Общий баланс",
+      "send": "Отправить",
+      "receive": "Получить",
+      "swap": "Обмен",
+      "assets": "Активы",
+      "standaloneMode": "Автономный режим",
+      "desktopMode": "Подключено к приложению CointMU",
+      "addWallet": "Добавить кошелёк",
+      "addNetwork": "Добавить сеть",
+      "networkName": "Название сети",
+      "rpcUrl": "URL RPC",
+      "chainId": "ID цепи",
+      "saveNetwork": "Сохранить сеть",
+      "desktopConnection": "Подключение к настольному приложению",
+      "cancel": "Отмена",
+      "addWalletSelectionTitle": "Выберите тип кошелька",
+      "selectImportBtn": "Импорт приватного ключа",
+      "selectLinkBtn": "Связать с настольным приложением",
+      "bridgeNotPaired": "Это расширение не сопряжено с CointMU Desktop. Обновите оба приложения, затем выберите «Связать с настольным приложением», чтобы выполнить сопряжение снова.",
+      "cancelSelectionBtn": "Отмена",
+      "importFailed": "Недействительный приватный ключ или ошибка вывода.",
+      "selectAccount": "Выберите аккаунт",
+      "imported": "Импортирован",
+      "desktop": "Десктоп",
+      "reconnecting": "Переподключение...",
+      "deleteWalletBtn": "Удалить кошелёк",
+      "deleteWalletConfirm": "Вы уверены, что хотите удалить этот кошелёк?",
+      "deleteNetworkBtn": "Удалить сеть",
+      "sendTitle": "Отправить актив",
+      "sendToLabel": "Адрес получателя",
+      "sendAmountLabel": "Сумма",
+      "sendConfirmBtn": "Подтвердить",
+      "sendCancelBtn": "Отмена",
+      "sendInProgress": "Отправка...",
+      "sendSuccess": "Транзакция отправлена!",
+      "privKeyLabel": "Приватный ключ",
+      "approveBtn": "Подтвердить",
+      "networkNamePlaceholder": "например, Мой тестнет",
+      "confirmTitle": "Вы уверены?",
+      "confirmBtn": "Подтвердить",
+      "unknownNetwork": "Неизвестная сеть",
+      "networkOptions": "Параметры",
+      "editBtn": "Изменить",
+      "deleteBtn": "Удалить",
+      "deleteNetworkConfirm": "Вы уверены, что хотите удалить эту сеть?",
+      "offline": "Не в сети",
+      "desktopUnreachable": "Не удалось связаться с CointMU Desktop. Убедитесь, что приложение запущено, и повторите попытку.",
+      "networkFieldsRequired": "Название и URL RPC обязательны.",
+      "chainIdInvalid": "ID цепи должен быть допустимым положительным числом.",
+      "sendFieldsRequired": "Требуются корректные получатель и сумма",
+      "sendSuccessWithHash": "Транзакция отправлена! Хеш: {{hash}}",
+      "sendFailedWithReason": "Транзакция не выполнена: {{reason}}",
+      "unknownError": "Неизвестная ошибка"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop не подключено. Откройте настольное приложение и повторите попытку.",
+      "storageSaveFailed": "Не удалось сохранить кошелёк в хранилище браузера.",
+      "noActiveAddress": "Кошелёк не выбран.",
+      "privateKeyNotFound": "Приватный ключ для этого кошелька не найден.",
+      "networkNotFound": "Выбранная сеть не найдена.",
+      "providerFailed": "Не удалось подготовить транзакцию.",
+      "txFailed": "Транзакция не выполнена."
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "Permintaan Koneksi",
+        "message": "Tandatangani Pesan",
+        "typedData": "Tandatangani Data Bertipe",
+        "sendTransaction": "Setujui Transaksi",
+        "signTransaction": "Tandatangani Transaksi"
+      },
+      "label": {
+        "site": "Situs",
+        "account": "Akun",
+        "permission": "Izin",
+        "message": "Pesan",
+        "network": "ID Chain",
+        "type": "Jenis",
+        "to": "Ke",
+        "value": "Nilai",
+        "data": "Data"
+      },
+      "value": {
+        "accounts": "Melihat alamat dompet Anda dan meminta persetujuan",
+        "contractCreation": "Kontrak baru (tanpa penerima)"
+      },
+      "warning": {
+        "contractData": "Transaksi ini berinteraksi dengan smart contract. Setujui hanya jika Anda memercayai situs ini dan memahami apa yang dilakukannya."
+      },
+      "notFound": "Permintaan ini tidak tersedia lagi. Mungkin sudah kedaluwarsa atau sudah dijawab."
+    },
+    "wallet": {
+      "approveTx": "Setujui Transaksi",
+      "rejectTx": "Tolak",
+      "waitingApproval": "Menunggu persetujuan di aplikasi desktop...",
+      "importPrivKey": "Impor Kunci Pribadi",
+      "importBtn": "Masuk",
+      "totalBalance": "Total saldo",
+      "send": "Kirim",
+      "receive": "Terima",
+      "swap": "Tukar",
+      "assets": "Aset",
+      "standaloneMode": "Mode Mandiri",
+      "desktopMode": "Terhubung ke Aplikasi CointMU",
+      "addWallet": "Tambah Dompet",
+      "addNetwork": "Tambah Jaringan",
+      "networkName": "Nama Jaringan",
+      "rpcUrl": "URL RPC",
+      "chainId": "ID Chain",
+      "saveNetwork": "Simpan Jaringan",
+      "desktopConnection": "Koneksi Desktop",
+      "cancel": "Batal",
+      "addWalletSelectionTitle": "Pilih Jenis Dompet",
+      "selectImportBtn": "Impor Kunci Pribadi",
+      "selectLinkBtn": "Tautkan ke Aplikasi Desktop",
+      "bridgeNotPaired": "Ekstensi ini belum dipasangkan dengan CointMU Desktop. Perbarui kedua aplikasi, lalu pilih Tautkan ke Aplikasi Desktop untuk memasangkan lagi.",
+      "cancelSelectionBtn": "Batal",
+      "importFailed": "Kunci pribadi tidak valid atau penurunan gagal.",
+      "selectAccount": "Pilih Akun",
+      "imported": "Diimpor",
+      "desktop": "Desktop",
+      "reconnecting": "Menyambungkan ulang...",
+      "deleteWalletBtn": "Hapus Dompet",
+      "deleteWalletConfirm": "Yakin ingin menghapus dompet ini?",
+      "deleteNetworkBtn": "Hapus Jaringan",
+      "sendTitle": "Kirim Aset",
+      "sendToLabel": "Alamat Penerima",
+      "sendAmountLabel": "Jumlah",
+      "sendConfirmBtn": "Konfirmasi",
+      "sendCancelBtn": "Batal",
+      "sendInProgress": "Mengirim...",
+      "sendSuccess": "Transaksi Terkirim!",
+      "privKeyLabel": "Kunci Pribadi",
+      "approveBtn": "Setujui",
+      "networkNamePlaceholder": "mis. Testnet Saya",
+      "confirmTitle": "Apakah Anda yakin?",
+      "confirmBtn": "Konfirmasi",
+      "unknownNetwork": "Jaringan Tidak Dikenal",
+      "networkOptions": "Opsi",
+      "editBtn": "Edit",
+      "deleteBtn": "Hapus",
+      "deleteNetworkConfirm": "Yakin ingin menghapus jaringan ini?",
+      "offline": "Luring",
+      "desktopUnreachable": "Tidak dapat menjangkau Aplikasi CointMU Desktop. Pastikan aplikasi berjalan, lalu coba lagi.",
+      "networkFieldsRequired": "Nama dan URL RPC wajib diisi.",
+      "chainIdInvalid": "ID Chain harus berupa angka positif yang valid.",
+      "sendFieldsRequired": "Penerima dan jumlah yang valid wajib diisi",
+      "sendSuccessWithHash": "Transaksi Terkirim! Hash: {{hash}}",
+      "sendFailedWithReason": "Transaksi Gagal: {{reason}}",
+      "unknownError": "Kesalahan tidak diketahui"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop tidak terhubung. Buka aplikasi desktop, lalu coba lagi.",
+      "storageSaveFailed": "Tidak dapat menyimpan dompet di penyimpanan browser.",
+      "noActiveAddress": "Tidak ada dompet yang dipilih.",
+      "privateKeyNotFound": "Kunci pribadi untuk dompet ini tidak ditemukan.",
+      "networkNotFound": "Jaringan yang dipilih tidak ditemukan.",
+      "providerFailed": "Tidak dapat menyiapkan transaksi.",
+      "txFailed": "Transaksi gagal."
+    }
+  }
+}

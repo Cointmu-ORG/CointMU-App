@@ -1,11 +1,14 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import * as path from "node:path";
 import {
   collectKeyRefs,
   isResolvable,
   readRegisteredNamespaces,
 } from "./i18n/key-usage";
-import { findExtensionKeyGaps } from "./i18n/extension-keys";
+import {
+  findExtensionKeyGaps,
+  findExtensionLocaleGaps,
+} from "./i18n/extension-keys";
 import {
   buildKeyIndex,
   findCatalogGaps,
@@ -115,7 +118,7 @@ function auditKeyUsage(): number {
 
 /**
  * Reports extension keys that its HTML/JS reference but en.json lacks, and
- * en.json keys nothing references. The extension ships English only.
+ * en.json keys nothing references.
  * @returns The number of missing plus unused keys.
  */
 function auditExtensionKeys(): number {
@@ -141,6 +144,44 @@ function auditExtensionKeys(): number {
   return missing.length + unused.length;
 }
 
+/**
+ * Checks that the extension has a locale file for every desktop locale, each
+ * with exactly en.json's keys and placeholders.
+ * @returns The number of problems found.
+ */
+function auditExtensionLocales(): number {
+  const fileOf = (language: string): string =>
+    path.join(EXTENSION_DIR, "locales", `${language}.json`);
+  const read = (language: string): unknown =>
+    JSON.parse(readFileSync(fileOf(language), "utf8"));
+  const english = read("en");
+  let problems = 0;
+  const languages = readdirSync(LOCALES_DIR).filter(
+    (language) => language !== "en",
+  );
+  for (const language of languages) {
+    if (!existsSync(fileOf(language))) {
+      console.log(`  [extension/${language}.json] missing file`);
+      problems += 1;
+      continue;
+    }
+    const gaps = findExtensionLocaleGaps(english, read(language));
+    for (const [kind, keys] of Object.entries(gaps)) {
+      for (const key of keys)
+        console.log(`  [extension/${language}.json] ${kind} ${key}`);
+      problems += keys.length;
+    }
+  }
+  console.log(
+    `Extension locales: ${problems} problem(s) across ${languages.length + 1} locales.`,
+  );
+  return problems;
+}
+
 const failures =
-  auditCatalog() + auditPluralForms() + auditKeyUsage() + auditExtensionKeys();
+  auditCatalog() +
+  auditPluralForms() +
+  auditKeyUsage() +
+  auditExtensionKeys() +
+  auditExtensionLocales();
 process.exit(failures > 0 ? 1 : 0);
