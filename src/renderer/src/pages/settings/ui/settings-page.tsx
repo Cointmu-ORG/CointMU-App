@@ -1,3 +1,4 @@
+import { useNotificationStore } from "@/entities/notification";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type SettingsStore } from "@/features/settings";
@@ -14,7 +15,6 @@ import { NotificationSettings } from "@/features/settings";
 import { resetAllSettings } from "@/features/settings";
 import { getAllSettings, setSetting } from "@/shared/api";
 import { useAppearanceStore } from "@/features/settings";
-import { useNotificationStore } from "@/features/notifications";
 import { ErrorReportingSettings } from "@/features/error-reporting";
 import {
   Sun,

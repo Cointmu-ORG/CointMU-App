@@ -1,6 +1,6 @@
+import { useNotificationStore } from "@/entities/notification";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useNotificationStore } from "@/features/notifications";
 
 interface ToggleRowProps {
   title: string;

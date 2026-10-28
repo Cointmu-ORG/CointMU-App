@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import {
   useNotificationStore,
   type NotificationItem,
-} from "../model/notification.store";
+} from "@/entities/notification";
 import { X } from "lucide-react";
 
 interface ToastCardProps {

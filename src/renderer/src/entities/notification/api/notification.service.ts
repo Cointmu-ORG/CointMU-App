@@ -1,7 +1,7 @@
 import {
   useNotificationStore,
   type NotificationType,
-} from "@/features/notifications";
+} from "../model/notification.store";
 
 /**
  * Maps a notification type to its governing category toggle. The generic 'info'

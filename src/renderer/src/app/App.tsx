@@ -1,3 +1,4 @@
+import { useNotificationStore } from "@/entities/notification";
 import type { DerivedAccount } from "@/entities/account";
 import { useState, useEffect, Suspense, lazy, type JSX } from "react";
 import ms from "ms";
@@ -17,7 +18,7 @@ import { useAuthStore } from "@/features/auth";
 
 import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
-import { ToastViewport, useNotificationStore } from "@/features/notifications";
+import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "@/features/auth";
 import { FirstRunNotice } from "@/features/error-reporting";
 
