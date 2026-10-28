@@ -29,7 +29,8 @@
     "walletLocked": "Wallet ist gesperrt. Bitte melden Sie sich erneut an.",
     "importedAccount": "Importiertes Konto",
     "importedSeedAccount": "Importiertes Seed-Konto",
-    "failedToAdd": "Konto konnte nicht hinzugefügt werden"
+    "failedToAdd": "Konto konnte nicht hinzugefügt werden",
+    "mainAccountLabel": "Haupt-Wallet"
   },
   "modals": {
     "addAccount": {

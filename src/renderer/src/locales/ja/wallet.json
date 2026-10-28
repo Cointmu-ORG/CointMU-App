@@ -29,7 +29,8 @@
     "walletLocked": "ウォレットがロックされています。再度ログインしてください。",
     "importedAccount": "インポートされたアカウント",
     "importedSeedAccount": "インポートされたシードアカウント",
-    "failedToAdd": "アカウントの追加に失敗しました"
+    "failedToAdd": "アカウントの追加に失敗しました",
+    "mainAccountLabel": "メインウォレット"
   },
   "modals": {
     "addAccount": {

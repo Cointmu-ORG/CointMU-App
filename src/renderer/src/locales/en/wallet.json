@@ -29,7 +29,8 @@
     "walletLocked": "Wallet is locked. Please log in again.",
     "importedAccount": "Imported Account",
     "importedSeedAccount": "Imported Seed Account",
-    "failedToAdd": "Failed to add account"
+    "failedToAdd": "Failed to add account",
+    "mainAccountLabel": "Main wallet"
   },
   "modals": {
     "addAccount": {
