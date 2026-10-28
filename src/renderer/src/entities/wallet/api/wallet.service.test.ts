@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Mnemonic } from "ethers";
 import { IpcErrorCode } from "@bridge/types";
-import type { DerivedAccount } from "@/entities/account";
+import type { DerivedAccount } from "@/entities/account/@x/wallet";
 import {
   decryptSecret,
   deriveAccount,

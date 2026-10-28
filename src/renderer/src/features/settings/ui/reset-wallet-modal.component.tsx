@@ -1,9 +1,9 @@
+import { verifyPassword, lockSession } from "@/entities/wallet";
 import { useTranslation } from "react-i18next";
 import { RESET_CONFIRM_WORD } from "../config/settings.constants";
 import { useState, type SyntheticEvent, type JSX } from "react";
 import { AlertTriangle, Eye, EyeOff, X } from "lucide-react";
 import { getSetting } from "@/shared/api";
-import { verifyPassword, lockSession } from "@/features/wallet";
 
 interface ResetWalletModalProps {
   onClose: () => void;

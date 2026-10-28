@@ -1,3 +1,4 @@
+import { purgeSecondaryAccounts } from "@/entities/wallet";
 import { LOG_LEVELS } from "../config/settings.constants";
 import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
@@ -5,7 +6,6 @@ import { useAdvancedStore } from "../model/advanced.store";
 import { CustomDropdown } from "@/shared/ui";
 import { LOG_LEVEL_LABEL_KEYS } from "@/shared/lib";
 import { LogLevel } from "@bridge/setting-values";
-import { purgeSecondaryAccounts } from "@/features/wallet";
 
 /**
  * Formats a byte count into a compact human-readable size string.
