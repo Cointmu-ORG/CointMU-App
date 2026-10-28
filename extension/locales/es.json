@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "Solicitud de conexión",
+        "message": "Firmar mensaje",
+        "typedData": "Firmar datos tipados",
+        "sendTransaction": "Aprobar transacción",
+        "signTransaction": "Firmar transacción"
+      },
+      "label": {
+        "site": "Sitio",
+        "account": "Cuenta",
+        "permission": "Permiso",
+        "message": "Mensaje",
+        "network": "ID de Cadena",
+        "type": "Tipo",
+        "to": "Para",
+        "value": "Valor",
+        "data": "Datos"
+      },
+      "value": {
+        "accounts": "Ver la dirección de tu billetera y solicitar aprobaciones",
+        "contractCreation": "Contrato nuevo (sin destinatario)"
+      },
+      "warning": {
+        "contractData": "Esta transacción interactúa con un contrato inteligente. Apruébala solo si confías en este sitio y entiendes lo que hace."
+      },
+      "notFound": "Esta solicitud ya no está disponible. Puede que haya caducado o ya se haya respondido."
+    },
+    "wallet": {
+      "approveTx": "Aprobar transacción",
+      "rejectTx": "Rechazar",
+      "waitingApproval": "Esperando aprobación en la aplicación de escritorio...",
+      "importPrivKey": "Importar clave privada",
+      "importBtn": "Iniciar sesión",
+      "totalBalance": "Saldo total",
+      "send": "Enviar",
+      "receive": "Recibir",
+      "swap": "Intercambiar",
+      "assets": "Activos",
+      "standaloneMode": "Modo independiente",
+      "desktopMode": "Conectado a la aplicación CointMU",
+      "addWallet": "Añadir billetera",
+      "addNetwork": "Añadir red",
+      "networkName": "Nombre de la red",
+      "rpcUrl": "URL de RPC",
+      "chainId": "ID de Cadena",
+      "saveNetwork": "Guardar red",
+      "desktopConnection": "Conexión de escritorio",
+      "cancel": "Cancelar",
+      "addWalletSelectionTitle": "Elige el tipo de billetera",
+      "selectImportBtn": "Importar clave privada",
+      "selectLinkBtn": "Vincular con la aplicación de escritorio",
+      "bridgeNotPaired": "Esta extensión no está emparejada con CointMU Desktop. Actualiza ambas aplicaciones y luego elige Vincular con la aplicación de escritorio para emparejarla de nuevo.",
+      "cancelSelectionBtn": "Cancelar",
+      "importFailed": "Clave privada no válida o falló la derivación.",
+      "selectAccount": "Seleccionar cuenta",
+      "imported": "Importada",
+      "desktop": "Escritorio",
+      "reconnecting": "Reconectando...",
+      "deleteWalletBtn": "Eliminar billetera",
+      "deleteWalletConfirm": "¿Seguro que quieres eliminar esta billetera?",
+      "deleteNetworkBtn": "Eliminar red",
+      "sendTitle": "Enviar activo",
+      "sendToLabel": "Dirección del destinatario",
+      "sendAmountLabel": "Cantidad",
+      "sendConfirmBtn": "Confirmar",
+      "sendCancelBtn": "Cancelar",
+      "sendInProgress": "Enviando...",
+      "sendSuccess": "¡Transacción enviada!",
+      "privKeyLabel": "Clave privada",
+      "approveBtn": "Aprobar",
+      "networkNamePlaceholder": "p. ej., Mi testnet",
+      "confirmTitle": "¿Estás seguro?",
+      "confirmBtn": "Confirmar",
+      "unknownNetwork": "Red desconocida",
+      "networkOptions": "Opciones",
+      "editBtn": "Editar",
+      "deleteBtn": "Eliminar",
+      "deleteNetworkConfirm": "¿Seguro que quieres eliminar esta red?",
+      "offline": "Sin conexión",
+      "desktopUnreachable": "No se pudo conectar con la aplicación CointMU Desktop. Asegúrate de que esté abierta e inténtalo de nuevo.",
+      "networkFieldsRequired": "El nombre y la URL de RPC son obligatorios.",
+      "chainIdInvalid": "El ID de Cadena debe ser un número positivo válido.",
+      "sendFieldsRequired": "Se requieren un destinatario y una cantidad válidos",
+      "sendSuccessWithHash": "¡Transacción enviada! Hash: {{hash}}",
+      "sendFailedWithReason": "La transacción falló: {{reason}}",
+      "unknownError": "Error desconocido"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop no está conectado. Abre la aplicación de escritorio e inténtalo de nuevo.",
+      "storageSaveFailed": "No se pudo guardar la billetera en el almacenamiento del navegador.",
+      "noActiveAddress": "No hay ninguna billetera seleccionada.",
+      "privateKeyNotFound": "No se encontró la clave privada de esta billetera.",
+      "networkNotFound": "No se encontró la red seleccionada.",
+      "providerFailed": "No se pudo preparar la transacción.",
+      "txFailed": "La transacción falló."
+    }
+  }
+}

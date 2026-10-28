@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "连接请求",
+        "message": "签署消息",
+        "typedData": "签署类型化数据",
+        "sendTransaction": "批准交易",
+        "signTransaction": "签署交易"
+      },
+      "label": {
+        "site": "网站",
+        "account": "账户",
+        "permission": "权限",
+        "message": "消息",
+        "network": "链 ID",
+        "type": "类型",
+        "to": "接收方",
+        "value": "金额",
+        "data": "数据"
+      },
+      "value": {
+        "accounts": "查看你的钱包地址并请求批准",
+        "contractCreation": "新合约（无接收方）"
+      },
+      "warning": {
+        "contractData": "此交易会与智能合约交互。只有在你信任此网站并了解其作用时才批准。"
+      },
+      "notFound": "此请求已不可用。它可能已过期或已被处理。"
+    },
+    "wallet": {
+      "approveTx": "批准交易",
+      "rejectTx": "拒绝",
+      "waitingApproval": "正在等待桌面应用批准...",
+      "importPrivKey": "导入私钥",
+      "importBtn": "登录",
+      "totalBalance": "总余额",
+      "send": "发送",
+      "receive": "接收",
+      "swap": "兑换",
+      "assets": "资产",
+      "standaloneMode": "独立模式",
+      "desktopMode": "已连接到 CointMU 应用",
+      "addWallet": "添加钱包",
+      "addNetwork": "添加网络",
+      "networkName": "网络名称",
+      "rpcUrl": "RPC URL",
+      "chainId": "链 ID",
+      "saveNetwork": "保存网络",
+      "desktopConnection": "桌面连接",
+      "cancel": "取消",
+      "addWalletSelectionTitle": "选择钱包类型",
+      "selectImportBtn": "导入私钥",
+      "selectLinkBtn": "关联桌面应用",
+      "bridgeNotPaired": "此扩展未与 CointMU Desktop 配对。请更新两个应用，然后选择“关联桌面应用”重新配对。",
+      "cancelSelectionBtn": "取消",
+      "importFailed": "私钥无效或派生失败。",
+      "selectAccount": "选择账户",
+      "imported": "已导入",
+      "desktop": "桌面",
+      "reconnecting": "正在重新连接...",
+      "deleteWalletBtn": "删除钱包",
+      "deleteWalletConfirm": "确定要移除此钱包吗？",
+      "deleteNetworkBtn": "删除网络",
+      "sendTitle": "发送资产",
+      "sendToLabel": "接收地址",
+      "sendAmountLabel": "金额",
+      "sendConfirmBtn": "确认",
+      "sendCancelBtn": "取消",
+      "sendInProgress": "正在发送...",
+      "sendSuccess": "交易已发送！",
+      "privKeyLabel": "私钥",
+      "approveBtn": "批准",
+      "networkNamePlaceholder": "例如：我的测试网",
+      "confirmTitle": "确定吗？",
+      "confirmBtn": "确认",
+      "unknownNetwork": "未知网络",
+      "networkOptions": "选项",
+      "editBtn": "编辑",
+      "deleteBtn": "删除",
+      "deleteNetworkConfirm": "确定要删除此网络吗？",
+      "offline": "离线",
+      "desktopUnreachable": "无法连接到 CointMU Desktop 应用。请确认它正在运行，然后重试。",
+      "networkFieldsRequired": "名称和 RPC URL 为必填项。",
+      "chainIdInvalid": "链 ID 必须是有效的正数。",
+      "sendFieldsRequired": "需要有效的接收方和金额",
+      "sendSuccessWithHash": "交易已发送！哈希：{{hash}}",
+      "sendFailedWithReason": "交易失败：{{reason}}",
+      "unknownError": "未知错误"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop 未连接。请打开桌面应用后重试。",
+      "storageSaveFailed": "无法将钱包保存到浏览器存储中。",
+      "noActiveAddress": "未选择钱包。",
+      "privateKeyNotFound": "未找到此钱包的私钥。",
+      "networkNotFound": "未找到所选网络。",
+      "providerFailed": "无法准备交易。",
+      "txFailed": "交易失败。"
+    }
+  }
+}

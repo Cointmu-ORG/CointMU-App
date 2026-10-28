@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "Verbindungsanfrage",
+        "message": "Nachricht signieren",
+        "typedData": "Typisierte Daten signieren",
+        "sendTransaction": "Transaktion genehmigen",
+        "signTransaction": "Transaktion signieren"
+      },
+      "label": {
+        "site": "Website",
+        "account": "Konto",
+        "permission": "Berechtigung",
+        "message": "Nachricht",
+        "network": "Ketten-ID",
+        "type": "Typ",
+        "to": "An",
+        "value": "Betrag",
+        "data": "Daten"
+      },
+      "value": {
+        "accounts": "Ihre Wallet-Adresse sehen und Genehmigungen anfordern",
+        "contractCreation": "Neuer Vertrag (kein Empfänger)"
+      },
+      "warning": {
+        "contractData": "Diese Transaktion interagiert mit einem Smart Contract. Genehmigen Sie sie nur, wenn Sie dieser Website vertrauen und verstehen, was sie tut."
+      },
+      "notFound": "Diese Anfrage ist nicht mehr verfügbar. Sie ist möglicherweise abgelaufen oder wurde bereits beantwortet."
+    },
+    "wallet": {
+      "approveTx": "Transaktion genehmigen",
+      "rejectTx": "Ablehnen",
+      "waitingApproval": "Warte auf Genehmigung in der Desktop-App...",
+      "importPrivKey": "Privaten Schlüssel importieren",
+      "importBtn": "Anmelden",
+      "totalBalance": "Gesamtguthaben",
+      "send": "Senden",
+      "receive": "Empfangen",
+      "swap": "Tauschen",
+      "assets": "Assets",
+      "standaloneMode": "Eigenständiger Modus",
+      "desktopMode": "Mit der CointMU-App verbunden",
+      "addWallet": "Wallet hinzufügen",
+      "addNetwork": "Netzwerk hinzufügen",
+      "networkName": "Netzwerkname",
+      "rpcUrl": "RPC-URL",
+      "chainId": "Ketten-ID",
+      "saveNetwork": "Netzwerk speichern",
+      "desktopConnection": "Desktop-Verbindung",
+      "cancel": "Abbrechen",
+      "addWalletSelectionTitle": "Wallet-Typ wählen",
+      "selectImportBtn": "Privaten Schlüssel importieren",
+      "selectLinkBtn": "Mit der Desktop-App verknüpfen",
+      "bridgeNotPaired": "Diese Erweiterung ist nicht mit CointMU Desktop gekoppelt. Aktualisieren Sie beide Apps und wählen Sie dann „Mit der Desktop-App verknüpfen“, um sie erneut zu koppeln.",
+      "cancelSelectionBtn": "Abbrechen",
+      "importFailed": "Ungültiger privater Schlüssel oder Ableitung fehlgeschlagen.",
+      "selectAccount": "Konto auswählen",
+      "imported": "Importiert",
+      "desktop": "Desktop",
+      "reconnecting": "Verbindung wird wiederhergestellt...",
+      "deleteWalletBtn": "Wallet löschen",
+      "deleteWalletConfirm": "Möchten Sie diese Wallet wirklich entfernen?",
+      "deleteNetworkBtn": "Netzwerk löschen",
+      "sendTitle": "Asset senden",
+      "sendToLabel": "Empfängeradresse",
+      "sendAmountLabel": "Betrag",
+      "sendConfirmBtn": "Bestätigen",
+      "sendCancelBtn": "Abbrechen",
+      "sendInProgress": "Wird gesendet...",
+      "sendSuccess": "Transaktion gesendet!",
+      "privKeyLabel": "Privater Schlüssel",
+      "approveBtn": "Genehmigen",
+      "networkNamePlaceholder": "z. B. Mein Testnet",
+      "confirmTitle": "Sind Sie sicher?",
+      "confirmBtn": "Bestätigen",
+      "unknownNetwork": "Unbekanntes Netzwerk",
+      "networkOptions": "Optionen",
+      "editBtn": "Bearbeiten",
+      "deleteBtn": "Löschen",
+      "deleteNetworkConfirm": "Möchten Sie dieses Netzwerk wirklich löschen?",
+      "offline": "Offline",
+      "desktopUnreachable": "CointMU Desktop ist nicht erreichbar. Stellen Sie sicher, dass die App läuft, und versuchen Sie es erneut.",
+      "networkFieldsRequired": "Name und RPC-URL sind erforderlich.",
+      "chainIdInvalid": "Die Ketten-ID muss eine gültige positive Zahl sein.",
+      "sendFieldsRequired": "Gültiger Empfänger und Betrag sind erforderlich",
+      "sendSuccessWithHash": "Transaktion gesendet! Hash: {{hash}}",
+      "sendFailedWithReason": "Transaktion fehlgeschlagen: {{reason}}",
+      "unknownError": "Unbekannter Fehler"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop ist nicht verbunden. Öffnen Sie die Desktop-App und versuchen Sie es erneut.",
+      "storageSaveFailed": "Die Wallet konnte nicht im Browserspeicher gespeichert werden.",
+      "noActiveAddress": "Es ist keine Wallet ausgewählt.",
+      "privateKeyNotFound": "Der private Schlüssel dieser Wallet wurde nicht gefunden.",
+      "networkNotFound": "Das ausgewählte Netzwerk wurde nicht gefunden.",
+      "providerFailed": "Die Transaktion konnte nicht vorbereitet werden.",
+      "txFailed": "Die Transaktion ist fehlgeschlagen."
+    }
+  }
+}

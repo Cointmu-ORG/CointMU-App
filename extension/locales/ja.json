@@ -1,0 +1,101 @@
+{
+  "extension": {
+    "approval": {
+      "title": {
+        "connect": "接続リクエスト",
+        "message": "メッセージに署名",
+        "typedData": "型付きデータに署名",
+        "sendTransaction": "トランザクションを承認",
+        "signTransaction": "トランザクションに署名"
+      },
+      "label": {
+        "site": "サイト",
+        "account": "アカウント",
+        "permission": "権限",
+        "message": "メッセージ",
+        "network": "チェーンID",
+        "type": "種類",
+        "to": "宛先",
+        "value": "金額",
+        "data": "データ"
+      },
+      "value": {
+        "accounts": "ウォレットアドレスの確認と承認のリクエスト",
+        "contractCreation": "新しいコントラクト（受取人なし）"
+      },
+      "warning": {
+        "contractData": "このトランザクションはスマートコントラクトとやり取りします。このサイトを信頼し、内容を理解している場合にのみ承認してください。"
+      },
+      "notFound": "このリクエストは利用できなくなりました。期限切れか、すでに応答済みの可能性があります。"
+    },
+    "wallet": {
+      "approveTx": "トランザクションを承認",
+      "rejectTx": "拒否",
+      "waitingApproval": "デスクトップアプリでの承認を待っています...",
+      "importPrivKey": "秘密鍵をインポート",
+      "importBtn": "ログイン",
+      "totalBalance": "合計残高",
+      "send": "送信",
+      "receive": "受信",
+      "swap": "スワップ",
+      "assets": "資産",
+      "standaloneMode": "スタンドアロンモード",
+      "desktopMode": "CointMUアプリに接続済み",
+      "addWallet": "ウォレットを追加",
+      "addNetwork": "ネットワークを追加",
+      "networkName": "ネットワーク名",
+      "rpcUrl": "RPC URL",
+      "chainId": "チェーンID",
+      "saveNetwork": "ネットワークを保存",
+      "desktopConnection": "デスクトップ接続",
+      "cancel": "キャンセル",
+      "addWalletSelectionTitle": "ウォレットの種類を選択",
+      "selectImportBtn": "秘密鍵をインポート",
+      "selectLinkBtn": "デスクトップアプリとリンク",
+      "bridgeNotPaired": "この拡張機能はCointMU Desktopとペアリングされていません。両方のアプリを更新してから、「デスクトップアプリとリンク」を選んで再度ペアリングしてください。",
+      "cancelSelectionBtn": "キャンセル",
+      "importFailed": "秘密鍵が無効か、導出に失敗しました。",
+      "selectAccount": "アカウントを選択",
+      "imported": "インポート済み",
+      "desktop": "デスクトップ",
+      "reconnecting": "再接続中...",
+      "deleteWalletBtn": "ウォレットを削除",
+      "deleteWalletConfirm": "このウォレットを削除してもよろしいですか？",
+      "deleteNetworkBtn": "ネットワークを削除",
+      "sendTitle": "資産を送信",
+      "sendToLabel": "受取人アドレス",
+      "sendAmountLabel": "金額",
+      "sendConfirmBtn": "確認",
+      "sendCancelBtn": "キャンセル",
+      "sendInProgress": "送信中...",
+      "sendSuccess": "トランザクションを送信しました！",
+      "privKeyLabel": "秘密鍵",
+      "approveBtn": "承認",
+      "networkNamePlaceholder": "例：マイテストネット",
+      "confirmTitle": "よろしいですか？",
+      "confirmBtn": "確認",
+      "unknownNetwork": "不明なネットワーク",
+      "networkOptions": "オプション",
+      "editBtn": "編集",
+      "deleteBtn": "削除",
+      "deleteNetworkConfirm": "このネットワークを削除してもよろしいですか？",
+      "offline": "オフライン",
+      "desktopUnreachable": "CointMU Desktopアプリに接続できませんでした。アプリが起動していることを確認して、もう一度お試しください。",
+      "networkFieldsRequired": "名前とRPC URLは必須です。",
+      "chainIdInvalid": "チェーンIDは有効な正の数である必要があります。",
+      "sendFieldsRequired": "有効な受取人と金額が必要です",
+      "sendSuccessWithHash": "トランザクションを送信しました！ハッシュ：{{hash}}",
+      "sendFailedWithReason": "トランザクションに失敗しました：{{reason}}",
+      "unknownError": "不明なエラー"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktopが接続されていません。デスクトップアプリを開いて、もう一度お試しください。",
+      "storageSaveFailed": "ブラウザのストレージにウォレットを保存できませんでした。",
+      "noActiveAddress": "ウォレットが選択されていません。",
+      "privateKeyNotFound": "このウォレットの秘密鍵が見つかりません。",
+      "networkNotFound": "選択したネットワークが見つかりません。",
+      "providerFailed": "トランザクションを準備できませんでした。",
+      "txFailed": "トランザクションに失敗しました。"
+    }
+  }
+}

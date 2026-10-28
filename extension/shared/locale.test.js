@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { formatMessage, loadTranslations } from "./locale.js";
+import { formatMessage, loadTranslations, pickLanguage } from "./locale.js";
 
 const LOCALE = {
   extension: {
@@ -22,15 +22,24 @@ function fakeElement(dataset) {
   return { dataset, textContent: "old", title: "old", placeholder: "old" };
 }
 
-function stubPage(elements) {
-  vi.stubGlobal("fetch", async () => ({
-    ok: true,
-    json: async () => LOCALE,
-  }));
+/**
+ * Stubs the popup page. `locales` maps a language to its file content, or to
+ * null for a file that fails to load; `uiLanguage` is the browser language.
+ */
+function stubPage(elements, { locales = { en: LOCALE }, uiLanguage } = {}) {
+  vi.stubGlobal("fetch", async (url) => {
+    const language = url.match(/locales\/(\w+)\.json$/)[1];
+    const content = locales[language];
+    return { ok: Boolean(content), json: async () => content };
+  });
+  const documentElement = { lang: "" };
   vi.stubGlobal("document", {
+    documentElement,
     querySelectorAll: (selector) =>
       elements.filter((el) => DATASET_KEYS[selector] in el.dataset),
   });
+  vi.stubGlobal("chrome", { i18n: { getUILanguage: () => uiLanguage } });
+  return documentElement;
 }
 
 describe("loadTranslations", () => {
@@ -69,6 +78,54 @@ describe("loadTranslations", () => {
     await loadTranslations();
 
     expect(label.textContent).toBe("old");
+  });
+});
+
+describe("loadTranslations language", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const JA = { extension: { wallet: { send: "送信" } } };
+
+  it("uses the browser language and fills its gaps from English", async () => {
+    const send = fakeElement({ i18n: "extension.wallet.send" });
+    const del = fakeElement({ i18nTitle: "extension.wallet.deleteWalletBtn" });
+    const root = stubPage([send, del], {
+      locales: { en: LOCALE, ja: JA },
+      uiLanguage: "ja",
+    });
+
+    await loadTranslations();
+
+    expect(send.textContent).toBe("送信");
+    expect(del.title).toBe("Delete Wallet");
+    expect(root.lang).toBe("ja");
+  });
+
+  it("falls back to English when the language file fails to load", async () => {
+    const send = fakeElement({ i18n: "extension.wallet.send" });
+    const root = stubPage([send], {
+      locales: { en: LOCALE, ja: null },
+      uiLanguage: "ja-JP",
+    });
+
+    await loadTranslations();
+
+    expect(send.textContent).toBe("Send");
+    expect(root.lang).toBe("en");
+  });
+});
+
+describe("pickLanguage", () => {
+  it.each([
+    ["ja", "ja"],
+    ["zh-CN", "zh"],
+    ["zh_TW", "zh"],
+    ["pt-BR", "en"],
+    ["DE", "de"],
+    ["", "en"],
+    [undefined, "en"],
+  ])("maps %j to %j", (uiLanguage, language) => {
+    expect(pickLanguage(uiLanguage)).toBe(language);
   });
 });
 
