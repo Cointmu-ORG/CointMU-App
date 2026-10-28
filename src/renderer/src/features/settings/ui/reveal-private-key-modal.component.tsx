@@ -1,3 +1,4 @@
+import type { DerivedAccount } from "@/entities/account";
 import { useTranslation } from "react-i18next";
 import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
@@ -9,7 +10,7 @@ import {
 } from "react";
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
 import { getSetting } from "@/shared/api";
-import { revealPrivateKey, type DerivedAccount } from "@/features/wallet";
+import { revealPrivateKey } from "@/features/wallet";
 import { useAppStore } from "@/shared/model";
 
 interface RevealPrivateKeyModalProps {

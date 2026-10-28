@@ -1,16 +1,8 @@
 import i18next from "i18next";
-import { GRADIENTS } from "../config/wallet.constants";
 import { Wallet, HDNodeWallet } from "ethers";
 import { getSetting, setSetting } from "@/shared/api";
 import { localizeIpcError } from "@/shared/lib";
-
-export interface DerivedAccount {
-  index: number;
-  address: string;
-  label: string;
-  encryptedKey?: string;
-  isHidden?: boolean;
-}
+import type { DerivedAccount } from "@/entities/account";
 
 /**
  * Generates a new 12-word BIP39 mnemonic seed phrase.
@@ -203,23 +195,6 @@ export async function generateKeystore(
   const privateKey = await revealPrivateKey(account, password);
   const wallet = new Wallet(privateKey);
   return wallet.encrypt(password);
-}
-
-/**
- * Deterministically generates a Tailwind gradient class string based on an Ethereum address.
- * @param address - The Ethereum address.
- * @returns A Tailwind gradient class string.
- */
-export function generateIdenticonGradient(address: string): string[] {
-  // Simple hash of the address string to pick a gradient
-  let hash = 0;
-  for (let i = 0; i < address.length; i++) {
-    hash = address.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  // Ensure positive index
-  const index = Math.abs(hash) % GRADIENTS.length;
-  return GRADIENTS[index];
 }
 
 /**

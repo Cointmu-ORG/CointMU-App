@@ -1,9 +1,9 @@
+import type { DerivedAccount } from "@/entities/account";
 import { useState, useEffect, Suspense, lazy, type JSX } from "react";
 import ms from "ms";
 import { WalletPage as Wallet } from "@/pages/wallet";
 import { DashboardPage } from "@/pages/dashboard";
 import { AuthFlow } from "@/features/auth";
-import { type DerivedAccount } from "@/features/wallet";
 import {
   useSecurityStore,
   useAdvancedStore,

@@ -1,7 +1,7 @@
+import type { DerivedAccount } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
-import { type DerivedAccount } from "@/features/wallet";
 import { Check, Copy } from "lucide-react";
 
 interface ReceiveModalProps {

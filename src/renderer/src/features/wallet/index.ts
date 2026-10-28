@@ -1,4 +1,3 @@
-export { AccountIcon } from "./ui/account-icon.component";
 export { TokenIcon } from "./ui/token-icon.component";
 export { WalletHistoryFilter } from "./ui/wallet-history-filter.component";
 export { AddTokenModal } from "./ui/add-token-modal.component";

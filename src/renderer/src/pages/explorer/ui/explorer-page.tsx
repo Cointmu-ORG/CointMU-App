@@ -1,3 +1,4 @@
+import type { DerivedAccount } from "@/entities/account";
 import {
   WEI_PER_CMU,
   BLOCK_REWARD_CMU,
@@ -21,7 +22,6 @@ import { useAppStore } from "@/shared/model";
 import { call, fetchBalance } from "@/shared/api";
 import { getNetworkInsights } from "@/features/settings";
 import { detectSearchType } from "@/features/explorer";
-import { type DerivedAccount } from "@/features/wallet";
 import { formatBlockNumber } from "@/shared/lib";
 import { type ActivityData } from "@/shared/ui";
 import { ActivityKind } from "@bridge/types";

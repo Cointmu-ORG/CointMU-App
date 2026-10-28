@@ -1,7 +1,6 @@
+import { type DerivedAccount, AccountIcon } from "@/entities/account";
 import { type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { type DerivedAccount } from "@/features/wallet";
-import { AccountIcon } from "@/features/wallet";
 import { Plus, EyeOff } from "lucide-react";
 
 const WATCH_LIST: never[] = [];

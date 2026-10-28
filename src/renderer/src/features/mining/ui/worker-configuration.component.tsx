@@ -1,10 +1,10 @@
+import { generateIdenticonGradient } from "@/entities/account";
 import { INTENSITY_OPTIONS } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/shared/ui";
 import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
 import type { MiningIntensity } from "@bridge/setting-values";
-import { generateIdenticonGradient } from "@/features/wallet";
 
 interface WorkerConfigurationProps {
   cpuThreads: number;

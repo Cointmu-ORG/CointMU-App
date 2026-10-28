@@ -1,6 +1,6 @@
+import type { DerivedAccount } from "@/entities/account";
 import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { type DerivedAccount } from "@/features/wallet";
 import { Eye, Trash2 } from "lucide-react";
 
 interface ManageHiddenModalProps {

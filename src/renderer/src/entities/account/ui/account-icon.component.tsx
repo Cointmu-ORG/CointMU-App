@@ -1,4 +1,4 @@
-import { AVATAR_PALETTE } from "../config/wallet.constants";
+import { AVATAR_PALETTE } from "../config/account.constants";
 import { type JSX } from "react";
 import Avatar from "boring-avatars";
 
