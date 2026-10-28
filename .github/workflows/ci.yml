@@ -169,11 +169,11 @@ jobs:
         run: ls -l /bin/sh; /bin/sh -c 'echo "$0"'; bash --version | head -1
 
       - name: Watcher under node
-        run: npx --no vitest run src/main/geth/gethWatcher.test.ts
+        run: npx --no vitest run src/main/geth/gethWatcher.test.ts src/main/geth/gethWatcherProcess.test.ts
 
       - name: Watcher under Electron (ELECTRON_RUN_AS_NODE)
-        run: GETH_WATCHER_RUNTIME="$(node -p 'require("electron")')" npx --no vitest run src/main/geth/gethWatcher.test.ts
+        run: GETH_WATCHER_RUNTIME="$(node -p 'require("electron")')" npx --no vitest run src/main/geth/gethWatcher.test.ts src/main/geth/gethWatcherProcess.test.ts
 
       - name: sh watcher under bash
         if: runner.os != 'Windows'
-        run: GETH_WATCHER_SHELL="$(command -v bash)" npx --no vitest run src/main/geth/gethWatcher.test.ts
+        run: GETH_WATCHER_SHELL="$(command -v bash)" npx --no vitest run src/main/geth/gethWatcher.test.ts src/main/geth/gethWatcherProcess.test.ts
