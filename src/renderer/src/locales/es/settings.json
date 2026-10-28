@@ -372,5 +372,34 @@
     "resetFailed": "No se pudo restablecer la billetera.",
     "resetting": "Restableciendo...",
     "submit": "Restablecer la billetera de forma permanente"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Eco",
+      "balanced": "Equilibrado",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Compacta",
+      "comfortable": "Cómoda",
+      "spacious": "Amplia"
+    },
+    "syncMode": {
+      "snap": "Snap (recomendado)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (nativa)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Información",
+      "debug": "Depuración",
+      "warn": "Advertencia",
+      "error": "Error"
+    },
+    "recommendedValue": "{{value}} (recomendado)"
   }
 }

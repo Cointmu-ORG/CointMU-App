@@ -371,5 +371,34 @@
     "resetFailed": "Failed to reset wallet.",
     "resetting": "Resetting...",
     "submit": "Permanently reset wallet"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Eco",
+      "balanced": "Balanced",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Compact",
+      "comfortable": "Comfortable",
+      "spacious": "Spacious"
+    },
+    "syncMode": {
+      "snap": "Snap (recommended)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (native)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Info",
+      "debug": "Debug",
+      "warn": "Warning",
+      "error": "Error"
+    },
+    "recommendedValue": "{{value}} (recommended)"
   }
 }

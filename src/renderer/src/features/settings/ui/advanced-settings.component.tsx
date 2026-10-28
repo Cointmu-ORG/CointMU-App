@@ -3,6 +3,8 @@ import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useAdvancedStore } from "../model/advanced.store";
 import { CustomDropdown } from "@/shared/ui";
+import { LOG_LEVEL_LABEL_KEYS } from "@/shared/lib";
+import { LogLevel } from "@bridge/setting-values";
 import { purgeSecondaryAccounts } from "@/features/wallet";
 
 /**
@@ -200,12 +202,14 @@ export function AdvancedSettings(): JSX.Element {
                 </p>
               </div>
               <div className="w-48">
-                <CustomDropdown<string>
+                <CustomDropdown<LogLevel>
                   options={LOG_LEVELS}
                   selected={settings.logLevel}
                   onSelect={(val) => updateSettings({ logLevel: val })}
-                  renderSelected={(selected) => selected || "Info"}
-                  renderOption={(option) => option}
+                  renderSelected={(selected) =>
+                    t(LOG_LEVEL_LABEL_KEYS[selected ?? LogLevel.INFO])
+                  }
+                  renderOption={(option) => t(LOG_LEVEL_LABEL_KEYS[option])}
                   compact
                 />
               </div>

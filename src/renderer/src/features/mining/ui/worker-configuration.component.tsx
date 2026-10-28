@@ -2,12 +2,14 @@ import { INTENSITY_OPTIONS } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/shared/ui";
+import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
+import type { MiningIntensity } from "@bridge/setting-values";
 import { generateIdenticonGradient } from "@/features/wallet";
 
 interface WorkerConfigurationProps {
   cpuThreads: number;
   maxCores: number;
-  intensity: string;
+  intensity: MiningIntensity;
   rewardAddress: string;
 }
 
@@ -79,7 +81,7 @@ function WorkerConfiguration({
                     : "bg-white dark:bg-gray-800 text-slate-400 dark:text-gray-400"
                 }`}
               >
-                {option}
+                {t(INTENSITY_LABEL_KEYS[option])}
               </div>
             ))}
           </div>

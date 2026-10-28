@@ -371,5 +371,34 @@
     "resetFailed": "Wallet konnte nicht zurückgesetzt werden.",
     "resetting": "Wird zurückgesetzt...",
     "submit": "Wallet dauerhaft zurücksetzen"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Eco",
+      "balanced": "Ausgewogen",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Kompakt",
+      "comfortable": "Komfortabel",
+      "spacious": "Großzügig"
+    },
+    "syncMode": {
+      "snap": "Snap (empfohlen)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (nativ)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Info",
+      "debug": "Debug",
+      "warn": "Warnung",
+      "error": "Fehler"
+    },
+    "recommendedValue": "{{value}} (empfohlen)"
   }
 }

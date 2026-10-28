@@ -1,4 +1,12 @@
 import { setSetting } from "@/shared/api";
+import {
+  DisplayCurrency,
+  LayoutDensity,
+  LogLevel,
+  MiningIntensity,
+  SyncMode,
+  ThemeMode,
+} from "@bridge/setting-values";
 import { resetBootnodes } from "./bootnode.service";
 
 /**
@@ -12,7 +20,7 @@ const NETWORK_DEFAULTS: Readonly<Record<string, unknown>> = {
   maxPeers: 14,
   discovery: true,
   listenPort: 30303,
-  syncMode: "Snap (recommended)",
+  syncMode: SyncMode.SNAP,
   pruneOldState: true,
   customNetworks: [],
   // Unset: the next launch falls back to the genesis chain id.
@@ -34,13 +42,12 @@ async function resetAllSettings(): Promise<void> {
       openInBackground: false,
       pushNotifications: true,
       notificationSound: false,
-      language: "English",
-      currency: "CMU (native)",
+      currency: DisplayCurrency.CMU,
     }),
     setSetting("appearance", {
-      theme: "Light",
+      theme: ThemeMode.LIGHT,
       accentColor: "#3b82f6",
-      density: "Comfortable",
+      density: LayoutDensity.COMFORTABLE,
       showSidebarColors: true,
       animatedTransitions: true,
     }),
@@ -51,7 +58,7 @@ async function resetAllSettings(): Promise<void> {
       isMiningEnabled: false,
       startAtLaunch: false,
       cpuThreads: 4,
-      intensity: "Balanced",
+      intensity: MiningIntensity.BALANCED,
       pauseOnBattery: true,
       miningMode: "Solo",
       poolAddress: "",
@@ -64,7 +71,7 @@ async function resetAllSettings(): Promise<void> {
       httpRpc: true,
       wsRpc: false,
       corsOrigins: "https://*.cointmu.net",
-      logLevel: "Info",
+      logLevel: LogLevel.INFO,
     }),
     setSetting("notifications", {
       global: true,

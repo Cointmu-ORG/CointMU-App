@@ -9,6 +9,8 @@ import type { SettingsStore } from "@/features/settings";
 import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
+import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
+import { MiningIntensity } from "@bridge/setting-values";
 
 interface MiningSettingsProps {
   config: SettingsStore["mining"];
@@ -287,7 +289,7 @@ export function MiningSettings({
                 </p>
               </div>
               <div className="flex items-center bg-slate-100 dark:bg-gray-800 rounded-lg p-1">
-                {["Eco", "Balanced", "Turbo"].map((opt) => (
+                {Object.values(MiningIntensity).map((opt) => (
                   <button
                     key={opt}
                     onClick={() => onUpdate("intensity", opt)}
@@ -297,7 +299,7 @@ export function MiningSettings({
                         : "text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200"
                     }`}
                   >
-                    {opt}
+                    {t(INTENSITY_LABEL_KEYS[opt])}
                   </button>
                 ))}
               </div>

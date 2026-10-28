@@ -370,5 +370,34 @@
     "resetFailed": "ウォレットをリセットできませんでした。",
     "resetting": "リセット中...",
     "submit": "ウォレットを完全にリセット"
+  },
+  "options": {
+    "intensity": {
+      "eco": "エコ",
+      "balanced": "バランス",
+      "turbo": "ターボ"
+    },
+    "density": {
+      "compact": "コンパクト",
+      "comfortable": "標準",
+      "spacious": "ゆったり"
+    },
+    "syncMode": {
+      "snap": "Snap（推奨）",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU（ネイティブ）",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "情報",
+      "debug": "デバッグ",
+      "warn": "警告",
+      "error": "エラー"
+    },
+    "recommendedValue": "{{value}}（推奨）"
   }
 }

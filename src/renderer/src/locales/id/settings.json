@@ -370,5 +370,34 @@
     "resetFailed": "Gagal mereset dompet.",
     "resetting": "Mereset...",
     "submit": "Reset dompet secara permanen"
+  },
+  "options": {
+    "intensity": {
+      "eco": "Hemat",
+      "balanced": "Seimbang",
+      "turbo": "Turbo"
+    },
+    "density": {
+      "compact": "Ringkas",
+      "comfortable": "Nyaman",
+      "spacious": "Lega"
+    },
+    "syncMode": {
+      "snap": "Snap (disarankan)",
+      "full": "Full",
+      "light": "Light"
+    },
+    "currency": {
+      "cmu": "CMU (bawaan)",
+      "usd": "USD ($)",
+      "eur": "EUR (€)"
+    },
+    "logLevel": {
+      "info": "Info",
+      "debug": "Debug",
+      "warn": "Peringatan",
+      "error": "Kesalahan"
+    },
+    "recommendedValue": "{{value}} (disarankan)"
   }
 }
