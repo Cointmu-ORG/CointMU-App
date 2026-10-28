@@ -4,88 +4,37 @@ import {
   type StdioOptions,
 } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { stripTypeScriptTypes } from "node:module";
-import { tmpdir } from "node:os";
+import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-  startGethWatcher,
+  EXIT_TIMEOUT_MS,
+  PIPE_HOLDER,
+  isAlive,
+  makeWatcherDir,
+  sleep,
+  waitFor,
+} from "./gethWatcher.fixtures";
+import {
   watcherCommand,
   watcherStdio,
   type WatcherCommand,
 } from "./gethWatcherProcess";
 
-// Real processes on every OS: a fake geth, the watchers built from source, and
-// for the SIGKILL case a fake main process that owns geth and the watcher.
+// Every case runs on real processes, once per watcher: the app's (sh outside
+// Windows, node on Windows), the node watcher everywhere else too, and the sh
+// script under GETH_WATCHER_SHELL when set.
 // GETH_WATCHER_RUNTIME=<electron binary> runs the node watcher the way the app
 // does on Windows (Electron in node mode); the default is this node.
-// GETH_WATCHER_SHELL=<shell> also runs the sh watcher under that shell.
 const WATCHER_RUNTIME = process.env.GETH_WATCHER_RUNTIME || process.execPath;
 const EXTRA_SHELL = process.env.GETH_WATCHER_SHELL;
 const SHORT_GRACE_MS = 300;
 const LONG_GRACE_MS = 15_000;
 // Past the sh watcher's 1 s poll, so a wrong reaction has time to happen.
 const STILL_RUNNING_CHECK_MS = 1500;
-// Room for the sh watcher's 1 s poll plus its drain, which restarts cat every
-// 0.1 s on macOS's small socket buffers. Below the per-test timeout, so a stuck
-// process fails with its own message.
-const EXIT_TIMEOUT_MS = 8000;
 const TEST_TIMEOUT_MS = 15_000;
-const POLL_MS = 100;
 const isWindows = process.platform === "win32";
 const GROUP_SIGNALS: NodeJS.Signals[] = ["SIGINT", "SIGTERM", "SIGHUP"];
-
-// On SIGINT it logs 256 KB, more than geth's output socket holds (about 120 KB
-// on Linux, 8-16 KB on macOS), like geth's shutdown log, then records a clean
-// stop. Without a reader on its stderr the write
-// fails (EPIPE here, SIGPIPE for geth) or blocks, and the marker never appears.
-const FAKE_GETH = `
-const fs = require("node:fs");
-const [marker, ignoreSigint] = process.argv.slice(2);
-process.on("SIGINT", () => {
-  if (ignoreSigint === "1") return;
-  const line = Buffer.alloc(1024, "x");
-  for (let i = 0; i < 256; i++) fs.writeSync(2, line);
-  fs.writeFileSync(marker, "clean");
-  process.exit(0);
-});
-setInterval(() => {}, 1000);
-process.stdout.write("ready");
-`;
-
-// Plays the app's main process: spawns geth with piped output it reads, and
-// the watcher with the same stdio layout as startGethWatcher (watcherStdio).
-const FAKE_MAIN = `
-const { spawn } = require("node:child_process");
-const [command, fakeGeth, marker, graceMs] = process.argv.slice(2);
-const { file, args, env } = JSON.parse(command);
-const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"] });
-geth.stderr.resume();
-geth.stdout.once("data", () => {
-  geth.stdout.resume();
-  const extra = process.platform === "win32" ? [] : [geth.stdout, geth.stderr];
-  spawn(file, [...args, String(geth.pid), graceMs], {
-    env,
-    stdio: ["pipe", "ignore", "ignore", ...extra],
-  });
-  process.stdout.write(String(geth.pid));
-});
-setInterval(() => {}, 1000);
-`;
-
-// Plays the main process's end of the watcher's stdin: writes until nothing
-// reads it any more, then exits 0 on EPIPE.
-const PIPE_HOLDER = `
-const fs = require("node:fs");
-setInterval(() => {
-  try {
-    fs.writeSync(1, "x");
-  } catch (err) {
-    process.exit(err.code === "EPIPE" ? 0 : 1);
-  }
-}, 50);
-`;
 
 type StdioEntry = Exclude<StdioOptions, string>[number];
 
@@ -119,74 +68,6 @@ const VARIANTS: WatcherVariant[] = [
       ]
     : []),
 ];
-
-function isAlive(pid: number): boolean {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function sleep(durationMs: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, durationMs));
-}
-
-async function waitFor(condition: () => boolean, what: string): Promise<void> {
-  const deadline = Date.now() + EXIT_TIMEOUT_MS;
-  while (!condition()) {
-    if (Date.now() >= deadline) throw new Error(`timed out: ${what}`);
-    await sleep(POLL_MS);
-  }
-}
-
-async function makeWatcherDir(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), "cointmu-watcher-"));
-  const source = await readFile(join(__dirname, "gethWatcher.ts"), "utf8");
-  await writeFile(join(dir, "gethWatcher.js"), stripTypeScriptTypes(source));
-  await writeFile(join(dir, "fake-geth.js"), FAKE_GETH);
-  await writeFile(join(dir, "fake-main.js"), FAKE_MAIN);
-  return dir;
-}
-
-describe("watcherStdio", () => {
-  const geth = spawn(process.execPath, ["-e", ""], {
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-
-  it("shares geth's output pipes outside Windows", () => {
-    expect(watcherStdio(geth, "linux")).toEqual([
-      "pipe",
-      "ignore",
-      "ignore",
-      geth.stdout,
-      geth.stderr,
-    ]);
-  });
-
-  it("only pipes stdin on Windows", () => {
-    expect(watcherStdio(geth, "win32")).toEqual(["pipe", "ignore", "ignore"]);
-  });
-});
-
-describe("watcherCommand", () => {
-  it("runs the sh watcher from /bin/sh with only system folders on PATH", () => {
-    const command = watcherCommand("linux", "/app/out/main");
-
-    expect(command.file).toBe("/bin/sh");
-    expect(command.args[0]).toBe("-c");
-    expect(command.env).toEqual({ PATH: "/usr/bin:/bin" });
-  });
-
-  it("runs gethWatcher.js in node mode on Windows", () => {
-    const command = watcherCommand("win32", "/app/out/main");
-
-    expect(command.file).toBe(process.execPath);
-    expect(command.args).toEqual([join("/app/out/main", "gethWatcher.js")]);
-    expect(command.env.ELECTRON_RUN_AS_NODE).toBe("1");
-  });
-});
 
 describe.each(VARIANTS)("$name", ({ command }) => {
   let dir: string;
@@ -408,38 +289,5 @@ describe.each(VARIANTS)("$name", ({ command }) => {
     const watcher = startWatcher(geth, String(geth.pid), "soon");
 
     expect((await exitOf(watcher)).code).toBe(2);
-  });
-});
-
-describe("startGethWatcher", () => {
-  let dir: string;
-  let children: ChildProcess[];
-
-  beforeEach(async () => {
-    dir = await makeWatcherDir();
-    children = [];
-  });
-
-  afterEach(async () => {
-    children.forEach((child) => child.kill("SIGKILL"));
-    await rm(dir, { recursive: true, force: true });
-  });
-
-  it("leaves geth's output readable by the main process", async () => {
-    const geth = spawn(
-      process.execPath,
-      ["-e", 'setInterval(() => process.stdout.write("tick"), 50)'],
-      { stdio: ["ignore", "pipe", "pipe"] },
-    );
-    children.push(geth);
-    let ticks = 0;
-    geth.stdout?.on("data", () => ticks++);
-    await waitFor(() => ticks > 0, "first output");
-    const watcher = startGethWatcher(geth, dir);
-    if (watcher === null) throw new Error("the watcher did not start");
-    children.push(watcher);
-    const before = ticks;
-
-    await waitFor(() => ticks > before, "output after the watcher started");
   });
 });
