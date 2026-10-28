@@ -9,9 +9,32 @@ permissions:
   contents: read
 
 jobs:
+  # The three OS builds race to create the release when none exists, and
+  # GitHub then holds two releases for one tag (as happened with v1.7.0).
+  # Creating one draft first makes electron-builder upload into it.
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # Idempotent: a re-run finds the draft (or the published release) and
+      # leaves it alone. The list endpoint, unlike /releases/tags, includes drafts.
+      - name: Create draft release
+        run: |
+          count=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")] | length")
+          if [ "$count" -gt 0 ]; then
+            echo "Release for $GITHUB_REF_NAME already exists ($count), not creating another"
+            exit 0
+          fi
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft --title "${GITHUB_REF_NAME#v}" --notes ""
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    needs: create-release
     runs-on: ${{ matrix.os }}
-    # electron-builder creates the release and uploads the installers.
+    # electron-builder uploads the installers into the draft release.
     permissions:
       contents: write
     strategy:
@@ -73,9 +96,9 @@ jobs:
           MAIN_VITE_TELEMETRY_DSN: ${{ vars.TELEMETRY_DSN }}
           MAIN_VITE_TELEMETRY_PINS: ${{ vars.TELEMETRY_PINS }}
 
-  # electron-builder creates a published release with an empty body and
-  # never edits the body afterwards, so filling it after every OS build
-  # has finished cannot be overwritten. The release title is left as is.
+  # electron-builder never edits the draft's body, so filling it after
+  # every OS build has finished cannot be overwritten. Publishing only now
+  # keeps the auto-updater from seeing a release with missing installers.
   release-notes:
     needs: build
     runs-on: ubuntu-latest
@@ -98,7 +121,30 @@ jobs:
       - name: Generate release notes
         run: node scripts/release-notes.js "$GITHUB_REF_NAME" > release-notes.md
 
-      - name: Update release body
-        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md
+      # Publishing an incomplete or duplicated release breaks the auto-updater,
+      # so stop here instead.
+      - name: Check release assets
+        run: |
+          releases=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")]")
+          count=$(jq length <<<"$releases")
+          if [ "$count" -ne 1 ]; then
+            echo "::error::$count releases for $GITHUB_REF_NAME, expected exactly 1"
+            exit 1
+          fi
+          assets=$(jq '.[0].assets | length' <<<"$releases")
+          if [ "$assets" -lt "$EXPECTED_ASSETS" ]; then
+            echo "::error::Release $GITHUB_REF_NAME has $assets assets, expected $EXPECTED_ASSETS:"
+            jq -r '.[0].assets[].name' <<<"$releases"
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # latest.yml, latest-linux.yml, latest-mac.yml; Windows exe +
+          # blockmap; Linux AppImage + deb; macOS dmg + zip, each + blockmap.
+          EXPECTED_ASSETS: 11
+
+      - name: Publish release with notes
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md --draft=false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
