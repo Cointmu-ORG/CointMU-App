@@ -1,3 +1,4 @@
+import { getTransactions, toActivityRow } from "@/entities/transaction";
 import { AccountIcon, type DerivedAccount } from "@/entities/account";
 import {
   ADDRESS_TX_PAGE_SIZE,
@@ -7,7 +8,6 @@ import {
 import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { getAddressSummary } from "../api/explorer.service";
-import { getTransactions, toActivityRow } from "@/features/wallet";
 import type { WalletActivity } from "@bridge/types";
 import { usePagination } from "@/shared/lib";
 import { formatAge } from "@/shared/lib";

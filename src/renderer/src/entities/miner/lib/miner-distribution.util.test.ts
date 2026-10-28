@@ -7,7 +7,7 @@ import {
   MAX_BLOCKS_TO_SCAN,
   SECONDS_IN_DAY,
   TOP_MINERS_LIMIT,
-} from "../config/mining.constants";
+} from "../config/miner.constants";
 import { fetchMinerDistribution } from "./miner-distribution.util";
 
 const NOW_SECONDS = 1_800_000_000;

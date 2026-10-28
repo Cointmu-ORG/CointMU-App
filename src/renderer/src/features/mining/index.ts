@@ -13,7 +13,6 @@ export {
   formatRewards,
   formatDifficultyLabel,
 } from "./lib/mining.utils";
-export * from "./lib/miner-distribution.util";
 
 // Model
 export { useMiningStore } from "./model/mining.store";

@@ -56,7 +56,3 @@ export const ACTIVITY_TABS = [
   ACTIVITY_TAB_LOG,
   ACTIVITY_TAB_ACTIVITY,
 ];
-
-export const SECONDS_IN_DAY = 86400;
-export const TOP_MINERS_LIMIT = 5;
-export const MAX_BLOCKS_TO_SCAN = 5000;

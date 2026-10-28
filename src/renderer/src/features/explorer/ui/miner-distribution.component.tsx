@@ -5,8 +5,11 @@ import {
   MINER_POLL_INTERVAL_MS,
 } from "../config/explorer.constants";
 import { type JSX, useState, useEffect } from "react";
-import { fetchMinerDistribution, type MinerEntry } from "@/features/mining";
-import { MiningCacheService } from "@/features/mining";
+import {
+  fetchMinerDistribution,
+  MinerDistributionCache,
+  type MinerEntry,
+} from "@/entities/miner";
 import { Activity } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -99,7 +102,7 @@ export function MinerDistribution({
   isConnected,
 }: MinerDistributionProps): JSX.Element {
   const { t } = useTranslation();
-  const cached = MiningCacheService.getMinerDistribution();
+  const cached = MinerDistributionCache.getMinerDistribution();
   const [entries, setEntries] = useState<MinerEntry[]>(cached ?? []);
   const [isLoading, setIsLoading] = useState(cached === undefined);
 
@@ -114,14 +117,14 @@ export function MinerDistribution({
       setIsLoading(false);
     };
 
-    MiningCacheService.startMinerDistributionPolling(
+    MinerDistributionCache.startMinerDistributionPolling(
       fetchMinerDistribution,
       onData,
       MINER_POLL_INTERVAL_MS,
     );
 
     return () => {
-      MiningCacheService.stopMinerDistributionPolling();
+      MinerDistributionCache.stopMinerDistributionPolling();
     };
   }, [isConnected]);
 
