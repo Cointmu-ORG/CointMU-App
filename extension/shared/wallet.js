@@ -8,6 +8,7 @@ import {
   startHeartbeat,
 } from "./socket.js";
 import "./protocol.js";
+import { BackgroundErrorCode, backgroundError } from "./background-errors.js";
 import {
   getConnectedOrigins,
   removeConnectedOrigin,
@@ -178,11 +179,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
         socket.send(JSON.stringify({ type: "REQUEST_LINK" }));
         sendResponse({ success: true });
       } else {
-        sendResponse({
-          success: false,
-          error:
-            "Could not reach CointMU Desktop App. Make sure it's running and try again.",
-        });
+        sendResponse(backgroundError(BackgroundErrorCode.DESKTOP_UNREACHABLE));
       }
     };
 
@@ -219,7 +216,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
       socket.send(JSON.stringify({ type: message.action }));
       sendResponse({ success: true });
     } else {
-      sendResponse({ success: false, error: "WebSocket not connected" });
+      sendResponse(backgroundError(BackgroundErrorCode.DESKTOP_NOT_CONNECTED));
     }
     return false;
   }
@@ -300,15 +297,14 @@ export function handleInternalMessage(message, sender, sendResponse) {
           })
           .catch((err) => {
             console.error("Failed to save to local storage", err);
-            sendResponse({ success: false, error: "Storage save failed" });
+            sendResponse(
+              backgroundError(BackgroundErrorCode.STORAGE_SAVE_FAILED),
+            );
           });
       });
     } catch (err) {
       console.error("Derivation error:", err);
-      sendResponse({
-        success: false,
-        error: "Invalid private key or derivation failed",
-      });
+      sendResponse(backgroundError(BackgroundErrorCode.IMPORT_FAILED));
     }
     return true;
   }
@@ -446,24 +442,27 @@ export function handleInternalMessage(message, sender, sendResponse) {
         .then((res) => {
           const addr = res.activeStandaloneAddress;
           if (!addr) {
-            sendResponse({
-              success: false,
-              error: "No active standalone address",
-            });
+            sendResponse(
+              backgroundError(BackgroundErrorCode.NO_ACTIVE_ADDRESS),
+            );
             return;
           }
           const walletData = (res.wallets || []).find(
             (w) => w.address === addr,
           );
           if (!walletData || !walletData.privateKey) {
-            sendResponse({ success: false, error: "Private key not found" });
+            sendResponse(
+              backgroundError(BackgroundErrorCode.PRIVATE_KEY_NOT_FOUND),
+            );
             return;
           }
           const customNet = (res.customNetworks || []).find(
             (n) => n.id === message.networkId,
           );
           if (!customNet) {
-            sendResponse({ success: false, error: "Custom network not found" });
+            sendResponse(
+              backgroundError(BackgroundErrorCode.NETWORK_NOT_FOUND),
+            );
             return;
           }
           let rpcUrl = customNet.rpcUrl;
@@ -488,22 +487,22 @@ export function handleInternalMessage(message, sender, sendResponse) {
               })
               .catch((err) => {
                 console.error("Send error:", err);
-                sendResponse({
-                  success: false,
-                  error: err.message || "Transaction failed",
-                });
+                sendResponse(
+                  backgroundError(BackgroundErrorCode.TX_FAILED, err.message),
+                );
               });
           } catch (err) {
-            sendResponse({
-              success: false,
-              error: err.message || "Failed to init provider",
-            });
+            sendResponse(
+              backgroundError(BackgroundErrorCode.PROVIDER_FAILED, err.message),
+            );
           }
         });
       return true;
     } else if (message.mode === "desktop") {
       if (!socket || socket.readyState !== WebSocket.OPEN) {
-        sendResponse({ success: false, error: "Desktop wallet not connected" });
+        sendResponse(
+          backgroundError(BackgroundErrorCode.DESKTOP_NOT_CONNECTED),
+        );
         return false;
       }
       const wsPayload = JSON.stringify({

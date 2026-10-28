@@ -87,6 +87,15 @@
       "sendSuccessWithHash": "Transaction Sent! Hash: {{hash}}",
       "sendFailedWithReason": "Transaction Failed: {{reason}}",
       "unknownError": "Unknown error"
+    },
+    "errors": {
+      "desktopNotConnected": "CointMU Desktop is not connected. Open the desktop app and try again.",
+      "storageSaveFailed": "Could not save the wallet in the browser storage.",
+      "noActiveAddress": "No wallet is selected.",
+      "privateKeyNotFound": "The private key for this wallet was not found.",
+      "networkNotFound": "The selected network was not found.",
+      "providerFailed": "Could not prepare the transaction.",
+      "txFailed": "The transaction failed."
     }
   }
 }

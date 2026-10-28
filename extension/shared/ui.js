@@ -1,6 +1,7 @@
 "use strict";
 
 import { formatMessage, loadTranslations } from "./locale.js";
+import { describeBackgroundError } from "./background-errors.js";
 import { renderApprovalView } from "./approval-popup.js";
 
 /** Translation keys for bridge refusal codes sent by the desktop app. */
@@ -567,6 +568,8 @@ export async function initPopup() {
               if (newState) updateUI(newState);
             },
           );
+        } else if (res?.errorCode) {
+          alert(describeBackgroundError(res, translations));
         } else {
           alert(
             translations["extension.wallet.importFailed"] ||
@@ -600,9 +603,10 @@ export async function initPopup() {
           translations["extension.wallet.selectLinkBtn"] ||
           "Link to Desktop App";
         alert(
-          (res && res.error) ||
-            translations["extension.wallet.desktopUnreachable"] ||
-            "Could not reach CointMU Desktop App. Make sure it's running and try again.",
+          res?.errorCode
+            ? describeBackgroundError(res, translations)
+            : translations["extension.wallet.desktopUnreachable"] ||
+                "Could not reach CointMU Desktop App. Make sure it's running and try again.",
         );
       }
     });
@@ -744,12 +748,7 @@ export async function initPopup() {
               formatMessage(
                 translations["extension.wallet.sendFailedWithReason"] ||
                   "Transaction Failed: {{reason}}",
-                {
-                  reason:
-                    res?.error ||
-                    translations["extension.wallet.unknownError"] ||
-                    "Unknown error",
-                },
+                { reason: describeBackgroundError(res, translations) },
               ),
             );
           }
