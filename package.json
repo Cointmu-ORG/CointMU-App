@@ -1,8 +1,8 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.7.3",
-  "codename": "Garnet",
+  "version": "1.7.4",
+  "codename": "Obsidian",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
   "author": "CointMU",
