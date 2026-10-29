@@ -1,0 +1,72 @@
+name: TEMP windows installer
+
+# TEMP (#97), reverted before merge. Builds the Windows NSIS installer of this
+# branch, with geth-supervisor.exe built as in release.yml, for manual tests.
+# Uploads it as an artifact only: nothing is published.
+on:
+  push:
+    branches: [fix/windows-geth-clean-shutdown]
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Use pinned npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+
+      - run: npm ci
+
+      # The same two steps as release.yml.
+      - name: Setup Go (Windows)
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: native/geth-supervisor/go.mod
+          cache: false
+
+      - name: Build geth-supervisor (Windows)
+        shell: bash
+        run: |
+          npm run build:geth-supervisor
+          test -s resources/bin/win/geth-supervisor.exe
+
+      # --publish never: no release, no upload anywhere but the artifact.
+      # MAIN_VITE_* stay unset: built-in bootnode, error reporting off.
+      - name: Build the installer
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npx electron-vite build
+          npx electron-builder --win --publish never
+
+      - name: Collect and hash
+        shell: bash
+        run: |
+          mkdir out-installer
+          cp dist/*-installer.exe out-installer/
+          cp resources/bin/win/geth-supervisor.exe out-installer/
+          test -s dist/win-unpacked/resources/bin/win/geth-supervisor.exe
+          cd out-installer
+          sha256sum *.exe | tee SHA256SUMS.txt
+          echo "commit ${GITHUB_SHA}" >> SHA256SUMS.txt
+          { echo '```'; cat SHA256SUMS.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-installer-pr100
+          path: out-installer
+          retention-days: 14
