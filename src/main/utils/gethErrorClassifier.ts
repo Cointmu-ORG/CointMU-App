@@ -71,6 +71,19 @@ const KIND_RULES: ReadonlyArray<{ kind: GethErrorKind; pattern: RegExp }> = [
     pattern:
       /\b(?:leveldb|pebble)\b.*(?:corrupt|checksum mismatch|invalid chunk)|leveldb: not found/i,
   },
+  // geth 1.10.26 startup aborts on a chaindata whose freezer (ancient store)
+  // and key-value store disagree; all reach "Failed to register the Ethereum
+  // service:" (cmd/utils/flags.go:1994). Every CointMU datadir was written by
+  // that geth, which only stores v5 receipts, so a "legacy" receipt is a damaged
+  // freezer entry (cmd/geth/config.go:183, legacy check in dbcmd.go:791).
+  // Freezer/leveldb checks: core/rawdb/database.go:234/236/244/261,
+  // freezer.go:341, freezer_table.go:763. Left out on purpose: incompatible
+  // genesis and newer database versions (valid data of another chain or geth).
+  {
+    kind: GethErrorKind.DB_CORRUPT,
+    pattern:
+      /Database has receipts with a legacy format|gap \(#\d+\) in the chain between ancients and leveldb|genesis mismatch: 0x[0-9a-f]+ \(leveldb\) != 0x[0-9a-f]+ \(ancients\)|failed to retrieve genesis from ancient|ancient chain segments already extracted|freezer tables \w+ and \w+ have differing lengths|missing data file \d+/,
+  },
 ];
 
 /**
