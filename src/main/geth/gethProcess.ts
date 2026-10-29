@@ -7,7 +7,7 @@ import { getNetworkId, resolveDataDir, resolveDataRoot } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
 import { forgetRunningBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
-import { resolveGethLaunch } from "./gethInit";
+import { resolveGethBinaryPath } from "./gethInit";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
   removeGethPidFile,
@@ -76,7 +76,7 @@ function scheduleGethRestart(store: AppStore): void {
  * @returns {Promise<void>}
  */
 export async function spawnGethProcess(store: AppStore): Promise<void> {
-  const { binaryPath, env } = await resolveGethLaunch();
+  const binaryPath = resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
       `[geth:spawn] Warning: Geth binary not found at ${binaryPath}. Skipping node spawn.`,
@@ -123,7 +123,6 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     gethProcess = spawn(binaryPath, args, {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false,
-      env,
     });
     lastSpawnedGeth = gethProcess;
     const spawnedPid = gethProcess.pid;

@@ -4,7 +4,6 @@ import { existsSync } from "fs";
 import { stat, writeFile, rm, mkdir } from "fs/promises";
 import { spawn } from "child_process";
 import { buildGenesis } from "./networkConfig";
-import { prepareGethLaunch, type GethLaunch } from "./gethBinaryCopy";
 
 /**
  * Resolves the absolute path to the bundled Core-geth binary based on the
@@ -24,22 +23,6 @@ export function resolveGethBinaryPath(): string {
     return join(process.resourcesPath, "bin", platformDir, binaryName);
   }
   return join(app.getAppPath(), "resources", "bin", platformDir, binaryName);
-}
-
-/**
- * Resolves the geth to spawn and its environment: on an AppImage a verified
- * copy outside the mount, else the bundled binary (see prepareGethLaunch).
- * Call it before every spawn; it re-checks the copy each time.
- * @returns {Promise<GethLaunch>} The executable and environment for spawn().
- */
-export function resolveGethLaunch(): Promise<GethLaunch> {
-  return prepareGethLaunch({
-    bundledPath: resolveGethBinaryPath(),
-    userDataDir: app.getPath("userData"),
-    resourcesPath: process.resourcesPath,
-    env: process.env,
-    platform: process.platform,
-  });
 }
 
 /**
@@ -65,7 +48,7 @@ export async function initGethIfNeeded(datadir: string): Promise<void> {
     }
   }
 
-  const { binaryPath, env } = await resolveGethLaunch();
+  const binaryPath = resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
       `[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`,
@@ -89,7 +72,6 @@ export async function initGethIfNeeded(datadir: string): Promise<void> {
         ["--datadir", datadir, "init", tempGenesisPath],
         {
           stdio: "ignore",
-          env,
         },
       );
       initProcess.on("exit", (code) => {
