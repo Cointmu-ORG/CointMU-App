@@ -1,9 +1,11 @@
 /**
- * Stops geth when the app's main process dies (#73). Runs as its own process
- * (Electron in node mode, see gethWatcherProcess.ts) with its stdin piped from
- * the main process. However the main process ends (quit, SIGTERM, SIGKILL,
- * crash), the OS closes that pipe; the watcher then sends geth SIGINT and, if
- * geth is still running after the grace period, SIGKILL.
+ * Stops geth when the app's main process dies (#73). The app runs it on
+ * Windows only; elsewhere gethWatcherScript.ts does the same job from /bin/sh
+ * (#90). Runs as its own process (Electron in node mode, see
+ * gethWatcherProcess.ts) with its stdin piped from the main process. However
+ * the main process ends (quit, SIGTERM, SIGKILL, crash), the OS closes that
+ * pipe; the watcher then sends geth SIGINT and, if geth is still running after
+ * the grace period, SIGKILL.
  *
  * Outside Windows it also holds the read ends of geth's stdout and stderr
  * (fds 3 and 4) and drains them once the main process is gone. Without a

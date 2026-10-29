@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 7
-SUBLEVEL = 1
-EXTRAVERSION = Onyx
+SUBLEVEL = 2
+EXTRAVERSION = Jade
 
 help:
 	@echo "============================================="
