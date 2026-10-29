@@ -76,14 +76,14 @@ jobs:
       - run: npm ci --ignore-scripts
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version-file: native/geth-interrupt/go.mod
+          go-version-file: native/geth-supervisor/go.mod
           cache: false
-      - name: Build and test geth-interrupt
+      - name: Build and test geth-supervisor
         shell: bash
         run: |
-          go -C native/geth-interrupt vet .
-          go -C native/geth-interrupt test .
-          npm run build:geth-interrupt
+          go -C native/geth-supervisor vet .
+          go -C native/geth-supervisor test .
+          npm run build:geth-supervisor
       - name: Block geth's outbound traffic
         shell: pwsh
         run: >
@@ -95,7 +95,7 @@ jobs:
           GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/branch
         run: >
           npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
-          src/main/geth/gethWatcher.test.ts src/main/geth/gethInterrupt.test.ts
+          src/main/geth/gethSupervisor.test.ts src/main/geth/orphanedGeth.test.ts
       # Option (b) from the plan: what a PowerShell Add-Type stop would cost
       # per call, against the helper's own start-up (pid 1 is never ours, so
       # it exits at AttachConsole).
@@ -108,7 +108,7 @@ jobs:
             (Measure-Command { pwsh -NoProfile -NonInteractive -Command "Add-Type -Name K -Namespace W -MemberDefinition '$def'" }).TotalMilliseconds
           }
           $helper = 1..3 | ForEach-Object {
-            (Measure-Command { & .\resources\bin\win\geth-interrupt.exe 1 2>$null }).TotalMilliseconds
+            (Measure-Command { & .\resources\bin\win\geth-supervisor.exe interrupt 1 2>$null }).TotalMilliseconds
           }
           $line = "Add-Type ms: $($ps -join ', ') | helper ms: $($helper -join ', ')"
           $line
@@ -137,9 +137,9 @@ jobs:
       - run: npm ci
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version-file: native/geth-interrupt/go.mod
+          go-version-file: native/geth-supervisor/go.mod
           cache: false
-      - run: npm run build:geth-interrupt
+      - run: npm run build:geth-supervisor
       - name: Build the installer and win-unpacked
         shell: bash
         env:
@@ -152,10 +152,10 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/real-app"
           {
-            echo "helper: $(stat -c %s resources/bin/win/geth-interrupt.exe)"
+            echo "supervisor: $(stat -c %s resources/bin/win/geth-supervisor.exe)"
             for f in dist/*.exe; do echo "installer $(basename "$f"): $(stat -c %s "$f")"; done
             echo "win-unpacked: $(du -sb dist/win-unpacked | cut -f1)"
-            find dist/win-unpacked -name 'geth-interrupt.exe' -printf 'packaged %p: %s\n'
+            find dist/win-unpacked -name 'geth-supervisor.exe' -printf 'packaged %p: %s\n'
           } | tee "$RUNNER_TEMP/real-app/sizes.txt" >> "$GITHUB_STEP_SUMMARY"
       - name: Block geth's outbound traffic
         shell: pwsh
@@ -197,5 +197,7 @@ jobs:
         run: |
           npx electron-vite build
           npx electron-builder --win --publish never
-          for f in dist/*.exe; do echo "main installer $(basename "$f"): $(stat -c %s "$f")"; done >> "$GITHUB_STEP_SUMMARY"
-          echo "main win-unpacked: $(du -sb dist/win-unpacked | cut -f1)" >> "$GITHUB_STEP_SUMMARY"
+          {
+            for f in dist/*.exe; do echo "main installer $(basename "$f"): $(stat -c %s "$f")"; done
+            echo "main win-unpacked: $(du -sb dist/win-unpacked | cut -f1)"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
