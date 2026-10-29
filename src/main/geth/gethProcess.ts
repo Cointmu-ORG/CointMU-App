@@ -198,7 +198,9 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     };
 
     gethProcess.stderr?.on("data", handleGethStderr);
-    startGethWatcher(gethProcess);
+    // Windows has no watcher: libuv terminates every non-detached child with
+    // this process (see gethWatcherProcess.ts).
+    if (process.platform !== "win32") startGethWatcher(gethProcess);
 
     gethProcess.on("error", (err: Error) => {
       console.error(

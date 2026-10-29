@@ -12,11 +12,7 @@ export default defineConfig({
   main: {
     build: {
       rolldownOptions: {
-        // The geth watcher runs as its own process (gethWatcherProcess.ts).
-        input: {
-          index: resolve("src/main/index.ts"),
-          gethWatcher: resolve("src/main/geth/gethWatcher.ts"),
-        },
+        input: { index: resolve("src/main/index.ts") },
       },
     },
   },

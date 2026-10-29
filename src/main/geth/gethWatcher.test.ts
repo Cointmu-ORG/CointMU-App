@@ -4,9 +4,8 @@ import {
   type StdioOptions,
 } from "node:child_process";
 import { existsSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { rm } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   EXIT_TIMEOUT_MS,
@@ -22,12 +21,9 @@ import {
   type WatcherCommand,
 } from "./gethWatcherProcess";
 
-// Every case runs on real processes, once per watcher: the app's (sh outside
-// Windows, node on Windows), the node watcher everywhere else too, and the sh
-// script under GETH_WATCHER_SHELL when set.
-// GETH_WATCHER_RUNTIME=<electron binary> runs the node watcher the way the app
-// does on Windows (Electron in node mode); the default is this node.
-const WATCHER_RUNTIME = process.env.GETH_WATCHER_RUNTIME || process.execPath;
+// Every case runs on real processes, once per watcher: the app's sh script,
+// and the same script under GETH_WATCHER_SHELL when set. Windows has no
+// watcher (see watcherCommand).
 const EXTRA_SHELL = process.env.GETH_WATCHER_SHELL;
 const SHORT_GRACE_MS = 300;
 const LONG_GRACE_MS = 15_000;
@@ -35,49 +31,28 @@ const LONG_GRACE_MS = 15_000;
 const STILL_RUNNING_CHECK_MS = 1500;
 const TEST_TIMEOUT_MS = 15_000;
 const isWindows = process.platform === "win32";
-// The helper ships next to geth.exe; npm run build:geth-interrupt puts it in
-// resources/bin/win. Without it the Windows watcher kills geth at once.
-const BUNDLED_GETH = join(__dirname, "../../../resources/bin/win/geth.exe");
-const HAS_INTERRUPT_HELPER = existsSync(
-  join(dirname(BUNDLED_GETH), "geth-interrupt.exe"),
-);
-const GETH_WITHOUT_HELPER = join(tmpdir(), "no-helper-here", "geth.exe");
 const GROUP_SIGNALS: NodeJS.Signals[] = ["SIGINT", "SIGTERM", "SIGHUP"];
 
 type StdioEntry = Exclude<StdioOptions, string>[number];
 
 interface WatcherVariant {
   name: string;
-  command: (dir: string) => WatcherCommand;
+  command: () => WatcherCommand;
 }
 
-const nodeWatcher = (dir: string): WatcherCommand => ({
-  file: WATCHER_RUNTIME,
-  args: [join(dir, "gethWatcher.js")],
-  env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
-});
-
 const VARIANTS: WatcherVariant[] = [
-  {
-    name: `the app's watcher on ${process.platform}`,
-    command: (dir) => watcherCommand(process.platform, dir, BUNDLED_GETH),
-  },
-  // Windows already runs the node watcher above.
-  ...(isWindows ? [] : [{ name: "the node watcher", command: nodeWatcher }]),
-  ...(EXTRA_SHELL && !isWindows
+  { name: "the app's watcher", command: watcherCommand },
+  ...(EXTRA_SHELL
     ? [
         {
           name: `the sh watcher under ${EXTRA_SHELL}`,
-          command: (dir: string) => ({
-            ...watcherCommand("linux", dir, BUNDLED_GETH),
-            file: EXTRA_SHELL,
-          }),
+          command: () => ({ ...watcherCommand(), file: EXTRA_SHELL }),
         },
       ]
     : []),
 ];
 
-describe.each(VARIANTS)("$name", ({ command }) => {
+describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
   let dir: string;
   let marker: string;
   let children: ChildProcess[];
@@ -108,8 +83,8 @@ describe.each(VARIANTS)("$name", ({ command }) => {
     graceMs: string,
     stdin: StdioEntry = "pipe",
   ): ChildProcess {
-    const { file, args, env } = command(dir);
-    const layout = watcherStdio(geth, process.platform);
+    const { file, args, env } = command();
+    const layout = watcherStdio(geth);
     if (!Array.isArray(layout)) throw new Error("expected a stdio array");
     const stdio: StdioEntry[] = [stdin, ...layout.slice(1)];
     return track(spawn(file, [...args, gethPid, graceMs], { env, stdio }));
@@ -148,10 +123,7 @@ describe.each(VARIANTS)("$name", ({ command }) => {
   }
 
   function expectCleanStop(): void {
-    // Without the helper, Windows can only terminate geth.
-    if (!isWindows || HAS_INTERRUPT_HELPER) {
-      expect(existsSync(marker)).toBe(true);
-    }
+    expect(existsSync(marker)).toBe(true);
   }
 
   it(
@@ -179,7 +151,7 @@ describe.each(VARIANTS)("$name", ({ command }) => {
           process.execPath,
           [
             join(dir, "fake-main.js"),
-            JSON.stringify(command(dir)),
+            JSON.stringify(command()),
             join(dir, "fake-geth.js"),
             marker,
             String(LONG_GRACE_MS),
@@ -200,7 +172,7 @@ describe.each(VARIANTS)("$name", ({ command }) => {
     TEST_TIMEOUT_MS,
   );
 
-  it.skipIf(isWindows)(
+  it(
     "kills a geth that ignores SIGINT after the grace period",
     async () => {
       const geth = await startFakeGeth(true);
@@ -210,31 +182,6 @@ describe.each(VARIANTS)("$name", ({ command }) => {
       watcher.stdin?.destroy();
 
       expect((await gethExit).signal).toBe("SIGKILL");
-    },
-    TEST_TIMEOUT_MS,
-  );
-
-  it.runIf(isWindows)(
-    "kills geth at once when the interrupt helper is missing",
-    async () => {
-      const geth = await startFakeGeth();
-      const gethExit = exitOf(geth);
-      const { file, args, env } = watcherCommand(
-        "win32",
-        dir,
-        GETH_WITHOUT_HELPER,
-      );
-      const watcher = track(
-        spawn(file, [...args, String(geth.pid), String(LONG_GRACE_MS)], {
-          env,
-          stdio: ["pipe", "ignore", "ignore"],
-        }),
-      );
-
-      watcher.stdin?.destroy();
-
-      await gethExit;
-      expect(existsSync(marker)).toBe(false);
     },
     TEST_TIMEOUT_MS,
   );
@@ -253,7 +200,7 @@ describe.each(VARIANTS)("$name", ({ command }) => {
     TEST_TIMEOUT_MS,
   );
 
-  it.skipIf(isWindows)(
+  it(
     "ignores the signals a terminal or logout sends to the process group",
     async () => {
       const geth = await startFakeGeth();
@@ -285,7 +232,7 @@ describe.each(VARIANTS)("$name", ({ command }) => {
     TEST_TIMEOUT_MS,
   );
 
-  it.skipIf(isWindows)(
+  it(
     "leaves nothing reading the main process's pipe once it has exited",
     async () => {
       const geth = await startFakeGeth();

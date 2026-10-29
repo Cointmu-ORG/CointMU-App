@@ -43,7 +43,6 @@ vi.mock("../diagnostics/gethReporting", () => ({
   reportBootnodeSource: () => {},
 }));
 
-import { makeWatcherDir } from "./gethWatcher.fixtures";
 import { initGethIfNeeded, resolveGethBinaryPath } from "./gethInit";
 import { killGethProcess, spawnGethProcess } from "./gethProcess";
 import { watcherCommand } from "./gethWatcherProcess";
@@ -201,11 +200,7 @@ async function startFakeMain(isDetached: boolean): Promise<{
       ...["--ipcpath", ipcPath],
       ...["--bootnodes", (store.get("network.bootnodes") as string[])[0]],
     ],
-    watcher: watcherCommand(
-      process.platform,
-      await makeWatcherDir(),
-      gethBinary,
-    ),
+    watcher: watcherCommand(),
     graceMs: GETH_GRACEFUL_TIMEOUT_MS,
   };
   const dir = join(sink.root, "fake-main");

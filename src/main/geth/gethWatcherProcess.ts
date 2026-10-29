@@ -3,12 +3,9 @@ import {
   type ChildProcess,
   type StdioOptions,
 } from "node:child_process";
-import { join } from "node:path";
 import { GETH_GRACEFUL_TIMEOUT_MS } from "./orphanedGeth";
-import { interruptHelperFor } from "./gethInterrupt";
 import { GETH_WATCHER_SH } from "./gethWatcherScript";
 
-const WATCHER_SCRIPT = "gethWatcher.js";
 const POSIX_SHELL = "/bin/sh";
 // Shown as the shell's $0 in ps, and in its error messages.
 const SHELL_WATCHER_NAME = "cointmu-geth-watcher";
@@ -24,33 +21,13 @@ export interface WatcherCommand {
 }
 
 /**
- * Picks the watcher per OS: the sh script (gethWatcherScript.ts) outside
- * Windows, gethWatcher.js on Windows, which has no /bin/sh. The Windows one
- * runs the app binary in node mode, so it depends on the RunAsNode Electron
- * fuse staying enabled; hardening that fuse means replacing it there (Job
- * Object, native helper). It stops geth through geth-interrupt.exe, found next
- * to geth.exe.
- * @param platform - Selects the watcher.
- * @param scriptDir - The folder holding the built gethWatcher.js.
- * @param gethBinary - The geth executable being watched.
+ * The watcher outside Windows: the sh script (gethWatcherScript.ts). Windows
+ * has none: libuv puts every non-detached child (geth, a watcher) in a job
+ * that Windows terminates with this process, so geth-supervisor.exe
+ * (native/geth-supervisor) does this job there.
  * @returns The command, without geth's PID and the grace period.
  */
-export function watcherCommand(
-  platform: NodeJS.Platform,
-  scriptDir: string,
-  gethBinary: string,
-): WatcherCommand {
-  if (platform === "win32") {
-    return {
-      file: process.execPath,
-      args: [join(scriptDir, WATCHER_SCRIPT)],
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: "1",
-        GETH_INTERRUPT_HELPER: interruptHelperFor(gethBinary),
-      },
-    };
-  }
+export function watcherCommand(): WatcherCommand {
   return {
     file: POSIX_SHELL,
     args: ["-c", GETH_WATCHER_SH, SHELL_WATCHER_NAME],
@@ -60,19 +37,14 @@ export function watcherCommand(
 
 /**
  * The watcher's stdio: stdin is the pipe whose end-of-file means this process
- * is gone. Outside Windows, fds 3 and 4 share geth's stdout and stderr pipes so
- * geth keeps a reader after this process dies (see gethWatcherScript.ts).
- * Windows has no SIGPIPE.
+ * is gone. fds 3 and 4 share geth's stdout and stderr pipes so geth keeps a
+ * reader after this process dies (see gethWatcherScript.ts).
  * @param geth - The geth child process, spawned with piped stdout and stderr.
- * @param platform - Selects the layout.
  * @returns The stdio layout for spawn().
  */
-export function watcherStdio(
-  geth: ChildProcess,
-  platform: NodeJS.Platform,
-): StdioOptions {
+export function watcherStdio(geth: ChildProcess): StdioOptions {
   const base: StdioOptions = ["pipe", "ignore", "ignore"];
-  if (platform === "win32" || !geth.stdout || !geth.stderr) return base;
+  if (!geth.stdout || !geth.stderr) return base;
   return [...base, geth.stdout, geth.stderr];
 }
 
@@ -80,27 +52,24 @@ export function watcherStdio(
  * Starts the watcher that stops geth if this process dies without stopping it
  * (see watcherCommand). This process keeps the watcher's stdin open for its
  * whole life and never writes to it. Call it after geth's output listeners are
- * attached: it resumes reading that output.
+ * attached: it resumes reading that output. Not on Windows.
  * @param geth - The geth child process just spawned.
- * @param scriptDir - The folder holding the built gethWatcher.js (the main
- *   bundle's); only used on Windows.
  * @param gracefulTimeoutMs - Time between SIGINT and SIGKILL.
  * @returns The watcher process, or null when it could not be started.
  */
 export function startGethWatcher(
   geth: ChildProcess,
-  scriptDir: string = __dirname,
   gracefulTimeoutMs = GETH_GRACEFUL_TIMEOUT_MS,
 ): ChildProcess | null {
   if (geth.pid === undefined) return null;
   try {
-    const command = watcherCommand(process.platform, scriptDir, geth.spawnfile);
+    const command = watcherCommand();
     const watcher = spawn(
       command.file,
       [...command.args, String(geth.pid), String(gracefulTimeoutMs)],
       {
         env: command.env,
-        stdio: watcherStdio(geth, process.platform),
+        stdio: watcherStdio(geth),
         windowsHide: true,
       },
     );

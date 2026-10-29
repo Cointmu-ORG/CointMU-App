@@ -1,7 +1,6 @@
 // Real processes for the geth watcher tests: a fake geth, a fake main process
-// that owns geth and a watcher, and the node watcher built from source.
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { stripTypeScriptTypes } from "node:module";
+// that owns geth and a watcher.
+import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -14,20 +13,17 @@ const POLL_MS = 100;
 // On SIGINT it logs 256 KB, more than geth's output socket holds (about 120 KB
 // on Linux, 8-16 KB on macOS), like geth's shutdown log, then records a clean
 // stop. Without a reader on its stderr the write fails (EPIPE here, SIGPIPE
-// for geth) or blocks, and the marker never appears. Node reports the
-// CTRL_BREAK from geth-interrupt.exe as SIGBREAK; geth reports it as SIGINT.
+// for geth) or blocks, and the marker never appears.
 const FAKE_GETH = `
 const fs = require("node:fs");
 const [marker, ignoreSigint] = process.argv.slice(2);
-const stop = () => {
+process.on("SIGINT", () => {
   if (ignoreSigint === "1") return;
   const line = Buffer.alloc(1024, "x");
   for (let i = 0; i < 256; i++) fs.writeSync(2, line);
   fs.writeFileSync(marker, "clean");
   process.exit(0);
-};
-process.on("SIGINT", stop);
-if (process.platform === "win32") process.on("SIGBREAK", stop);
+});
 setInterval(() => {}, 1000);
 process.stdout.write("ready");
 `;
@@ -38,14 +34,13 @@ const FAKE_MAIN = `
 const { spawn } = require("node:child_process");
 const [command, fakeGeth, marker, graceMs] = process.argv.slice(2);
 const { file, args, env } = JSON.parse(command);
-const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
+const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"] });
 geth.stderr.resume();
 geth.stdout.once("data", () => {
   geth.stdout.resume();
-  const extra = process.platform === "win32" ? [] : [geth.stdout, geth.stderr];
   spawn(file, [...args, String(geth.pid), graceMs], {
     env,
-    stdio: ["pipe", "ignore", "ignore", ...extra],
+    stdio: ["pipe", "ignore", "ignore", geth.stdout, geth.stderr],
   });
   process.stdout.write(String(geth.pid));
 });
@@ -91,8 +86,6 @@ export async function waitFor(
 
 export async function makeWatcherDir(): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), "cointmu-watcher-"));
-  const source = await readFile(join(__dirname, "gethWatcher.ts"), "utf8");
-  await writeFile(join(dir, "gethWatcher.js"), stripTypeScriptTypes(source));
   await writeFile(join(dir, "fake-geth.js"), FAKE_GETH);
   await writeFile(join(dir, "fake-main.js"), FAKE_MAIN);
   return dir;
