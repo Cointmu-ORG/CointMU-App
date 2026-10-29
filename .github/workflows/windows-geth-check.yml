@@ -1,10 +1,10 @@
 name: Windows geth check
 
 # Stops the bundled Windows geth through every path the app uses (quit and
-# restarts, the watcher when the main process dies, a leftover geth at the
-# next start) and fails unless each stop was clean (#97): geth logs "Got
-# interrupt" and its next start reports no unclean shutdown. A regression
-# here is silent until a user's chain database breaks.
+# restarts, geth-supervisor when the main process dies or is killed, a
+# leftover geth at the next start) and fails unless each stop was clean
+# (#97): geth logs "Got interrupt" and its next start reports no unclean
+# shutdown. A regression here is silent until a user's chain database breaks.
 on:
   pull_request:
     paths:
@@ -84,7 +84,7 @@ jobs:
           GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/geth-shutdown
         run: >
           npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
-          src/main/geth/gethWatcher.test.ts src/main/geth/gethInterrupt.test.ts
+          src/main/geth/gethSupervisor.test.ts src/main/geth/orphanedGeth.test.ts
 
       - name: Upload geth logs
         if: always()
