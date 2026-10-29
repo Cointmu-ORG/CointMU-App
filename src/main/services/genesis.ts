@@ -1,3 +1,5 @@
+import { COINTMU_NETWORK } from "../../bridge/network";
+
 /**
  * Shape of a geth genesis block. The chainId is strongly typed because it drives
  * the network id; all remaining standard genesis fields are permitted via the
@@ -19,7 +21,7 @@ export interface GenesisBlock {
  */
 export const GENESIS_BLOCK: GenesisBlock = {
   config: {
-    chainId: 1912,
+    chainId: COINTMU_NETWORK.chainId,
     homesteadBlock: 0,
     eip150Block: 0,
     eip155Block: 0,

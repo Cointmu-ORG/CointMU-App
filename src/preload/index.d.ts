@@ -67,7 +67,6 @@ interface CointmuAPI {
       config?: { chainId?: number };
       alloc?: Record<string, { balance: string }>;
     } | null>;
-    setChainId: (chainId: number) => Promise<boolean>;
   };
   settings: {
     get: (key: string) => Promise<any>;

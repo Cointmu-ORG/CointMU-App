@@ -14,18 +14,18 @@ set -u
 P=$(realpath "$1"); IMG=$(realpath "$2"); L=$3; TARGET=$4; shift 4
 HOLD_S=0; case "${1:-}" in stopgeth=*) HOLD_S=${1#stopgeth=}; shift ;; esac
 [ "$TARGET" = held ] && HOLD_S=3
-readonly GETH_START_TIMEOUT_S=180 SETTLE_S=20 GETH_EXIT_TIMEOUT_S=60 TEARDOWN_TIMEOUT_S=30
+readonly TEST_CHAIN_ID=19129 GETH_START_TIMEOUT_S=180 SETTLE_S=20 GETH_EXIT_TIMEOUT_S=60 TEARDOWN_TIMEOUT_S=30
 HERE=$(dirname "$(realpath "$0")")
 log=$P/reap-$L.log; applog=$P/app-$L.log; rm -f "$log"
 gethlog=$P/xdg/CointMU/logs/geth.log
 
-GETH_LOG_VERBOSITY=4 "$HERE/nsfuse.sh" "$P" "$L" sh -c "${PRE_CMD:-true} && exec \"\$@\"" sh \
+GETH_NETWORK_ID=$TEST_CHAIN_ID GETH_LOG_VERBOSITY=4 "$HERE/nsfuse.sh" "$P" "$L" sh -c "${PRE_CMD:-true} && exec \"\$@\"" sh \
   python3 "$HERE/reaper-ms.py" "$log" "$IMG" --remote-debugging-port=9333
 holder=$(cat "$P/ns-$L.pid")
 
 g=
 for _ in $(seq 1 $GETH_START_TIMEOUT_S); do
-  g=$(pgrep -f -- "--networkid 19129 --datadir $P/" | head -1); [ -n "$g" ] && break; sleep 1
+  g=$(pgrep -f -- "--networkid $TEST_CHAIN_ID --datadir $P/" | head -1); [ -n "$g" ] && break; sleep 1
 done
 if [ -z "$g" ]; then
   echo "$L: geth never started"; tail -20 "$applog"

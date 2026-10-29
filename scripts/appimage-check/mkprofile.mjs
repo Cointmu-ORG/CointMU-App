@@ -2,16 +2,15 @@
 // test node off any real network:
 // 1. The app runs only inside nsfuse.sh's network namespace (loopback only), so
 //    no packet leaves the machine, even if it falls back to its built-in bootnode.
-// 2. The profile itself: a test chain id, so geth runs with another --networkid
-//    and datadir and a real peer fails the handshake; the only bootnode is a dead
-//    local enode (a valid key, or the app would reject it and use the built-in
-//    one); a random P2P port.
+// 2. The profile itself: the only bootnode is a dead local enode (a valid key,
+//    or the app would reject it and use the built-in one); a random P2P port.
+//    The test chain id (another --networkid and datadir, so a real peer fails the
+//    handshake) is not stored here: appimage-sigtest.sh sets GETH_NETWORK_ID.
 // usage: node mkprofile.mjs <dir>   (deletes <dir> first)
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
 
-const TEST_CHAIN_ID = 19129;
 const DEAD_BOOTNODE_PORT = 30399;
 const P2P_PORT_BASE = 30400;
 const P2P_PORT_RANGE = 500;
@@ -25,7 +24,6 @@ fs.mkdirSync(path.join(dir, "xdg/CointMU"), { recursive: true });
 fs.mkdirSync(path.join(dir, "home"));
 const config = {
   network: {
-    chainId: TEST_CHAIN_ID,
     listenPort: P2P_PORT_BASE + Math.floor(Math.random() * P2P_PORT_RANGE),
     bootnodes: [`enode://${publicKey}@127.0.0.1:${DEAD_BOOTNODE_PORT}`],
   },

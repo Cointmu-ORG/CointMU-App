@@ -2,13 +2,15 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { migrateSettingValues } from "./settingsMigration";
 
-// A store written by the released 1.6.18 AppImage (run offline in an isolated
-// profile; EUR, the U+FFFD network label, 25 peers, Full, Turbo, Custom pool
-// and Debug chosen in its UI). Only the encrypted key payload is redacted.
-const snapshot = (): Record<string, unknown> =>
+// Stores written by released AppImages, run offline in an isolated profile.
+// 1.6.18: EUR, the U+FFFD network label, 25 peers, Full, Turbo, Custom pool
+// and Debug chosen in its UI. 1.7.1: a custom network added, then Testnet
+// chosen (geth ran with --networkid 7013). Only the encrypted key payload is
+// redacted.
+const snapshot = (version = "1.6.18"): Record<string, unknown> =>
   JSON.parse(
     readFileSync(
-      new URL("./store-1.6.18.fixture.json", import.meta.url),
+      new URL(`./store-${version}.fixture.json`, import.meta.url),
       "utf8",
     ),
   );
@@ -20,15 +22,26 @@ describe("migrateSettingValues", () => {
     expect(migrated).toMatchObject({
       general: { currency: "eur" },
       appearance: { theme: "light", density: "comfortable" },
-      network: {
-        network: "CointMU Mainnet · chain ID 1912",
-        syncMode: "full",
-        maxPeers: 25,
-      },
+      network: { syncMode: "full", maxPeers: 25 },
       mining: { intensity: "turbo", miningMode: "Custom pool..." },
       advanced: { logLevel: "debug" },
     });
     expect(migrated?.general).not.toHaveProperty("language");
+    expect(migrated?.network).not.toHaveProperty("network");
+    expect(migrated?.network).not.toHaveProperty("chainId");
+    expect(migrated?.network).not.toHaveProperty("rpcEndpoint");
+  });
+
+  it("drops the network choice of a real 1.7.1 store", () => {
+    const before = snapshot("1.7.1");
+
+    const migrated = migrateSettingValues(before);
+
+    expect(migrated?.network).toEqual({
+      listenPort: (before.network as Record<string, unknown>).listenPort,
+      bootnodes: (before.network as Record<string, unknown>).bootnodes,
+    });
+    expect({ ...migrated, network: before.network }).toEqual(before);
   });
 
   it("leaves wallet data and unrelated settings untouched", () => {
@@ -53,8 +66,8 @@ describe("migrateSettingValues", () => {
     });
   });
 
-  it("is idempotent", () => {
-    const once = migrateSettingValues(snapshot());
+  it.each(["1.6.18", "1.7.1"])("is idempotent on a %s store", (version) => {
+    const once = migrateSettingValues(snapshot(version));
 
     expect(once).not.toBeNull();
     expect(migrateSettingValues(once ?? {})).toBeNull();
@@ -94,15 +107,16 @@ describe("migrateSettingValues", () => {
     expect(migrated?.network).toEqual({ syncMode: code });
   });
 
-  it("repairs the testnet label and keeps custom network names", () => {
+  it.each([
+    ["network", "My lab chain"],
+    ["customNetworks", []],
+    ["chainId", 1912],
+    ["chainId", null],
+    ["rpcEndpoint", "https://rpc.cointmu.net"],
+  ])("removes network.%s (%j)", (key, value) => {
     expect(
-      migrateSettingValues({
-        network: { network: "CointMU Testnet � chain ID 7013" },
-      }),
-    ).toEqual({ network: { network: "CointMU Testnet · chain ID 7013" } });
-    expect(
-      migrateSettingValues({ network: { network: "My lab chain" } }),
-    ).toBeNull();
+      migrateSettingValues({ network: { [key]: value, maxPeers: 14 } }),
+    ).toEqual({ network: { maxPeers: 14 } });
   });
 
   it("returns null for a store that needs nothing", () => {

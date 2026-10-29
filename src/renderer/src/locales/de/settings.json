@@ -46,19 +46,7 @@
     "title": "Benachrichtigungen"
   },
   "network": {
-    "title": "Netzwerk",
-    "addNetwork": {
-      "modalTitle": "Benutzerdefiniertes Netzwerk hinzufügen",
-      "networkNameLabel": "Netzwerkname",
-      "rpcUrlLabel": "RPC-URL",
-      "chainIdLabel": "Ketten-ID",
-      "currencySymbolLabel": "Währungssymbol",
-      "saveBtn": "Speichern",
-      "cancelBtn": "Abbrechen",
-      "rpcUrlInvalid": "Die RPC-URL muss eine gültige HTTP/HTTPS-URL sein",
-      "examplePlaceholder": "z. B. {{example}}"
-    },
-    "addNetworkOption": "+ Netzwerk hinzufügen"
+    "title": "Netzwerk"
   },
   "mining": {
     "title": "Mining"
@@ -132,18 +120,10 @@
     "links": "Links",
     "githubTitle": "GitHub",
     "reportIssueDesc": "Senden Sie einen Fehlerbericht oder eine Funktionsanfrage",
-    "saveBtn": "Speichern",
-    "savingBtn": "Speichern...",
-    "cancelBtn": "Abbrechen",
-    "chainWarning": "WARNUNG: Das Ändern der Ketten-ID wird Ihre bestehenden lokalen Blockchain-Daten dauerhaft LÖSCHEN und den Knoten neu starten. Sind Sie sich absolut sicher, dass Sie fortfahren möchten?",
-    "chainSuccess": "Ketten-ID erfolgreich aktualisiert. Der Knoten startet mit einer frischen Blockchain neu.",
-    "chainFailure": "Ketten-ID konnte nicht aktualisiert werden.",
-    "chainError": "Beim Festlegen der Ketten-ID ist ein Fehler aufgetreten.",
     "title": "Über",
     "checkUpdateDesc": "Prüfen Sie, ob eine neuere Version verfügbar ist.",
     "nodeVersion": "Knoten-Version",
     "chainId": "Ketten-ID",
-    "edit": "Bearbeiten",
     "connectedPeers": "Verbundene Peers",
     "uptime": "Betriebszeit",
     "documentationTitle": "Dokumentation",
@@ -174,14 +154,10 @@
   },
   "system": "System",
   "networkSettings": {
-    "subtitle": "Verbindung, RPC-Endpunkte und Kettenauswahl",
+    "subtitle": "Netzwerk, Peers, Synchronisation und Bootnodes",
     "activeNetwork": "Aktives Netzwerk",
     "networkTitle": "Netzwerk",
     "networkDesc": "Mit welcher Kette CointMU verbunden ist",
-    "rpcTitle": "RPC-Endpunkt",
-    "rpcDesc": "Wohin Transaktionen und Abfragen gesendet werden",
-    "chainIdTitle": "Ketten-ID",
-    "chainIdDesc": "Verwendet für die Transaktionssignatur",
     "blockTimeTitle": "Blockzeit",
     "blockTimeDesc": "Zielzeit zwischen Blöcken",
     "peers": "Peers",
@@ -199,8 +175,6 @@
     "syncModeDesc": "Snap lädt bereinigten Zustand schnell herunter. Full validiert jeden Block ab Genesis",
     "pruneTitle": "Alten Zustand bereinigen",
     "pruneDesc": "Die letzten 128 Blöcke des historischen Zustands behalten, um Speicherplatz zu sparen",
-    "switchingNetwork": "Netzwerk wechseln... Bitte warten.",
-    "restartRequired": "Knoten wird neu gestartet, um sich mit dem neuen Netzwerk zu verbinden.",
     "advanced": "Erweitert",
     "bootnodes": {
       "title": "Bootnodes",
