@@ -18,7 +18,7 @@ It runs on Windows, Linux, and macOS.
 1. Clone the repository and navigate to the project directory:
    ```bash
    git clone https://github.com/Cointmu-ORG/CointMU-App.git
-   cd CointMU
+   cd CointMU-App
    ```
 2. Place the platform-appropriate `geth` binary in `resources/bin/`. On Linux and macOS, make it executable:
    ```bash
