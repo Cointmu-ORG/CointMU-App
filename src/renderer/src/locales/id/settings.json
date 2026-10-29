@@ -168,7 +168,7 @@
     "listenPortTitle": "Port dengar",
     "listenPortDesc": "Port UDP / TCP yang digunakan oleh protokol gossip",
     "connectedPeersTitle": "Rekan terhubung",
-    "connectedPeersDesc": "{{count}} node saat ini berkomunikasi dengan Anda",
+    "connectedPeersDesc_other": "{{count}} node saat ini berkomunikasi dengan Anda",
     "viewList": "Lihat daftar",
     "sync": "Sinkronisasi",
     "syncModeTitle": "Mode sinkronisasi",

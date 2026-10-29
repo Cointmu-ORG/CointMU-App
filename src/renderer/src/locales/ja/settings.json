@@ -168,7 +168,7 @@
     "listenPortTitle": "リッスンポート",
     "listenPortDesc": "ゴシッププロトコルで使用されるUDP / TCPポート",
     "connectedPeersTitle": "接続されたピア",
-    "connectedPeersDesc": "{{count}} 個のノードが現在あなたと通信しています",
+    "connectedPeersDesc_other": "{{count}} 個のノードが現在あなたと通信しています",
     "viewList": "リストを表示",
     "sync": "同期",
     "syncModeTitle": "同期モード",

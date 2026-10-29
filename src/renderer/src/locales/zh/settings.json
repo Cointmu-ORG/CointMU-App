@@ -168,7 +168,7 @@
     "listenPortTitle": "监听端口",
     "listenPortDesc": "Gossip 协议使用的 UDP / TCP 端口",
     "connectedPeersTitle": "已连接节点",
-    "connectedPeersDesc": "当前有 {{count}} 个节点与您通信",
+    "connectedPeersDesc_other": "当前有 {{count}} 个节点与您通信",
     "viewList": "查看列表",
     "sync": "同步",
     "syncModeTitle": "同步模式",

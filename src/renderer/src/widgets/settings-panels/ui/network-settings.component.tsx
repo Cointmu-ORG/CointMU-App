@@ -8,6 +8,7 @@ import type { SyncMode } from "@bridge/setting-values";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "@/features/settings";
+import { useAppStore } from "@/shared/model";
 import { CustomDropdown } from "@/shared/ui";
 import { SYNC_MODE_LABEL_KEYS } from "@/shared/lib";
 import { BootnodeSettings } from "./bootnode-settings.component";
@@ -28,6 +29,7 @@ export function NetworkSettings({
   onUpdate,
 }: NetworkSettingsProps): JSX.Element {
   const { t } = useTranslation();
+  const peerCount = useAppStore((s) => s.peerCount);
   const maxPeersLabel = (peers: number): string =>
     peers === RECOMMENDED_MAX_PEERS
       ? t("settings:options.recommendedValue", { value: peers })
@@ -145,11 +147,13 @@ export function NetworkSettings({
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings:networkSettings.connectedPeersTitle")}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.connectedPeersDesc", {
-                    count: 14,
-                  })}
-                </p>
+                {peerCount !== null && (
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                    {t("settings:networkSettings.connectedPeersDesc", {
+                      count: peerCount,
+                    })}
+                  </p>
+                )}
               </div>
               <button className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
                 {t("settings:networkSettings.viewList")}
