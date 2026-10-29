@@ -24,7 +24,6 @@ export interface SettingsStore {
     animatedTransitions: boolean;
   };
   network: {
-    network: string;
     rpcEndpoint: string;
     maxPeers: number;
     discovery: boolean;

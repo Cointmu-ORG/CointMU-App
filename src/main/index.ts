@@ -86,7 +86,7 @@ app.whenReady().then(async () => {
 
   await resolveGethPorts();
 
-  loadNetworkId(store);
+  loadNetworkId();
 
   attachNodeRecovery(createNodeRecovery(store));
 

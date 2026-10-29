@@ -1,6 +1,7 @@
 import type { IncomingMessage } from "node:http";
 import { WebSocketServer, type WebSocket } from "ws";
 import { callGethRpc } from "../utils/rpcUtils";
+import { COINTMU_NETWORK } from "../../bridge/network";
 import { ipcMain, BrowserWindow } from "electron";
 import {
   BRIDGE_NOT_PAIRED_MESSAGE,
@@ -99,7 +100,7 @@ export async function broadcastWalletState(
   if (!wss) return;
 
   const address = store.get("activeWalletAddress");
-  const network = store.get("network.network") || "CointMU Mainnet";
+  const network = COINTMU_NETWORK.name;
   let balance = "0.00";
 
   let accounts: string[] = [];

@@ -66,12 +66,10 @@ const CODED_SETTINGS: readonly CodedSetting[] = [
   },
 ];
 
-// 1.6.18 shipped U+FFFD instead of "·" in the network option labels; the
-// label is the stored value and is also sent to the browser extension.
-const NETWORK_LABEL_FIXES: Readonly<Record<string, string>> = {
-  "CointMU Mainnet � chain ID 1912": "CointMU Mainnet · chain ID 1912",
-  "CointMU Testnet � chain ID 7013": "CointMU Testnet · chain ID 7013",
-};
+// Up to 1.7.2 the app could switch networks: the chosen label, the custom
+// networks and the chain id override that moved geth to another chain. It now
+// runs CointMU Mainnet only, so these keys are dropped.
+const REMOVED_NETWORK_KEYS = ["network", "customNetworks", "chainId"] as const;
 
 /**
  * @param value - A store value.
@@ -84,9 +82,10 @@ function asSection(value: unknown): StoreData | null {
 }
 
 /**
- * Converts the stored settings from 1.6.18 and earlier: labels become codes,
- * the broken network label is repaired, and the unused `general.language`
- * (the UI language lives in the renderer's localStorage) is removed. Missing
+ * Converts the stored settings from earlier versions: labels (1.6.18 and
+ * earlier) become codes, the network choice (1.7.2 and earlier) is removed,
+ * and the unused `general.language` (the UI language lives in the renderer's
+ * localStorage) is removed. Missing
  * sections and keys are left missing; the store defaults cover them.
  * Idempotent: running it on its own output changes nothing.
  * @param data - The whole store content.
@@ -112,14 +111,11 @@ export function migrateSettingValues<T extends StoreData>(data: T): T | null {
   }
 
   const network = asSection(migrated.network);
-  const networkLabel = network?.network;
-  if (
-    network &&
-    typeof networkLabel === "string" &&
-    Object.hasOwn(NETWORK_LABEL_FIXES, networkLabel)
-  ) {
-    network.network = NETWORK_LABEL_FIXES[networkLabel];
-    hasChanged = true;
+  for (const key of REMOVED_NETWORK_KEYS) {
+    if (network && key in network) {
+      delete network[key];
+      hasChanged = true;
+    }
   }
 
   const general = asSection(migrated.general);

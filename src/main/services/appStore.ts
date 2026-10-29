@@ -42,7 +42,6 @@ export async function createAppStore() {
         animatedTransitions: true,
       },
       network: {
-        network: "CointMU Mainnet",
         rpcEndpoint: "https://rpc.cointmu.net",
         maxPeers: 14,
         discovery: true,

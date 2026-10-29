@@ -5,8 +5,8 @@ import { isBootnodeSettingKey } from "../geth/bootnodeSettings";
 import type { AppStore } from "../services/appStore";
 
 /**
- * Registers the settings read/write handlers. Changing the active wallet or
- * network re-broadcasts wallet state to the paired extension. Writes that
+ * Registers the settings read/write handlers. Changing the active wallet
+ * re-broadcasts wallet state to the paired extension. Writes that
  * would bypass a dedicated, validated channel (the bootnode list) are refused.
  * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {void}
@@ -24,7 +24,7 @@ export function registerSettingsHandlers(store: AppStore): void {
       );
     }
     store.set(key, value);
-    if (key === "activeWalletAddress" || key === "network.network") {
+    if (key === "activeWalletAddress") {
       void broadcastWalletState(store, getRpcPort());
     }
   });
