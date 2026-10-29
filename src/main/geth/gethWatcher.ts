@@ -5,7 +5,9 @@
  * gethWatcherProcess.ts) with its stdin piped from the main process. However
  * the main process ends (quit, SIGTERM, SIGKILL, crash), the OS closes that
  * pipe; the watcher then sends geth SIGINT and, if geth is still running after
- * the grace period, SIGKILL.
+ * the grace period, SIGKILL. On Windows, where SIGINT terminates outright, it
+ * runs geth-interrupt.exe (path in GETH_INTERRUPT_HELPER, see gethInterrupt.ts)
+ * instead, and kills geth at once when that fails.
  *
  * Outside Windows it also holds the read ends of geth's stdout and stderr
  * (fds 3 and 4) and drains them once the main process is gone. Without a
@@ -16,10 +18,12 @@
  * small and shares no chunk with the main process.
  * usage: gethWatcher.js <gethPid> <gracefulTimeoutMs>
  */
+import { execFile } from "node:child_process";
 import { Socket } from "node:net";
 
 const LIVENESS_POLL_MS = 1000;
 const EXIT_POLL_MS = 250;
+const INTERRUPT_HELPER_TIMEOUT_MS = 5000;
 const GETH_OUTPUT_FDS = [3, 4];
 // Ctrl+C in a terminal or a session logout signals the whole process group;
 // the watcher must outlive the main process to do its job.
@@ -42,6 +46,26 @@ function signalGeth(pid: number, signal: NodeJS.Signals): void {
   }
 }
 
+function interruptGeth(pid: number): void {
+  if (process.platform !== "win32") {
+    signalGeth(pid, "SIGINT");
+    return;
+  }
+  const helper = process.env.GETH_INTERRUPT_HELPER;
+  if (!helper) {
+    signalGeth(pid, "SIGKILL");
+    return;
+  }
+  execFile(
+    helper,
+    [String(pid)],
+    { timeout: INTERRUPT_HELPER_TIMEOUT_MS, windowsHide: true },
+    (err) => {
+      if (err) signalGeth(pid, "SIGKILL");
+    },
+  );
+}
+
 function drainGethOutput(): void {
   if (process.platform === "win32") return;
   GETH_OUTPUT_FDS.forEach((fd) => {
@@ -54,7 +78,7 @@ function drainGethOutput(): void {
 
 function stopGeth(pid: number, gracefulTimeoutMs: number): void {
   drainGethOutput();
-  signalGeth(pid, "SIGINT");
+  interruptGeth(pid);
   const deadline = Date.now() + gracefulTimeoutMs;
   const poll = setInterval(() => {
     if (!isAlive(pid)) process.exit(0);

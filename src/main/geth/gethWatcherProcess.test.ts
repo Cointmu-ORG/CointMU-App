@@ -31,7 +31,7 @@ describe("watcherStdio", () => {
 
 describe("watcherCommand", () => {
   it("runs the sh watcher from /bin/sh with only system folders on PATH", () => {
-    const command = watcherCommand("linux", "/app/out/main");
+    const command = watcherCommand("linux", "/app/out/main", "/app/bin/geth");
 
     expect(command.file).toBe("/bin/sh");
     expect(command.args[0]).toBe("-c");
@@ -39,11 +39,18 @@ describe("watcherCommand", () => {
   });
 
   it("runs gethWatcher.js in node mode on Windows", () => {
-    const command = watcherCommand("win32", "/app/out/main");
+    const command = watcherCommand(
+      "win32",
+      "/app/out/main",
+      join("/app/bin/win", "geth.exe"),
+    );
 
     expect(command.file).toBe(process.execPath);
     expect(command.args).toEqual([join("/app/out/main", "gethWatcher.js")]);
     expect(command.env.ELECTRON_RUN_AS_NODE).toBe("1");
+    expect(command.env.GETH_INTERRUPT_HELPER).toBe(
+      join("/app/bin/win", "geth-interrupt.exe"),
+    );
   });
 });
 

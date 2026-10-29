@@ -14,17 +14,20 @@ const POLL_MS = 100;
 // On SIGINT it logs 256 KB, more than geth's output socket holds (about 120 KB
 // on Linux, 8-16 KB on macOS), like geth's shutdown log, then records a clean
 // stop. Without a reader on its stderr the write fails (EPIPE here, SIGPIPE
-// for geth) or blocks, and the marker never appears.
+// for geth) or blocks, and the marker never appears. Node reports the
+// CTRL_BREAK from geth-interrupt.exe as SIGBREAK; geth reports it as SIGINT.
 const FAKE_GETH = `
 const fs = require("node:fs");
 const [marker, ignoreSigint] = process.argv.slice(2);
-process.on("SIGINT", () => {
+const stop = () => {
   if (ignoreSigint === "1") return;
   const line = Buffer.alloc(1024, "x");
   for (let i = 0; i < 256; i++) fs.writeSync(2, line);
   fs.writeFileSync(marker, "clean");
   process.exit(0);
-});
+};
+process.on("SIGINT", stop);
+if (process.platform === "win32") process.on("SIGBREAK", stop);
 setInterval(() => {}, 1000);
 process.stdout.write("ready");
 `;
@@ -35,7 +38,7 @@ const FAKE_MAIN = `
 const { spawn } = require("node:child_process");
 const [command, fakeGeth, marker, graceMs] = process.argv.slice(2);
 const { file, args, env } = JSON.parse(command);
-const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"] });
+const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
 geth.stderr.resume();
 geth.stdout.once("data", () => {
   geth.stdout.resume();

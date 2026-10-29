@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import ms from "ms";
+import { interruptGethOnWindows } from "./gethInterrupt";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
 export const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
@@ -171,18 +172,40 @@ async function waitForExit(pid: number, timeoutMs: number): Promise<boolean> {
 }
 
 /**
+ * @param pid - Our orphaned geth.
+ * @param interruptHelper - geth-interrupt.exe, used on Windows only.
+ * @returns False when geth could not be interrupted and must be killed.
+ */
+async function interruptOrphan(
+  pid: number,
+  interruptHelper: string | undefined,
+): Promise<boolean> {
+  if (process.platform !== "win32") {
+    signalProcess(pid, "SIGINT");
+    return true;
+  }
+  return (
+    interruptHelper !== undefined &&
+    (await interruptGethOnWindows(pid, interruptHelper))
+  );
+}
+
+/**
  * Stops a geth left running by an earlier app process that died without
  * stopping it, so the new geth does not fail on the datadir lock (#73). Only a
  * process whose command line proves it is our geth is signalled; anything else
  * (a reused PID) is left alone and the stale record is dropped.
  * @param dataRoot - The folder holding every network's geth datadir.
  * @param gracefulTimeoutMs - Time between SIGINT and SIGKILL.
+ * @param interruptHelper - geth-interrupt.exe, which stops geth cleanly on
+ *   Windows (see gethInterrupt.ts); without it geth is killed there at once.
  * @returns Resolves once no recorded geth can still hold the datadir.
  * @throws When the recorded geth cannot be signalled (e.g. EPERM).
  */
 export async function stopOrphanedGeth(
   dataRoot: string,
   gracefulTimeoutMs = GETH_GRACEFUL_TIMEOUT_MS,
+  interruptHelper?: string,
 ): Promise<void> {
   const file = pidFilePath(dataRoot);
   let pid: number | null;
@@ -199,9 +222,9 @@ export async function stopOrphanedGeth(
     isOwnGethCommandLine(commandLine, dataRoot, process.platform)
   ) {
     console.warn(`[geth:orphan] Stopping geth ${pid} left by a previous run`);
-    signalProcess(pid, "SIGINT");
-    if (!(await waitForExit(pid, gracefulTimeoutMs))) {
-      console.warn(`[geth:orphan] geth ${pid} ignored SIGINT; killing it`);
+    const isInterrupted = await interruptOrphan(pid, interruptHelper);
+    if (!isInterrupted || !(await waitForExit(pid, gracefulTimeoutMs))) {
+      console.warn(`[geth:orphan] geth ${pid} is still running; killing it`);
       signalProcess(pid, "SIGKILL");
       await waitForExit(pid, KILL_SETTLE_TIMEOUT_MS);
     }

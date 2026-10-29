@@ -5,6 +5,7 @@ import {
 } from "node:child_process";
 import { join } from "node:path";
 import { GETH_GRACEFUL_TIMEOUT_MS } from "./orphanedGeth";
+import { interruptHelperFor } from "./gethInterrupt";
 import { GETH_WATCHER_SH } from "./gethWatcherScript";
 
 const WATCHER_SCRIPT = "gethWatcher.js";
@@ -27,20 +28,27 @@ export interface WatcherCommand {
  * Windows, gethWatcher.js on Windows, which has no /bin/sh. The Windows one
  * runs the app binary in node mode, so it depends on the RunAsNode Electron
  * fuse staying enabled; hardening that fuse means replacing it there (Job
- * Object, native helper).
+ * Object, native helper). It stops geth through geth-interrupt.exe, found next
+ * to geth.exe.
  * @param platform - Selects the watcher.
  * @param scriptDir - The folder holding the built gethWatcher.js.
+ * @param gethBinary - The geth executable being watched.
  * @returns The command, without geth's PID and the grace period.
  */
 export function watcherCommand(
   platform: NodeJS.Platform,
   scriptDir: string,
+  gethBinary: string,
 ): WatcherCommand {
   if (platform === "win32") {
     return {
       file: process.execPath,
       args: [join(scriptDir, WATCHER_SCRIPT)],
-      env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
+      env: {
+        ...process.env,
+        ELECTRON_RUN_AS_NODE: "1",
+        GETH_INTERRUPT_HELPER: interruptHelperFor(gethBinary),
+      },
     };
   }
   return {
@@ -54,7 +62,7 @@ export function watcherCommand(
  * The watcher's stdio: stdin is the pipe whose end-of-file means this process
  * is gone. Outside Windows, fds 3 and 4 share geth's stdout and stderr pipes so
  * geth keeps a reader after this process dies (see gethWatcherScript.ts).
- * Windows has no SIGPIPE, and its SIGINT already terminates geth outright.
+ * Windows has no SIGPIPE.
  * @param geth - The geth child process, spawned with piped stdout and stderr.
  * @param platform - Selects the layout.
  * @returns The stdio layout for spawn().
@@ -86,7 +94,7 @@ export function startGethWatcher(
 ): ChildProcess | null {
   if (geth.pid === undefined) return null;
   try {
-    const command = watcherCommand(process.platform, scriptDir);
+    const command = watcherCommand(process.platform, scriptDir, geth.spawnfile);
     const watcher = spawn(
       command.file,
       [...command.args, String(geth.pid), String(gracefulTimeoutMs)],

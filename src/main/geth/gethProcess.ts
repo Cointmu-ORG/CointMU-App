@@ -14,6 +14,7 @@ import {
   writeGethPidFile,
 } from "./orphanedGeth";
 import { startGethWatcher } from "./gethWatcherProcess";
+import { interruptGethOnWindows, interruptHelperFor } from "./gethInterrupt";
 import { parseGethLogChunk } from "../utils/gethLogParser";
 import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
@@ -122,7 +123,11 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     intentionalGethShutdown = false;
     gethProcess = spawn(binaryPath, args, {
       stdio: ["ignore", "pipe", "pipe"],
+      // Not detached: on Windows that leaves geth with no console, and the
+      // clean stop (killGethProcess) needs one. windowsHide gives geth a
+      // hidden console of its own instead of a window or the terminal's.
       detached: false,
+      windowsHide: true,
       env,
     });
     lastSpawnedGeth = gethProcess;
@@ -230,7 +235,9 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 
 /**
  * Sends SIGINT to the geth child process and returns a promise that resolves
- * once the process has fully terminated. A hard SIGKILL is dispatched if the
+ * once the process has fully terminated. On Windows, where SIGINT terminates
+ * outright, geth-interrupt.exe interrupts it instead (see gethInterrupt.ts);
+ * if that fails geth is killed at once. A hard SIGKILL is dispatched if the
  * process does not exit within GETH_GRACEFUL_TIMEOUT_MS. When no geth process
  * is running the returned promise resolves immediately.
  * @returns {Promise<void>} Resolves after the geth process has exited.
@@ -260,15 +267,31 @@ export function killGethProcess(): Promise<void> {
       resolve();
     };
 
-    const killTimer = setTimeout(() => {
+    const forceKill = (): void => {
       if (settled) return;
       try {
         proc.kill("SIGKILL");
       } catch {}
-    }, GETH_GRACEFUL_TIMEOUT_MS);
+    };
+
+    const killTimer = setTimeout(forceKill, GETH_GRACEFUL_TIMEOUT_MS);
 
     proc.once("close", onExit);
     proc.once("exit", onExit);
+
+    if (process.platform === "win32") {
+      if (proc.pid === undefined) {
+        forceKill();
+        return;
+      }
+      void interruptGethOnWindows(
+        proc.pid,
+        interruptHelperFor(proc.spawnfile),
+      ).then((isInterrupted) => {
+        if (!isInterrupted) forceKill();
+      });
+      return;
+    }
 
     try {
       proc.kill("SIGINT");
