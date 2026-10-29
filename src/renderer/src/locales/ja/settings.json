@@ -46,19 +46,7 @@
     "title": "通知"
   },
   "network": {
-    "title": "ネットワーク",
-    "addNetwork": {
-      "modalTitle": "カスタムネットワークの追加",
-      "networkNameLabel": "ネットワーク名",
-      "rpcUrlLabel": "RPC URL",
-      "chainIdLabel": "チェーンID",
-      "currencySymbolLabel": "通貨記号",
-      "saveBtn": "保存",
-      "cancelBtn": "キャンセル",
-      "rpcUrlInvalid": "RPC URL は有効な HTTP/HTTPS URL である必要があります",
-      "examplePlaceholder": "例: {{example}}"
-    },
-    "addNetworkOption": "+ ネットワークを追加"
+    "title": "ネットワーク"
   },
   "mining": {
     "title": "マイニング"
@@ -143,17 +131,9 @@
     "links": "リンク",
     "githubTitle": "GitHub",
     "reportIssueDesc": "バグレポートや機能リクエストを送信する",
-    "saveBtn": "保存",
-    "savingBtn": "保存中...",
-    "cancelBtn": "キャンセル",
-    "chainWarning": "警告: チェーンIDを変更すると、既存のローカルブロックチェーンデータが完全に削除され、ノードが再起動します。本当に続行してもよろしいですか？",
-    "chainSuccess": "チェーンIDが正常に更新されました。ノードは新しいブロックチェーンで再起動しています。",
-    "chainFailure": "チェーンIDの更新に失敗しました。",
-    "chainError": "チェーンIDの設定中にエラーが発生しました。",
     "title": "バージョン情報",
     "nodeVersion": "ノードバージョン",
     "chainId": "チェーンID",
-    "edit": "編集",
     "connectedPeers": "接続されたピア",
     "uptime": "アップタイム",
     "documentationTitle": "ドキュメント",
@@ -174,14 +154,10 @@
   },
   "system": "システム",
   "networkSettings": {
-    "subtitle": "接続、RPCエンドポイント、およびチェーンの選択",
+    "subtitle": "ネットワーク、ピア、同期、ブートノード",
     "activeNetwork": "アクティブなネットワーク",
     "networkTitle": "ネットワーク",
     "networkDesc": "CointMUが接続しているチェーン",
-    "rpcTitle": "RPCエンドポイント",
-    "rpcDesc": "トランザクションとクエリが送信される場所",
-    "chainIdTitle": "チェーンID",
-    "chainIdDesc": "トランザクションの署名に使用されます",
     "blockTimeTitle": "ブロック時間",
     "blockTimeDesc": "ブロック間のターゲット時間",
     "peers": "ピア",
@@ -199,8 +175,6 @@
     "syncModeDesc": "Snapは剪定された状態を素早くダウンロードします。Fullはジェネシスからすべてのブロックを検証します",
     "pruneTitle": "古い状態を剪定する",
     "pruneDesc": "ディスクを節約するために過去128ブロックの履歴状態を保持します",
-    "switchingNetwork": "ネットワークを切り替えています... お待ちください。",
-    "restartRequired": "新しいネットワークに接続するためにノードを再起動しています。",
     "advanced": "詳細設定",
     "bootnodes": {
       "title": "ブートノード",

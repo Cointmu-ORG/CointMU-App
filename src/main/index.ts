@@ -79,14 +79,14 @@ app.whenReady().then(async () => {
   registerAppHandlers();
   registerCryptoHandlers();
   registerSystemHandlers();
-  registerNetworkHandlers(store);
+  registerNetworkHandlers();
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
 
   await resolveGethPorts();
 
-  loadNetworkId(store);
+  loadNetworkId();
 
   attachNodeRecovery(createNodeRecovery(store));
 

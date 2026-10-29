@@ -1,0 +1,77 @@
+{
+  "network": {
+    "chainId": 7013,
+    "listenPort": 30491,
+    "bootnodes": [
+      "enode://1434e5d64475959142dc811db798919076f14c8ab462b7898db72c71bd882557f1c8ddd07fa4a13ae741e7bd9fb9d2c1300c905d6688e14a093379d7e49aa486@127.0.0.1:30399"
+    ],
+    "customNetworks": [
+      {
+        "name": "My lab chain",
+        "rpcUrl": "http://127.0.0.1:8546",
+        "chainId": 4242,
+        "symbol": "LAB"
+      }
+    ],
+    "network": "CointMU Testnet · chain ID 7013"
+  },
+  "mnemonic": null,
+  "activeWalletAddress": "0x2CF2762952207957FCEe044083685656C4072E2f",
+  "accounts": [
+    {
+      "index": 0,
+      "address": "0x2CF2762952207957FCEe044083685656C4072E2f",
+      "label": "Main wallet"
+    }
+  ],
+  "general": {
+    "launchAtLogin": true,
+    "openInBackground": false,
+    "pushNotifications": true,
+    "notificationSound": false,
+    "currency": "cmu"
+  },
+  "appearance": {
+    "theme": "light",
+    "accentColor": "#3b82f6",
+    "density": "comfortable",
+    "showSidebarColors": true,
+    "animatedTransitions": true
+  },
+  "mining": {
+    "isMiningEnabled": false,
+    "startAtLaunch": false,
+    "cpuThreads": 4,
+    "intensity": "balanced",
+    "pauseOnBattery": true,
+    "miningMode": "Solo",
+    "poolAddress": "0x2CF2762952207957FCEe044083685656C4072E2f"
+  },
+  "security": {
+    "autoLock": true,
+    "requireBiometrics": false
+  },
+  "advanced": {
+    "httpRpc": true,
+    "wsRpc": false,
+    "corsOrigins": "https://*.cointmu.net",
+    "logLevel": "info"
+  },
+  "notifications": {
+    "global": true,
+    "transactions": true,
+    "mining": true,
+    "security": true,
+    "desktopOs": true,
+    "sound": false
+  },
+  "notificationHistory": [],
+  "telemetry": {
+    "enabled": false,
+    "noticeAcknowledged": true
+  },
+  "geth": {
+    "ipcInstallId": "78bfb903-25ef-4a3c-aac2-71c89a721031"
+  },
+  "encryptedPayload": "<redacted: scrypt keystore of a throwaway test key>"
+}

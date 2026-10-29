@@ -1,16 +1,15 @@
 import {
-  NETWORK_OPTIONS,
   MAX_PEERS_OPTIONS,
   RECOMMENDED_MAX_PEERS,
   SYNC_MODE_OPTIONS,
 } from "@/features/settings";
+import { COINTMU_NETWORK } from "@bridge/network";
 import type { SyncMode } from "@bridge/setting-values";
-import { useState, type JSX } from "react";
+import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { CustomNetwork, SettingsStore } from "@/features/settings";
+import type { SettingsStore } from "@/features/settings";
 import { CustomDropdown } from "@/shared/ui";
 import { SYNC_MODE_LABEL_KEYS } from "@/shared/lib";
-import { AddNetworkModal } from "./add-network-modal.component";
 import { BootnodeSettings } from "./bootnode-settings.component";
 
 interface NetworkSettingsProps {
@@ -19,8 +18,8 @@ interface NetworkSettingsProps {
 }
 
 /**
- * Network settings pane containing active network configuration, RPC endpoints,
- * peer bounds, and sync mode configuration.
+ * Network settings pane: the active network (read-only), peer bounds, sync
+ * mode and bootnodes.
  * @param props The configuration state and the update callback.
  * @returns The Network Settings form component.
  */
@@ -33,48 +32,6 @@ export function NetworkSettings({
     peers === RECOMMENDED_MAX_PEERS
       ? t("settings:options.recommendedValue", { value: peers })
       : String(peers);
-  const [isSwitching, setIsSwitching] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const customNetworks = config.customNetworks || [];
-  const options = [
-    ...NETWORK_OPTIONS,
-    ...customNetworks.map((n) => n.name),
-    "+ Add Network",
-  ];
-
-  const handleNetworkSwitch = async (val: string): Promise<void> => {
-    if (val === "+ Add Network") {
-      setIsAddModalOpen(true);
-      return;
-    }
-
-    onUpdate("network", val);
-
-    let chainId = 1912;
-    if (val.includes("7013")) chainId = 7013;
-    else if (val.includes("Localhost")) chainId = 1337;
-    else {
-      const custom = customNetworks.find((n) => n.name === val);
-      if (custom) chainId = custom.chainId;
-    }
-
-    setIsSwitching(true);
-    try {
-      await window.api.network.setChainId(chainId);
-    } finally {
-      setIsSwitching(false);
-    }
-  };
-
-  const handleAddCustomNetwork = async (
-    network: CustomNetwork,
-  ): Promise<void> => {
-    const updatedNetworks = [...customNetworks, network];
-    await onUpdate("customNetworks", updatedNetworks);
-    setIsAddModalOpen(false);
-    await handleNetworkSwitch(network.name);
-  };
 
   return (
     <div>
@@ -88,7 +45,7 @@ export function NetworkSettings({
             {t("settings:networkSettings.activeNetwork")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings:networkSettings.networkTitle")}
@@ -97,65 +54,8 @@ export function NetworkSettings({
                   {t("settings:networkSettings.networkDesc")}
                 </p>
               </div>
-              <div className="w-64">
-                <CustomDropdown<string>
-                  options={options}
-                  selected={config.network}
-                  onSelect={handleNetworkSwitch}
-                  renderSelected={(selected) => selected || NETWORK_OPTIONS[0]}
-                  renderOption={(option) => {
-                    if (option === "+ Add Network") {
-                      return (
-                        <span className="text-blue-500 font-bold">
-                          {t("settings:network.addNetworkOption")}
-                        </span>
-                      );
-                    }
-                    return option;
-                  }}
-                  compact
-                />
-                {isSwitching && (
-                  <div className="mt-3 text-[11px] text-blue-600 font-medium animate-pulse bg-blue-50 p-2 rounded border border-blue-100">
-                    <p>{t("settings:networkSettings.switchingNetwork")}</p>
-                    <p className="mt-0.5 opacity-80">
-                      {t("settings:networkSettings.restartRequired")}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.rpcTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.rpcDesc")}
-                </p>
-              </div>
-              <div className="w-64">
-                <input
-                  type="text"
-                  value={config.rpcEndpoint}
-                  onChange={(e) => onUpdate("rpcEndpoint", e.target.value)}
-                  className="w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 dark:text-gray-100 dark:text-gray-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.chainIdTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.chainIdDesc")}
-                </p>
-              </div>
-              <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
-                1912
+              <span className="text-sm font-bold text-slate-700 dark:text-gray-300">
+                {COINTMU_NETWORK.name} · chain ID {COINTMU_NETWORK.chainId}
               </span>
             </div>
 
@@ -309,11 +209,6 @@ export function NetworkSettings({
 
         <BootnodeSettings />
       </div>
-      <AddNetworkModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSave={handleAddCustomNetwork}
-      />
     </div>
   );
 }

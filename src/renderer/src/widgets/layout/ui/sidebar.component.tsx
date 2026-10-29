@@ -15,6 +15,7 @@ import {
   LockOpen,
   TriangleAlert,
 } from "lucide-react";
+import { COINTMU_NETWORK } from "@bridge/network";
 
 interface SidebarProps {
   accounts: DerivedAccount[];
@@ -24,8 +25,6 @@ interface SidebarProps {
   onLogout: () => void;
   updateStatus: UpdaterStatus;
 }
-
-const APP_NETWORK = "testnet";
 
 /**
  * Sidebar navigation component with workspace routing and a popover-enabled
@@ -80,7 +79,7 @@ export function Sidebar({
               CointMU
             </p>
             <p className="text-[10px] text-slate-400 tracking-wide">
-              v{window.systemInfo?.version || "0.0.1"} - {APP_NETWORK}
+              v{window.systemInfo?.version || "0.0.1"}
             </p>
           </div>
         </div>
@@ -93,7 +92,7 @@ export function Sidebar({
           <span className="text-[11px] font-medium text-slate-600">
             {t("sidebar.connectedTo")}
             <span className="font-semibold text-accent ml-1">
-              CointMU Mainnet
+              {COINTMU_NETWORK.name}
             </span>
           </span>
           {peerHint && (

@@ -25,9 +25,17 @@ describe("resetAllSettings", () => {
     const keys = set.mock.calls.map(([key]) => key);
     expect(keys).not.toContain("network");
     expect(keys).not.toContain("network.bootnodes");
-    expect(set).toHaveBeenCalledWith("network.network", "CointMU Mainnet");
     expect(set).toHaveBeenCalledWith("network.listenPort", 30303);
-    expect(set).toHaveBeenCalledWith("network.customNetworks", []);
+  });
+
+  it("writes no network choice: the app runs one network", async () => {
+    await resetAllSettings();
+
+    const keys = set.mock.calls.map(([key]) => key);
+    expect(keys).not.toContain("network.network");
+    expect(keys).not.toContain("network.customNetworks");
+    expect(keys).not.toContain("network.chainId");
+    expect(keys).not.toContain("network.rpcEndpoint");
   });
 
   it("writes setting codes, not labels, and no language", async () => {

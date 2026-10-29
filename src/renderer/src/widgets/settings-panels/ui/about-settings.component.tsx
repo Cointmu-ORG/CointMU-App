@@ -63,9 +63,6 @@ export function AboutSettings(): JSX.Element {
   const { t, i18n } = useTranslation();
   const [uptimeSeconds, setUptimeSeconds] = useState<number | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
-  const [isEditingChain, setIsEditingChain] = useState<boolean>(false);
-  const [newChainIdInput, setNewChainIdInput] = useState<string>("");
-  const [isSavingChain, setIsSavingChain] = useState<boolean>(false);
 
   const peerCount = useAppStore((s) => s.peerCount);
   const updater = useUpdater();
@@ -91,7 +88,6 @@ export function AboutSettings(): JSX.Element {
         const genesis = await window.api.network.getGenesisConfig();
         if (genesis && genesis.config && genesis.config.chainId) {
           setChainId(genesis.config.chainId);
-          setNewChainIdInput(String(genesis.config.chainId));
         }
       } catch (err) {
         console.error("Failed to fetch genesis config", err);
@@ -101,32 +97,6 @@ export function AboutSettings(): JSX.Element {
 
     return () => clearInterval(interval);
   }, []);
-
-  const handleSaveChainId = async (): Promise<void> => {
-    const parsedId = parseInt(newChainIdInput, 10);
-    if (isNaN(parsedId) || parsedId <= 0) return;
-
-    const confirmed = window.confirm(t("settings:about.chainWarning"));
-
-    if (!confirmed) return;
-
-    setIsSavingChain(true);
-    try {
-      const success = await window.api.network.setChainId(parsedId);
-      if (success) {
-        setChainId(parsedId);
-        setIsEditingChain(false);
-        alert(t("settings:about.chainSuccess"));
-      } else {
-        alert(t("settings:about.chainFailure"));
-      }
-    } catch (err) {
-      console.error(err);
-      alert(t("settings:about.chainError"));
-    } finally {
-      setIsSavingChain(false);
-    }
-  };
 
   return (
     <div>
@@ -306,50 +276,9 @@ export function AboutSettings(): JSX.Element {
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                 {t("settings:about.chainId")}
               </p>
-              <div className="flex items-center gap-3">
-                {isEditingChain ? (
-                  <>
-                    <input
-                      type="number"
-                      className="w-24 text-sm font-medium font-mono text-slate-600 bg-slate-50 border border-slate-200 rounded px-2 py-1 outline-none focus:border-blue-500"
-                      value={newChainIdInput}
-                      onChange={(e) => setNewChainIdInput(e.target.value)}
-                      disabled={isSavingChain}
-                    />
-                    <button
-                      onClick={handleSaveChainId}
-                      disabled={isSavingChain}
-                      className="text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded px-2.5 py-1 transition-colors"
-                    >
-                      {isSavingChain
-                        ? t("settings:about.savingBtn")
-                        : t("settings:about.saveBtn")}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsEditingChain(false);
-                        setNewChainIdInput(String(chainId));
-                      }}
-                      disabled={isSavingChain}
-                      className="text-xs font-bold text-slate-500 dark:text-gray-400 hover:text-slate-700 transition-colors"
-                    >
-                      {t("settings:about.cancelBtn")}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-sm font-medium font-mono text-slate-600">
-                      {chainId !== null ? chainId : "--"}
-                    </span>
-                    <button
-                      onClick={() => setIsEditingChain(true)}
-                      className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors"
-                    >
-                      {t("settings:about.edit")}
-                    </button>
-                  </>
-                )}
-              </div>
+              <span className="text-sm font-medium font-mono text-slate-600">
+                {chainId !== null ? chainId : "--"}
+              </span>
             </div>
 
             <div className="flex items-center justify-between p-4">

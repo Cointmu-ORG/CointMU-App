@@ -46,19 +46,7 @@
     "title": "Notifications"
   },
   "network": {
-    "title": "Network",
-    "addNetwork": {
-      "modalTitle": "Add Custom Network",
-      "networkNameLabel": "Network Name",
-      "rpcUrlLabel": "RPC URL",
-      "chainIdLabel": "Chain ID",
-      "currencySymbolLabel": "Currency Symbol",
-      "saveBtn": "Save",
-      "cancelBtn": "Cancel",
-      "rpcUrlInvalid": "RPC URL must be a valid HTTP/HTTPS URL",
-      "examplePlaceholder": "e.g. {{example}}"
-    },
-    "addNetworkOption": "+ Add Network"
+    "title": "Network"
   },
   "mining": {
     "title": "Mining"
@@ -143,17 +131,9 @@
     "links": "Links",
     "githubTitle": "GitHub",
     "reportIssueDesc": "Send a bug report or feature request",
-    "saveBtn": "Save",
-    "savingBtn": "Saving...",
-    "cancelBtn": "Cancel",
-    "chainWarning": "WARNING: Changing the Chain ID will permanently WIPE your existing local blockchain data and restart the node. Are you absolutely sure you want to proceed?",
-    "chainSuccess": "Chain ID updated successfully. The node is restarting with a fresh blockchain.",
-    "chainFailure": "Failed to update the Chain ID.",
-    "chainError": "An error occurred while setting the Chain ID.",
     "title": "About",
     "nodeVersion": "Node version",
     "chainId": "Chain ID",
-    "edit": "Edit",
     "connectedPeers": "Connected peers",
     "uptime": "Uptime",
     "documentationTitle": "Documentation",
@@ -174,14 +154,10 @@
   },
   "system": "System",
   "networkSettings": {
-    "subtitle": "Connection, RPC endpoints, and chain selection",
+    "subtitle": "Network, peers, sync, and bootnodes",
     "activeNetwork": "Active Network",
     "networkTitle": "Network",
     "networkDesc": "Which chain CointMU is connected to",
-    "rpcTitle": "RPC endpoint",
-    "rpcDesc": "Where transactions and queries are sent",
-    "chainIdTitle": "Chain ID",
-    "chainIdDesc": "Used for transaction signing",
     "blockTimeTitle": "Block time",
     "blockTimeDesc": "Target time between blocks",
     "peers": "Peers",
@@ -199,8 +175,6 @@
     "syncModeDesc": "Snap downloads pruned state quickly. Full validates every block from genesis",
     "pruneTitle": "Prune old state",
     "pruneDesc": "Keep last 128 blocks of historical state to save disk",
-    "switchingNetwork": "Switching network... Please wait.",
-    "restartRequired": "Node restarting to connect to the new network.",
     "advanced": "Advanced",
     "bootnodes": {
       "title": "Bootnodes",

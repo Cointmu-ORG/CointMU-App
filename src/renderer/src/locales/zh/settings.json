@@ -46,19 +46,7 @@
     "title": "通知"
   },
   "network": {
-    "title": "网络",
-    "addNetwork": {
-      "modalTitle": "添加自定义网络",
-      "networkNameLabel": "网络名称",
-      "rpcUrlLabel": "RPC URL",
-      "chainIdLabel": "链 ID",
-      "currencySymbolLabel": "货币符号",
-      "saveBtn": "保存",
-      "cancelBtn": "取消",
-      "rpcUrlInvalid": "RPC URL 必须是有效的 HTTP/HTTPS 地址",
-      "examplePlaceholder": "例如 {{example}}"
-    },
-    "addNetworkOption": "+ 添加网络"
+    "title": "网络"
   },
   "mining": {
     "title": "挖矿"
@@ -132,18 +120,10 @@
     "links": "链接",
     "githubTitle": "GitHub",
     "reportIssueDesc": "发送错误报告或功能请求",
-    "saveBtn": "保存",
-    "savingBtn": "保存中...",
-    "cancelBtn": "取消",
-    "chainWarning": "警告：更改链 ID 将永久擦除您现有的本地区块链数据并重启节点。您绝对确定要继续吗？",
-    "chainSuccess": "链 ID 已成功更新。节点正在用全新的区块链重启。",
-    "chainFailure": "未能更新链 ID。",
-    "chainError": "设置链 ID 时发生错误。",
     "title": "关于",
     "checkUpdateDesc": "检查是否有更新版本可用。",
     "nodeVersion": "节点版本",
     "chainId": "链 ID",
-    "edit": "编辑",
     "connectedPeers": "已连接节点",
     "uptime": "正常运行时间",
     "documentationTitle": "文档",
@@ -174,14 +154,10 @@
   },
   "system": "系统",
   "networkSettings": {
-    "subtitle": "连接、RPC 端点和链选择",
+    "subtitle": "网络、节点、同步和引导节点",
     "activeNetwork": "活动网络",
     "networkTitle": "网络",
     "networkDesc": "CointMU 连接到哪条链",
-    "rpcTitle": "RPC 端点",
-    "rpcDesc": "发送交易和查询的地方",
-    "chainIdTitle": "链 ID",
-    "chainIdDesc": "用于交易签名",
     "blockTimeTitle": "出块时间",
     "blockTimeDesc": "区块间目标时间",
     "peers": "节点",
@@ -199,8 +175,6 @@
     "syncModeDesc": "快照（Snap）快速下载修剪状态。完整（Full）从创世区块验证每个区块",
     "pruneTitle": "修剪旧状态",
     "pruneDesc": "保留最近 128 个区块的历史状态以节省磁盘空间",
-    "switchingNetwork": "正在切换网络...请稍候。",
-    "restartRequired": "节点正在重新启动以连接到新网络。",
     "advanced": "高级",
     "bootnodes": {
       "title": "引导节点",

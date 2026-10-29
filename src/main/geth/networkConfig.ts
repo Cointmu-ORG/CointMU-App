@@ -1,7 +1,6 @@
 import { app } from "electron";
 import { join } from "path";
 import { GENESIS_BLOCK, type GenesisBlock } from "../services/genesis";
-import type { AppStore } from "../services/appStore";
 
 let GETH_NETWORK_ID =
   process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
@@ -12,31 +11,17 @@ export function getNetworkId(): string {
 }
 
 /**
- * Replaces the active network id (the chain-id editor persists it separately).
- * @param {string} networkId - The new network id.
- * @returns {void}
- */
-export function setNetworkId(networkId: string): void {
-  GETH_NETWORK_ID = networkId;
-}
-
-/**
  * Resolves the active chain id and records it as the authoritative network id
- * used for both genesis init and the geth spawn. Resolution order is: a persisted
- * override (set by the chain-id editor), then the GETH_NETWORK_ID environment
- * value, then the inlined genesis default.
- * @param {AppStore} store - The electron-store instance holding the optional override.
+ * used for both genesis init and the geth spawn: a positive GETH_NETWORK_ID
+ * environment value (development and CI test chains), else the genesis chain id.
  * @returns {void}
  */
-export function loadNetworkId(store: AppStore): void {
-  const override = Number(store.get("network.chainId"));
+export function loadNetworkId(): void {
   const envNetworkId = Number(process.env.GETH_NETWORK_ID);
   GETH_NETWORK_ID = String(
-    Number.isFinite(override) && override > 0
-      ? override
-      : Number.isFinite(envNetworkId) && envNetworkId > 0
-        ? envNetworkId
-        : GENESIS_BLOCK.config.chainId,
+    Number.isFinite(envNetworkId) && envNetworkId > 0
+      ? envNetworkId
+      : GENESIS_BLOCK.config.chainId,
   );
 }
 

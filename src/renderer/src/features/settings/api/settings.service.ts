@@ -15,16 +15,11 @@ import { resetBootnodes } from "./bootnode.service";
  * only the validated bootnode channel may change.
  */
 const NETWORK_DEFAULTS: Readonly<Record<string, unknown>> = {
-  network: "CointMU Mainnet",
-  rpcEndpoint: "https://rpc.cointmu.net",
   maxPeers: 14,
   discovery: true,
   listenPort: 30303,
   syncMode: SyncMode.SNAP,
   pruneOldState: true,
-  customNetworks: [],
-  // Unset: the next launch falls back to the genesis chain id.
-  chainId: null,
 };
 
 /**
