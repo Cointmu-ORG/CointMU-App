@@ -4,8 +4,8 @@
  * and for maintaining clean component files.
  */
 export const EXTERNAL_LINKS = {
-  GITHUB_REPO: "https://github.com/kakonoomoidee/CointMU",
+  GITHUB_REPO: "https://github.com/Cointmu-ORG/CointMU-App",
   DOCUMENTATION: "https://docs.cointmu.net",
-  REPORT_ISSUE: "https://github.com/kakonoomoidee/CointMU/issues/new",
-  RELEASE_NOTES: "https://github.com/kakonoomoidee/CointMU/releases",
+  REPORT_ISSUE: "https://github.com/Cointmu-ORG/CointMU-App/issues/new",
+  RELEASE_NOTES: "https://github.com/Cointmu-ORG/CointMU-App/releases",
 } as const;

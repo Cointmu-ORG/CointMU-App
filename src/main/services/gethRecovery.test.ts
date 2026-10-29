@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 import { NodeRecoveryStage, type NodeRecoveryEvent } from "../../bridge/types";
 import { GethRecovery, type GethRecoveryDeps } from "./gethRecovery";
+import { quarantineChainData } from "./chaindataQuarantine";
+
+// Recovery waits seconds between restarts; the tests skip the waits and the
+// disk: quarantine only renames a folder (covered in its own tests).
+vi.mock("node:timers/promises", () => ({ setTimeout: async () => {} }));
+vi.mock("./chaindataQuarantine", () => ({
+  quarantineChainData: vi.fn(async () => "chaindata.corrupt-1"),
+}));
 
 // captured: geth prints every Fatal line to both stdout and stderr
 const CAPTURED_UNKNOWN_FATAL =
@@ -165,5 +173,59 @@ describe("GethRecovery Windows fatals", () => {
     expect(events).toEqual([
       { stage: NodeRecoveryStage.BLOCKED, reason: "PORT_RESERVED", port: 8551 },
     ]);
+  });
+});
+
+describe("GethRecovery legacy-receipt fatal", () => {
+  // captured: a Windows user's geth.log (1.6.18 → 1.7.2), printed on every start
+  const LEGACY_RECEIPTS_FATAL =
+    "Fatal: Database has receipts with a legacy format. Please run `geth db freezer-migrate`.";
+
+  it("quarantines the chaindata and resyncs instead of restarting forever", async () => {
+    const events: NodeRecoveryEvent[] = [];
+    let isQuarantined = false;
+    let isGethRunning = false;
+    const initGenesis = vi.fn(async () => {
+      isQuarantined = true;
+    });
+    const deps: GethRecoveryDeps = {
+      // The damaged freezer aborts every start until it is moved aside.
+      spawnGeth: vi.fn(async () => {
+        if (isQuarantined) {
+          isGethRunning = true;
+          return;
+        }
+        recovery.handleLogLine(LEGACY_RECEIPTS_FATAL);
+      }),
+      stopGeth: vi.fn(async () => {
+        isGethRunning = false;
+      }),
+      hasGethExited: () => !isGethRunning,
+      initGenesis,
+      resolveDataDir: () => "/data",
+      resolveRpcPort: () => null,
+      broadcast: (event) => events.push(event),
+    };
+    const recovery = new GethRecovery(deps);
+
+    crashOnce(recovery, LEGACY_RECEIPTS_FATAL);
+    await vi.waitFor(() =>
+      expect(events.at(-1)?.stage).toBe(NodeRecoveryStage.RECOVERED),
+    );
+
+    expect(events.map((event) => event.stage)).toEqual([
+      ...Array.from({ length: 3 }, () => [
+        NodeRecoveryStage.RETRYING,
+        NodeRecoveryStage.VERIFYING,
+      ]).flat(),
+      NodeRecoveryStage.QUARANTINED,
+      NodeRecoveryStage.RESYNCING,
+      NodeRecoveryStage.VERIFYING,
+      NodeRecoveryStage.RECOVERED,
+    ]);
+    expect(quarantineChainData).toHaveBeenCalledOnce();
+    expect(quarantineChainData).toHaveBeenCalledWith("/data");
+    expect(initGenesis).toHaveBeenCalledWith("/data");
+    expect(recovery.isRestartSuppressed()).toBe(false);
   });
 });

@@ -47,6 +47,28 @@ const FATAL_CORRUPT_LINES = [
   "Fatal: Failed to register the Ethereum service: pebble: corruption: pebble/record: invalid chunk",
 ];
 
+// Freezer/key-value inconsistencies, in the geth 1.10.26 formats cited in the
+// classifier. The first line is verbatim from a Windows user's geth.log.
+const FATAL_INCONSISTENT_LINES = [
+  // captured (user log, 1.6.18 → 1.7.2)
+  "Fatal: Database has receipts with a legacy format. Please run `geth db freezer-migrate`.",
+  "Fatal: Failed to register the Ethereum service: gap (#90001) in the chain between ancients and leveldb",
+  "Fatal: Failed to register the Ethereum service: genesis mismatch: 0x2e1b7c (leveldb) != 0x9a0f3d (ancients)",
+  "Fatal: Failed to register the Ethereum service: failed to retrieve genesis from ancient out of bounds",
+  "Fatal: Failed to register the Ethereum service: ancient chain segments already extracted, please set --datadir.ancient to the correct path",
+  "Fatal: Failed to register the Ethereum service: freezer tables headers and receipts have differing lengths: 90001 != 89999",
+  "Fatal: Failed to register the Ethereum service: missing data file 3",
+];
+
+// Fatal or ERROR lines about chain data that are not corruption: valid data
+// of a newer geth, or problems geth repairs while it keeps running.
+const NOT_CORRUPT_LINES = [
+  "Fatal: Failed to register the Ethereum service: database version is v9, Geth 1.10.26-stable only supports v8",
+  'EROR[10-29|14:28:30.835] Error in block freeze operation          err="block receipts missing, can\'t freeze block 90001"',
+  'EROR[10-29|14:28:30.835] Failed to retrieve state                  err="missing trie node 3f1a (path ) <nil>"',
+  "WARN [10-29|14:28:30.835] Head state missing, repairing            number=178,440 hash=ab12..cd34",
+];
+
 const BENIGN_LINES = [
   // captured: these two WARNs appear on every fresh genesis and used to loop the wipe
   'WARN [10-18|18:20:03.072] Failed to load snapshot, regenerating    err="missing or corrupted snapshot"',
@@ -96,6 +118,20 @@ describe("classifyGethLine", () => {
       kind: GethErrorKind.DB_CORRUPT,
       severity: GethLineSeverity.FATAL,
     });
+  });
+
+  it.each(FATAL_INCONSISTENT_LINES)(
+    "classifies inconsistent chaindata as corruption: %s",
+    (line) => {
+      expect(classifyGethLine(line)).toEqual({
+        kind: GethErrorKind.DB_CORRUPT,
+        severity: GethLineSeverity.FATAL,
+      });
+    },
+  );
+
+  it.each(NOT_CORRUPT_LINES)("does not call it corruption: %s", (line) => {
+    expect(classifyGethLine(line)?.kind).not.toBe(GethErrorKind.DB_CORRUPT);
   });
 
   it.each(BENIGN_LINES)("ignores sub-ERROR lines: %s", (line) => {
