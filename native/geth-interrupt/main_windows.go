@@ -15,7 +15,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/signal"
 	"strconv"
 	"syscall"
 	"time"
@@ -42,6 +41,7 @@ var (
 	kernel32                 = syscall.NewLazyDLL("kernel32.dll")
 	freeConsole              = kernel32.NewProc("FreeConsole")
 	attachConsole            = kernel32.NewProc("AttachConsole")
+	setConsoleCtrlHandler    = kernel32.NewProc("SetConsoleCtrlHandler")
 	getConsoleProcessList    = kernel32.NewProc("GetConsoleProcessList")
 	generateConsoleCtrlEvent = kernel32.NewProc("GenerateConsoleCtrlEvent")
 )
@@ -69,15 +69,26 @@ func main() {
 		fail(exitUsage, "invalid pid %q", os.Args[1])
 	}
 
-	// The event reaches this process too; with a Go handler registered the
-	// runtime reports it handled instead of exiting.
-	interrupted := make(chan os.Signal, 1)
-	signal.Notify(interrupted, os.Interrupt)
-
 	// Fails when this process has no console, which is fine.
 	freeConsole.Call()
 	if ok, _, err := attachConsole.Call(uintptr(pid)); ok == 0 {
 		fail(exitAttach, "cannot attach to the console of %d: %v", pid, err)
+	}
+
+	// The event reaches this process too. A handler that returns TRUE keeps the
+	// default one from ending it with STATUS_CONTROL_C_EXIT, which the caller
+	// would read as a failure and kill geth mid-shutdown. os/signal does not
+	// cover this (measured on windows-latest), so it is registered directly.
+	ownEvent := make(chan struct{}, 1)
+	handler := syscall.NewCallback(func(ctrlType uintptr) uintptr {
+		select {
+		case ownEvent <- struct{}{}:
+		default:
+		}
+		return 1
+	})
+	if ok, _, err := setConsoleCtrlHandler.Call(handler, 1); ok == 0 {
+		fail(exitAttach, "cannot install a console handler: %v", err)
 	}
 
 	clients := consoleClients()
@@ -88,11 +99,9 @@ func main() {
 		ctrlBreakEvent, allConsoleProcesses); ok == 0 {
 		fail(exitSend, "cannot send CTRL_BREAK to %d: %v", pid, err)
 	}
-	// Delivery is asynchronous. Exiting before it arrives races the handler:
-	// the default one then ends this process with STATUS_CONTROL_C_EXIT, and
-	// the caller, seeing a failure, kills geth mid-shutdown.
+	// Delivery is asynchronous; wait for it so exiting cannot race it.
 	select {
-	case <-interrupted:
+	case <-ownEvent:
 	case <-time.After(ownEventTimeout):
 		fmt.Fprintf(os.Stderr, "geth-interrupt: sent, but the event did not come back\n")
 	}
