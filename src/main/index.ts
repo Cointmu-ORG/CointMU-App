@@ -106,7 +106,7 @@ app.whenReady().then(async () => {
   await spawnGethProcess(store);
 
   const miningController = new MiningController(getRpcPort(), store);
-  const removeRendererRpcHandler = registerRendererRpcHandler(getRpcPort);
+  registerRendererRpcHandler(getRpcPort);
 
   const win = createWindow();
   initUpdater(win);
@@ -122,7 +122,6 @@ app.whenReady().then(async () => {
 
   app.on("before-quit", () => {
     extSyncServer.close();
-    removeRendererRpcHandler();
   });
 });
 

@@ -35,13 +35,13 @@ export function rejectRendererRpc(
 
 /**
  * Relays renderer JSON-RPC calls to the node from the main process, so the
- * geth HTTP endpoint needs no CORS and web pages cannot read it.
+ * geth HTTP endpoint needs no CORS and web pages cannot read it. The handler
+ * stays registered until the process exits: quitting waits for geth to stop
+ * while the window keeps polling, and a call to a removed handler is logged
+ * as an error. While geth is down the call answers with an error envelope.
  * @param getRpcPort - Returns the current geth HTTP port.
- * @returns A function that removes the handler.
  */
-export function registerRendererRpcHandler(
-  getRpcPort: () => number,
-): () => void {
+export function registerRendererRpcHandler(getRpcPort: () => number): void {
   ipcMain.handle(
     RPC_CHANNELS.CALL,
     async (_event, method: unknown, params: unknown) => {
@@ -54,5 +54,4 @@ export function registerRendererRpcHandler(
       );
     },
   );
-  return () => ipcMain.removeHandler(RPC_CHANNELS.CALL);
 }
