@@ -9,6 +9,8 @@ data/
 .env
 resources/bin/geth
 resources/bin/geth.exe
+# Built from native/geth-supervisor (npm run build:geth-supervisor).
+resources/bin/win/geth-supervisor.exe
 .claude/
 .vscode/
 graphify-out/

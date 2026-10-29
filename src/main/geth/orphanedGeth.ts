@@ -4,9 +4,17 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import ms from "ms";
+import { interruptGethOnWindows } from "./gethSupervisor";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
 export const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
+/**
+ * geth-supervisor.exe kills geth itself after the grace period; killing the
+ * supervisor (which takes geth with it) waits this much longer, so its own
+ * kill comes first.
+ */
+export const SUPERVISOR_EXIT_MARGIN_MS = ms("5s");
+const SUPERVISOR_EXECUTABLE = "geth-supervisor.exe";
 const KILL_SETTLE_TIMEOUT_MS = ms("5s");
 const EXIT_POLL_INTERVAL_MS = 250;
 const COMMAND_LINE_TIMEOUT_MS = ms("10s");
@@ -97,6 +105,46 @@ export function isOwnGethCommandLine(
 }
 
 /**
+ * @param commandLine - A Windows command line, as Win32_Process reports it.
+ * @returns True when its executable (the first, possibly quoted, token) is
+ *   geth-supervisor.exe, not when the name only appears in an argument.
+ */
+export function isSupervisorCommandLine(commandLine: string): boolean {
+  const line = commandLine.trim();
+  const executable = line.startsWith('"')
+    ? line.slice(1, line.indexOf('"', 1))
+    : line.split(/\s/, 1)[0];
+  const name = executable.split(/[\\/]/).pop() ?? "";
+  return name.toLowerCase() === SUPERVISOR_EXECUTABLE;
+}
+
+/**
+ * How to stop an orphan, by what the PID file names (both pass
+ * isOwnGethCommandLine: the supervisor's command line holds geth's).
+ * - signal: geth outside Windows, SIGINT.
+ * - await-supervisor: geth-supervisor.exe. Its stdin closed when the app that
+ *   started it went away, so it is already stopping geth; wait for it.
+ * - interrupt: a geth.exe without a supervisor (written by an older version):
+ *   `geth-supervisor.exe interrupt`.
+ */
+export type OrphanStopMethod = "signal" | "await-supervisor" | "interrupt";
+
+/**
+ * @param commandLine - The orphan's command line.
+ * @param platform - Selects the method.
+ * @returns How to stop it.
+ */
+export function orphanStopMethod(
+  commandLine: string,
+  platform: NodeJS.Platform,
+): OrphanStopMethod {
+  if (platform !== "win32") return "signal";
+  return isSupervisorCommandLine(commandLine)
+    ? "await-supervisor"
+    : "interrupt";
+}
+
+/**
  * @param pid - A process ID.
  * @returns The process command line, or null when it cannot be read (gone).
  */
@@ -171,18 +219,43 @@ async function waitForExit(pid: number, timeoutMs: number): Promise<boolean> {
 }
 
 /**
+ * @param pid - Our orphaned geth or its supervisor.
+ * @param method - See orphanStopMethod.
+ * @param supervisor - geth-supervisor.exe, for the interrupt method.
+ * @returns False when the orphan could not be stopped cleanly and must be
+ *   killed.
+ */
+async function beginOrphanStop(
+  pid: number,
+  method: OrphanStopMethod,
+  supervisor: string | undefined,
+): Promise<boolean> {
+  if (method === "signal") {
+    signalProcess(pid, "SIGINT");
+    return true;
+  }
+  if (method === "await-supervisor") return true;
+  return (
+    supervisor !== undefined && (await interruptGethOnWindows(pid, supervisor))
+  );
+}
+
+/**
  * Stops a geth left running by an earlier app process that died without
  * stopping it, so the new geth does not fail on the datadir lock (#73). Only a
  * process whose command line proves it is our geth is signalled; anything else
  * (a reused PID) is left alone and the stale record is dropped.
  * @param dataRoot - The folder holding every network's geth datadir.
  * @param gracefulTimeoutMs - Time between SIGINT and SIGKILL.
+ * @param supervisor - geth-supervisor.exe, which stops an unsupervised geth
+ *   cleanly on Windows; without it such a geth is killed there at once.
  * @returns Resolves once no recorded geth can still hold the datadir.
  * @throws When the recorded geth cannot be signalled (e.g. EPERM).
  */
 export async function stopOrphanedGeth(
   dataRoot: string,
   gracefulTimeoutMs = GETH_GRACEFUL_TIMEOUT_MS,
+  supervisor?: string,
 ): Promise<void> {
   const file = pidFilePath(dataRoot);
   let pid: number | null;
@@ -199,9 +272,14 @@ export async function stopOrphanedGeth(
     isOwnGethCommandLine(commandLine, dataRoot, process.platform)
   ) {
     console.warn(`[geth:orphan] Stopping geth ${pid} left by a previous run`);
-    signalProcess(pid, "SIGINT");
-    if (!(await waitForExit(pid, gracefulTimeoutMs))) {
-      console.warn(`[geth:orphan] geth ${pid} ignored SIGINT; killing it`);
+    const method = orphanStopMethod(commandLine, process.platform);
+    const isStopping = await beginOrphanStop(pid, method, supervisor);
+    const waitMs =
+      method === "await-supervisor"
+        ? gracefulTimeoutMs + SUPERVISOR_EXIT_MARGIN_MS
+        : gracefulTimeoutMs;
+    if (!isStopping || !(await waitForExit(pid, waitMs))) {
+      console.warn(`[geth:orphan] geth ${pid} is still running; killing it`);
       signalProcess(pid, "SIGKILL");
       await waitForExit(pid, KILL_SETTLE_TIMEOUT_MS);
     }

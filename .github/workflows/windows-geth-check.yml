@@ -1,0 +1,95 @@
+name: Windows geth check
+
+# Stops the bundled Windows geth through every path the app uses (quit and
+# restarts, geth-supervisor when the main process dies or is killed, a
+# leftover geth at the next start) and fails unless each stop was clean
+# (#97): geth logs "Got interrupt" and its next start reports no unclean
+# shutdown. A regression here is silent until a user's chain database breaks.
+on:
+  pull_request:
+    paths:
+      - "src/main/geth/**"
+      - "src/main/services/updater.ts"
+      - "native/geth-supervisor/**"
+      - "resources/bin/win/**"
+      - "package-lock.json"
+      - ".github/workflows/windows-geth-check.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: windows-geth-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows-geth-check:
+    name: windows-geth-check
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
+
+      # Same npm as Dependabot and local: package.json "packageManager".
+      - name: Use pinned npm
+        id: npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      # The tests mock electron, so its binary is not needed.
+      - run: npm ci --ignore-scripts
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: native/geth-supervisor/go.mod
+          cache: false
+
+      - name: Build and test geth-supervisor
+        shell: bash
+        run: |
+          go -C native/geth-supervisor vet .
+          go -C native/geth-supervisor test .
+          npm run build:geth-supervisor
+          size=$(stat -c %s resources/bin/win/geth-supervisor.exe)
+          echo "geth-supervisor.exe: $size bytes" >> "$GITHUB_STEP_SUMMARY"
+
+      # The test chain and dead bootnode already keep geth off any network;
+      # this makes it certain. Loopback and the IPC pipe are not affected.
+      - name: Block geth's outbound traffic
+        shell: pwsh
+        run: >
+          New-NetFirewallRule -DisplayName "test geth outbound" -Direction Outbound
+          -Action Block -Program "$env:GITHUB_WORKSPACE\resources\bin\win\geth.exe"
+
+      - name: Shutdown check
+        env:
+          GETH_SHUTDOWN_E2E: "1"
+          GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/geth-shutdown
+        run: >
+          npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
+          src/main/geth/gethSupervisor.test.ts src/main/geth/orphanedGeth.test.ts
+
+      - name: Upload geth logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-geth-shutdown
+          path: ${{ runner.temp }}/geth-shutdown
+          if-no-files-found: warn

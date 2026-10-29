@@ -5,6 +5,7 @@ import {
   type ProgressInfo,
 } from "electron-updater";
 import { is } from "@electron-toolkit/utils";
+import { killGethProcess } from "../geth/gethProcess";
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the
@@ -27,6 +28,18 @@ interface UpdaterStatePayload {
     bytesPerSecond: number;
   };
   error?: string;
+}
+
+/**
+ * Stops geth, then quits and installs the downloaded update. On Windows the
+ * installer terminates every process under the install folder, geth.exe
+ * included, about a second after it starts: long before before-quit has let
+ * geth shut down, which would leave its database unclean (#97).
+ * @returns {Promise<void>} Resolves once the install has been started.
+ */
+async function stopGethAndInstall(): Promise<void> {
+  await killGethProcess();
+  autoUpdater.quitAndInstall();
 }
 
 /**
@@ -91,7 +104,7 @@ function initUpdater(mainWindow: BrowserWindow): void {
       `[updater] Update downloaded: ${info.version}. Restarting to apply update.`,
     );
     send({ status: "downloaded", info: { version: info.version } });
-    autoUpdater.quitAndInstall();
+    void stopGethAndInstall();
   });
 
   autoUpdater.on("error", (err: Error) => {
@@ -124,9 +137,7 @@ function initUpdater(mainWindow: BrowserWindow): void {
     }
   });
 
-  ipcMain.handle("updater:install", () => {
-    autoUpdater.quitAndInstall();
-  });
+  ipcMain.handle("updater:install", () => stopGethAndInstall());
 
   if (app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {

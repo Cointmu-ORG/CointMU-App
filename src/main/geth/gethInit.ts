@@ -90,6 +90,7 @@ export async function initGethIfNeeded(datadir: string): Promise<void> {
         {
           stdio: "ignore",
           env,
+          windowsHide: true,
         },
       );
       initProcess.on("exit", (code) => {

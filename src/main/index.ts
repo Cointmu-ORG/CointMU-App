@@ -27,8 +27,12 @@ import {
   killGethProcess,
   spawnGethProcess,
 } from "./geth/gethProcess";
-import { initGethIfNeeded } from "./geth/gethInit";
-import { stopOrphanedGeth } from "./geth/orphanedGeth";
+import { initGethIfNeeded, resolveGethBinaryPath } from "./geth/gethInit";
+import { supervisorFor } from "./geth/gethSupervisor";
+import {
+  GETH_GRACEFUL_TIMEOUT_MS,
+  stopOrphanedGeth,
+} from "./geth/orphanedGeth";
 import { createNodeRecovery } from "./geth/nodeRecovery";
 import { MiningController } from "./services/miningController";
 import { registerWindowHandlers } from "./ipc/windowIpc";
@@ -91,7 +95,11 @@ app.whenReady().then(async () => {
   attachNodeRecovery(createNodeRecovery(store));
 
   try {
-    await stopOrphanedGeth(resolveDataRoot());
+    await stopOrphanedGeth(
+      resolveDataRoot(),
+      GETH_GRACEFUL_TIMEOUT_MS,
+      supervisorFor(resolveGethBinaryPath()),
+    );
   } catch (err) {
     console.error("[geth:orphan] Could not stop a leftover geth:", err);
   }

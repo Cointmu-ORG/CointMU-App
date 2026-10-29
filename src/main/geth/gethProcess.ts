@@ -10,10 +10,12 @@ import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethLaunch } from "./gethInit";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
+  SUPERVISOR_EXIT_MARGIN_MS,
   removeGethPidFile,
   writeGethPidFile,
 } from "./orphanedGeth";
 import { startGethWatcher } from "./gethWatcherProcess";
+import { gethLaunchCommand } from "./gethSupervisor";
 import { parseGethLogChunk } from "../utils/gethLogParser";
 import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
@@ -118,11 +120,26 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 
   args.push(...(await prepareBootnodeArgs(store)));
 
+  const launch = gethLaunchCommand({
+    binaryPath,
+    gethArgs: args,
+    platform: process.platform,
+    graceMs: GETH_GRACEFUL_TIMEOUT_MS,
+  });
+  if (process.platform === "win32" && !launch.isSupervised) {
+    console.warn(
+      "[geth:spawn] geth-supervisor.exe is missing; every geth stop will be a hard kill",
+    );
+  }
+
   try {
     intentionalGethShutdown = false;
-    gethProcess = spawn(binaryPath, args, {
-      stdio: ["ignore", "pipe", "pipe"],
-      detached: false,
+    // On Windows the PID (and the PID file) is the supervisor's; see
+    // gethLaunchCommand for its stdin and why it is detached.
+    gethProcess = spawn(launch.file, launch.args, {
+      stdio: [launch.isSupervised ? "pipe" : "ignore", "pipe", "pipe"],
+      detached: launch.isSupervised,
+      windowsHide: true,
       env,
     });
     lastSpawnedGeth = gethProcess;
@@ -193,7 +210,9 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     };
 
     gethProcess.stderr?.on("data", handleGethStderr);
-    startGethWatcher(gethProcess);
+    // Windows has no watcher: libuv terminates every non-detached child with
+    // this process (see gethWatcherProcess.ts).
+    if (process.platform !== "win32") startGethWatcher(gethProcess);
 
     gethProcess.on("error", (err: Error) => {
       console.error(
@@ -231,8 +250,12 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 /**
  * Sends SIGINT to the geth child process and returns a promise that resolves
  * once the process has fully terminated. A hard SIGKILL is dispatched if the
- * process does not exit within GETH_GRACEFUL_TIMEOUT_MS. When no geth process
- * is running the returned promise resolves immediately.
+ * process does not exit within GETH_GRACEFUL_TIMEOUT_MS. On Windows, where
+ * SIGINT terminates outright, closing geth-supervisor.exe's stdin makes it
+ * interrupt geth (see gethLaunchCommand); its own kill comes first, this
+ * SIGKILL of the supervisor follows SUPERVISOR_EXIT_MARGIN_MS later and takes
+ * geth with it. An unsupervised geth there is killed at once. When no geth
+ * process is running the returned promise resolves immediately.
  * @returns {Promise<void>} Resolves after the geth process has exited.
  */
 export function killGethProcess(): Promise<void> {
@@ -260,15 +283,32 @@ export function killGethProcess(): Promise<void> {
       resolve();
     };
 
-    const killTimer = setTimeout(() => {
+    const forceKill = (): void => {
       if (settled) return;
       try {
         proc.kill("SIGKILL");
       } catch {}
-    }, GETH_GRACEFUL_TIMEOUT_MS);
+    };
+
+    // Only the supervisor gets a stdin pipe.
+    const supervisorStdin = proc.stdin;
+    const killTimer = setTimeout(
+      forceKill,
+      supervisorStdin
+        ? GETH_GRACEFUL_TIMEOUT_MS + SUPERVISOR_EXIT_MARGIN_MS
+        : GETH_GRACEFUL_TIMEOUT_MS,
+    );
 
     proc.once("close", onExit);
     proc.once("exit", onExit);
+
+    if (process.platform === "win32") {
+      // destroy, not end: nothing is written, so a supervisor already gone
+      // cannot raise EPIPE.
+      if (supervisorStdin) supervisorStdin.destroy();
+      else forceKill();
+      return;
+    }
 
     try {
       proc.kill("SIGINT");

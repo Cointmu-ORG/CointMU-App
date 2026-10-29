@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   isOwnGethCommandLine,
+  isSupervisorCommandLine,
+  orphanStopMethod,
   parsePidFile,
   removeGethPidFile,
   stopOrphanedGeth,
@@ -80,6 +82,76 @@ describe("isOwnGethCommandLine", () => {
   it("is case-sensitive outside Windows", () => {
     const line = `/usr/bin/geth --datadir ${LINUX_ROOT.toUpperCase()}/1912`;
     expect(isOwnGethCommandLine(line, LINUX_ROOT, "linux")).toBe(false);
+  });
+});
+
+// What Win32_Process reports for the app's processes: libuv quotes every
+// argument that holds a space.
+const WIN_SPACED_ROOT =
+  "C:\\Users\\A B\\AppData\\Roaming\\CointMU\\cointmu-chaindata";
+const WIN_BIN = "C:\\Program Files\\CointMU\\resources\\bin\\win";
+const GETH_ARGS = `--networkid 1912 --datadir "${WIN_SPACED_ROOT}\\1912" --port 30303`;
+const SUPERVISED_GETH = `"${WIN_BIN}\\geth-supervisor.exe" run --grace-ms 15000 -- "${WIN_BIN}\\geth.exe" ${GETH_ARGS}`;
+const UNSUPERVISED_GETH = `"${WIN_BIN}\\geth.exe" ${GETH_ARGS}`;
+
+describe("a Windows PID file naming the supervisor or geth", () => {
+  it.each([
+    ["the supervisor", SUPERVISED_GETH],
+    ["geth without a supervisor", UNSUPERVISED_GETH],
+    [
+      "the supervisor installed without spaces",
+      `C:\\CointMU\\geth-supervisor.exe run --grace-ms 15000 -- C:\\CointMU\\geth.exe --datadir ${WIN_ROOT}\\1912`,
+    ],
+  ])("accepts %s as our geth", (_label, line) => {
+    const root = line.includes(WIN_SPACED_ROOT) ? WIN_SPACED_ROOT : WIN_ROOT;
+    expect(isOwnGethCommandLine(line, root, "win32")).toBe(true);
+  });
+
+  it.each([
+    [
+      "another program named like the supervisor",
+      `"${WIN_BIN}\\my-geth-supervisor.exe" run -- "${WIN_BIN}\\mygeth.exe" ${GETH_ARGS}`,
+    ],
+    [
+      "the supervisor running geth on another datadir",
+      `"${WIN_BIN}\\geth-supervisor.exe" run --grace-ms 15000 -- "${WIN_BIN}\\geth.exe" --datadir "D:\\chains\\1912"`,
+    ],
+    [
+      "a sibling data root sharing the prefix",
+      `"${WIN_BIN}\\geth.exe" --datadir "${WIN_SPACED_ROOT}-old\\1912"`,
+    ],
+    [
+      "an editor opening a file in the datadir",
+      `"C:\\Windows\\notepad.exe" "${WIN_SPACED_ROOT}\\1912\\geth.log"`,
+    ],
+  ])("rejects %s", (_label, line) => {
+    expect(isOwnGethCommandLine(line, WIN_SPACED_ROOT, "win32")).toBe(false);
+  });
+
+  it("waits for the supervisor, which is already stopping geth", () => {
+    expect(isSupervisorCommandLine(SUPERVISED_GETH)).toBe(true);
+    expect(orphanStopMethod(SUPERVISED_GETH, "win32")).toBe("await-supervisor");
+  });
+
+  it("interrupts a geth that runs without a supervisor", () => {
+    expect(isSupervisorCommandLine(UNSUPERVISED_GETH)).toBe(false);
+    expect(orphanStopMethod(UNSUPERVISED_GETH, "win32")).toBe("interrupt");
+  });
+
+  it("does not take a program with a longer name for the supervisor", () => {
+    const line = `"${WIN_BIN}\\my-geth-supervisor.exe" run -- x`;
+    expect(isSupervisorCommandLine(line)).toBe(false);
+  });
+
+  it("only counts the supervisor as the executable, not as an argument", () => {
+    const line = `"C:\\Windows\\notepad.exe" "${WIN_BIN}\\geth-supervisor.exe"`;
+    expect(isSupervisorCommandLine(line)).toBe(false);
+  });
+
+  it("signals geth outside Windows", () => {
+    expect(orphanStopMethod("/usr/bin/geth --datadir /x", "linux")).toBe(
+      "signal",
+    );
   });
 });
 

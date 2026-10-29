@@ -1,7 +1,6 @@
 // Real processes for the geth watcher tests: a fake geth, a fake main process
-// that owns geth and a watcher, and the node watcher built from source.
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { stripTypeScriptTypes } from "node:module";
+// that owns geth and a watcher.
+import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -39,10 +38,9 @@ const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore"
 geth.stderr.resume();
 geth.stdout.once("data", () => {
   geth.stdout.resume();
-  const extra = process.platform === "win32" ? [] : [geth.stdout, geth.stderr];
   spawn(file, [...args, String(geth.pid), graceMs], {
     env,
-    stdio: ["pipe", "ignore", "ignore", ...extra],
+    stdio: ["pipe", "ignore", "ignore", geth.stdout, geth.stderr],
   });
   process.stdout.write(String(geth.pid));
 });
@@ -88,8 +86,6 @@ export async function waitFor(
 
 export async function makeWatcherDir(): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), "cointmu-watcher-"));
-  const source = await readFile(join(__dirname, "gethWatcher.ts"), "utf8");
-  await writeFile(join(dir, "gethWatcher.js"), stripTypeScriptTypes(source));
   await writeFile(join(dir, "fake-geth.js"), FAKE_GETH);
   await writeFile(join(dir, "fake-main.js"), FAKE_MAIN);
   return dir;
