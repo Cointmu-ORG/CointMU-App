@@ -82,6 +82,22 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      # geth-interrupt.exe lets the app stop geth cleanly on Windows (#97);
+      # an installer without it would hard-kill geth on every stop.
+      - name: Setup Go (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: native/geth-interrupt/go.mod
+          cache: false
+
+      - name: Build geth-interrupt (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          npm run build:geth-interrupt
+          test -s resources/bin/win/geth-interrupt.exe
+
       - name: Build and Publish Artifacts
         run: npm run build && npx electron-builder --publish always
         env:

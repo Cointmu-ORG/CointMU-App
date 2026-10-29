@@ -9,6 +9,8 @@ data/
 .env
 resources/bin/geth
 resources/bin/geth.exe
+# Built from native/geth-interrupt (npm run build:geth-interrupt).
+resources/bin/win/geth-interrupt.exe
 .claude/
 .vscode/
 graphify-out/
