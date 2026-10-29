@@ -46,19 +46,7 @@
     "title": "Уведомления"
   },
   "network": {
-    "title": "Сеть",
-    "addNetwork": {
-      "modalTitle": "Добавить пользовательскую сеть",
-      "networkNameLabel": "Имя сети",
-      "rpcUrlLabel": "URL-адрес RPC",
-      "chainIdLabel": "ID цепочки",
-      "currencySymbolLabel": "Символ валюты",
-      "saveBtn": "Сохранить",
-      "cancelBtn": "Отмена",
-      "rpcUrlInvalid": "RPC URL должен быть действительным адресом HTTP/HTTPS",
-      "examplePlaceholder": "напр. {{example}}"
-    },
-    "addNetworkOption": "+ Добавить сеть"
+    "title": "Сеть"
   },
   "mining": {
     "title": "Майнинг"
@@ -132,18 +120,10 @@
     "links": "Ссылки",
     "githubTitle": "GitHub",
     "reportIssueDesc": "Отправить баг-репорт или запрос функции",
-    "saveBtn": "Сохранить",
-    "savingBtn": "Сохранение...",
-    "cancelBtn": "Отмена",
-    "chainWarning": "ВНИМАНИЕ: Изменение ID цепи НАВСЕГДА удалит локальные данные блокчейна. Вы уверены?",
-    "chainSuccess": "ID цепи успешно обновлен.",
-    "chainFailure": "Не удалось обновить ID цепи.",
-    "chainError": "Произошла ошибка при установке ID цепи.",
     "title": "О программе",
     "checkUpdateDesc": "Проверить наличие новой версии.",
     "nodeVersion": "Версия узла",
     "chainId": "ID цепи",
-    "edit": "Изменить",
     "connectedPeers": "Подключенные узлы",
     "uptime": "Время работы",
     "documentationTitle": "Документация",
@@ -180,8 +160,6 @@
     "networkDesc": "К какой цепи подключен CointMU",
     "rpcTitle": "Конечная точка RPC",
     "rpcDesc": "Куда отправляются транзакции и запросы",
-    "chainIdTitle": "ID цепи",
-    "chainIdDesc": "Используется для подписи транзакций",
     "blockTimeTitle": "Время блока",
     "blockTimeDesc": "Целевое время между блоками",
     "peers": "Узлы",
@@ -199,8 +177,6 @@
     "syncModeDesc": "Snap загружает обрезанное состояние быстро. Full проверяет все блоки от генезиса",
     "pruneTitle": "Обрезать старое состояние",
     "pruneDesc": "Хранить последние 128 блоков для экономии места",
-    "switchingNetwork": "Переключение сети... Пожалуйста, подождите.",
-    "restartRequired": "Узел перезапускается для подключения к новой сети.",
     "advanced": "Дополнительно",
     "bootnodes": {
       "title": "Bootnode-узлы",

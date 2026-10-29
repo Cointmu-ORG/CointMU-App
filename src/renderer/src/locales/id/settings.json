@@ -46,19 +46,7 @@
     "title": "Notifikasi"
   },
   "network": {
-    "title": "Jaringan",
-    "addNetwork": {
-      "modalTitle": "Tambah Jaringan Kustom",
-      "networkNameLabel": "Nama Jaringan",
-      "rpcUrlLabel": "URL RPC",
-      "chainIdLabel": "ID Chain",
-      "currencySymbolLabel": "Simbol Mata Uang",
-      "saveBtn": "Simpan",
-      "cancelBtn": "Batal",
-      "rpcUrlInvalid": "URL RPC harus berupa URL HTTP/HTTPS yang valid",
-      "examplePlaceholder": "mis. {{example}}"
-    },
-    "addNetworkOption": "+ Tambah jaringan"
+    "title": "Jaringan"
   },
   "mining": {
     "title": "Penambangan"
@@ -132,18 +120,10 @@
     "links": "Tautan",
     "githubTitle": "GitHub",
     "reportIssueDesc": "Kirim laporan bug atau permintaan fitur",
-    "saveBtn": "Simpan",
-    "savingBtn": "Menyimpan...",
-    "cancelBtn": "Batal",
-    "chainWarning": "PERINGATAN: Mengubah ID Chain akan secara permanen MENGHAPUS data blockchain lokal Anda yang ada dan memulai ulang node. Apakah Anda benar-benar yakin ingin melanjutkan?",
-    "chainSuccess": "ID Chain berhasil diperbarui. Node memulai ulang dengan blockchain baru.",
-    "chainFailure": "Gagal memperbarui ID Chain.",
-    "chainError": "Terjadi kesalahan saat mengatur ID Chain.",
     "title": "Tentang",
     "checkUpdateDesc": "Periksa apakah ada versi yang lebih baru.",
     "nodeVersion": "Versi node",
     "chainId": "ID Chain",
-    "edit": "Edit",
     "connectedPeers": "Rekan terhubung",
     "uptime": "Waktu aktif",
     "documentationTitle": "Dokumentasi",
@@ -180,8 +160,6 @@
     "networkDesc": "Chain yang terhubung dengan CointMU",
     "rpcTitle": "Titik akhir RPC",
     "rpcDesc": "Ke mana transaksi dan kueri dikirim",
-    "chainIdTitle": "ID Chain",
-    "chainIdDesc": "Digunakan untuk penandatanganan transaksi",
     "blockTimeTitle": "Waktu blok",
     "blockTimeDesc": "Target waktu antar blok",
     "peers": "Rekan",
@@ -199,8 +177,6 @@
     "syncModeDesc": "Snap mengunduh status terpangkas dengan cepat. Full memvalidasi setiap blok dari genesis",
     "pruneTitle": "Pangkas status lama",
     "pruneDesc": "Simpan 128 blok status historis terakhir untuk menghemat disk",
-    "switchingNetwork": "Mengganti jaringan... Harap tunggu.",
-    "restartRequired": "Node sedang di-restart untuk terhubung ke jaringan baru.",
     "advanced": "Lanjutan",
     "bootnodes": {
       "title": "Bootnode",

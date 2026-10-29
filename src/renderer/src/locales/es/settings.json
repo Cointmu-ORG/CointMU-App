@@ -46,19 +46,7 @@
     "title": "Notificaciones"
   },
   "network": {
-    "title": "Red",
-    "addNetwork": {
-      "modalTitle": "Añadir red personalizada",
-      "networkNameLabel": "Nombre de la red",
-      "rpcUrlLabel": "URL de RPC",
-      "chainIdLabel": "ID de cadena",
-      "currencySymbolLabel": "Símbolo de moneda",
-      "saveBtn": "Guardar",
-      "cancelBtn": "Cancelar",
-      "rpcUrlInvalid": "La URL de RPC debe ser una URL HTTP/HTTPS válida",
-      "examplePlaceholder": "p. ej. {{example}}"
-    },
-    "addNetworkOption": "+ Añadir red"
+    "title": "Red"
   },
   "mining": {
     "title": "Minería"
@@ -132,18 +120,10 @@
     "links": "Enlaces",
     "githubTitle": "GitHub",
     "reportIssueDesc": "Enviar reporte de bug o solicitud de función",
-    "saveBtn": "Guardar",
-    "savingBtn": "Guardando...",
-    "cancelBtn": "Cancelar",
-    "chainWarning": "ADVERTENCIA: Cambiar el ID de la Cadena ELIMINARÁ permanentemente tus datos de blockchain local existentes y reiniciará el nodo. ¿Estás absolutamente seguro de que quieres continuar?",
-    "chainSuccess": "ID de Cadena actualizado con éxito. El nodo se está reiniciando con una blockchain fresca.",
-    "chainFailure": "Fallo al actualizar el ID de Cadena.",
-    "chainError": "Ocurrió un error al establecer el ID de Cadena.",
     "title": "Acerca de",
     "checkUpdateDesc": "Comprueba si hay una versión más nueva disponible.",
     "nodeVersion": "Versión de nodo",
     "chainId": "ID de Cadena",
-    "edit": "Editar",
     "connectedPeers": "Pares conectados",
     "uptime": "Tiempo activo",
     "documentationTitle": "Documentación",
@@ -180,8 +160,6 @@
     "networkDesc": "A qué cadena está conectada CointMU",
     "rpcTitle": "Punto final RPC",
     "rpcDesc": "A dónde se envían transacciones y consultas",
-    "chainIdTitle": "ID de Cadena",
-    "chainIdDesc": "Usado para firmar transacciones",
     "blockTimeTitle": "Tiempo de bloque",
     "blockTimeDesc": "Tiempo objetivo entre bloques",
     "peers": "Pares",
@@ -199,8 +177,6 @@
     "syncModeDesc": "Snap descarga estado podado rápidamente. Full valida cada bloque desde la génesis",
     "pruneTitle": "Podar estado antiguo",
     "pruneDesc": "Mantener últimos 128 bloques de estado histórico para ahorrar disco",
-    "switchingNetwork": "Cambiando de red... Por favor, espere.",
-    "restartRequired": "El nodo se está reiniciando para conectarse a la nueva red.",
     "advanced": "Avanzado",
     "bootnodes": {
       "title": "Bootnodes",
