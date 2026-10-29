@@ -10,7 +10,7 @@ on:
     paths:
       - "src/main/geth/**"
       - "src/main/services/updater.ts"
-      - "native/geth-interrupt/**"
+      - "native/geth-supervisor/**"
       - "resources/bin/win/**"
       - "package-lock.json"
       - ".github/workflows/windows-geth-check.yml"
@@ -58,17 +58,17 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version-file: native/geth-interrupt/go.mod
+          go-version-file: native/geth-supervisor/go.mod
           cache: false
 
-      - name: Build and test geth-interrupt
+      - name: Build and test geth-supervisor
         shell: bash
         run: |
-          go -C native/geth-interrupt vet .
-          go -C native/geth-interrupt test .
-          npm run build:geth-interrupt
-          size=$(stat -c %s resources/bin/win/geth-interrupt.exe)
-          echo "geth-interrupt.exe: $size bytes" >> "$GITHUB_STEP_SUMMARY"
+          go -C native/geth-supervisor vet .
+          go -C native/geth-supervisor test .
+          npm run build:geth-supervisor
+          size=$(stat -c %s resources/bin/win/geth-supervisor.exe)
+          echo "geth-supervisor.exe: $size bytes" >> "$GITHUB_STEP_SUMMARY"
 
       # The test chain and dead bootnode already keep geth off any network;
       # this makes it certain. Loopback and the IPC pipe are not affected.

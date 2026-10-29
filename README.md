@@ -59,10 +59,10 @@ npm run build:win
 
 Produces a Windows installer in the `dist/` directory.
 
-It also builds `resources/bin/win/geth-interrupt.exe` from `native/geth-interrupt`, the
-helper that lets the app stop geth cleanly on Windows. This needs Go (the version in
-`native/geth-interrupt/go.mod`). From Linux or macOS, build only the helper with
-`GOOS=windows GOARCH=amd64 npm run build:geth-interrupt`.
+It also builds `resources/bin/win/geth-supervisor.exe` from `native/geth-supervisor`,
+which runs geth on Windows so that it always stops cleanly. This needs Go (the version in
+`native/geth-supervisor/go.mod`). From Linux or macOS, build only the supervisor with
+`GOOS=windows GOARCH=amd64 npm run build:geth-supervisor`.
 
 ### Linux
 
