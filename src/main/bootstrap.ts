@@ -11,4 +11,9 @@ import { initErrorReporting } from "./diagnostics/errorReporting";
 initLogging();
 initErrorReporting();
 
-config({ path: join(app.getAppPath(), ".env") });
+// A packaged app ships no .env (electron-builder.yml excludes it); its runtime
+// overrides come from the process environment. dotenv would still print its
+// "injected env (0)" notice to stderr, which the log records as an error.
+if (!app.isPackaged) {
+  config({ path: join(app.getAppPath(), ".env"), quiet: true });
+}
