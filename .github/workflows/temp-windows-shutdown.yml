@@ -1,0 +1,201 @@
+name: TEMP windows shutdown
+
+# TEMP (#97), reverted before merge. Evidence for the PR:
+# - ab-main: the same e2e test against main, which must be unclean.
+# - real-app: the packaged app (win-unpacked) quit and killed, plus sizes.
+# - size-main: main's installer size, for the before/after table.
+# - branch-e2e: the windows-geth-check steps on this branch (that workflow only
+#   runs on pull requests), plus the option (b) PowerShell latency sample.
+on:
+  push:
+    branches: [fix/windows-geth-clean-shutdown]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ab-main:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: branch
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: main-tree
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Use pinned npm
+        shell: bash
+        working-directory: main-tree
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+      - working-directory: main-tree
+        run: npm ci --ignore-scripts
+      - name: Copy the e2e test onto main
+        shell: bash
+        run: cp branch/src/main/geth/windowsShutdown.* main-tree/src/main/geth/
+      - name: Block geth's outbound traffic
+        shell: pwsh
+        run: >
+          New-NetFirewallRule -DisplayName "test geth outbound" -Direction Outbound
+          -Action Block -Program "$env:GITHUB_WORKSPACE\main-tree\resources\bin\win\geth.exe"
+      - name: Shutdown check on main (expect unclean)
+        working-directory: main-tree
+        env:
+          GETH_SHUTDOWN_E2E: "1"
+          EXPECT_SHUTDOWN: unclean
+          GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/ab-main
+        run: npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ab-main
+          path: ${{ runner.temp }}/ab-main
+
+  branch-e2e:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Use pinned npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+      - run: npm ci --ignore-scripts
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: native/geth-interrupt/go.mod
+          cache: false
+      - name: Build and test geth-interrupt
+        shell: bash
+        run: |
+          go -C native/geth-interrupt vet .
+          go -C native/geth-interrupt test .
+          npm run build:geth-interrupt
+      - name: Block geth's outbound traffic
+        shell: pwsh
+        run: >
+          New-NetFirewallRule -DisplayName "test geth outbound" -Direction Outbound
+          -Action Block -Program "$env:GITHUB_WORKSPACE\resources\bin\win\geth.exe"
+      - name: Shutdown check on this branch
+        env:
+          GETH_SHUTDOWN_E2E: "1"
+          GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/branch
+        run: >
+          npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
+          src/main/geth/gethWatcher.test.ts src/main/geth/gethInterrupt.test.ts
+      # Option (b) from the plan: what a PowerShell Add-Type stop would cost
+      # per call, against the helper's own start-up (pid 1 is never ours, so
+      # it exits at AttachConsole).
+      - name: Latency of PowerShell Add-Type vs the helper
+        if: always()
+        shell: pwsh
+        run: |
+          $def = '[DllImport("kernel32.dll")] public static extern bool GenerateConsoleCtrlEvent(uint e, uint g);'
+          $ps = 1..3 | ForEach-Object {
+            (Measure-Command { pwsh -NoProfile -NonInteractive -Command "Add-Type -Name K -Namespace W -MemberDefinition '$def'" }).TotalMilliseconds
+          }
+          $helper = 1..3 | ForEach-Object {
+            (Measure-Command { & .\resources\bin\win\geth-interrupt.exe 1 2>$null }).TotalMilliseconds
+          }
+          $line = "Add-Type ms: $($ps -join ', ') | helper ms: $($helper -join ', ')"
+          $line
+          $line >> $env:GITHUB_STEP_SUMMARY
+          $line > "$env:RUNNER_TEMP\branch\latency.txt"
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: branch-e2e
+          path: ${{ runner.temp }}/branch
+
+  real-app:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Use pinned npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+      - run: npm ci
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: native/geth-interrupt/go.mod
+          cache: false
+      - run: npm run build:geth-interrupt
+      - name: Build the installer and win-unpacked
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npx electron-vite build
+          npx electron-builder --win --publish never
+      - name: Sizes
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/real-app"
+          {
+            echo "helper: $(stat -c %s resources/bin/win/geth-interrupt.exe)"
+            for f in dist/*.exe; do echo "installer $(basename "$f"): $(stat -c %s "$f")"; done
+            echo "win-unpacked: $(du -sb dist/win-unpacked | cut -f1)"
+            find dist/win-unpacked -name 'geth-interrupt.exe' -printf 'packaged %p: %s\n'
+          } | tee "$RUNNER_TEMP/real-app/sizes.txt" >> "$GITHUB_STEP_SUMMARY"
+      - name: Block geth's outbound traffic
+        shell: pwsh
+        run: >
+          New-NetFirewallRule -DisplayName "test geth outbound" -Direction Outbound
+          -Action Block -Program "$env:GITHUB_WORKSPACE\dist\win-unpacked\resources\bin\win\geth.exe"
+      - name: Quit and kill the real app
+        shell: pwsh
+        run: |
+          $key = node -e "console.log(require('ethers').Wallet.createRandom().signingKey.publicKey.slice(4))"
+          ./scripts/windows-shutdown-check/real-app.ps1 "$env:GITHUB_WORKSPACE\dist\win-unpacked\CointMU.exe" $key "$env:RUNNER_TEMP\real-app"
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: real-app
+          path: ${{ runner.temp }}/real-app
+
+  size-main:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Use pinned npm
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+      - run: npm ci
+      - name: Build main's installer
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npx electron-vite build
+          npx electron-builder --win --publish never
+          for f in dist/*.exe; do echo "main installer $(basename "$f"): $(stat -c %s "$f")"; done >> "$GITHUB_STEP_SUMMARY"
+          echo "main win-unpacked: $(du -sb dist/win-unpacked | cut -f1)" >> "$GITHUB_STEP_SUMMARY"
