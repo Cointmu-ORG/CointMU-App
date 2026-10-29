@@ -154,12 +154,10 @@
   },
   "system": "系统",
   "networkSettings": {
-    "subtitle": "连接、RPC 端点和链选择",
+    "subtitle": "网络、节点、同步和引导节点",
     "activeNetwork": "活动网络",
     "networkTitle": "网络",
     "networkDesc": "CointMU 连接到哪条链",
-    "rpcTitle": "RPC 端点",
-    "rpcDesc": "发送交易和查询的地方",
     "blockTimeTitle": "出块时间",
     "blockTimeDesc": "区块间目标时间",
     "peers": "节点",

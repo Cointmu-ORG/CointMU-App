@@ -154,12 +154,10 @@
   },
   "system": "Sistem",
   "networkSettings": {
-    "subtitle": "Koneksi, titik akhir RPC, dan pemilihan chain",
+    "subtitle": "Jaringan, rekan, sinkronisasi, dan bootnode",
     "activeNetwork": "Jaringan Aktif",
     "networkTitle": "Jaringan",
     "networkDesc": "Chain yang terhubung dengan CointMU",
-    "rpcTitle": "Titik akhir RPC",
-    "rpcDesc": "Ke mana transaksi dan kueri dikirim",
     "blockTimeTitle": "Waktu blok",
     "blockTimeDesc": "Target waktu antar blok",
     "peers": "Rekan",

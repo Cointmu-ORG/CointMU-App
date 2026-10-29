@@ -15,7 +15,6 @@ import { resetBootnodes } from "./bootnode.service";
  * only the validated bootnode channel may change.
  */
 const NETWORK_DEFAULTS: Readonly<Record<string, unknown>> = {
-  rpcEndpoint: "https://rpc.cointmu.net",
   maxPeers: 14,
   discovery: true,
   listenPort: 30303,

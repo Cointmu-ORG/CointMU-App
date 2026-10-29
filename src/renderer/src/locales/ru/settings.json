@@ -154,12 +154,10 @@
   },
   "system": "Система",
   "networkSettings": {
-    "subtitle": "Подключение, конечные точки RPC и выбор цепи",
+    "subtitle": "Сеть, узлы, синхронизация и bootnode-узлы",
     "activeNetwork": "Активная сеть",
     "networkTitle": "Сеть",
     "networkDesc": "К какой цепи подключен CointMU",
-    "rpcTitle": "Конечная точка RPC",
-    "rpcDesc": "Куда отправляются транзакции и запросы",
     "blockTimeTitle": "Время блока",
     "blockTimeDesc": "Целевое время между блоками",
     "peers": "Узлы",

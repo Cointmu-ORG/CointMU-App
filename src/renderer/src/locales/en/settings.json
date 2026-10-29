@@ -154,12 +154,10 @@
   },
   "system": "System",
   "networkSettings": {
-    "subtitle": "Connection, RPC endpoints, and chain selection",
+    "subtitle": "Network, peers, sync, and bootnodes",
     "activeNetwork": "Active Network",
     "networkTitle": "Network",
     "networkDesc": "Which chain CointMU is connected to",
-    "rpcTitle": "RPC endpoint",
-    "rpcDesc": "Where transactions and queries are sent",
     "blockTimeTitle": "Block time",
     "blockTimeDesc": "Target time between blocks",
     "peers": "Peers",

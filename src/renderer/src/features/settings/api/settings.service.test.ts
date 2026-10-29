@@ -35,6 +35,7 @@ describe("resetAllSettings", () => {
     expect(keys).not.toContain("network.network");
     expect(keys).not.toContain("network.customNetworks");
     expect(keys).not.toContain("network.chainId");
+    expect(keys).not.toContain("network.rpcEndpoint");
   });
 
   it("writes setting codes, not labels, and no language", async () => {

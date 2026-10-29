@@ -29,6 +29,7 @@ describe("migrateSettingValues", () => {
     expect(migrated?.general).not.toHaveProperty("language");
     expect(migrated?.network).not.toHaveProperty("network");
     expect(migrated?.network).not.toHaveProperty("chainId");
+    expect(migrated?.network).not.toHaveProperty("rpcEndpoint");
   });
 
   it("drops the network choice of a real 1.7.1 store", () => {
@@ -111,6 +112,7 @@ describe("migrateSettingValues", () => {
     ["customNetworks", []],
     ["chainId", 1912],
     ["chainId", null],
+    ["rpcEndpoint", "https://rpc.cointmu.net"],
   ])("removes network.%s (%j)", (key, value) => {
     expect(
       migrateSettingValues({ network: { [key]: value, maxPeers: 14 } }),

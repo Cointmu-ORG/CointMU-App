@@ -154,12 +154,10 @@
   },
   "system": "システム",
   "networkSettings": {
-    "subtitle": "接続、RPCエンドポイント、およびチェーンの選択",
+    "subtitle": "ネットワーク、ピア、同期、ブートノード",
     "activeNetwork": "アクティブなネットワーク",
     "networkTitle": "ネットワーク",
     "networkDesc": "CointMUが接続しているチェーン",
-    "rpcTitle": "RPCエンドポイント",
-    "rpcDesc": "トランザクションとクエリが送信される場所",
     "blockTimeTitle": "ブロック時間",
     "blockTimeDesc": "ブロック間のターゲット時間",
     "peers": "ピア",

@@ -68,8 +68,14 @@ const CODED_SETTINGS: readonly CodedSetting[] = [
 
 // Up to 1.7.2 the app could switch networks: the chosen label, the custom
 // networks and the chain id override that moved geth to another chain. It now
-// runs CointMU Mainnet only, so these keys are dropped.
-const REMOVED_NETWORK_KEYS = ["network", "customNetworks", "chainId"] as const;
+// runs CointMU Mainnet only, so these keys are dropped, along with the RPC
+// endpoint field that nothing ever read.
+const REMOVED_NETWORK_KEYS = [
+  "network",
+  "customNetworks",
+  "chainId",
+  "rpcEndpoint",
+] as const;
 
 /**
  * @param value - A store value.

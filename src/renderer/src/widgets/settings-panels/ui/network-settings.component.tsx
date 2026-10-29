@@ -18,8 +18,8 @@ interface NetworkSettingsProps {
 }
 
 /**
- * Network settings pane containing active network configuration, RPC endpoints,
- * peer bounds, and sync mode configuration.
+ * Network settings pane: the active network (read-only), peer bounds, sync
+ * mode and bootnodes.
  * @param props The configuration state and the update callback.
  * @returns The Network Settings form component.
  */
@@ -57,25 +57,6 @@ export function NetworkSettings({
               <span className="text-sm font-bold text-slate-700 dark:text-gray-300">
                 {COINTMU_NETWORK.name} · chain ID {COINTMU_NETWORK.chainId}
               </span>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.rpcTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.rpcDesc")}
-                </p>
-              </div>
-              <div className="w-64">
-                <input
-                  type="text"
-                  value={config.rpcEndpoint}
-                  onChange={(e) => onUpdate("rpcEndpoint", e.target.value)}
-                  className="w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 dark:text-gray-100 dark:text-gray-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                />
-              </div>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">

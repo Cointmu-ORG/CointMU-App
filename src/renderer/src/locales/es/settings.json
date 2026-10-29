@@ -154,12 +154,10 @@
   },
   "system": "Sistema",
   "networkSettings": {
-    "subtitle": "Conexión, puntos finales RPC y selección de cadena",
+    "subtitle": "Red, pares, sincronización y bootnodes",
     "activeNetwork": "Red Activa",
     "networkTitle": "Red",
     "networkDesc": "A qué cadena está conectada CointMU",
-    "rpcTitle": "Punto final RPC",
-    "rpcDesc": "A dónde se envían transacciones y consultas",
     "blockTimeTitle": "Tiempo de bloque",
     "blockTimeDesc": "Tiempo objetivo entre bloques",
     "peers": "Pares",
