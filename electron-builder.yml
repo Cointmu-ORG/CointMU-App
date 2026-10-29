@@ -54,5 +54,5 @@ linux:
 publish:
   provider: github
   releaseType: release
-  owner: kakonoomoidee
-  repo: CointMU
+  owner: Cointmu-ORG
+  repo: CointMU-App

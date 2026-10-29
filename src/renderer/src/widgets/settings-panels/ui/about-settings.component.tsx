@@ -407,7 +407,7 @@ export function AboutSettings(): JSX.Element {
                   {t("settings:about.githubTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  github.com/kakonoomoidee/CointMU
+                  {EXTERNAL_LINKS.GITHUB_REPO.replace("https://", "")}
                 </p>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 group-hover:text-blue-500 transition-colors">
