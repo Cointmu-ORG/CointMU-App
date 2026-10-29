@@ -28,7 +28,7 @@ import {
   spawnGethProcess,
 } from "./geth/gethProcess";
 import { initGethIfNeeded, resolveGethBinaryPath } from "./geth/gethInit";
-import { interruptHelperFor } from "./geth/gethInterrupt";
+import { supervisorFor } from "./geth/gethSupervisor";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
   stopOrphanedGeth,
@@ -98,7 +98,7 @@ app.whenReady().then(async () => {
     await stopOrphanedGeth(
       resolveDataRoot(),
       GETH_GRACEFUL_TIMEOUT_MS,
-      interruptHelperFor(resolveGethBinaryPath()),
+      supervisorFor(resolveGethBinaryPath()),
     );
   } catch (err) {
     console.error("[geth:orphan] Could not stop a leftover geth:", err);
