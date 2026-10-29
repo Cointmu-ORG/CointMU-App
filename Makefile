@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 7
-SUBLEVEL = 2
-EXTRAVERSION = Jade
+SUBLEVEL = 3
+EXTRAVERSION = Garnet
 
 help:
 	@echo "============================================="
