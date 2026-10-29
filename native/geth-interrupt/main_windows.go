@@ -18,6 +18,7 @@ import (
 	"os/signal"
 	"strconv"
 	"syscall"
+	"time"
 	"unsafe"
 )
 
@@ -32,6 +33,8 @@ const (
 	allConsoleProcesses = 0
 	// Room to see that more than geth and this helper are attached.
 	maxListedClients = 8
+	// How long to wait for the event to reach this process too.
+	ownEventTimeout = 2 * time.Second
 )
 
 // kernel32 is a KnownDLL: Windows always loads it from System32.
@@ -68,7 +71,8 @@ func main() {
 
 	// The event reaches this process too; with a Go handler registered the
 	// runtime reports it handled instead of exiting.
-	signal.Notify(make(chan os.Signal, 1), os.Interrupt)
+	interrupted := make(chan os.Signal, 1)
+	signal.Notify(interrupted, os.Interrupt)
 
 	// Fails when this process has no console, which is fine.
 	freeConsole.Call()
@@ -83,5 +87,13 @@ func main() {
 	if ok, _, err := generateConsoleCtrlEvent.Call(
 		ctrlBreakEvent, allConsoleProcesses); ok == 0 {
 		fail(exitSend, "cannot send CTRL_BREAK to %d: %v", pid, err)
+	}
+	// Delivery is asynchronous. Exiting before it arrives races the handler:
+	// the default one then ends this process with STATUS_CONTROL_C_EXIT, and
+	// the caller, seeing a failure, kills geth mid-shutdown.
+	select {
+	case <-interrupted:
+	case <-time.After(ownEventTimeout):
+		fmt.Fprintf(os.Stderr, "geth-interrupt: sent, but the event did not come back\n")
 	}
 }
