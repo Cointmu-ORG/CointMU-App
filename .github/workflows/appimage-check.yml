@@ -1,0 +1,86 @@
+name: AppImage check
+
+# Builds the AppImage and runs the signal matrix from scripts/appimage-check
+# (#90): geth must stop cleanly however the app ends, including when the
+# AppImage's FUSE mount goes away first. Not a release gate yet.
+on:
+  pull_request:
+    paths:
+      - "src/main/geth/**"
+      - "electron-builder.yml"
+      - "package-lock.json"
+      - "scripts/appimage-check/**"
+      - ".github/workflows/appimage-check.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: appimage-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  signal-matrix:
+    name: signal-matrix
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          # Its npm caching runs `npm config get cache` with Node's bundled
+          # npm 11, which devEngines rejects.
+          package-manager-cache: false
+
+      # Same npm as Dependabot and local: package.json "packageManager".
+      - name: Use pinned npm
+        id: npm
+        run: |
+          version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          [ "$(npm -v)" = "$version" ] || npm install -g "npm@$version"
+          echo "cache=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.npm.outputs.cache }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libfuse2t64 xvfb
+
+      # Ubuntu 24.04 strips capabilities from unprivileged user namespaces via
+      # AppArmor; nsfuse.sh needs them inside its namespace to bring up
+      # loopback and mount FUSE. Only relaxed on this throwaway runner.
+      - name: Allow unprivileged user namespaces
+        run: |
+          probe() { unshare -U -n -m --map-user="$(id -u)" --keep-caps sh -c 'ip link set lo up'; }
+          echo "apparmor_restrict_unprivileged_userns=$(sysctl -n kernel.apparmor_restrict_unprivileged_userns 2>/dev/null || echo unset)"
+          if probe; then echo "namespace works as is"; exit 0; fi
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          probe && echo "namespace works after the sysctl"
+
+      - run: npm ci
+
+      - name: Build the AppImage
+        run: npm run build && npx electron-builder --linux AppImage --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Run the signal matrix
+        run: xvfb-run -a bash scripts/appimage-check/run-matrix.sh dist/*.AppImage "$RUNNER_TEMP/appimage-check"
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: appimage-check-logs
+          path: |
+            ${{ runner.temp }}/appimage-check/profile/*.log
+            ${{ runner.temp }}/appimage-check/profile/xdg/CointMU/logs/
+          retention-days: 7
