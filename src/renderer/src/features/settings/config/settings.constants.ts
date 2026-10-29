@@ -10,12 +10,6 @@ export const MINING_DEBOUNCE_DELAY_MS = 800;
 export const MAX_CORES = navigator.hardwareConcurrency || 8;
 export const UPTIME_REFRESH_MS = ms("1m");
 
-export const NETWORK_OPTIONS = [
-  "CointMU Mainnet · chain ID 1912",
-  "CointMU Testnet · chain ID 7013",
-  "Localhost 8545",
-];
-
 export const MAX_PEERS_OPTIONS = [10, 14, 25, 50];
 export const RECOMMENDED_MAX_PEERS = 14;
 

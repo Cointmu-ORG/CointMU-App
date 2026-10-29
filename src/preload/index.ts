@@ -87,8 +87,6 @@ const api = {
   network: {
     getInsights: () => ipcRenderer.invoke("network:getInsights"),
     getGenesisConfig: () => ipcRenderer.invoke("network:getGenesisConfig"),
-    setChainId: (chainId: number) =>
-      ipcRenderer.invoke("network:setChainId", chainId),
   },
   settings: {
     get: (key: string) => ipcRenderer.invoke("settings:get", key),
