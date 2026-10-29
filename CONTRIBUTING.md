@@ -24,7 +24,7 @@ By participating in this project you agree to abide by our
 2. Add the upstream remote so you can keep your fork in sync:
 
    ```bash
-   git remote add upstream https://github.com/kakonoomoidee/CointMU.git
+   git remote add upstream https://github.com/Cointmu-ORG/CointMU-App.git
    ```
 
 3. Install dependencies:
@@ -89,7 +89,7 @@ node interaction is required.
 
 ## Submitting a Pull Request
 
-1. Push your branch to your fork and open a pull request against `kakonoomoidee/CointMU:main`.
+1. Push your branch to your fork and open a pull request against `Cointmu-ORG/CointMU-App:main`.
 2. Fill in the pull request template completely, describe your changes, link any related
    issues, and confirm that the build and local checks passed.
 3. A maintainer will review your contribution. Please respond to review feedback and keep
