@@ -44,7 +44,7 @@
     "version": "node scripts/sync-release-files.js"
   },
   "dependencies": {
-    "@sentry/core": "11.9.0",
+    "@sentry/core": "11.8.0",
     "@sentry/electron": "^8.3.0",
     "archiver": "^8.0.0",
     "boring-avatars": "^2.0.4",
