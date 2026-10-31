@@ -49,8 +49,6 @@ import { registerExplorerHandlers } from "./ipc/explorerIpc";
 import {
   queryIndexStatus,
   queryMinerDistribution,
-  startExplorerIndex,
-  stopExplorerIndex,
 } from "./explorerIndex/explorerIndexService";
 
 let isAppQuitting = false;
@@ -123,7 +121,6 @@ app.whenReady().then(async () => {
 
   await prepareGethIpcEndpoint(store);
   await spawnGethProcess(store);
-  startExplorerIndex();
 
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
@@ -155,8 +152,7 @@ app.on("before-quit", (e) => {
   }
   e.preventDefault();
   isAppQuitting = true;
-  stopExplorerIndex()
-    .then(killGethProcess)
+  killGethProcess()
     .then(removeTemporaryIpcDir)
     .then(() => {
       app.exit();

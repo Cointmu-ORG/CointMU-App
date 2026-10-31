@@ -158,8 +158,13 @@ export class BlockStore {
     }
   }
 
+  /** Checkpoints the WAL into the database file, then closes it. */
   close(): void {
-    this.db.close();
+    try {
+      this.db.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+    } finally {
+      this.db.close();
+    }
   }
 
   /** @returns The indexed range, or null when the index is empty. */

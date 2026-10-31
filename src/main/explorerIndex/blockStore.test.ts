@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -124,5 +124,19 @@ describe("BlockStore.range", () => {
       /SCAN blocks/,
     );
     expect(store.range()).toEqual({ low: 0, high: 4 });
+  });
+});
+
+describe("BlockStore.close", () => {
+  it("checkpoints the WAL into the database file", () => {
+    store.insert(buildChain({ length: 500, headTime: HEAD_TIME }));
+    const wal = join(dir, "blocks.sqlite-wal");
+    expect(statSync(wal).size).toBeGreaterThan(0);
+
+    store.close();
+
+    expect(!existsSync(wal) || statSync(wal).size === 0).toBe(true);
+    store = BlockStore.open(dir);
+    expect(store.range()).toEqual({ low: 0, high: 499 });
   });
 });
