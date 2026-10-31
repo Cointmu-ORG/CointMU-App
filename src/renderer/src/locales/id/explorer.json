@@ -152,8 +152,27 @@
   },
   "minerDistribution": {
     "title": "Distribusi miner",
-    "subtitle": "Porsi blok yang ditambang · 24 jam terakhir",
-    "empty": "Tidak ada blok yang ditambang dalam 24 jam terakhir",
+    "subtitle": {
+      "week": "Porsi blok yang ditambang · 7 hari terakhir",
+      "month": "Porsi blok yang ditambang · 30 hari terakhir",
+      "all": "Porsi blok yang ditambang · sepanjang waktu"
+    },
+    "range": {
+      "label": "Rentang waktu",
+      "week": "Minggu",
+      "month": "Bulan",
+      "all": "Semua"
+    },
+    "empty": {
+      "week": "Tidak ada blok yang ditambang dalam 7 hari terakhir",
+      "month": "Tidak ada blok yang ditambang dalam 30 hari terakhir",
+      "all": "Belum ada blok yang ditambang"
+    },
+    "emptyPartial": "Belum ada blok terindeks di rentang ini",
+    "indexing": "Mengindeks blok · {{percent}}% · data parsial",
+    "nodeUnreachable": "Node tidak terjangkau · menampilkan blok terindeks hingga #{{block}}",
+    "progressLabel": "Progres indeks blok",
+    "unavailable": "Indeks blok tidak tersedia",
     "others": "Lainnya",
     "addressYou": "{{address}} (Anda)"
   }

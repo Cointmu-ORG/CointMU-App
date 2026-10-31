@@ -152,8 +152,27 @@
   },
   "minerDistribution": {
     "title": "矿工分布",
-    "subtitle": "已挖区块占比 · 过去 24 小时",
-    "empty": "过去 24 小时内没有挖出区块",
+    "subtitle": {
+      "week": "已挖出区块占比 · 过去 7 天",
+      "month": "已挖出区块占比 · 过去 30 天",
+      "all": "已挖出区块占比 · 全部时间"
+    },
+    "range": {
+      "label": "时间范围",
+      "week": "周",
+      "month": "月",
+      "all": "全部"
+    },
+    "empty": {
+      "week": "过去 7 天内没有挖出区块",
+      "month": "过去 30 天内没有挖出区块",
+      "all": "尚未挖出区块"
+    },
+    "emptyPartial": "此范围内尚无已索引的区块",
+    "indexing": "正在索引区块 · {{percent}}% · 部分数据",
+    "nodeUnreachable": "节点无法访问 · 显示已索引至 #{{block}} 的区块",
+    "progressLabel": "区块索引进度",
+    "unavailable": "区块索引不可用",
     "others": "其他",
     "addressYou": "{{address}}（你）"
   }

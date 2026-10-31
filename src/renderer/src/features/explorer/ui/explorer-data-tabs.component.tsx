@@ -449,10 +449,7 @@ function ExplorerDataTabs({
         </div>
       </div>
 
-      <MinerDistribution
-        activeWalletAddress={activeWalletAddress}
-        isConnected={isConnected}
-      />
+      <MinerDistribution activeWalletAddress={activeWalletAddress} />
     </div>
   );
 }

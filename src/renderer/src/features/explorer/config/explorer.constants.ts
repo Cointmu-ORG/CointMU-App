@@ -1,4 +1,5 @@
 import ms from "ms";
+import { MinerRange } from "@bridge/types";
 
 export const WEI_PER_CMU = BigInt("1000000000000000000");
 export const BLOCK_REWARD_CMU = 2;
@@ -14,7 +15,27 @@ export const ADDRESS_TX_PAGE_SIZE = 8;
 export const MOCK_USD_RATE = 0.42;
 export const MS_PER_WEEK = ms("7d");
 
-export const MINER_POLL_INTERVAL_MS = 60_000;
+// The distribution is a ~3 ms read of the local block index in main, so it
+// can refresh often and show backfill progress as it moves.
+export const MINER_POLL_INTERVAL_MS = ms("5s");
+export const MINER_RANGE_OPTIONS = [
+  { range: MinerRange.WEEK, labelKey: "explorer:minerDistribution.range.week" },
+  {
+    range: MinerRange.MONTH,
+    labelKey: "explorer:minerDistribution.range.month",
+  },
+  { range: MinerRange.ALL, labelKey: "explorer:minerDistribution.range.all" },
+] as const;
+export const MINER_SUBTITLE_KEYS = {
+  [MinerRange.WEEK]: "explorer:minerDistribution.subtitle.week",
+  [MinerRange.MONTH]: "explorer:minerDistribution.subtitle.month",
+  [MinerRange.ALL]: "explorer:minerDistribution.subtitle.all",
+} as const;
+export const MINER_EMPTY_KEYS = {
+  [MinerRange.WEEK]: "explorer:minerDistribution.empty.week",
+  [MinerRange.MONTH]: "explorer:minerDistribution.empty.month",
+  [MinerRange.ALL]: "explorer:minerDistribution.empty.all",
+} as const;
 export const BAR_COLORS = [
   "bg-blue-500",
   "bg-indigo-500",
