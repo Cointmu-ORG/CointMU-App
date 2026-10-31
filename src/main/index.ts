@@ -45,6 +45,11 @@ import {
   registerNodeControlHandlers,
   registerNodeStatusHandlers,
 } from "./ipc/nodeIpc";
+import { registerExplorerHandlers } from "./ipc/explorerIpc";
+import {
+  queryIndexStatus,
+  queryMinerDistribution,
+} from "./explorerIndex/explorerIndexService";
 
 let isAppQuitting = false;
 
@@ -87,6 +92,10 @@ app.whenReady().then(async () => {
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
+  registerExplorerHandlers({
+    minerDistribution: queryMinerDistribution,
+    status: queryIndexStatus,
+  });
 
   await resolveGethPorts();
 

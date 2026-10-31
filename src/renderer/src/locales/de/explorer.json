@@ -154,8 +154,27 @@
   },
   "minerDistribution": {
     "title": "Miner-Verteilung",
-    "subtitle": "Anteil geminter Blöcke · letzte 24 Stunden",
-    "empty": "In den letzten 24 Stunden wurden keine Blöcke gemint",
+    "subtitle": {
+      "week": "Anteil geschürfter Blöcke · letzte 7 Tage",
+      "month": "Anteil geschürfter Blöcke · letzte 30 Tage",
+      "all": "Anteil geschürfter Blöcke · gesamter Zeitraum"
+    },
+    "range": {
+      "label": "Zeitraum",
+      "week": "Woche",
+      "month": "Monat",
+      "all": "Gesamt"
+    },
+    "empty": {
+      "week": "In den letzten 7 Tagen wurden keine Blöcke geschürft",
+      "month": "In den letzten 30 Tagen wurden keine Blöcke geschürft",
+      "all": "Noch keine Blöcke geschürft"
+    },
+    "emptyPartial": "In diesem Zeitraum sind noch keine Blöcke indexiert",
+    "indexing": "Blöcke werden indexiert · {{percent}} % · Teildaten",
+    "nodeUnreachable": "Node nicht erreichbar · zeigt indexierte Blöcke bis #{{block}}",
+    "progressLabel": "Fortschritt des Blockindex",
+    "unavailable": "Blockindex nicht verfügbar",
     "others": "Andere",
     "addressYou": "{{address}} (du)"
   }

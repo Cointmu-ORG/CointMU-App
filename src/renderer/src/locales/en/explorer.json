@@ -154,8 +154,27 @@
   },
   "minerDistribution": {
     "title": "Miner distribution",
-    "subtitle": "Share of blocks mined · past 24 hours",
-    "empty": "No blocks mined in the past 24 hours",
+    "subtitle": {
+      "week": "Share of blocks mined · past 7 days",
+      "month": "Share of blocks mined · past 30 days",
+      "all": "Share of blocks mined · all time"
+    },
+    "range": {
+      "label": "Time range",
+      "week": "Week",
+      "month": "Month",
+      "all": "All time"
+    },
+    "empty": {
+      "week": "No blocks mined in the past 7 days",
+      "month": "No blocks mined in the past 30 days",
+      "all": "No blocks mined yet"
+    },
+    "emptyPartial": "No blocks indexed in this range yet",
+    "indexing": "Indexing blocks · {{percent}}% · partial data",
+    "nodeUnreachable": "Node unreachable · showing blocks indexed up to #{{block}}",
+    "progressLabel": "Block index progress",
+    "unavailable": "Block index unavailable",
     "others": "Others",
     "addressYou": "{{address}} (you)"
   }

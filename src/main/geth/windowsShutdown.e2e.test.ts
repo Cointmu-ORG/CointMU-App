@@ -35,6 +35,11 @@ vi.mock("electron", () => ({
   },
   BrowserWindow: { getAllWindows: () => [] },
 }));
+vi.mock("../explorerIndex/explorerIndexService", () => ({
+  startExplorerIndex: () => {},
+  stopExplorerIndex: async () => {},
+  requestIndexRebuild: () => {},
+}));
 vi.mock("../diagnostics/logging", () => ({
   gethLog: { info: (line: string) => sink.lines.push(line) },
 }));
