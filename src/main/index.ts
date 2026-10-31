@@ -45,6 +45,12 @@ import {
   registerNodeControlHandlers,
   registerNodeStatusHandlers,
 } from "./ipc/nodeIpc";
+import { registerExplorerHandlers } from "./ipc/explorerIpc";
+import {
+  getExplorerIndex,
+  startExplorerIndex,
+  stopExplorerIndex,
+} from "./explorerIndex/explorerIndexService";
 
 let isAppQuitting = false;
 
@@ -87,6 +93,7 @@ app.whenReady().then(async () => {
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
+  registerExplorerHandlers(getExplorerIndex);
 
   await resolveGethPorts();
 
@@ -112,6 +119,7 @@ app.whenReady().then(async () => {
 
   await prepareGethIpcEndpoint(store);
   await spawnGethProcess(store);
+  startExplorerIndex();
 
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
@@ -143,7 +151,8 @@ app.on("before-quit", (e) => {
   }
   e.preventDefault();
   isAppQuitting = true;
-  killGethProcess()
+  stopExplorerIndex()
+    .then(killGethProcess)
     .then(removeTemporaryIpcDir)
     .then(() => {
       app.exit();

@@ -7,6 +7,8 @@ import {
   isTcpReachable,
 } from "../services/peerWatchdog";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
+import { NodeRecoveryStage } from "../../bridge/types";
+import { getExplorerIndex } from "../explorerIndex/explorerIndexService";
 import {
   reportPeerHint,
   reportRecoveryEvent,
@@ -46,6 +48,9 @@ export function createNodeRecovery(store: AppStore): GethRecovery {
       (store.get("advanced.httpRpc") ?? true) ? getRpcPort() : null,
     broadcast: (event) => {
       reportRecoveryEvent(event);
+      if (event.stage === NodeRecoveryStage.QUARANTINED) {
+        getExplorerIndex()?.requestRebuild("chaindata quarantined");
+      }
       BrowserWindow.getAllWindows().forEach((win) => {
         win.webContents.send(NODE_CHANNELS.RECOVERY, event);
       });

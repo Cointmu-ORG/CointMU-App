@@ -2,7 +2,10 @@ import type {
   BootnodeSaveResult,
   BootnodeState,
   DialogText,
+  ExplorerIndexStatus,
   JsonRpcEnvelope,
+  MinerDistributionResult,
+  MinerRange,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
@@ -46,6 +49,13 @@ interface CointmuAPI {
     sessionValid: boolean;
     networkId: string;
   }>;
+  explorer: {
+    /** Null when the block index could not start or a read failed. */
+    getMinerDistribution: (
+      range: MinerRange,
+    ) => Promise<MinerDistributionResult | null>;
+    getIndexStatus: () => Promise<ExplorerIndexStatus | null>;
+  };
   network: {
     getInsights: () => Promise<{
       isOnline: boolean;
