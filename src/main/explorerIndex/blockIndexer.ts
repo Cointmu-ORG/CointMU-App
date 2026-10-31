@@ -218,6 +218,9 @@ export class BlockIndexer {
       return StepOutcome.BUSY;
     }
     this.store.insert(blocks);
+    // ponytail: blocks the main thread once per (re)build, ~0.5 s per 300k
+    // blocks; move the store to a worker thread if that pause shows.
+    if (blocks[0].number === 0) this.store.compact();
     return StepOutcome.BUSY;
   }
 

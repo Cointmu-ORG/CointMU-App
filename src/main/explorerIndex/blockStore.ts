@@ -7,6 +7,10 @@ const DB_FILE_NAME = "blocks.sqlite";
 const SECONDS_PER_DAY = 86_400;
 const HEX_PREFIX = "0x";
 const GENESIS_HASH_KEY = "genesisHash";
+// Two scalar subqueries: SQLite only answers MIN or MAX from the primary key
+// when the statement has one of them; "SELECT MIN(x), MAX(x)" scans the table.
+export const RANGE_SQL =
+  "SELECT (SELECT MIN(number) FROM blocks) AS low, (SELECT MAX(number) FROM blocks) AS high";
 
 /** The block header fields the explorer index keeps. Hashes and miner are lowercase 0x hex. */
 export interface IndexedBlock {
@@ -77,6 +81,7 @@ export class BlockStore {
     readonly blockAt: StatementSync;
     readonly countSince: StatementSync;
     readonly countBetween: StatementSync;
+    readonly range: StatementSync;
   };
 
   private constructor(private readonly db: DatabaseSync) {
@@ -93,6 +98,7 @@ export class BlockStore {
         `SELECT m.address AS address, SUM(d.blocks) AS blocks FROM miner_days d
          JOIN miners m ON m.id = d.miner_id WHERE d.day > ? GROUP BY d.miner_id`,
       ),
+      range: db.prepare(RANGE_SQL),
       countBetween: db.prepare(
         `SELECT m.address AS address, COUNT(*) AS blocks FROM blocks b
          JOIN miners m ON m.id = b.miner_id
@@ -158,9 +164,10 @@ export class BlockStore {
 
   /** @returns The indexed range, or null when the index is empty. */
   range(): BlockRange | null {
-    const row = this.db
-      .prepare("SELECT MIN(number) AS low, MAX(number) AS high FROM blocks")
-      .get() as { low: number | null; high: number | null };
+    const row = this.statements.range.get() as {
+      low: number | null;
+      high: number | null;
+    };
     return row.low === null || row.high === null
       ? null
       : { low: row.low, high: row.high };
@@ -211,6 +218,15 @@ export class BlockStore {
         );
       }
     });
+  }
+
+  /**
+   * Rewrites the database densely. The backfill inserts below the lowest
+   * block, which leaves B-tree pages about half full (~160 instead of ~80
+   * bytes per block); one VACUUM after the backfill halves the file.
+   */
+  compact(): void {
+    this.db.exec("VACUUM; PRAGMA wal_checkpoint(TRUNCATE);");
   }
 
   /** Removes every block above a height (reorg rollback). */

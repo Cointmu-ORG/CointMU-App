@@ -8,7 +8,8 @@ import {
   buildChain,
   SECONDS_PER_DAY,
 } from "./blockIndex.fixtures";
-import { BlockStore, BlockStoreInvalidError } from "./blockStore";
+import { DatabaseSync } from "node:sqlite";
+import { BlockStore, BlockStoreInvalidError, RANGE_SQL } from "./blockStore";
 
 const HEAD_TIME = 1_800_000_000;
 const MINER_A = addressOf(0xa);
@@ -106,5 +107,22 @@ describe("BlockStore.open", () => {
 
     expect(() => BlockStore.open(dir)).toThrow(BlockStoreInvalidError);
     store = BlockStore.open(join(dir, "fresh"));
+  });
+});
+
+describe("BlockStore.range", () => {
+  it("reads both ends from the primary key instead of scanning the table", () => {
+    store.insert(buildChain({ length: 5, headTime: HEAD_TIME }));
+    const db = new DatabaseSync(join(dir, "blocks.sqlite"), { readOnly: true });
+
+    const plan = db.prepare(`EXPLAIN QUERY PLAN ${RANGE_SQL}`).all() as {
+      detail: string;
+    }[];
+    db.close();
+
+    expect(plan.map((step) => step.detail).join("; ")).not.toMatch(
+      /SCAN blocks/,
+    );
+    expect(store.range()).toEqual({ low: 0, high: 4 });
   });
 });
