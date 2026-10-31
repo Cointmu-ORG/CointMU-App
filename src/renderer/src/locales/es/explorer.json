@@ -156,8 +156,27 @@
   },
   "minerDistribution": {
     "title": "Distribución de mineros",
-    "subtitle": "Proporción de bloques minados · últimas 24 horas",
-    "empty": "No se minaron bloques en las últimas 24 horas",
+    "subtitle": {
+      "week": "Proporción de bloques minados · últimos 7 días",
+      "month": "Proporción de bloques minados · últimos 30 días",
+      "all": "Proporción de bloques minados · desde el inicio"
+    },
+    "range": {
+      "label": "Periodo",
+      "week": "Semana",
+      "month": "Mes",
+      "all": "Todo"
+    },
+    "empty": {
+      "week": "No se minaron bloques en los últimos 7 días",
+      "month": "No se minaron bloques en los últimos 30 días",
+      "all": "Aún no se han minado bloques"
+    },
+    "emptyPartial": "Aún no hay bloques indexados en este periodo",
+    "indexing": "Indexando bloques · {{percent}} % · datos parciales",
+    "nodeUnreachable": "Nodo inaccesible · se muestran los bloques indexados hasta el #{{block}}",
+    "progressLabel": "Progreso del índice de bloques",
+    "unavailable": "Índice de bloques no disponible",
     "others": "Otros",
     "addressYou": "{{address}} (tú)"
   }

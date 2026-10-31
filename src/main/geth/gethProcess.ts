@@ -21,6 +21,10 @@ import { gethLog } from "../diagnostics/logging";
 import { recordGethLine } from "../diagnostics/gethReporting";
 import type { GethRecovery } from "../services/gethRecovery";
 import type { AppStore } from "../services/appStore";
+import {
+  startExplorerIndex,
+  stopExplorerIndex,
+} from "../explorerIndex/explorerIndexService";
 
 export const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
@@ -143,6 +147,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       env,
     });
     lastSpawnedGeth = gethProcess;
+    startExplorerIndex();
     const spawnedPid = gethProcess.pid;
     if (spawnedPid !== undefined) {
       writeGethPidFile(resolveDataRoot(), spawnedPid);
@@ -258,7 +263,13 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
  * process is running the returned promise resolves immediately.
  * @returns {Promise<void>} Resolves after the geth process has exited.
  */
-export function killGethProcess(): Promise<void> {
+export async function killGethProcess(): Promise<void> {
+  // The explorer index closes its database (WAL checkpoint) alongside; its
+  // stop is bounded, so it never holds up quit, a restart or a recovery.
+  await Promise.all([stopExplorerIndex(), stopGethChild()]);
+}
+
+function stopGethChild(): Promise<void> {
   intentionalGethShutdown = true;
   if (gethRestartTimer) {
     clearTimeout(gethRestartTimer);

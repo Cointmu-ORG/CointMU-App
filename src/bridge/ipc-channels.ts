@@ -29,3 +29,8 @@ export const DIAGNOSTICS_CHANNELS = {
   LIST_QUEUED_REPORTS: "diagnostics:list-queued-reports",
   CLEAR_QUEUED_REPORTS: "diagnostics:clear-queued-reports",
 } as const;
+
+export const EXPLORER_CHANNELS = {
+  GET_MINER_DISTRIBUTION: "explorer:get-miner-distribution",
+  GET_INDEX_STATUS: "explorer:get-index-status",
+} as const;

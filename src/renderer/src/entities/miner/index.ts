@@ -1,5 +1,10 @@
 export {
-  fetchMinerDistribution,
+  OTHERS_ADDRESS,
+  type MinerDistribution,
   type MinerEntry,
+  type MinerIndexProgress,
 } from "./lib/miner-distribution.util";
-export { MinerDistributionCache } from "./api/miner-distribution-cache.service";
+export {
+  fetchMinerDistribution,
+  getCachedMinerDistribution,
+} from "./api/miner-distribution.service";
