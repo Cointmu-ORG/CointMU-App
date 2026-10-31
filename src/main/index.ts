@@ -47,7 +47,8 @@ import {
 } from "./ipc/nodeIpc";
 import { registerExplorerHandlers } from "./ipc/explorerIpc";
 import {
-  getExplorerIndex,
+  queryIndexStatus,
+  queryMinerDistribution,
   startExplorerIndex,
   stopExplorerIndex,
 } from "./explorerIndex/explorerIndexService";
@@ -93,7 +94,10 @@ app.whenReady().then(async () => {
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
-  registerExplorerHandlers(getExplorerIndex);
+  registerExplorerHandlers({
+    minerDistribution: queryMinerDistribution,
+    status: queryIndexStatus,
+  });
 
   await resolveGethPorts();
 
