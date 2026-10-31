@@ -4,6 +4,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import {
   BOOTNODE_CHANNELS,
   DIAGNOSTICS_CHANNELS,
+  EXPLORER_CHANNELS,
   NODE_CHANNELS,
   RPC_CHANNELS,
   SYSTEM_CHANNELS,
@@ -13,7 +14,10 @@ import type {
   BootnodeSaveResult,
   BootnodeState,
   DialogText,
+  ExplorerIndexStatus,
   JsonRpcEnvelope,
+  MinerDistributionResult,
+  MinerRange,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
@@ -84,6 +88,14 @@ const api = {
     sessionValid: boolean;
     networkId: string;
   }> => ipcRenderer.invoke("get-node-status"),
+  explorer: {
+    getMinerDistribution: (
+      range: MinerRange,
+    ): Promise<MinerDistributionResult | null> =>
+      ipcRenderer.invoke(EXPLORER_CHANNELS.GET_MINER_DISTRIBUTION, range),
+    getIndexStatus: (): Promise<ExplorerIndexStatus | null> =>
+      ipcRenderer.invoke(EXPLORER_CHANNELS.GET_INDEX_STATUS),
+  },
   network: {
     getInsights: () => ipcRenderer.invoke("network:getInsights"),
     getGenesisConfig: () => ipcRenderer.invoke("network:getGenesisConfig"),

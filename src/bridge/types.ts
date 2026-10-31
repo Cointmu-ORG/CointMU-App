@@ -204,3 +204,57 @@ export interface WalletActivity {
   /** Empty for a contract deployment; the miner for a mining reward. */
   readonly to: string;
 }
+
+/** Time window of the explorer miner distribution, counted back from now. */
+export const MinerRange = {
+  WEEK: "week",
+  MONTH: "month",
+  ALL: "all",
+} as const;
+
+export type MinerRange = (typeof MinerRange)[keyof typeof MinerRange];
+
+/** What the local explorer block index is doing. */
+export const ExplorerIndexPhase = {
+  /** Fetching blocks: the index does not yet reach both genesis and the node head. */
+  INDEXING: "indexing",
+  /** Every block from genesis to the node head is indexed; new blocks follow. */
+  SYNCED: "synced",
+  /** The last node call failed; the index serves what it has. */
+  NODE_UNREACHABLE: "node-unreachable",
+} as const;
+
+export type ExplorerIndexPhase =
+  (typeof ExplorerIndexPhase)[keyof typeof ExplorerIndexPhase];
+
+/** Payload of EXPLORER_CHANNELS.GET_INDEX_STATUS. */
+export interface ExplorerIndexStatus {
+  readonly phase: ExplorerIndexPhase;
+  /** Lowest and highest indexed block; the index is one contiguous range. Null when empty. */
+  readonly lowestBlock: number | null;
+  readonly highestBlock: number | null;
+  /** The node head at the last successful call, null before the first one. */
+  readonly nodeHead: number | null;
+  /** Indexed share of blocks 0..nodeHead, 0-100. */
+  readonly percent: number;
+}
+
+/** Blocks mined by one address in the requested range. */
+export interface MinerShare {
+  /** Lowercase 0x address. */
+  readonly address: string;
+  readonly blocks: number;
+}
+
+/** Payload of EXPLORER_CHANNELS.GET_MINER_DISTRIBUTION. */
+export interface MinerDistributionResult {
+  readonly range: MinerRange;
+  /** The top miners, most blocks first. */
+  readonly miners: readonly MinerShare[];
+  /** Blocks of every miner beyond the top ones. */
+  readonly otherBlocks: number;
+  readonly totalBlocks: number;
+  /** False while the index does not yet cover the whole range up to the node head. */
+  readonly isComplete: boolean;
+  readonly status: ExplorerIndexStatus;
+}
