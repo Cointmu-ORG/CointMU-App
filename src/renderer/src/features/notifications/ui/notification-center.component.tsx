@@ -1,4 +1,4 @@
-import { NOTIFICATION_COLORS_BY_TYPE } from "../config/notification.constants";
+import { NOTIFICATION_COLORS_BY_TYPE } from "../config/notification-display.constants";
 import { type JSX, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { formatAge } from "@/shared/lib";

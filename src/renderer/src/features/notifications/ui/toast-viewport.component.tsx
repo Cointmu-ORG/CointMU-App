@@ -1,7 +1,7 @@
 import {
   TOAST_DURATION_MS,
   NOTIFICATION_COLORS_BY_TYPE,
-} from "../config/notification.constants";
+} from "../config/notification-display.constants";
 import { type JSX, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {

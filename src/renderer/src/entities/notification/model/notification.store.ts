@@ -2,7 +2,7 @@ import {
   MAX_NOTIFICATIONS,
   NOTIFICATIONS_SETTINGS_KEY,
   NOTIFICATIONS_HISTORY_KEY,
-} from "../config/notification.constants";
+} from "../config/notification-storage.constants";
 import { create } from "zustand";
 import { getSetting, setSetting } from "@/shared/api";
 

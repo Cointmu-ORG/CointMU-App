@@ -10,7 +10,7 @@ import {
   MAX_NOTIFICATIONS,
   NOTIFICATIONS_HISTORY_KEY,
   NOTIFICATIONS_SETTINGS_KEY,
-} from "../config/notification.constants";
+} from "../config/notification-storage.constants";
 import { dispatchNotification } from "../api/notification.service";
 import { useNotificationStore } from "./notification.store";
 
