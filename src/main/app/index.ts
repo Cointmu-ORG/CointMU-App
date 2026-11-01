@@ -4,7 +4,7 @@ import { registerCryptoHandlers } from "../wallet/crypto";
 import { registerSystemHandlers } from "./system";
 import { initUpdater } from "./updater";
 import { registerRendererRpcHandler } from "../services/rendererRpc";
-import { startExtensionSyncServer } from "../services/extensionSyncServer";
+import { startExtensionSyncServer } from "../extension/extensionSyncServer";
 import { registerDiagnosticsHandlers } from "../diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.

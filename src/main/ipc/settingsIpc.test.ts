@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import { registerSettingsHandlers } from "./settingsIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
-vi.mock("../services/extensionSyncServer", () => ({
+vi.mock("../extension/extensionSyncServer", () => ({
   broadcastWalletState: vi.fn(),
 }));
 vi.mock("../geth/process/ports", () => ({ getRpcPort: () => 8545 }));
