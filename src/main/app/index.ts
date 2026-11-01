@@ -3,7 +3,7 @@ import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "../wallet/crypto";
 import { registerSystemHandlers } from "./system";
 import { initUpdater } from "./updater";
-import { registerRendererRpcHandler } from "../services/rendererRpc";
+import { registerRendererRpcHandler } from "../ipc/rendererRpc";
 import { startExtensionSyncServer } from "../extension/extensionSyncServer";
 import { registerDiagnosticsHandlers } from "../diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
