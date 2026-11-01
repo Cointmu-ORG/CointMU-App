@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { NodeRecoveryStage, type NodeRecoveryEvent } from "../../bridge/types";
+import {
+  NodeRecoveryStage,
+  type NodeRecoveryEvent,
+} from "../../../bridge/types";
 import { GethRecovery, type GethRecoveryDeps } from "./gethRecovery";
 import { quarantineChainData } from "./chaindataQuarantine";
 

@@ -36,7 +36,7 @@ import {
   GETH_GRACEFUL_TIMEOUT_MS,
   stopOrphanedGeth,
 } from "../geth/process/orphanedGeth";
-import { createNodeRecovery } from "../geth/nodeRecovery";
+import { createNodeRecovery } from "../geth/recovery/nodeRecovery";
 import { MiningController } from "../services/miningController";
 import { registerWindowHandlers } from "../ipc/windowIpc";
 import { registerSettingsHandlers } from "../ipc/settingsIpc";

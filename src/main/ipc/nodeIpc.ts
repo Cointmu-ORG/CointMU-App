@@ -5,7 +5,7 @@ import { getNetworkId } from "../geth/process/networkConfig";
 import { getNodeRecovery, isGethRunning } from "../geth/process/gethProcess";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { isSessionValid } from "../app/session";
-import { peerWatchdog } from "../geth/nodeRecovery";
+import { peerWatchdog } from "../geth/recovery/nodeRecovery";
 import type { AppStore } from "../services/appStore";
 
 /**

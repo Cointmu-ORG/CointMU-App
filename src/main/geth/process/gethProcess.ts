@@ -19,10 +19,10 @@ import {
 } from "./orphanedGeth";
 import { startGethWatcher } from "./gethWatcherProcess";
 import { gethLaunchCommand } from "./gethSupervisor";
-import { parseGethLogChunk } from "../../utils/gethLogParser";
+import { parseGethLogChunk } from "../recovery/gethLogParser";
 import { gethLog } from "../../diagnostics/logging";
 import { recordGethLine } from "../../diagnostics/gethReporting";
-import type { GethRecovery } from "../../services/gethRecovery";
+import type { GethRecovery } from "../recovery/gethRecovery";
 import type { AppStore } from "../../services/appStore";
 import {
   startExplorerIndex,

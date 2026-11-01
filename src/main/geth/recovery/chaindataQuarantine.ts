@@ -8,7 +8,7 @@ import {
   buildQuarantinePath,
   isQuarantineName,
   resolveChainDataPath,
-} from "../utils/recoveryPathGuard";
+} from "./recoveryPathGuard";
 
 const RENAME_RETRY_DELAYS_MS = [ms("250ms"), ms("500ms"), ms("1s"), ms("2s")];
 const RENAME_RETRYABLE_CODES = new Set(["EBUSY", "EPERM"]);

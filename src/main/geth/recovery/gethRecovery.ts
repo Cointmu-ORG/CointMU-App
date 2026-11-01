@@ -4,7 +4,7 @@ import {
   NodeBlockReason,
   NodeRecoveryStage,
   type NodeRecoveryEvent,
-} from "../../bridge/types";
+} from "../../../bridge/types";
 import {
   GethErrorKind,
   GethLineSeverity,
@@ -12,10 +12,10 @@ import {
   extractListenPort,
   isCorruptionConfirmed,
   type GethLineClassification,
-} from "../utils/gethErrorClassifier";
+} from "./gethErrorClassifier";
 import { quarantineChainData } from "./chaindataQuarantine";
-import { sanitizeLocalLine } from "../diagnostics/localSanitizer";
-import { callGethRpc } from "../utils/rpcUtils";
+import { sanitizeLocalLine } from "../../diagnostics/localSanitizer";
+import { callGethRpc } from "../../utils/rpcUtils";
 
 const RESTART_BACKOFF_MS = [ms("3s"), ms("10s"), ms("30s")];
 const HEALTH_GRACE_MS = ms("15s");

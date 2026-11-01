@@ -10,7 +10,7 @@ import {
   GethLineSeverity,
   classifyGethLine,
   type GethErrorKind,
-} from "../utils/gethErrorClassifier";
+} from "../geth/recovery/gethErrorClassifier";
 import { BreadcrumbCategory, ReportTag } from "./eventAllowlist";
 import { sanitizeLocal } from "./localSanitizer";
 

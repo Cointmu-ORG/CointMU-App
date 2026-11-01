@@ -1,30 +1,30 @@
 import { BrowserWindow } from "electron";
 import ms from "ms";
-import { GethRecovery } from "../services/gethRecovery";
+import { GethRecovery } from "./gethRecovery";
 import {
   PeerWatchdog,
   isAnyBootnodeReachable,
   isTcpReachable,
-} from "../services/peerWatchdog";
-import { NODE_CHANNELS } from "../../bridge/ipc-channels";
-import { NodeRecoveryStage } from "../../bridge/types";
-import { requestIndexRebuild } from "../explorerIndex/explorerIndexService";
+} from "../../services/peerWatchdog";
+import { NODE_CHANNELS } from "../../../bridge/ipc-channels";
+import { NodeRecoveryStage } from "../../../bridge/types";
+import { requestIndexRebuild } from "../../explorerIndex/explorerIndexService";
 import {
   reportPeerHint,
   reportRecoveryEvent,
-} from "../diagnostics/gethReporting";
-import { callGethRpc } from "../utils/rpcUtils";
-import { getActiveBootnodeConfig } from "./bootnode/bootnodeWatcher";
+} from "../../diagnostics/gethReporting";
+import { callGethRpc } from "../../utils/rpcUtils";
+import { getActiveBootnodeConfig } from "../bootnode/bootnodeWatcher";
 import {
   hasGethExited,
   isGethRunning,
   killGethProcess,
   spawnGethProcess,
-} from "./process/gethProcess";
-import { initGethIfNeeded } from "./process/gethInit";
-import { resolveDataDir } from "./process/networkConfig";
-import { getRpcPort } from "./process/ports";
-import type { AppStore } from "../services/appStore";
+} from "../process/gethProcess";
+import { initGethIfNeeded } from "../process/gethInit";
+import { resolveDataDir } from "../process/networkConfig";
+import { getRpcPort } from "../process/ports";
+import type { AppStore } from "../../services/appStore";
 
 const PEER_COUNT_TIMEOUT_MS = ms("5s");
 const BOOTNODE_PROBE_TIMEOUT_MS = ms("3s");
