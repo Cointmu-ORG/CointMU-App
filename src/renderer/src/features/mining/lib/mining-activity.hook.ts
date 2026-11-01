@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import i18next from "i18next";
 import { format } from "date-fns";
 import { useMiningStore } from "../model/mining.store";
-import { type BlockData } from "@/shared/lib";
+import { type BlockData } from "@/entities/block";
 
 interface LogEntry {
   id: string;

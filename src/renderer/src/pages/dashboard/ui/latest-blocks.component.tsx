@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData, formatAge } from "@/shared/lib";
+import { formatAge } from "@/shared/lib";
+import { type BlockData } from "@/entities/block";
 import { useAppStore } from "@/shared/model";
 import { ChevronRight, Square, Box } from "lucide-react";
 

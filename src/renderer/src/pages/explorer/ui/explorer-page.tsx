@@ -16,7 +16,8 @@ import {
   type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from "@/shared/lib";
+import { usePagination } from "@/shared/lib";
+import { useRecentBlocks } from "@/entities/block";
 
 import { useAppStore } from "@/shared/model";
 import { call, fetchBalance } from "@/shared/api";

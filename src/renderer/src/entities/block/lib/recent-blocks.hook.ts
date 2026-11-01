@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { call } from "@/shared/api/rpc.client";
+import { call } from "@/shared/api";
 
 export interface BlockData {
   number: number;

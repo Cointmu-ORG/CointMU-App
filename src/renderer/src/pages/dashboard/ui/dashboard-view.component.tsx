@@ -11,7 +11,8 @@ import {
 } from "../config/dashboard.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from "@/shared/lib";
+import { usePagination } from "@/shared/lib";
+import { useRecentBlocks } from "@/entities/block";
 import { useMiningStats, useMiningControls } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useMiningStore } from "@/features/mining";

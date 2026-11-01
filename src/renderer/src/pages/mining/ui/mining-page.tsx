@@ -1,7 +1,8 @@
 import type { DerivedAccount } from "@/entities/account";
 import { FOUND_BLOCKS_PAGE_SIZE } from "@/features/mining";
 import { useState, useMemo, type JSX } from "react";
-import { useTimer, usePagination, useRecentBlocks } from "@/shared/lib";
+import { useTimer, usePagination } from "@/shared/lib";
+import { useRecentBlocks } from "@/entities/block";
 import {
   useMiningStats,
   useMiningControls,

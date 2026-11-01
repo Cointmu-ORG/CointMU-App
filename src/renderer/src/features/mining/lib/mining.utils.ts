@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { DEFAULT_CONCURRENCY } from "../config/mining.constants";
-import { type BlockData } from "@/shared/lib";
+import { type BlockData } from "@/entities/block";
 
 /**
  * Resolves a safe CPU core count from the browser environment, falling back to
