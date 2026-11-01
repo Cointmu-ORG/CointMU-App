@@ -9,7 +9,7 @@ on:
   pull_request:
     paths:
       - "src/main/geth/**"
-      - "src/main/services/updater.ts"
+      - "src/main/app/updater.ts"
       - "native/geth-supervisor/**"
       - "resources/bin/win/**"
       - "package-lock.json"

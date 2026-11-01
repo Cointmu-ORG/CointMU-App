@@ -3,7 +3,7 @@ import { join } from "path";
 import { existsSync } from "fs";
 import { copyFile } from "fs/promises";
 import { resolveDataDir } from "../geth/networkConfig";
-import { getDirectorySize } from "../services/directorySize";
+import { getDirectorySize } from "../app/directorySize";
 import { resolveDialogText } from "./dialogText";
 
 const EXPORT_EXTENSION_DIALOG = {

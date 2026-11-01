@@ -4,7 +4,7 @@ import { getRpcPort } from "../geth/ports";
 import { getNetworkId } from "../geth/networkConfig";
 import { getNodeRecovery, isGethRunning } from "../geth/gethProcess";
 import { restartNodeByUser } from "../geth/nodeRestart";
-import { isSessionValid } from "../services/session";
+import { isSessionValid } from "../app/session";
 import { peerWatchdog } from "../geth/nodeRecovery";
 import type { AppStore } from "../services/appStore";
 

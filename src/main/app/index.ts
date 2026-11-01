@@ -1,55 +1,55 @@
 import { app, BrowserWindow } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { registerCryptoHandlers } from "./services/crypto";
-import { registerSystemHandlers } from "./services/system";
-import { initUpdater } from "./services/updater";
-import { registerRendererRpcHandler } from "./services/rendererRpc";
-import { startExtensionSyncServer } from "./services/extensionSyncServer";
-import { registerDiagnosticsHandlers } from "./diagnostics/diagnosticsIpc";
+import { registerCryptoHandlers } from "../services/crypto";
+import { registerSystemHandlers } from "./system";
+import { initUpdater } from "./updater";
+import { registerRendererRpcHandler } from "../services/rendererRpc";
+import { startExtensionSyncServer } from "../services/extensionSyncServer";
+import { registerDiagnosticsHandlers } from "../diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
-import { getRpcPort, resolveGethPorts } from "./geth/ports";
+import { getRpcPort, resolveGethPorts } from "../geth/ports";
 import {
   loadNetworkId,
   resolveDataDir,
   resolveDataRoot,
-} from "./geth/networkConfig";
-import { startSession } from "./services/session";
+} from "../geth/networkConfig";
+import { startSession } from "./session";
 import { createWindow } from "./window";
-import { createAppStore } from "./services/appStore";
+import { createAppStore } from "../services/appStore";
 import {
   prepareGethIpcEndpoint,
   removeTemporaryIpcDir,
-} from "./geth/ipcEndpointLifecycle";
+} from "../geth/ipcEndpointLifecycle";
 import {
   attachNodeRecovery,
   killGethProcess,
   spawnGethProcess,
-} from "./geth/gethProcess";
-import { initGethIfNeeded, resolveGethBinaryPath } from "./geth/gethInit";
-import { supervisorFor } from "./geth/gethSupervisor";
+} from "../geth/gethProcess";
+import { initGethIfNeeded, resolveGethBinaryPath } from "../geth/gethInit";
+import { supervisorFor } from "../geth/gethSupervisor";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
   stopOrphanedGeth,
-} from "./geth/orphanedGeth";
-import { createNodeRecovery } from "./geth/nodeRecovery";
-import { MiningController } from "./services/miningController";
-import { registerWindowHandlers } from "./ipc/windowIpc";
-import { registerSettingsHandlers } from "./ipc/settingsIpc";
-import { registerBootnodeHandlers } from "./ipc/bootnodeIpc";
-import { registerWalletHandlers } from "./ipc/walletIpc";
-import { registerAppHandlers } from "./ipc/appIpc";
-import { registerNetworkHandlers } from "./ipc/networkIpc";
+} from "../geth/orphanedGeth";
+import { createNodeRecovery } from "../geth/nodeRecovery";
+import { MiningController } from "../services/miningController";
+import { registerWindowHandlers } from "../ipc/windowIpc";
+import { registerSettingsHandlers } from "../ipc/settingsIpc";
+import { registerBootnodeHandlers } from "../ipc/bootnodeIpc";
+import { registerWalletHandlers } from "../ipc/walletIpc";
+import { registerAppHandlers } from "../ipc/appIpc";
+import { registerNetworkHandlers } from "../ipc/networkIpc";
 import {
   registerNodeControlHandlers,
   registerNodeStatusHandlers,
-} from "./ipc/nodeIpc";
-import { registerExplorerHandlers } from "./ipc/explorerIpc";
+} from "../ipc/nodeIpc";
+import { registerExplorerHandlers } from "../ipc/explorerIpc";
 import {
   queryIndexStatus,
   queryMinerDistribution,
-} from "./explorerIndex/explorerIndexService";
+} from "../explorerIndex/explorerIndexService";
 
 let isAppQuitting = false;
 
