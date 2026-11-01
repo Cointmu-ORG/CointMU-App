@@ -1,7 +1,7 @@
 import { connect } from "node:net";
 import ms from "ms";
 import { NodePeerHint } from "../../bridge/types";
-import { parseEnode } from "../geth/bootnode";
+import { parseEnode } from "../geth/bootnode/bootnode";
 
 export const PEER_POLL_INTERVAL_MS = ms("30s");
 /** How long the node must run with zero peers before the bootnode is probed. */

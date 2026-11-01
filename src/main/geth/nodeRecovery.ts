@@ -14,7 +14,7 @@ import {
   reportRecoveryEvent,
 } from "../diagnostics/gethReporting";
 import { callGethRpc } from "../utils/rpcUtils";
-import { getActiveBootnodeConfig } from "./bootnodeWatcher";
+import { getActiveBootnodeConfig } from "./bootnode/bootnodeWatcher";
 import {
   hasGethExited,
   isGethRunning,

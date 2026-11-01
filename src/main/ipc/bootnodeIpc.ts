@@ -6,11 +6,11 @@ import {
   buildBootnodeState,
   checkBootnodeInput,
   hasSameEnodes,
-} from "../geth/bootnodeSettings";
+} from "../geth/bootnode/bootnodeSettings";
 import {
   DEFAULT_BOOTNODE_CONFIG,
   getActiveBootnodeConfig,
-} from "../geth/bootnodeWatcher";
+} from "../geth/bootnode/bootnodeWatcher";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import type { AppStore } from "../services/appStore";
 

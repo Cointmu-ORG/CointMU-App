@@ -1,6 +1,9 @@
 import { isIP } from "node:net";
 import { SigningKey } from "ethers";
-import { BootnodeSource, type InvalidBootnodeEntry } from "../../bridge/types";
+import {
+  BootnodeSource,
+  type InvalidBootnodeEntry,
+} from "../../../bridge/types";
 
 const ENODE_PROTOCOL = "enode:";
 // secp256k1 public key without the 0x04 prefix: 64 bytes as hex.

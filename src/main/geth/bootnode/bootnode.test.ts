@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BootnodeSource } from "../../bridge/types";
+import { BootnodeSource } from "../../../bridge/types";
 import {
   BootnodeConfigProblem,
   FALLBACK_BOOTNODE_ENODES,

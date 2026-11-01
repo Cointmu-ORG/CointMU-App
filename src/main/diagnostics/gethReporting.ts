@@ -5,7 +5,7 @@ import {
   type NodePeerHint,
   type NodeRecoveryEvent,
 } from "../../bridge/types";
-import type { BootnodeConfigProblem } from "../geth/bootnode";
+import type { BootnodeConfigProblem } from "../geth/bootnode/bootnode";
 import {
   GethLineSeverity,
   classifyGethLine,

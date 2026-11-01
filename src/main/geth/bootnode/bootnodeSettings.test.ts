@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BootnodeSaveError, BootnodeSource } from "../../bridge/types";
+import { BootnodeSaveError, BootnodeSource } from "../../../bridge/types";
 import { MAX_BOOTNODES, resolveBuildBootnodes } from "./bootnode";
 import {
   BOOTNODES_SETTING_KEY,

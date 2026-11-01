@@ -8,12 +8,12 @@ import {
   resolveBuildBootnodes,
 } from "./bootnode";
 import { BOOTNODES_SETTING_KEY, type SettingsReader } from "./bootnodeSettings";
-import { getRpcPort } from "./process/ports";
-import { callGethRpc } from "../utils/rpcUtils";
+import { getRpcPort } from "../process/ports";
+import { callGethRpc } from "../../utils/rpcUtils";
 import {
   reportBootnodeConfigProblem,
   reportBootnodeSource,
-} from "../diagnostics/gethReporting";
+} from "../../diagnostics/gethReporting";
 
 const BOOTNODE_DNS_RETRY_MS = ms("30s");
 const ENODE_LIST_SEPARATOR = ",";

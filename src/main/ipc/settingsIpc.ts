@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { broadcastWalletState } from "../services/extensionSyncServer";
 import { getRpcPort } from "../geth/process/ports";
-import { isBootnodeSettingKey } from "../geth/bootnodeSettings";
+import { isBootnodeSettingKey } from "../geth/bootnode/bootnodeSettings";
 import type { AppStore } from "../services/appStore";
 
 /**

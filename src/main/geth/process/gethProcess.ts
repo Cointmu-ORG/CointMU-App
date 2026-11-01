@@ -8,7 +8,7 @@ import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
 import {
   forgetRunningBootnodes,
   prepareBootnodeArgs,
-} from "../bootnodeWatcher";
+} from "../bootnode/bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethLaunch } from "./gethInit";
 import {

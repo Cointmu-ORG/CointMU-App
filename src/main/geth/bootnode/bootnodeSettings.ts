@@ -2,7 +2,7 @@ import {
   BootnodeSaveError,
   type BootnodeState,
   type InvalidBootnodeEntry,
-} from "../../bridge/types";
+} from "../../../bridge/types";
 import {
   type BootnodeConfig,
   MAX_BOOTNODES,
