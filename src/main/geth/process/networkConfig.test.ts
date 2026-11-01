@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { join } from "node:path";
-import { GENESIS_BLOCK } from "../services/genesis";
+import { GENESIS_BLOCK } from "./genesis";
 import {
   buildGenesis,
   getNetworkId,

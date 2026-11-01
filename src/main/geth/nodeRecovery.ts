@@ -20,10 +20,10 @@ import {
   isGethRunning,
   killGethProcess,
   spawnGethProcess,
-} from "./gethProcess";
-import { initGethIfNeeded } from "./gethInit";
-import { resolveDataDir } from "./networkConfig";
-import { getRpcPort } from "./ports";
+} from "./process/gethProcess";
+import { initGethIfNeeded } from "./process/gethInit";
+import { resolveDataDir } from "./process/networkConfig";
+import { getRpcPort } from "./process/ports";
 import type { AppStore } from "../services/appStore";
 
 const PEER_COUNT_TIMEOUT_MS = ms("5s");

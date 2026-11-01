@@ -1,4 +1,4 @@
-import { GETH_HTTP_API_NAMESPACES } from "../security/rpcMethodPolicy";
+import { GETH_HTTP_API_NAMESPACES } from "../../security/rpcMethodPolicy";
 
 const LOCALHOST_ADDR = "127.0.0.1";
 // Host-header allow-list; blocks DNS rebinding to the local endpoint.

@@ -11,7 +11,7 @@ import {
   DEFAULT_BOOTNODE_CONFIG,
   getActiveBootnodeConfig,
 } from "../geth/bootnodeWatcher";
-import { restartNodeByUser } from "../geth/nodeRestart";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
 import type { AppStore } from "../services/appStore";
 
 /**

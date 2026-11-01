@@ -5,8 +5,8 @@ import {
   resolveGethIpcEndpoint,
   type GethIpcEndpoint,
 } from "./ipcEndpoint";
-import { configureGethIpcPath } from "../utils/rpcUtils";
-import type { AppStore } from "../services/appStore";
+import { configureGethIpcPath } from "../../utils/rpcUtils";
+import type { AppStore } from "../../services/appStore";
 
 let gethIpcEndpoint: GethIpcEndpoint | null = null;
 

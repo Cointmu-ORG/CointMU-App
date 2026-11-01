@@ -2,7 +2,7 @@ import { app, shell, ipcMain, dialog } from "electron";
 import { join } from "path";
 import { existsSync } from "fs";
 import { copyFile } from "fs/promises";
-import { resolveDataDir } from "../geth/networkConfig";
+import { resolveDataDir } from "../geth/process/networkConfig";
 import { getDirectorySize } from "../app/directorySize";
 import { resolveDialogText } from "./dialogText";
 

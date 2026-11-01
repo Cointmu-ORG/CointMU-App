@@ -83,8 +83,8 @@ jobs:
           GETH_SHUTDOWN_E2E: "1"
           GETH_SHUTDOWN_EVIDENCE_DIR: ${{ runner.temp }}/geth-shutdown
         run: >
-          npx vitest run src/main/geth/windowsShutdown.e2e.test.ts
-          src/main/geth/gethSupervisor.test.ts src/main/geth/orphanedGeth.test.ts
+          npx vitest run src/main/geth/process/windowsShutdown.e2e.test.ts
+          src/main/geth/process/gethSupervisor.test.ts src/main/geth/process/orphanedGeth.test.ts
 
       - name: Upload geth logs
         if: always()

@@ -35,15 +35,15 @@ vi.mock("electron", () => ({
   },
   BrowserWindow: { getAllWindows: () => [] },
 }));
-vi.mock("../explorerIndex/explorerIndexService", () => ({
+vi.mock("../../explorerIndex/explorerIndexService", () => ({
   startExplorerIndex: () => {},
   stopExplorerIndex: async () => {},
   requestIndexRebuild: () => {},
 }));
-vi.mock("../diagnostics/logging", () => ({
+vi.mock("../../diagnostics/logging", () => ({
   gethLog: { info: (line: string) => sink.lines.push(line) },
 }));
-vi.mock("../diagnostics/gethReporting", () => ({
+vi.mock("../../diagnostics/gethReporting", () => ({
   recordGethLine: () => {},
   reportBootnodeConfigProblem: () => {},
   reportBootnodeSource: () => {},
@@ -73,7 +73,7 @@ import {
   windowsChildPids,
   type FakeMainLaunch,
 } from "./windowsShutdown.fixtures";
-import { callGethRpc } from "../utils/rpcUtils";
+import { callGethRpc } from "../../utils/rpcUtils";
 
 const IS_ENABLED = process.env.GETH_SHUTDOWN_E2E === "1";
 const IS_WINDOWS = process.platform === "win32";

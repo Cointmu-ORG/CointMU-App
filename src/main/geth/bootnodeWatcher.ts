@@ -8,7 +8,7 @@ import {
   resolveBuildBootnodes,
 } from "./bootnode";
 import { BOOTNODES_SETTING_KEY, type SettingsReader } from "./bootnodeSettings";
-import { getRpcPort } from "./ports";
+import { getRpcPort } from "./process/ports";
 import { callGethRpc } from "../utils/rpcUtils";
 import {
   reportBootnodeConfigProblem,

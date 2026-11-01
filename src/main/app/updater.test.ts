@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ipcMain, type BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
-import { killGethProcess } from "../geth/gethProcess";
+import { killGethProcess } from "../geth/process/gethProcess";
 import { initUpdater } from "./updater";
 
 // The real module downloads the Electron binary on first require (#74).
@@ -13,7 +13,7 @@ vi.mock("electron-updater", () => ({
   autoUpdater: { on: vi.fn(), quitAndInstall: vi.fn() },
 }));
 vi.mock("@electron-toolkit/utils", () => ({ is: { dev: false } }));
-vi.mock("../geth/gethProcess", () => ({ killGethProcess: vi.fn() }));
+vi.mock("../geth/process/gethProcess", () => ({ killGethProcess: vi.fn() }));
 
 const window = {
   isDestroyed: () => false,

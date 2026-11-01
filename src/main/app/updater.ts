@@ -5,7 +5,7 @@ import {
   type ProgressInfo,
 } from "electron-updater";
 import { is } from "@electron-toolkit/utils";
-import { killGethProcess } from "../geth/gethProcess";
+import { killGethProcess } from "../geth/process/gethProcess";
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the

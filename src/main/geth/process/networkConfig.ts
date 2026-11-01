@@ -1,6 +1,6 @@
 import { app } from "electron";
 import { join } from "path";
-import { GENESIS_BLOCK, type GenesisBlock } from "../services/genesis";
+import { GENESIS_BLOCK, type GenesisBlock } from "./genesis";
 
 let GETH_NETWORK_ID =
   process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);

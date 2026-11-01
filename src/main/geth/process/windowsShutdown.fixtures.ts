@@ -6,7 +6,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { Wallet } from "ethers";
-import type { AppStore } from "../services/appStore";
+import type { AppStore } from "../../services/appStore";
 
 // Nothing listens there, so geth finds no peers; a valid key, or the app would
 // reject it and fall back to the real bootnode.

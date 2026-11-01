@@ -1,4 +1,4 @@
-import { COINTMU_NETWORK } from "../../bridge/network";
+import { COINTMU_NETWORK } from "../../../bridge/network";
 
 /**
  * Shape of a geth genesis block. The chainId is strongly typed because it drives

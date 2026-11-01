@@ -5,11 +5,11 @@ import { BootnodeSaveError, BootnodeSource } from "../../bridge/types";
 import { resolveBuildBootnodes } from "../geth/bootnode";
 import { BOOTNODES_SETTING_KEY } from "../geth/bootnodeSettings";
 import { getActiveBootnodeConfig } from "../geth/bootnodeWatcher";
-import { restartNodeByUser } from "../geth/nodeRestart";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerBootnodeHandlers } from "./bootnodeIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
-vi.mock("../geth/nodeRestart", () => ({ restartNodeByUser: vi.fn() }));
+vi.mock("../geth/process/nodeRestart", () => ({ restartNodeByUser: vi.fn() }));
 vi.mock("../geth/bootnodeWatcher", async () => {
   const { resolveBuildBootnodes } = await import("../geth/bootnode");
   return {

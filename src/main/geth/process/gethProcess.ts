@@ -5,7 +5,10 @@ import ms from "ms";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
 import { getNetworkId, resolveDataDir, resolveDataRoot } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
-import { forgetRunningBootnodes, prepareBootnodeArgs } from "./bootnodeWatcher";
+import {
+  forgetRunningBootnodes,
+  prepareBootnodeArgs,
+} from "../bootnodeWatcher";
 import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethLaunch } from "./gethInit";
 import {
@@ -16,15 +19,15 @@ import {
 } from "./orphanedGeth";
 import { startGethWatcher } from "./gethWatcherProcess";
 import { gethLaunchCommand } from "./gethSupervisor";
-import { parseGethLogChunk } from "../utils/gethLogParser";
-import { gethLog } from "../diagnostics/logging";
-import { recordGethLine } from "../diagnostics/gethReporting";
-import type { GethRecovery } from "../services/gethRecovery";
-import type { AppStore } from "../services/appStore";
+import { parseGethLogChunk } from "../../utils/gethLogParser";
+import { gethLog } from "../../diagnostics/logging";
+import { recordGethLine } from "../../diagnostics/gethReporting";
+import type { GethRecovery } from "../../services/gethRecovery";
+import type { AppStore } from "../../services/appStore";
 import {
   startExplorerIndex,
   stopExplorerIndex,
-} from "../explorerIndex/explorerIndexService";
+} from "../../explorerIndex/explorerIndexService";
 
 export const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");

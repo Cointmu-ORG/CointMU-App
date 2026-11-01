@@ -9,30 +9,33 @@ import { registerDiagnosticsHandlers } from "../diagnostics/diagnosticsIpc";
 // Must stay below the imports above and above every local module below: see
 // bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
-import { getRpcPort, resolveGethPorts } from "../geth/ports";
+import { getRpcPort, resolveGethPorts } from "../geth/process/ports";
 import {
   loadNetworkId,
   resolveDataDir,
   resolveDataRoot,
-} from "../geth/networkConfig";
+} from "../geth/process/networkConfig";
 import { startSession } from "./session";
 import { createWindow } from "./window";
 import { createAppStore } from "../services/appStore";
 import {
   prepareGethIpcEndpoint,
   removeTemporaryIpcDir,
-} from "../geth/ipcEndpointLifecycle";
+} from "../geth/process/ipcEndpointLifecycle";
 import {
   attachNodeRecovery,
   killGethProcess,
   spawnGethProcess,
-} from "../geth/gethProcess";
-import { initGethIfNeeded, resolveGethBinaryPath } from "../geth/gethInit";
-import { supervisorFor } from "../geth/gethSupervisor";
+} from "../geth/process/gethProcess";
+import {
+  initGethIfNeeded,
+  resolveGethBinaryPath,
+} from "../geth/process/gethInit";
+import { supervisorFor } from "../geth/process/gethSupervisor";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
   stopOrphanedGeth,
-} from "../geth/orphanedGeth";
+} from "../geth/process/orphanedGeth";
 import { createNodeRecovery } from "../geth/nodeRecovery";
 import { MiningController } from "../services/miningController";
 import { registerWindowHandlers } from "../ipc/windowIpc";

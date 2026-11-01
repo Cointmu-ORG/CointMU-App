@@ -6,7 +6,7 @@ vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
 vi.mock("../services/extensionSyncServer", () => ({
   broadcastWalletState: vi.fn(),
 }));
-vi.mock("../geth/ports", () => ({ getRpcPort: () => 8545 }));
+vi.mock("../geth/process/ports", () => ({ getRpcPort: () => 8545 }));
 
 type Handler = (event: unknown, ...args: unknown[]) => unknown;
 
