@@ -17,7 +17,7 @@ import {
 } from "../geth/process/networkConfig";
 import { startSession } from "./session";
 import { createWindow } from "./window";
-import { createAppStore } from "../services/appStore";
+import { createAppStore } from "../store/appStore";
 import {
   prepareGethIpcEndpoint,
   removeTemporaryIpcDir,

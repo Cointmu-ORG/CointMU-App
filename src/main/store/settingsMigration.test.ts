@@ -10,7 +10,7 @@ import { migrateSettingValues } from "./settingsMigration";
 const snapshot = (version = "1.6.18"): Record<string, unknown> =>
   JSON.parse(
     readFileSync(
-      new URL(`./store-${version}.fixture.json`, import.meta.url),
+      new URL(`./fixtures/store-${version}.fixture.json`, import.meta.url),
       "utf8",
     ),
   );

@@ -24,7 +24,7 @@ import {
 import { initGethIfNeeded } from "../process/gethInit";
 import { resolveDataDir } from "../process/networkConfig";
 import { getRpcPort } from "../process/ports";
-import type { AppStore } from "../../services/appStore";
+import type { AppStore } from "../../store/appStore";
 
 const PEER_COUNT_TIMEOUT_MS = ms("5s");
 const BOOTNODE_PROBE_TIMEOUT_MS = ms("3s");

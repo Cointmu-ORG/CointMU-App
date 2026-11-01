@@ -4,7 +4,7 @@ import {
   killGethProcess,
   spawnGethProcess,
 } from "./gethProcess";
-import type { AppStore } from "../../services/appStore";
+import type { AppStore } from "../../store/appStore";
 
 /**
  * Restarts geth on a user action (retry, settings change), clearing any

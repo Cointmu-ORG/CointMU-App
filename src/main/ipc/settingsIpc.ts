@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import { broadcastWalletState } from "../services/extensionSyncServer";
 import { getRpcPort } from "../geth/process/ports";
 import { isBootnodeSettingKey } from "../geth/bootnode/bootnodeSettings";
-import type { AppStore } from "../services/appStore";
+import type { AppStore } from "../store/appStore";
 
 /**
  * Registers the settings read/write handlers. Changing the active wallet

@@ -12,7 +12,7 @@ import {
   getActiveBootnodeConfig,
 } from "../geth/bootnode/bootnodeWatcher";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
-import type { AppStore } from "../services/appStore";
+import type { AppStore } from "../store/appStore";
 
 /**
  * Restarts the node so it dials the saved bootnodes, then describes the

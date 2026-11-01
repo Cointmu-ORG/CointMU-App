@@ -23,7 +23,7 @@ import { parseGethLogChunk } from "../recovery/gethLogParser";
 import { gethLog } from "../../diagnostics/logging";
 import { recordGethLine } from "../../diagnostics/gethReporting";
 import type { GethRecovery } from "../recovery/gethRecovery";
-import type { AppStore } from "../../services/appStore";
+import type { AppStore } from "../../store/appStore";
 import {
   startExplorerIndex,
   stopExplorerIndex,

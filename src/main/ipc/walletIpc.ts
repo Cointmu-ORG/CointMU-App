@@ -1,7 +1,7 @@
 import { ipcMain, dialog } from "electron";
 import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
-import type { AppStore } from "../services/appStore";
+import type { AppStore } from "../store/appStore";
 import { resolveDialogText } from "./dialogText";
 
 const EXPORT_KEYSTORE_DIALOG = { title: "Export Keystore", filterName: "JSON" };
