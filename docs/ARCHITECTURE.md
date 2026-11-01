@@ -13,10 +13,13 @@ This is an **Electron desktop application**. `main`, `preload`, and `renderer` a
 
 ```text
 src/
-├── main/                     # Electron main process (Node context)
+├── main/                     # Electron main process (Node context); see src/main/README.md
+│   ├── app/                  # Entry point (index.ts), bootstrap, window, session, updater
+│   ├── geth/                 # process/, bootnode/, recovery/, rpc/
+│   ├── store/                # electron-store, settings migrations
+│   ├── wallet/ mining/ extension/ explorerIndex/ diagnostics/
 │   ├── ipc/                  # ipcMain handlers, grouped by domain
-│   ├── services/             # OS-level, filesystem, secure storage, WS
-│   └── main.ts                # Entry point, window lifecycle
+│   └── security/             # RPC method and bridge origin policies
 │
 ├── preload/
 │   └── preload.ts            # contextBridge exposure only, no business logic
