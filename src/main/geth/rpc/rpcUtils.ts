@@ -1,5 +1,5 @@
-import type { JsonRpcEnvelope } from "../../bridge/types";
-import { isPrivilegedNodeMethod } from "../security/rpcMethodPolicy";
+import type { JsonRpcEnvelope } from "../../../bridge/types";
+import { isPrivilegedNodeMethod } from "../../security/rpcMethodPolicy";
 import { callGethIpc, internalErrorEnvelope } from "./gethIpcClient";
 
 const GETH_IPC_DEFAULT_TIMEOUT_MS = 10_000;

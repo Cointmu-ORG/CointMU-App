@@ -13,7 +13,7 @@ import {
   reportPeerHint,
   reportRecoveryEvent,
 } from "../../diagnostics/gethReporting";
-import { callGethRpc } from "../../utils/rpcUtils";
+import { callGethRpc } from "../rpc/rpcUtils";
 import { getActiveBootnodeConfig } from "../bootnode/bootnodeWatcher";
 import {
   hasGethExited,

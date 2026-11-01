@@ -1,5 +1,5 @@
 import { ActivityKind, type WalletActivity } from "../../bridge/types";
-import { callGethRpc, toHex, safeParseHex } from "../utils/rpcUtils";
+import { callGethRpc, toHex, safeParseHex } from "../geth/rpc/rpcUtils";
 
 const ACTIVITY_BLOCK_SCAN_DEPTH = 500;
 const MINING_BLOCK_REWARD = "2.00";

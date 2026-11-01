@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "node:http";
 import { WebSocketServer, type WebSocket } from "ws";
-import { callGethRpc } from "../utils/rpcUtils";
+import { callGethRpc } from "../geth/rpc/rpcUtils";
 import { COINTMU_NETWORK } from "../../bridge/network";
 import { ipcMain, BrowserWindow } from "electron";
 import {

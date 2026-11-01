@@ -13,7 +13,7 @@ vi.mock("../../diagnostics/gethReporting", () => ({
   reportBootnodeConfigProblem: vi.fn(),
   reportBootnodeSource: vi.fn(),
 }));
-vi.mock("../../utils/rpcUtils", () => ({ callGethRpc: vi.fn() }));
+vi.mock("../rpc/rpcUtils", () => ({ callGethRpc: vi.fn() }));
 vi.mock("../process/ports", () => ({ getRpcPort: () => 8545 }));
 
 // The secp256k1 generator point G: the public key of private key 1.

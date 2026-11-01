@@ -5,7 +5,7 @@ import {
   isBridgeRpcAllowed,
   isSigningMethod,
 } from "../security/rpcMethodPolicy";
-import { callGethRpcRaw } from "../utils/rpcUtils";
+import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 
 const JSON_RPC_VERSION = "2.0";
 const JSON_RPC_INVALID_REQUEST = -32600;

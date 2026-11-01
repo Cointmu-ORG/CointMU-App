@@ -1,5 +1,5 @@
 import { createConnection } from "node:net";
-import type { JsonRpcEnvelope } from "../../bridge/types";
+import type { JsonRpcEnvelope } from "../../../bridge/types";
 
 const JSON_RPC_VERSION = "2.0";
 const JSON_RPC_INTERNAL_ERROR = -32603;

@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { ActivityKind } from "../../bridge/types";
 import { scanWalletActivity } from "./activityScanner";
-import { callGethRpc } from "../utils/rpcUtils";
+import { callGethRpc } from "../geth/rpc/rpcUtils";
 
-vi.mock("../utils/rpcUtils", () => ({
+vi.mock("../geth/rpc/rpcUtils", () => ({
   callGethRpc: vi.fn(),
   toHex: (n: number) => `0x${n.toString(16)}`,
   safeParseHex: (v: string) => parseInt(v, 16),

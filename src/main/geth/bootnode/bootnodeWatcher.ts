@@ -9,7 +9,7 @@ import {
 } from "./bootnode";
 import { BOOTNODES_SETTING_KEY, type SettingsReader } from "./bootnodeSettings";
 import { getRpcPort } from "../process/ports";
-import { callGethRpc } from "../../utils/rpcUtils";
+import { callGethRpc } from "../rpc/rpcUtils";
 import {
   reportBootnodeConfigProblem,
   reportBootnodeSource,

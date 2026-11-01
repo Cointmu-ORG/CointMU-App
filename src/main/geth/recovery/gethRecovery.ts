@@ -15,7 +15,7 @@ import {
 } from "./gethErrorClassifier";
 import { quarantineChainData } from "./chaindataQuarantine";
 import { sanitizeLocalLine } from "../../diagnostics/localSanitizer";
-import { callGethRpc } from "../../utils/rpcUtils";
+import { callGethRpc } from "../rpc/rpcUtils";
 
 const RESTART_BACKOFF_MS = [ms("3s"), ms("10s"), ms("30s")];
 const HEALTH_GRACE_MS = ms("15s");

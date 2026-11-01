@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import { RPC_CHANNELS } from "../../bridge/ipc-channels";
 import type { JsonRpcEnvelope } from "../../bridge/types";
 import { isRendererRpcAllowed } from "../security/rpcMethodPolicy";
-import { callGethRpcRaw } from "../utils/rpcUtils";
+import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 
 const JSON_RPC_INVALID_PARAMS = -32602;
 const JSON_RPC_METHOD_NOT_FOUND = -32601;

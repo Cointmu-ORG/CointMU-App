@@ -73,7 +73,7 @@ import {
   windowsChildPids,
   type FakeMainLaunch,
 } from "./windowsShutdown.fixtures";
-import { callGethRpc } from "../../utils/rpcUtils";
+import { callGethRpc } from "../rpc/rpcUtils";
 
 const IS_ENABLED = process.env.GETH_SHUTDOWN_E2E === "1";
 const IS_WINDOWS = process.platform === "win32";
