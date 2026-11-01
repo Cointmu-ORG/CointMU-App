@@ -1,7 +1,7 @@
 import { AccountIcon } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData } from "@/shared/lib";
+import { type BlockData } from "@/entities/block";
 import { useAppStore } from "@/shared/model";
 import { SkeletonTable, Pagination, type ActivityData } from "@/shared/ui";
 import { MinerDistribution } from "./miner-distribution.component";

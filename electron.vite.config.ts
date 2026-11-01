@@ -13,7 +13,7 @@ export default defineConfig({
     build: {
       rolldownOptions: {
         input: {
-          index: resolve("src/main/index.ts"),
+          index: resolve("src/main/app/index.ts"),
           // The explorer block index runs here in a worker thread.
           indexWorker: resolve("src/main/explorerIndex/indexWorker.ts"),
         },

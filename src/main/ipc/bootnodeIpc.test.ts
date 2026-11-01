@@ -2,16 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ipcMain } from "electron";
 import { BOOTNODE_CHANNELS } from "../../bridge/ipc-channels";
 import { BootnodeSaveError, BootnodeSource } from "../../bridge/types";
-import { resolveBuildBootnodes } from "../geth/bootnode";
-import { BOOTNODES_SETTING_KEY } from "../geth/bootnodeSettings";
-import { getActiveBootnodeConfig } from "../geth/bootnodeWatcher";
-import { restartNodeByUser } from "../geth/nodeRestart";
+import { resolveBuildBootnodes } from "../geth/bootnode/bootnode";
+import { BOOTNODES_SETTING_KEY } from "../geth/bootnode/bootnodeSettings";
+import { getActiveBootnodeConfig } from "../geth/bootnode/bootnodeWatcher";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerBootnodeHandlers } from "./bootnodeIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
-vi.mock("../geth/nodeRestart", () => ({ restartNodeByUser: vi.fn() }));
-vi.mock("../geth/bootnodeWatcher", async () => {
-  const { resolveBuildBootnodes } = await import("../geth/bootnode");
+vi.mock("../geth/process/nodeRestart", () => ({ restartNodeByUser: vi.fn() }));
+vi.mock("../geth/bootnode/bootnodeWatcher", async () => {
+  const { resolveBuildBootnodes } = await import("../geth/bootnode/bootnode");
   return {
     DEFAULT_BOOTNODE_CONFIG: resolveBuildBootnodes(undefined),
     getActiveBootnodeConfig: vi.fn(() => resolveBuildBootnodes(undefined)),

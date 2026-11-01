@@ -5,12 +5,12 @@ import {
   type NodePeerHint,
   type NodeRecoveryEvent,
 } from "../../bridge/types";
-import type { BootnodeConfigProblem } from "../geth/bootnode";
+import type { BootnodeConfigProblem } from "../geth/bootnode/bootnode";
 import {
   GethLineSeverity,
   classifyGethLine,
   type GethErrorKind,
-} from "../utils/gethErrorClassifier";
+} from "../geth/recovery/gethErrorClassifier";
 import { BreadcrumbCategory, ReportTag } from "./eventAllowlist";
 import { sanitizeLocal } from "./localSanitizer";
 

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as Sentry from "@sentry/electron/main";
 import { BootnodeSource, NodeRecoveryStage } from "../../bridge/types";
-import { BootnodeConfigProblem } from "../geth/bootnode";
+import { BootnodeConfigProblem } from "../geth/bootnode/bootnode";
 import {
   recordGethLine,
   reportBootnodeConfigProblem,

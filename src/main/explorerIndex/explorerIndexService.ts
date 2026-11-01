@@ -7,8 +7,8 @@ import type {
   MinerDistributionResult,
   MinerRange,
 } from "../../bridge/types";
-import { getNetworkId } from "../geth/networkConfig";
-import { getRpcPort } from "../geth/ports";
+import { getNetworkId } from "../geth/process/networkConfig";
+import { getRpcPort } from "../geth/process/ports";
 import type {
   IndexWorkerData,
   IndexWorkerMessage,

@@ -26,8 +26,10 @@ class FakeWorker extends EventEmitter {
 
 vi.mock("electron", () => ({ app: { getPath: () => "/user-data" } }));
 vi.mock("node:worker_threads", () => ({ Worker: FakeWorker }));
-vi.mock("../geth/networkConfig", () => ({ getNetworkId: () => "1912" }));
-vi.mock("../geth/ports", () => ({ getRpcPort: () => 8585 }));
+vi.mock("../geth/process/networkConfig", () => ({
+  getNetworkId: () => "1912",
+}));
+vi.mock("../geth/process/ports", () => ({ getRpcPort: () => 8585 }));
 
 const service = await import("./explorerIndexService");
 

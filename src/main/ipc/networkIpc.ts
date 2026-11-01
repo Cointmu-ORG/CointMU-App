@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { buildGenesis } from "../geth/networkConfig";
+import { buildGenesis } from "../geth/process/networkConfig";
 
 /**
  * Registers the genesis read. The desktop app runs one network, so there is

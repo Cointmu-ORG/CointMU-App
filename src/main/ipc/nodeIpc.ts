@@ -1,12 +1,12 @@
 import { ipcMain } from "electron";
 import { NODE_CHANNELS } from "../../bridge/ipc-channels";
-import { getRpcPort } from "../geth/ports";
-import { getNetworkId } from "../geth/networkConfig";
-import { getNodeRecovery, isGethRunning } from "../geth/gethProcess";
-import { restartNodeByUser } from "../geth/nodeRestart";
-import { isSessionValid } from "../services/session";
-import { peerWatchdog } from "../geth/nodeRecovery";
-import type { AppStore } from "../services/appStore";
+import { getRpcPort } from "../geth/process/ports";
+import { getNetworkId } from "../geth/process/networkConfig";
+import { getNodeRecovery, isGethRunning } from "../geth/process/gethProcess";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
+import { isSessionValid } from "../app/session";
+import { peerWatchdog } from "../geth/recovery/nodeRecovery";
+import type { AppStore } from "../store/appStore";
 
 /**
  * Registers the RPC port and node status queries. Safe before startup resolves

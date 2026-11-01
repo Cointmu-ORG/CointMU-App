@@ -58,6 +58,9 @@ renderer through the preload bridge. You do not need to start `geth` manually; t
 handles the lifecycle. Logs from the node are surfaced in the terminal that launched
 `npm run dev`.
 
+The main process code is grouped by domain under `src/main`; `src/main/README.md` lists
+what belongs in each folder.
+
 ## Branching and Commits
 
 1. Create a topic branch from `main`:
