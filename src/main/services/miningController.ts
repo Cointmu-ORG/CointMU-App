@@ -1,6 +1,9 @@
 import { BrowserWindow, ipcMain, powerMonitor } from "electron";
 import { callGethRpc } from "../geth/rpc/rpcUtils";
-import { scanWalletActivity, fetchNetworkInsights } from "./activityScanner";
+import {
+  scanWalletActivity,
+  fetchNetworkInsights,
+} from "../wallet/activityScanner";
 import type { AppStore } from "../store/appStore";
 import { IpcErrorCode, MiningPowerStatus } from "../../bridge/types";
 

@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { registerCryptoHandlers } from "../services/crypto";
+import { registerCryptoHandlers } from "../wallet/crypto";
 import { registerSystemHandlers } from "./system";
 import { initUpdater } from "./updater";
 import { registerRendererRpcHandler } from "../services/rendererRpc";

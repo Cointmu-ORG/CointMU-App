@@ -8,7 +8,7 @@ export const EMPTY_STAT_LABEL = "--";
 export const INSIGHTS_POLL_INTERVAL_MS = ms("3s");
 export const EXPLORER_VIEW_TICK_INTERVAL_MS = ms("5s");
 export const CHAIN_TIMELINE_TICK_INTERVAL_MS = ms("1s");
-/** Blocks per insights payload; mirrors INSIGHTS_BLOCK_WINDOW in main/services/activityScanner.ts. */
+/** Blocks per insights payload; mirrors INSIGHTS_BLOCK_WINDOW in main/wallet/activityScanner.ts. */
 export const CHAIN_TIMELINE_BLOCK_COUNT = 12;
 
 export const ADDRESS_TX_PAGE_SIZE = 8;
