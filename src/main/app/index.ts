@@ -37,7 +37,7 @@ import {
   stopOrphanedGeth,
 } from "../geth/process/orphanedGeth";
 import { createNodeRecovery } from "../geth/recovery/nodeRecovery";
-import { MiningController } from "../services/miningController";
+import { MiningController } from "../mining/miningController";
 import { registerWindowHandlers } from "../ipc/windowIpc";
 import { registerSettingsHandlers } from "../ipc/settingsIpc";
 import { registerBootnodeHandlers } from "../ipc/bootnodeIpc";

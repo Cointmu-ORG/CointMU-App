@@ -5,7 +5,7 @@ import {
   PeerWatchdog,
   isAnyBootnodeReachable,
   isTcpReachable,
-} from "../../services/peerWatchdog";
+} from "../../mining/peerWatchdog";
 import { NODE_CHANNELS } from "../../../bridge/ipc-channels";
 import { NodeRecoveryStage } from "../../../bridge/types";
 import { requestIndexRebuild } from "../../explorerIndex/explorerIndexService";
