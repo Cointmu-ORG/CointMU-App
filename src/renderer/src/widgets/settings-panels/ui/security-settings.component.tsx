@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useBiometrics, useSecurityStore } from "@/features/settings";
+import { useSecurityStore } from "@/features/settings";
 import { ShieldCheck } from "lucide-react";
 import { RevealPrivateKeyModal } from "./reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "./recovery-phrase-modal.component";
@@ -16,7 +16,7 @@ interface ToggleProps {
 }
 
 /**
- * Shared pill-switch toggle used by the lock preferences.
+ * Pill-switch toggle for the auto-lock preference.
  * @param props - The current value and the change handler.
  * @returns The rendered toggle button.
  */
@@ -34,20 +34,17 @@ function Toggle({ value, onChange }: ToggleProps): JSX.Element {
 }
 
 /**
- * Security settings pane. Self-contained: lock preferences come from the
- * security store, biometric availability gates the Touch ID row, and the
- * recovery, keystore-export, private-key, and reset flows each open a dedicated
- * password-gated modal.
+ * Security settings pane. Self-contained: the auto-lock preference comes from
+ * the security store, and the recovery, keystore-export, private-key, and
+ * reset flows each open a dedicated password-gated modal. The biometric
+ * signing toggle is hidden until signing checks it (#104); its stored value
+ * is kept.
  * @returns The Security Settings form component.
  */
 export function SecuritySettings(): JSX.Element {
   const { t } = useTranslation();
   const settings = useSecurityStore((s) => s.settings);
   const toggleAutoLock = useSecurityStore((s) => s.toggleAutoLock);
-  const toggleRequireBiometrics = useSecurityStore(
-    (s) => s.toggleRequireBiometrics,
-  );
-  const { isSupported: biometricsSupported } = useBiometrics();
 
   const [showReveal, setShowReveal] = useState(false);
   const [showRecovery, setShowRecovery] = useState(false);
@@ -77,23 +74,6 @@ export function SecuritySettings(): JSX.Element {
               </div>
               <Toggle value={settings.autoLock} onChange={toggleAutoLock} />
             </div>
-
-            {biometricsSupported && (
-              <div className="flex items-center justify-between p-4">
-                <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings:securitySettings.biometricsTitle")}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings:securitySettings.biometricsDesc")}
-                  </p>
-                </div>
-                <Toggle
-                  value={settings.requireBiometrics}
-                  onChange={toggleRequireBiometrics}
-                />
-              </div>
-            )}
           </div>
         </section>
 

@@ -12,7 +12,6 @@ interface SecurityStore {
   hydrated: boolean;
   hydrate: () => Promise<void>;
   toggleAutoLock: () => void;
-  toggleRequireBiometrics: () => void;
   updateSettings: (newSettings: Partial<SecuritySettings>) => void;
 }
 
@@ -36,7 +35,8 @@ function persistSettings(settings: SecuritySettings): void {
 /**
  * Global security preferences store. Mirrors the notification store pattern:
  * settings are hydrated from electron-store on startup and mirrored back on
- * every mutation so the auto-lock and biometric toggles survive restarts.
+ * every mutation so the auto-lock toggle survives restarts. requireBiometrics
+ * has no control yet (#104) and is carried through unchanged.
  */
 export const useSecurityStore = create<SecurityStore>((set, get) => ({
   settings: DEFAULT_SETTINGS,
@@ -61,16 +61,6 @@ export const useSecurityStore = create<SecurityStore>((set, get) => ({
       const settings = {
         ...state.settings,
         autoLock: !state.settings.autoLock,
-      };
-      persistSettings(settings);
-      return { settings };
-    });
-  },
-  toggleRequireBiometrics: () => {
-    set((state) => {
-      const settings = {
-        ...state.settings,
-        requireBiometrics: !state.settings.requireBiometrics,
       };
       persistSettings(settings);
       return { settings };

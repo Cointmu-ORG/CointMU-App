@@ -161,29 +161,6 @@ export function AppearanceSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:appearance.showSidebarColorsTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:appearance.showSidebarColorsDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() =>
-                  appearanceStore.setShowSidebarColors(
-                    !appearanceStore.showSidebarColors,
-                  )
-                }
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${appearanceStore.showSidebarColors ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${appearanceStore.showSidebarColors ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings:appearance.animatedTransitionsTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">

@@ -7,8 +7,6 @@
     "backgroundTitle": "Abrir en segundo plano",
     "backgroundDesc": "Comenzar minimizado para que la minería pueda ejecutarse sin ventana",
     "display": "Visualización",
-    "currencyTitle": "Moneda predeterminada",
-    "currencyDesc": "Usada en todas partes donde se muestran montos",
     "title": "General"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Diseño",
     "densityTitle": "Densidad",
     "densityDesc": "Espaciado vertical en listas y tablas",
-    "showSidebarColorsTitle": "Mostrar iconos de la barra lateral en color",
-    "showSidebarColorsDesc": "Acentuar los elementos de la red por color en la barra lateral",
     "animatedTransitionsTitle": "Transiciones animadas",
     "animatedTransitionsDesc": "Cambios de página y movimiento fluidos",
     "title": "Apariencia"
@@ -41,8 +37,6 @@
     "txDesc": "Envíos, confirmaciones y transacciones fallidas",
     "miningTitle": "Eventos de minería",
     "miningDesc": "Bloques que sellas e hitos de minería",
-    "securityTitle": "Eventos de seguridad",
-    "securityDesc": "Bloqueo de billetera, revelación de clave y otras acciones sensibles",
     "title": "Notificaciones"
   },
   "network": {
@@ -89,10 +83,6 @@
     "rpcNetwork": "RPC/Red",
     "httpRpcTitle": "Habilitar JSON-RPC vía HTTP",
     "httpRpcDesc": "Escuchar en 127.0.0.1:8545 para conexiones dApp",
-    "wsRpcTitle": "Habilitar WebSocket RPC",
-    "wsRpcDesc": "Escuchar en 127.0.0.1:8546",
-    "corsTitle": "Orígenes permitidos CORS",
-    "corsDesc": "Orígenes permitidos para conectarse al servidor RPC",
     "storage": "Almacenamiento",
     "datadirTitle": "Directorio de datos",
     "datadirDesc": "Donde se almacenan los datos de la cadena y keystore",
@@ -164,8 +154,6 @@
     "peers": "Pares",
     "maxPeersTitle": "Máx. pares",
     "maxPeersDesc": "Límite superior de conexiones de pares simultáneas",
-    "discoveryTitle": "Descubrimiento",
-    "discoveryDesc": "Encuentra automáticamente nuevos pares a través de DHT",
     "listenPortTitle": "Puerto de escucha",
     "listenPortDesc": "Puerto UDP / TCP usado por el protocolo gossip",
     "listenPortInvalid": "Introduce un puerto entre {{min}} y {{max}}.",
@@ -173,11 +161,6 @@
     "connectedPeersDesc_one": "{{count}} nodo interactuando actualmente contigo",
     "connectedPeersDesc_many": "{{count}} nodos interactuando actualmente contigo",
     "connectedPeersDesc_other": "{{count}} nodos interactuando actualmente contigo",
-    "sync": "Sincronización",
-    "syncModeTitle": "Modo de sincronización",
-    "syncModeDesc": "Snap descarga estado podado rápidamente. Full valida cada bloque desde la génesis",
-    "pruneTitle": "Podar estado antiguo",
-    "pruneDesc": "Mantener últimos 128 bloques de estado histórico para ahorrar disco",
     "advanced": "Avanzado",
     "bootnodes": {
       "title": "Bootnodes",
@@ -214,16 +197,12 @@
     "mining": "Minería",
     "enableTitle": "Habilitar Minería",
     "enableDesc": "Permitir que este cliente resuelva hashes de bloque",
-    "startLaunchTitle": "Empezar a minar al iniciar",
-    "startLaunchDesc": "Comenzar hashing automáticamente cuando inicie CointMU",
     "worker": "Trabajador",
     "cpuThreadsTitle": "Hilos de CPU",
     "cpuThreadsDesc": "Núcleos máximos usados para hashing ({{count}}/{{max}} asignados)",
     "coreCount_one": "{{count}} núcleo",
     "coreCount_many": "{{count}} núcleos",
     "coreCount_other": "{{count}} núcleos",
-    "intensityTitle": "Intensidad",
-    "intensityDesc": "Limitar uso de CPU por hilo",
     "pauseTitle": "Pausar con batería",
     "pauseDesc": "Detener minería cuando la laptop se desconecta de la corriente",
     "rewards": "Recompensas",
@@ -252,9 +231,7 @@
     "resetWalletBtn": "Restablecer...",
     "access": "Acceso",
     "backup": "Copia de seguridad",
-    "hardware": "Hardware",
-    "biometricsTitle": "Requerir Touch ID / Windows Hello para firmar",
-    "biometricsDesc": "Usar biometría para autorizar cada transacción"
+    "hardware": "Hardware"
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",
@@ -347,31 +324,14 @@
     "submit": "Restablecer la billetera de forma permanente"
   },
   "options": {
-    "intensity": {
-      "eco": "Eco",
-      "balanced": "Equilibrado",
-      "turbo": "Turbo"
-    },
     "density": {
       "compact": "Compacta",
       "comfortable": "Cómoda",
       "spacious": "Amplia"
     },
-    "syncMode": {
-      "snap": "Snap (recomendado)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (nativa)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Información",
-      "debug": "Depuración",
-      "warn": "Advertencia",
-      "error": "Error"
+      "debug": "Depuración"
     },
     "recommendedValue": "{{value}} (recomendado)"
   }

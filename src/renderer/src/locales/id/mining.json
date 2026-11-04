@@ -70,8 +70,6 @@
     "subtitle": "Konfigurasi internal node saat ini",
     "workerThreads": "Thread pekerja",
     "ofCores_other": "{{threads}} dari {{count}} core",
-    "intensityTitle": "Intensitas",
-    "higherMoreHeat": "Lebih tinggi = lebih panas, lebih cepat selesai",
     "rewardAddressTitle": "Alamat hadiah",
     "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
     "setInMiningSettings": "Atur di Pengaturan Penambangan",

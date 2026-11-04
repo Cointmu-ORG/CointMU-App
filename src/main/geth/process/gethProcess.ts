@@ -3,7 +3,12 @@ import { existsSync } from "fs";
 import { spawn, ChildProcess } from "child_process";
 import ms from "ms";
 import { isListenPort } from "../../../bridge/network";
-import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
+import {
+  buildGethHttpArgs,
+  buildGethIpcArgs,
+  buildGethPeerArgs,
+  resolveGethVerbosity,
+} from "./gethArgs";
 import { getNetworkId, resolveDataDir, resolveDataRoot } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
 import {
@@ -34,7 +39,6 @@ export const NODE_RESTART_DELAY_MS = ms("1s");
 const GETH_RESTART_DELAY_MS = ms("2s");
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
-const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
 let intentionalGethShutdown = false;
 let gethRestartTimer: NodeJS.Timeout | null = null;
@@ -114,7 +118,11 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     "--port",
     String(listenPort),
     "--verbosity",
-    GETH_LOG_VERBOSITY,
+    resolveGethVerbosity(
+      store.get("advanced.logLevel"),
+      process.env.GETH_LOG_VERBOSITY,
+    ),
+    ...buildGethPeerArgs(store.get("network.maxPeers")),
     "--syncmode",
     "full",
     "--authrpc.addr",

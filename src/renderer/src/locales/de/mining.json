@@ -73,8 +73,6 @@
     "workerThreads": "Worker-Threads",
     "ofCores_one": "{{threads}} von {{count}} Kern",
     "ofCores_other": "{{threads}} von {{count}} Kernen",
-    "intensityTitle": "Intensität",
-    "higherMoreHeat": "Höher = mehr Wärme, schnellere Lösung",
     "rewardAddressTitle": "Belohnungsadresse",
     "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
     "setInMiningSettings": "In Mining-Einstellungen festgelegt",

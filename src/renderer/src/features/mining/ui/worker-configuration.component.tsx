@@ -1,28 +1,23 @@
 import { generateIdenticonGradient } from "@/entities/account";
-import { INTENSITY_OPTIONS } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/shared/ui";
-import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
-import type { MiningIntensity } from "@bridge/setting-values";
 
 interface WorkerConfigurationProps {
   cpuThreads: number;
   maxCores: number;
-  intensity: MiningIntensity;
   rewardAddress: string;
 }
 
 /**
  * Read-only summary of the internal node worker configuration: allocated worker
- * threads, mining intensity, and the reward address that receives block rewards.
- * @param props - Thread allocation, core count, intensity, and reward address.
+ * threads and the reward address that receives block rewards.
+ * @param props - Thread allocation, core count, and reward address.
  * @returns The rendered worker configuration card.
  */
 function WorkerConfiguration({
   cpuThreads,
   maxCores,
-  intensity,
   rewardAddress,
 }: WorkerConfigurationProps): JSX.Element {
   const { t } = useTranslation();
@@ -58,31 +53,6 @@ function WorkerConfiguration({
                 className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? "bg-emerald-400" : "bg-slate-200 dark:bg-gray-800"}`}
                 title={t("mining:worker.threadTitle", { count: i + 1 })}
               />
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between py-4">
-          <div>
-            <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
-              {t("mining:worker.intensityTitle")}
-            </p>
-            <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5 max-w-[140px]">
-              {t("mining:worker.higherMoreHeat")}
-            </p>
-          </div>
-          <div className="flex items-center rounded-lg border border-slate-200 dark:border-gray-700 overflow-hidden">
-            {INTENSITY_OPTIONS.map((option) => (
-              <div
-                key={option}
-                className={`px-3.5 py-1.5 text-xs font-semibold cursor-default transition-colors ${
-                  intensity === option
-                    ? "bg-slate-300 dark:bg-gray-700 text-slate-700 dark:text-gray-100"
-                    : "bg-white dark:bg-gray-800 text-slate-400 dark:text-gray-400"
-                }`}
-              >
-                {t(INTENSITY_LABEL_KEYS[option])}
-              </div>
             ))}
           </div>
         </div>

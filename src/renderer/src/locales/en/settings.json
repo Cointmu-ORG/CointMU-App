@@ -7,8 +7,6 @@
     "backgroundTitle": "Open in background",
     "backgroundDesc": "Start minimized so mining can run without a window",
     "display": "Display",
-    "currencyTitle": "Default currency",
-    "currencyDesc": "Used everywhere amounts are shown",
     "title": "General"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Layout",
     "densityTitle": "Density",
     "densityDesc": "Vertical spacing in lists and tables",
-    "showSidebarColorsTitle": "Show sidebar icons in color",
-    "showSidebarColorsDesc": "Accent network items by color in the sidebar",
     "animatedTransitionsTitle": "Animated transitions",
     "animatedTransitionsDesc": "Smooth page changes and motion",
     "title": "Appearance"
@@ -41,8 +37,6 @@
     "txDesc": "Sends, confirmations, and failed transactions",
     "miningTitle": "Mining events",
     "miningDesc": "Blocks you seal and mining milestones",
-    "securityTitle": "Security events",
-    "securityDesc": "Wallet lock, key reveal, and other sensitive actions",
     "title": "Notifications"
   },
   "network": {
@@ -89,10 +83,6 @@
     "rpcNetwork": "RPC/Network",
     "httpRpcTitle": "Enable JSON-RPC over HTTP",
     "httpRpcDesc": "Listen on 127.0.0.1:8545 for dApp connections",
-    "wsRpcTitle": "Enable WebSocket RPC",
-    "wsRpcDesc": "Listen on 127.0.0.1:8546",
-    "corsTitle": "CORS allowed origins",
-    "corsDesc": "Origins allowed to connect to the RPC server",
     "storage": "Storage",
     "datadirTitle": "Datadir",
     "datadirDesc": "Where chain data and keystore are stored",
@@ -164,19 +154,12 @@
     "peers": "Peers",
     "maxPeersTitle": "Max peers",
     "maxPeersDesc": "Upper bound on simultaneous peer connections",
-    "discoveryTitle": "Discovery",
-    "discoveryDesc": "Automatically find new peers via DHT",
     "listenPortTitle": "Listen port",
     "listenPortDesc": "UDP / TCP port used by the gossip protocol",
     "listenPortInvalid": "Enter a port from {{min}} to {{max}}.",
     "connectedPeersTitle": "Connected peers",
     "connectedPeersDesc_one": "{{count}} node currently gossiping with you",
     "connectedPeersDesc_other": "{{count}} nodes currently gossiping with you",
-    "sync": "Sync",
-    "syncModeTitle": "Sync mode",
-    "syncModeDesc": "Snap downloads pruned state quickly. Full validates every block from genesis",
-    "pruneTitle": "Prune old state",
-    "pruneDesc": "Keep last 128 blocks of historical state to save disk",
     "advanced": "Advanced",
     "bootnodes": {
       "title": "Bootnodes",
@@ -213,15 +196,11 @@
     "mining": "Mining",
     "enableTitle": "Enable Mining",
     "enableDesc": "Allow this client to solve block hashes",
-    "startLaunchTitle": "Start mining at launch",
-    "startLaunchDesc": "Automatically begin hashing when CointMU starts",
     "worker": "Worker",
     "cpuThreadsTitle": "CPU threads",
     "cpuThreadsDesc": "Maximum cores used for hashing ({{count}}/{{max}} allocated)",
     "coreCount_one": "{{count}} core",
     "coreCount_other": "{{count}} cores",
-    "intensityTitle": "Intensity",
-    "intensityDesc": "Limit CPU usage per thread",
     "pauseTitle": "Pause on battery",
     "pauseDesc": "Stop mining when laptop is disconnected from power",
     "rewards": "Rewards",
@@ -250,9 +229,7 @@
     "resetWalletBtn": "Reset...",
     "access": "Access",
     "backup": "Backup",
-    "hardware": "Hardware",
-    "biometricsTitle": "Require Touch ID / Windows Hello to sign",
-    "biometricsDesc": "Use biometrics to authorize every transaction"
+    "hardware": "Hardware"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",
@@ -345,31 +322,14 @@
     "submit": "Permanently reset wallet"
   },
   "options": {
-    "intensity": {
-      "eco": "Eco",
-      "balanced": "Balanced",
-      "turbo": "Turbo"
-    },
     "density": {
       "compact": "Compact",
       "comfortable": "Comfortable",
       "spacious": "Spacious"
     },
-    "syncMode": {
-      "snap": "Snap (recommended)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (native)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Info",
-      "debug": "Debug",
-      "warn": "Warning",
-      "error": "Error"
+      "debug": "Debug"
     },
     "recommendedValue": "{{value}} (recommended)"
   }

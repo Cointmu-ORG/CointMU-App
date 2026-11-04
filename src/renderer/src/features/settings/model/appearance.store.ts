@@ -10,12 +10,12 @@ export interface AppearanceState {
   theme: ThemeMode;
   accentColor: string;
   density: LayoutDensity;
+  // No control yet (#104): the sidebar icons have no colors to switch.
   showSidebarColors: boolean;
   animatedTransitions: boolean;
   setTheme: (theme: ThemeMode) => void;
   setAccentColor: (color: string) => void;
   setDensity: (density: LayoutDensity) => void;
-  setShowSidebarColors: (show: boolean) => void;
   setAnimatedTransitions: (animate: boolean) => void;
   resetToDefaults: () => void;
 }
@@ -31,7 +31,6 @@ export const useAppearanceStore = create<AppearanceState>()(
       setTheme: (theme) => set({ theme }),
       setAccentColor: (accentColor) => set({ accentColor }),
       setDensity: (density) => set({ density }),
-      setShowSidebarColors: (showSidebarColors) => set({ showSidebarColors }),
       setAnimatedTransitions: (animatedTransitions) =>
         set({ animatedTransitions }),
       resetToDefaults: () =>

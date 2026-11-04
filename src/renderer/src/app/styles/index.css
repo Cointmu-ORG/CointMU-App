@@ -38,6 +38,16 @@
     overflow: hidden;
   }
 
+  /* Settings > Appearance > Density (data-density, appearance.store.ts):
+     Tailwind sizes are in rem, so the root font size scales the layout. */
+  html[data-density="compact"] {
+    font-size: 93.75%;
+  }
+
+  html[data-density="spacious"] {
+    font-size: 106.25%;
+  }
+
   body {
     font-family: var(--font-family-sans);
     background-color: var(--color-surface-primary);
@@ -193,6 +203,15 @@
 
 .animate-fade-in-up {
   animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Settings > Appearance > Animated transitions off (data-animations). Spinners
+   keep turning: they show that something is still loading. */
+html[data-animations="false"] *:not(.animate-spin),
+html[data-animations="false"] *::before,
+html[data-animations="false"] *::after {
+  animation: none !important;
+  transition: none !important;
 }
 
 @keyframes fillBar {

@@ -17,6 +17,7 @@ import {
 } from "../geth/process/networkConfig";
 import { startSession } from "./session";
 import { createWindow } from "./window";
+import { syncLoginItemFromOs } from "./loginItem";
 import { createAppStore } from "../store/appStore";
 import {
   prepareGethIpcEndpoint,
@@ -84,6 +85,7 @@ app.whenReady().then(async () => {
   registerNodeStatusHandlers();
 
   const store = await createAppStore();
+  syncLoginItemFromOs(store);
 
   registerDiagnosticsHandlers(store);
   registerSettingsHandlers(store);

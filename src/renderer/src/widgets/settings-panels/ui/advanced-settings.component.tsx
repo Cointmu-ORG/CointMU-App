@@ -1,6 +1,10 @@
-import { LOG_LEVELS, useAdvancedStore } from "@/features/settings";
+import {
+  LOG_LEVELS,
+  type NodeLogLevel,
+  useAdvancedStore,
+} from "@/features/settings";
 import { purgeSecondaryAccounts } from "@/entities/wallet";
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { CustomDropdown } from "@/shared/ui";
 import { LOG_LEVEL_LABEL_KEYS } from "@/shared/lib";
@@ -35,21 +39,13 @@ export function AdvancedSettings(): JSX.Element {
   const updateSettings = useAdvancedStore((s) => s.updateSettings);
   const fetchStorageInfo = useAdvancedStore((s) => s.fetchStorageInfo);
 
-  const [corsDraft, setCorsDraft] = useState(settings.corsOrigins);
+  // A warn or error level (offered up to 1.7.4) runs geth at info (gethArgs.ts).
+  const shownLogLevel =
+    settings.logLevel === LogLevel.DEBUG ? LogLevel.DEBUG : LogLevel.INFO;
 
   useEffect(() => {
     void fetchStorageInfo();
   }, [fetchStorageInfo]);
-
-  useEffect(() => {
-    setCorsDraft(settings.corsOrigins);
-  }, [settings.corsOrigins]);
-
-  const handleCorsBlur = (): void => {
-    if (corsDraft !== settings.corsOrigins) {
-      updateSettings({ corsOrigins: corsDraft });
-    }
-  };
 
   const handlePurge = async (): Promise<void> => {
     if (window.confirm(t("settings:advanced.purgeWalletsConfirm"))) {
@@ -87,46 +83,6 @@ export function AdvancedSettings(): JSX.Element {
                   className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${settings.httpRpc ? "translate-x-5" : "translate-x-0"}`}
                 />
               </button>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:advanced.wsRpcTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:advanced.wsRpcDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() => updateSettings({ wsRpc: !settings.wsRpc })}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${settings.wsRpc ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${settings.wsRpc ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:advanced.corsTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:advanced.corsDesc")}
-                </p>
-              </div>
-              <div className="w-64">
-                <input
-                  type="text"
-                  value={corsDraft}
-                  onChange={(e) => setCorsDraft(e.target.value)}
-                  onBlur={handleCorsBlur}
-                  placeholder="https://*.cointmu.net"
-                  className="w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 dark:text-gray-200 dark:text-gray-100 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                />
-              </div>
             </div>
           </div>
         </section>
@@ -201,9 +157,9 @@ export function AdvancedSettings(): JSX.Element {
                 </p>
               </div>
               <div className="w-48">
-                <CustomDropdown<LogLevel>
+                <CustomDropdown<NodeLogLevel>
                   options={LOG_LEVELS}
-                  selected={settings.logLevel}
+                  selected={shownLogLevel}
                   onSelect={(val) => updateSettings({ logLevel: val })}
                   renderSelected={(selected) =>
                     t(LOG_LEVEL_LABEL_KEYS[selected ?? LogLevel.INFO])

@@ -76,8 +76,6 @@
     "ofCores_one": "{{threads}} de {{count}} núcleo",
     "ofCores_many": "{{threads}} de {{count}} núcleos",
     "ofCores_other": "{{threads}} de {{count}} núcleos",
-    "intensityTitle": "Intensidad",
-    "higherMoreHeat": "Mayor = más calor, resolución más rápida",
     "rewardAddressTitle": "Dirección de recompensa",
     "blockRewardsCreditedHere": "Las recompensas de bloque se acreditan aquí",
     "setInMiningSettings": "Establecido en Ajustes de Minería",

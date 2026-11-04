@@ -3,8 +3,6 @@ export * from "./model/security.store";
 export * from "./model/connected-sites.store";
 export * from "./model/appearance.store";
 
-export { useBiometrics } from "./lib/biometrics.hook";
-
 export * from "./api/settings.service";
 export * from "./api/network.service";
 

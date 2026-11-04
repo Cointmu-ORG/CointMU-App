@@ -1,5 +1,5 @@
 import ms from "ms";
-import { DisplayCurrency, LogLevel, SyncMode } from "@bridge/setting-values";
+import { LogLevel } from "@bridge/setting-values";
 
 export const SECURITY_SETTINGS_KEY = "security";
 export const ADVANCED_SETTINGS_KEY = "advanced";
@@ -12,8 +12,6 @@ export const UPTIME_REFRESH_MS = ms("1m");
 export const MAX_PEERS_OPTIONS = [10, 14, 25, 50];
 export const RECOMMENDED_MAX_PEERS = 14;
 
-export const SYNC_MODE_OPTIONS = Object.values(SyncMode);
-
 export const LANGUAGE_OPTIONS = [
   { label: "English", value: "en" },
   { label: "Bahasa Indonesia", value: "id" },
@@ -24,8 +22,6 @@ export const LANGUAGE_OPTIONS = [
   { label: "日本語", value: "ja" },
 ];
 
-export const CURRENCY_OPTIONS = Object.values(DisplayCurrency);
-
 export const COLORS = [
   { id: "#3b82f6", color: "bg-blue-500", name: "blue" },
   { id: "#10b981", color: "bg-emerald-500", name: "emerald" },
@@ -35,6 +31,9 @@ export const COLORS = [
   { id: "#ef4444", color: "bg-red-500", name: "red" },
 ];
 
-export const LOG_LEVELS = Object.values(LogLevel);
+// geth stays at info or above: the app reads its INFO lines (mining log, DAG
+// progress, recovery), so Warning and Error are not offered.
+export type NodeLogLevel = typeof LogLevel.INFO | typeof LogLevel.DEBUG;
+export const LOG_LEVELS: NodeLogLevel[] = [LogLevel.INFO, LogLevel.DEBUG];
 
 export const CONNECTED_SITES_SETTINGS_KEY = "connectedSites";

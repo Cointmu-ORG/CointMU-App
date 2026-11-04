@@ -187,6 +187,8 @@ declare global {
       codename?: string;
       build: string;
       platform: string;
+      /** process.platform: "win32", "darwin", "linux", ... */
+      os: string;
       nodeVersion: string;
       getUptime: () => number;
     };

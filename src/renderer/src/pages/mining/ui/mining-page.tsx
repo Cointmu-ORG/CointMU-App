@@ -193,7 +193,6 @@ function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
           <WorkerConfiguration
             cpuThreads={config.cpuThreads}
             maxCores={maxCores}
-            intensity={config.intensity}
             rewardAddress={rewardAddress}
           />
 

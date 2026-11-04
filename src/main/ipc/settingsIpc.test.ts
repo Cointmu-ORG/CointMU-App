@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ipcMain } from "electron";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
+import { applyLoginItem } from "../app/loginItem";
 import { registerSettingsHandlers } from "./settingsIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
@@ -11,6 +12,7 @@ vi.mock("../geth/process/ports", () => ({ getRpcPort: () => 8545 }));
 vi.mock("../geth/process/nodeRestart", () => ({
   restartNodeByUser: vi.fn(() => true),
 }));
+vi.mock("../app/loginItem", () => ({ applyLoginItem: vi.fn() }));
 
 type Handler = (event: unknown, ...args: unknown[]) => unknown;
 
@@ -87,6 +89,7 @@ describe("settings:set", () => {
 describe("settings:set and the running node", () => {
   beforeEach(() => {
     vi.mocked(restartNodeByUser).mockClear();
+    vi.mocked(applyLoginItem).mockClear();
   });
 
   it("restarts geth when the listen port changes", () => {
@@ -97,6 +100,33 @@ describe("settings:set and the running node", () => {
     expect(restartNodeByUser).toHaveBeenCalledTimes(1);
   });
 
+  it("restarts geth when Max peers changes", () => {
+    const { setHandler } = registerSet({ network: { maxPeers: 14 } });
+
+    setHandler(null, "network.maxPeers", 25);
+
+    expect(restartNodeByUser).toHaveBeenCalledTimes(1);
+  });
+
+  it("restarts geth when the advanced section is saved with a new log level", () => {
+    const { setHandler } = registerSet({
+      advanced: { httpRpc: true, logLevel: "info" },
+    });
+
+    setHandler(null, "advanced", { httpRpc: true, logLevel: "debug" });
+
+    expect(restartNodeByUser).toHaveBeenCalledTimes(1);
+  });
+
+  it("writes the login item when Launch at login changes, without a restart", () => {
+    const { setHandler } = registerSet({ general: { launchAtLogin: false } });
+
+    setHandler(null, "general.launchAtLogin", true);
+
+    expect(applyLoginItem).toHaveBeenCalledTimes(1);
+    expect(restartNodeByUser).not.toHaveBeenCalled();
+  });
+
   it("leaves geth running when the saved port is the same", () => {
     const { setHandler } = registerSet({ network: { listenPort: 30303 } });
 
@@ -105,11 +135,12 @@ describe("settings:set and the running node", () => {
     expect(restartNodeByUser).not.toHaveBeenCalled();
   });
 
-  it("leaves geth running for settings it does not read", () => {
+  it("leaves geth and the login item alone for other settings", () => {
     const { setHandler } = registerSet({ general: { currency: "cmu" } });
 
     setHandler(null, "general.currency", "usd");
 
     expect(restartNodeByUser).not.toHaveBeenCalled();
+    expect(applyLoginItem).not.toHaveBeenCalled();
   });
 });

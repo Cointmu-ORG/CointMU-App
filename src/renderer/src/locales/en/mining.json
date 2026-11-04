@@ -73,8 +73,6 @@
     "workerThreads": "Worker threads",
     "ofCores_one": "{{threads}} of {{count}} core",
     "ofCores_other": "{{threads}} of {{count}} cores",
-    "intensityTitle": "Intensity",
-    "higherMoreHeat": "Higher = more heat, faster solves",
     "rewardAddressTitle": "Reward address",
     "blockRewardsCreditedHere": "Block rewards are credited here",
     "setInMiningSettings": "Set in Mining Settings",

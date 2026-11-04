@@ -7,8 +7,6 @@
     "backgroundTitle": "Buka di latar belakang",
     "backgroundDesc": "Mulai dengan jendela minimal agar penambangan bisa berjalan tanpa jendela",
     "display": "Tampilan",
-    "currencyTitle": "Mata uang bawaan",
-    "currencyDesc": "Digunakan di semua tempat jumlah ditampilkan",
     "title": "Umum"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Tata Letak",
     "densityTitle": "Kerapatan",
     "densityDesc": "Jarak vertikal dalam daftar dan tabel",
-    "showSidebarColorsTitle": "Tampilkan ikon bilah sisi berwarna",
-    "showSidebarColorsDesc": "Beri warna pada item jaringan di bilah sisi",
     "animatedTransitionsTitle": "Transisi animasi",
     "animatedTransitionsDesc": "Perubahan halaman dan gerakan yang mulus",
     "title": "Penampilan"
@@ -41,8 +37,6 @@
     "txDesc": "Pengiriman, konfirmasi, dan transaksi gagal",
     "miningTitle": "Acara penambangan",
     "miningDesc": "Blok yang Anda temukan dan pencapaian penambangan",
-    "securityTitle": "Acara keamanan",
-    "securityDesc": "Penguncian dompet, tampilan kunci, dan tindakan sensitif lainnya",
     "title": "Notifikasi"
   },
   "network": {
@@ -89,10 +83,6 @@
     "rpcNetwork": "RPC/Jaringan",
     "httpRpcTitle": "Aktifkan JSON-RPC melalui HTTP",
     "httpRpcDesc": "Dengarkan di 127.0.0.1:8545 untuk koneksi dApp",
-    "wsRpcTitle": "Aktifkan WebSocket RPC",
-    "wsRpcDesc": "Dengarkan di 127.0.0.1:8546",
-    "corsTitle": "Asal CORS yang diizinkan",
-    "corsDesc": "Asal yang diizinkan untuk terhubung ke server RPC",
     "storage": "Penyimpanan",
     "datadirTitle": "Datadir",
     "datadirDesc": "Tempat data chain dan keystore disimpan",
@@ -164,18 +154,11 @@
     "peers": "Rekan",
     "maxPeersTitle": "Rekan maks",
     "maxPeersDesc": "Batas atas pada koneksi rekan bersamaan",
-    "discoveryTitle": "Penemuan",
-    "discoveryDesc": "Temukan rekan baru secara otomatis melalui DHT",
     "listenPortTitle": "Port dengar",
     "listenPortDesc": "Port UDP / TCP yang digunakan oleh protokol gossip",
     "listenPortInvalid": "Masukkan port antara {{min}} dan {{max}}.",
     "connectedPeersTitle": "Rekan terhubung",
     "connectedPeersDesc_other": "{{count}} node saat ini berkomunikasi dengan Anda",
-    "sync": "Sinkronisasi",
-    "syncModeTitle": "Mode sinkronisasi",
-    "syncModeDesc": "Snap mengunduh status terpangkas dengan cepat. Full memvalidasi setiap blok dari genesis",
-    "pruneTitle": "Pangkas status lama",
-    "pruneDesc": "Simpan 128 blok status historis terakhir untuk menghemat disk",
     "advanced": "Lanjutan",
     "bootnodes": {
       "title": "Bootnode",
@@ -212,14 +195,10 @@
     "mining": "Penambangan",
     "enableTitle": "Aktifkan Penambangan",
     "enableDesc": "Izinkan klien ini menyelesaikan hash blok",
-    "startLaunchTitle": "Mulai penambangan saat diluncurkan",
-    "startLaunchDesc": "Mulai hashing secara otomatis saat CointMU berjalan",
     "worker": "Pekerja",
     "cpuThreadsTitle": "Utas CPU",
     "cpuThreadsDesc": "Core maksimum yang digunakan untuk hashing ({{count}}/{{max}} dialokasikan)",
     "coreCount_other": "{{count}} core",
-    "intensityTitle": "Intensitas",
-    "intensityDesc": "Batasi penggunaan CPU per utas",
     "pauseTitle": "Jeda pada baterai",
     "pauseDesc": "Hentikan penambangan saat laptop dicabut dari daya",
     "rewards": "Hadiah",
@@ -248,9 +227,7 @@
     "resetWalletBtn": "Reset...",
     "access": "Akses",
     "backup": "Cadangan",
-    "hardware": "Perangkat Keras",
-    "biometricsTitle": "Perlukan Touch ID / Windows Hello untuk menandatangani",
-    "biometricsDesc": "Gunakan biometrik untuk mengotorisasi setiap transaksi"
+    "hardware": "Perangkat Keras"
   },
   "privacy": {
     "title": "Privasi & Diagnostik",
@@ -343,31 +320,14 @@
     "submit": "Reset dompet secara permanen"
   },
   "options": {
-    "intensity": {
-      "eco": "Hemat",
-      "balanced": "Seimbang",
-      "turbo": "Turbo"
-    },
     "density": {
       "compact": "Ringkas",
       "comfortable": "Nyaman",
       "spacious": "Lega"
     },
-    "syncMode": {
-      "snap": "Snap (disarankan)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (bawaan)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Info",
-      "debug": "Debug",
-      "warn": "Peringatan",
-      "error": "Kesalahan"
+      "debug": "Debug"
     },
     "recommendedValue": "{{value}} (disarankan)"
   }

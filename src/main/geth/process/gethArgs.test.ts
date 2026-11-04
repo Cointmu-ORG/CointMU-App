@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
+import {
+  buildGethHttpArgs,
+  buildGethIpcArgs,
+  buildGethPeerArgs,
+  resolveGethVerbosity,
+} from "./gethArgs";
 
 const RPC_PORT = 8585;
 
@@ -40,5 +45,41 @@ describe("buildGethIpcArgs", () => {
 
   it("disables IPC rather than using geth's default location", () => {
     expect(buildGethIpcArgs(null)).toEqual(["--ipcdisable"]);
+  });
+});
+
+describe("buildGethPeerArgs", () => {
+  it("passes the Max peers setting", () => {
+    expect(buildGethPeerArgs(25)).toEqual(["--maxpeers", "25"]);
+  });
+
+  it.each([undefined, 0, -3, 2.5, "50"])(
+    "falls back to 14 for %s",
+    (stored) => {
+      expect(buildGethPeerArgs(stored)).toEqual(["--maxpeers", "14"]);
+    },
+  );
+});
+
+describe("resolveGethVerbosity", () => {
+  it("maps Debug to 4 and Info to 3", () => {
+    expect(resolveGethVerbosity("debug", undefined)).toBe("4");
+    expect(resolveGethVerbosity("info", undefined)).toBe("3");
+  });
+
+  it.each(["warn", "error", undefined, 7])(
+    "keeps the info lines the app parses for %s",
+    (stored) => {
+      expect(resolveGethVerbosity(stored, undefined)).toBe("3");
+    },
+  );
+
+  it("lets GETH_LOG_VERBOSITY win", () => {
+    expect(resolveGethVerbosity("info", "5")).toBe("5");
+    expect(resolveGethVerbosity("debug", "2")).toBe("2");
+  });
+
+  it("ignores an empty GETH_LOG_VERBOSITY", () => {
+    expect(resolveGethVerbosity("debug", "")).toBe("4");
   });
 });

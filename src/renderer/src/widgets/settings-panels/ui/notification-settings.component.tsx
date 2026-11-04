@@ -106,12 +106,7 @@ export function NotificationSettings(): JSX.Element {
               value={settings.mining}
               onChange={() => updateSettings({ mining: !settings.mining })}
             />
-            <ToggleRow
-              title={t("settings:notifications.securityTitle")}
-              description={t("settings:notifications.securityDesc")}
-              value={settings.security}
-              onChange={() => updateSettings({ security: !settings.security })}
-            />
+            {/* No security toggle until something sends security events (#104). */}
           </div>
         </section>
       </div>

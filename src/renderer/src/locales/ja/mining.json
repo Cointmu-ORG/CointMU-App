@@ -70,8 +70,6 @@
     "subtitle": "現在の内部ノード構成",
     "workerThreads": "ワーカースレッド",
     "ofCores_other": "{{count}} コア中 {{threads}}",
-    "intensityTitle": "強度",
-    "higherMoreHeat": "高い = より多くの熱、より速い解決",
     "rewardAddressTitle": "報酬アドレス",
     "blockRewardsCreditedHere": "ブロック報酬はここにクレジットされます",
     "setInMiningSettings": "マイニング設定で設定します",
