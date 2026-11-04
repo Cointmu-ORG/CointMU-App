@@ -222,6 +222,7 @@ function App(): JSX.Element {
                 setAccounts={setAccounts}
                 activeWalletAddress={activeWalletAddress}
                 setActiveWalletAddress={setActiveWalletAddress}
+                onNavigate={handleNavigate}
               />
             )}
             {activeView === NAV_ITEM_EXPLORER && (

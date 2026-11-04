@@ -36,7 +36,6 @@
     "balanceFromNode": "Balance from node",
     "send": "Send",
     "receive": "Receive",
-    "stake": "Stake",
     "miningLive": "Mining live"
   },
   "activityFeed": {

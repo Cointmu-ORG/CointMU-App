@@ -36,7 +36,6 @@
     "balanceFromNode": "Баланс с узла",
     "send": "Отправить",
     "receive": "Получить",
-    "stake": "Стейкинг",
     "miningLive": "Майнинг активен"
   },
   "activityFeed": {

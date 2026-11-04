@@ -1,17 +1,12 @@
-import {
-  MAX_PEERS_OPTIONS,
-  RECOMMENDED_MAX_PEERS,
-  SYNC_MODE_OPTIONS,
-} from "@/features/settings";
+import { MAX_PEERS_OPTIONS, RECOMMENDED_MAX_PEERS } from "@/features/settings";
 import { COINTMU_NETWORK } from "@bridge/network";
-import type { SyncMode } from "@bridge/setting-values";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "@/features/settings";
 import { useAppStore } from "@/shared/model";
 import { CustomDropdown } from "@/shared/ui";
-import { SYNC_MODE_LABEL_KEYS } from "@/shared/lib";
 import { BootnodeSettings } from "./bootnode-settings.component";
+import { ListenPortRow } from "./listen-port-row.component";
 
 interface NetworkSettingsProps {
   config: SettingsStore["network"];
@@ -19,8 +14,9 @@ interface NetworkSettingsProps {
 }
 
 /**
- * Network settings pane: the active network (read-only), peer bounds, sync
- * mode and bootnodes.
+ * Network settings pane: the active network (read-only), peer limit, listen
+ * port and bootnodes. Discovery, sync mode and pruning are hidden until geth
+ * gets their flags (#104); their stored values are kept.
  * @param props The configuration state and the update callback.
  * @returns The Network Settings form component.
  */
@@ -109,38 +105,11 @@ export function NetworkSettings({
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.discoveryTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.discoveryDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() => onUpdate("discovery", !config.discovery)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.discovery ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.discovery ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.listenPortTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.listenPortDesc")}
-                </p>
-              </div>
-              <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
-                {config.listenPort}
-              </span>
-            </div>
+            <ListenPortRow
+              key={config.listenPort}
+              port={config.listenPort}
+              onSave={(port) => onUpdate("listenPort", port)}
+            />
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
@@ -155,58 +124,6 @@ export function NetworkSettings({
                   </p>
                 )}
               </div>
-              <button className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
-                {t("settings:networkSettings.viewList")}
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings:networkSettings.sync")}
-          </h3>
-          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
-            <div className="flex items-center justify-between p-4">
-              <div className="pr-4">
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.syncModeTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5 leading-relaxed">
-                  {t("settings:networkSettings.syncModeDesc")}
-                </p>
-              </div>
-              <div className="w-56 flex-shrink-0">
-                <CustomDropdown<SyncMode>
-                  options={SYNC_MODE_OPTIONS}
-                  selected={config.syncMode}
-                  onSelect={(val) => onUpdate("syncMode", val)}
-                  renderSelected={(selected) =>
-                    t(SYNC_MODE_LABEL_KEYS[selected ?? SYNC_MODE_OPTIONS[0]])
-                  }
-                  renderOption={(option) => t(SYNC_MODE_LABEL_KEYS[option])}
-                  compact
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.pruneTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.pruneDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() => onUpdate("pruneOldState", !config.pruneOldState)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.pruneOldState ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.pruneOldState ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
             </div>
           </div>
         </section>

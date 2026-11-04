@@ -7,8 +7,6 @@
     "backgroundTitle": "Open in background",
     "backgroundDesc": "Start minimized so mining can run without a window",
     "display": "Display",
-    "currencyTitle": "Default currency",
-    "currencyDesc": "Used everywhere amounts are shown",
     "title": "General"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Layout",
     "densityTitle": "Density",
     "densityDesc": "Vertical spacing in lists and tables",
-    "showSidebarColorsTitle": "Show sidebar icons in color",
-    "showSidebarColorsDesc": "Accent network items by color in the sidebar",
     "animatedTransitionsTitle": "Animated transitions",
     "animatedTransitionsDesc": "Smooth page changes and motion",
     "title": "Appearance"
@@ -41,8 +37,6 @@
     "txDesc": "Sends, confirmations, and failed transactions",
     "miningTitle": "Mining events",
     "miningDesc": "Blocks you seal and mining milestones",
-    "securityTitle": "Security events",
-    "securityDesc": "Wallet lock, key reveal, and other sensitive actions",
     "title": "Notifications"
   },
   "network": {
@@ -81,17 +75,14 @@
     "extensionTitle": "Companion Browser Extension",
     "extensionDesc": "This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.",
     "download": "Download ZIP",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "exportFailed": "Could not save the extension ZIP. Try another folder; if it keeps failing, report an issue with the logs."
   },
   "advanced": {
     "subtitle": "Developer APIs, local storage, and diagnostics",
     "rpcNetwork": "RPC/Network",
     "httpRpcTitle": "Enable JSON-RPC over HTTP",
     "httpRpcDesc": "Listen on 127.0.0.1:8545 for dApp connections",
-    "wsRpcTitle": "Enable WebSocket RPC",
-    "wsRpcDesc": "Listen on 127.0.0.1:8546",
-    "corsTitle": "CORS allowed origins",
-    "corsDesc": "Origins allowed to connect to the RPC server",
     "storage": "Storage",
     "datadirTitle": "Datadir",
     "datadirDesc": "Where chain data and keystore are stored",
@@ -163,19 +154,12 @@
     "peers": "Peers",
     "maxPeersTitle": "Max peers",
     "maxPeersDesc": "Upper bound on simultaneous peer connections",
-    "discoveryTitle": "Discovery",
-    "discoveryDesc": "Automatically find new peers via DHT",
     "listenPortTitle": "Listen port",
     "listenPortDesc": "UDP / TCP port used by the gossip protocol",
+    "listenPortInvalid": "Enter a port from {{min}} to {{max}}.",
     "connectedPeersTitle": "Connected peers",
     "connectedPeersDesc_one": "{{count}} node currently gossiping with you",
     "connectedPeersDesc_other": "{{count}} nodes currently gossiping with you",
-    "viewList": "View list",
-    "sync": "Sync",
-    "syncModeTitle": "Sync mode",
-    "syncModeDesc": "Snap downloads pruned state quickly. Full validates every block from genesis",
-    "pruneTitle": "Prune old state",
-    "pruneDesc": "Keep last 128 blocks of historical state to save disk",
     "advanced": "Advanced",
     "bootnodes": {
       "title": "Bootnodes",
@@ -212,15 +196,11 @@
     "mining": "Mining",
     "enableTitle": "Enable Mining",
     "enableDesc": "Allow this client to solve block hashes",
-    "startLaunchTitle": "Start mining at launch",
-    "startLaunchDesc": "Automatically begin hashing when CointMU starts",
     "worker": "Worker",
     "cpuThreadsTitle": "CPU threads",
     "cpuThreadsDesc": "Maximum cores used for hashing ({{count}}/{{max}} allocated)",
     "coreCount_one": "{{count}} core",
     "coreCount_other": "{{count}} cores",
-    "intensityTitle": "Intensity",
-    "intensityDesc": "Limit CPU usage per thread",
     "pauseTitle": "Pause on battery",
     "pauseDesc": "Stop mining when laptop is disconnected from power",
     "rewards": "Rewards",
@@ -243,17 +223,13 @@
     "privateKeyTitle": "Reveal private key",
     "privateKeyDesc": "Decrypt and display the raw private key for an account",
     "hardwareDesc": "Connect a {{device}} device via USB",
-    "noUsb": "No USB detected",
+    "comingSoon": "Coming soon",
     "resetWalletTitle": "Reset wallet",
     "resetWalletDesc": "Removes all accounts and keys from this device. Cannot be undone.",
     "resetWalletBtn": "Reset...",
     "access": "Access",
     "backup": "Backup",
-    "hardware": "Hardware",
-    "biometricsTitle": "Require Touch ID / Windows Hello to sign",
-    "biometricsDesc": "Use biometrics to authorize every transaction",
-    "connecting": "Connecting...",
-    "connect": "Connect"
+    "hardware": "Hardware"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",
@@ -346,31 +322,14 @@
     "submit": "Permanently reset wallet"
   },
   "options": {
-    "intensity": {
-      "eco": "Eco",
-      "balanced": "Balanced",
-      "turbo": "Turbo"
-    },
     "density": {
       "compact": "Compact",
       "comfortable": "Comfortable",
       "spacious": "Spacious"
     },
-    "syncMode": {
-      "snap": "Snap (recommended)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (native)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Info",
-      "debug": "Debug",
-      "warn": "Warning",
-      "error": "Error"
+      "debug": "Debug"
     },
     "recommendedValue": "{{value}} (recommended)"
   }

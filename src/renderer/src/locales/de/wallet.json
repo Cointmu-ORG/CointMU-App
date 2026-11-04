@@ -2,13 +2,10 @@
   "balanceFromNode": "Guthaben vom Node",
   "send": "Senden",
   "receive": "Empfangen",
-  "swap": "Tauschen",
   "copyAddress": "Adresse kopieren",
   "copied": "Kopiert!",
   "sidebar": {
     "accounts": "Konten",
-    "watchList": "Beobachtungsliste",
-    "noWatched": "Keine beobachteten Adressen",
     "importWallet": "+ Wallet importieren",
     "manageHidden": "Versteckte Konten verwalten",
     "hideAccount": "Konto ausblenden"
@@ -20,6 +17,7 @@
     "workspace": "Arbeitsbereich",
     "title": "Wallet",
     "synced": "Synchronisiert",
+    "offline": "Offline",
     "backup": "Sicherung",
     "newAccount": "Neues Konto"
   },

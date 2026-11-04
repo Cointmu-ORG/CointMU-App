@@ -1,18 +1,21 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Wallet, Copy, ArrowUp, ArrowDown, Lock, Activity } from "lucide-react";
+import { Wallet, Copy, ArrowUp, ArrowDown, Activity } from "lucide-react";
 
 interface WalletOverviewCardProps {
   balance: string;
   abbrAddress: string;
   activeWalletAddress: string | null;
   walletLabel: string;
+  onSend: () => void;
+  onReceive: () => void;
+  onOpenMining: () => void;
 }
 
 /**
  * Gradient hero card summarizing the active wallet: its label, abbreviated
  * address, node-reported balance, and the primary wallet quick actions.
- * @param props - The balance, abbreviated address, and full active address.
+ * @param props - The balance, addresses, and the quick action handlers.
  * @returns The rendered wallet overview card.
  */
 function WalletOverviewCard({
@@ -20,6 +23,9 @@ function WalletOverviewCard({
   abbrAddress,
   activeWalletAddress,
   walletLabel,
+  onSend,
+  onReceive,
+  onOpenMining,
 }: WalletOverviewCardProps): JSX.Element {
   const { t } = useTranslation(["common", "dashboard"]);
 
@@ -64,19 +70,24 @@ function WalletOverviewCard({
         </div>
 
         <div className="mt-auto flex items-center gap-2.5">
-          <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
+          <button
+            onClick={onSend}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors"
+          >
             <ArrowUp className="w-3 h-3 text-white" strokeWidth={2.5} />
             {t("dashboard:walletOverview.send")}
           </button>
-          <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
+          <button
+            onClick={onReceive}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors"
+          >
             <ArrowDown className="w-3 h-3 text-white" strokeWidth={2.5} />
             {t("dashboard:walletOverview.receive")}
           </button>
-          <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
-            <Lock className="w-3 h-3" />
-            {t("dashboard:walletOverview.stake")}
-          </button>
-          <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
+          <button
+            onClick={onOpenMining}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors"
+          >
             <Activity className="w-3 h-3" />
             {t("dashboard:walletOverview.miningLive")}
           </button>

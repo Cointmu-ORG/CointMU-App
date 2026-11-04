@@ -79,8 +79,6 @@
     "ofCores_few": "{{threads}} из {{count}} ядер",
     "ofCores_many": "{{threads}} из {{count}} ядер",
     "ofCores_other": "{{threads}} из {{count}} ядра",
-    "intensityTitle": "Интенсивность",
-    "higherMoreHeat": "Выше = больше нагрев, быстрее решение",
     "rewardAddressTitle": "Адрес вознаграждения",
     "blockRewardsCreditedHere": "Награды за блоки зачисляются сюда",
     "setInMiningSettings": "Установлено в настройках майнинга",

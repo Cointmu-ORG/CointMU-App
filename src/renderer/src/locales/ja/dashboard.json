@@ -36,7 +36,6 @@
     "balanceFromNode": "ノードの残高",
     "send": "送信",
     "receive": "受信",
-    "stake": "ステーク",
     "miningLive": "マイニングライブ"
   },
   "activityFeed": {

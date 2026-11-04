@@ -26,6 +26,7 @@ interface WalletProps {
   setAccounts: (accounts: DerivedAccount[]) => void;
   activeWalletAddress: string | null;
   setActiveWalletAddress: (address: string) => void;
+  onNavigate: (view: string, payload?: string) => void;
 }
 
 /**
@@ -33,7 +34,8 @@ interface WalletProps {
  * signing business logic, sources transient UI and form state from the wallet UI
  * store, reads the shared balances from the global app store, and composes the
  * layout from focused presentational sub-components.
- * @param props - Account list and setters, and the active address and setter.
+ * @param props - Account list and setters, the active address and setter, and
+ * the navigation used by Backup.
  * @returns The complete wallet view with sidebar, hero card, tabs, and modals.
  */
 function WalletPage({
@@ -41,6 +43,7 @@ function WalletPage({
   setAccounts,
   activeWalletAddress,
   setActiveWalletAddress,
+  onNavigate,
 }: WalletProps): JSX.Element {
   const { t } = useTranslation();
   const balance = useAppStore((s) => s.balance);
@@ -249,7 +252,10 @@ function WalletPage({
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950 dark:text-white relative">
-      <WalletHeader onAddAccount={() => setModalState("ADD_ACCOUNT")} />
+      <WalletHeader
+        onAddAccount={() => setModalState("ADD_ACCOUNT")}
+        onBackup={() => onNavigate("settings", "security")}
+      />
 
       <main className="flex-1 overflow-y-auto px-8 pb-8">
         <div className="flex gap-6 h-full">

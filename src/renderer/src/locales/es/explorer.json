@@ -95,13 +95,12 @@
     "network": "Red",
     "explorer": "Explorador",
     "blockHeight": "Bloque # {{height}}",
-    "disconnected": "Desconectado",
-    "savedSearches": "Búsquedas guardadas"
+    "disconnected": "Desconectado"
   },
   "search": {
     "searchChain": "Buscar en la cadena",
     "title": "Bloque, transacción o dirección",
-    "placeholder": "Dirección 0x..., hash de transacción, número de bloque o nombredeusuario.cmu",
+    "placeholder": "Dirección 0x..., hash de transacción o número de bloque",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

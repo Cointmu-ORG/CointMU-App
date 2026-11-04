@@ -7,8 +7,6 @@
     "backgroundTitle": "Im Hintergrund öffnen",
     "backgroundDesc": "Minimiert starten, damit Mining ohne Fenster laufen kann",
     "display": "Anzeige",
-    "currencyTitle": "Standardwährung",
-    "currencyDesc": "Wird überall verwendet, wo Beträge angezeigt werden",
     "title": "Allgemein"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Layout",
     "densityTitle": "Dichte",
     "densityDesc": "Vertikaler Abstand in Listen und Tabellen",
-    "showSidebarColorsTitle": "Sidebar-Symbole farbig anzeigen",
-    "showSidebarColorsDesc": "Netzwerkelemente in der Sidebar farblich hervorheben",
     "animatedTransitionsTitle": "Animierte Übergänge",
     "animatedTransitionsDesc": "Reibungslose Seitenwechsel und Bewegungen",
     "title": "Erscheinungsbild"
@@ -41,8 +37,6 @@
     "txDesc": "Sendungen, Bestätigungen und fehlgeschlagene Transaktionen",
     "miningTitle": "Mining-Ereignisse",
     "miningDesc": "Gefundene Blöcke und Mining-Meilensteine",
-    "securityTitle": "Sicherheitsereignisse",
-    "securityDesc": "Wallet-Sperre, Schlüsselanzeige und andere sensible Aktionen",
     "title": "Benachrichtigungen"
   },
   "network": {
@@ -81,17 +75,14 @@
     "extensionTitle": "Companion-Browser-Erweiterung",
     "extensionDesc": "Diese eigenständige Erweiterung überbrückt externe dApps zu Ihrem Desktop-Knoten. Laden Sie die mitgelieferte ZIP-Datei herunter und laden Sie sie entpackt in Ihren Browser, um Web3-Konnektivität zu aktivieren.",
     "download": "ZIP herunterladen",
-    "saving": "Speichern..."
+    "saving": "Speichern...",
+    "exportFailed": "Das Erweiterungs-ZIP konnte nicht gespeichert werden. Versuche einen anderen Ordner; wenn es weiter fehlschlägt, melde ein Problem mit den Logs."
   },
   "advanced": {
     "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",
     "rpcNetwork": "RPC/Netzwerk",
     "httpRpcTitle": "JSON-RPC über HTTP aktivieren",
     "httpRpcDesc": "Auf 127.0.0.1:8545 für dApp-Verbindungen lauschen",
-    "wsRpcTitle": "WebSocket-RPC aktivieren",
-    "wsRpcDesc": "Auf 127.0.0.1:8546 lauschen",
-    "corsTitle": "CORS-erlaubte Ursprünge",
-    "corsDesc": "Ursprünge, die sich mit dem RPC-Server verbinden dürfen",
     "storage": "Speicher",
     "datadirTitle": "Datenverzeichnis",
     "datadirDesc": "Wo Ketten-Daten und Keystore gespeichert sind",
@@ -163,19 +154,12 @@
     "peers": "Peers",
     "maxPeersTitle": "Max. Peers",
     "maxPeersDesc": "Obergrenze für gleichzeitige Peer-Verbindungen",
-    "discoveryTitle": "Entdeckung",
-    "discoveryDesc": "Automatisch neue Peers über DHT finden",
     "listenPortTitle": "Listen-Port",
     "listenPortDesc": "UDP / TCP-Port, der vom Gossip-Protokoll verwendet wird",
+    "listenPortInvalid": "Gib einen Port von {{min}} bis {{max}} ein.",
     "connectedPeersTitle": "Verbundene Peers",
     "connectedPeersDesc_one": "{{count}} Knoten, der derzeit mit Ihnen kommuniziert",
     "connectedPeersDesc_other": "{{count}} Knoten, die derzeit mit Ihnen kommunizieren",
-    "viewList": "Liste ansehen",
-    "sync": "Synchronisation",
-    "syncModeTitle": "Sync-Modus",
-    "syncModeDesc": "Snap lädt bereinigten Zustand schnell herunter. Full validiert jeden Block ab Genesis",
-    "pruneTitle": "Alten Zustand bereinigen",
-    "pruneDesc": "Die letzten 128 Blöcke des historischen Zustands behalten, um Speicherplatz zu sparen",
     "advanced": "Erweitert",
     "bootnodes": {
       "title": "Bootnodes",
@@ -212,15 +196,11 @@
     "mining": "Mining",
     "enableTitle": "Mining aktivieren",
     "enableDesc": "Diesem Client erlauben, Block-Hashes zu lösen",
-    "startLaunchTitle": "Mining beim Start beginnen",
-    "startLaunchDesc": "Beim Start von CointMU automatisch mit dem Hashing beginnen",
     "worker": "Worker",
     "cpuThreadsTitle": "CPU-Threads",
     "cpuThreadsDesc": "Maximale Kerne, die für das Hashing verwendet werden ({{count}}/{{max}} zugewiesen)",
     "coreCount_one": "{{count}} Kern",
     "coreCount_other": "{{count}} Kerne",
-    "intensityTitle": "Intensität",
-    "intensityDesc": "CPU-Nutzung pro Thread begrenzen",
     "pauseTitle": "Im Akkubetrieb pausieren",
     "pauseDesc": "Mining stoppen, wenn der Laptop vom Stromnetz getrennt ist",
     "rewards": "Belohnungen",
@@ -243,17 +223,13 @@
     "privateKeyTitle": "Privaten Schlüssel anzeigen",
     "privateKeyDesc": "Entschlüsseln und den rohen privaten Schlüssel für ein Konto anzeigen",
     "hardwareDesc": "{{device}}-Gerät über USB verbinden",
-    "noUsb": "Kein USB erkannt",
+    "comingSoon": "Demnächst verfügbar",
     "resetWalletTitle": "Wallet zurücksetzen",
     "resetWalletDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",
     "resetWalletBtn": "Zurücksetzen...",
     "access": "Zugriff",
     "backup": "Sicherung",
-    "hardware": "Hardware",
-    "biometricsTitle": "Touch ID / Windows Hello zum Signieren anfordern",
-    "biometricsDesc": "Biometrie verwenden, um jede Transaktion zu autorisieren",
-    "connecting": "Verbinden...",
-    "connect": "Verbinden"
+    "hardware": "Hardware"
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",
@@ -346,31 +322,14 @@
     "submit": "Wallet dauerhaft zurücksetzen"
   },
   "options": {
-    "intensity": {
-      "eco": "Eco",
-      "balanced": "Ausgewogen",
-      "turbo": "Turbo"
-    },
     "density": {
       "compact": "Kompakt",
       "comfortable": "Komfortabel",
       "spacious": "Großzügig"
     },
-    "syncMode": {
-      "snap": "Snap (empfohlen)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (nativ)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Info",
-      "debug": "Debug",
-      "warn": "Warnung",
-      "error": "Fehler"
+      "debug": "Debug"
     },
     "recommendedValue": "{{value}} (empfohlen)"
   }

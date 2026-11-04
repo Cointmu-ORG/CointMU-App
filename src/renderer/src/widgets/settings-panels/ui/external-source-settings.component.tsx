@@ -11,19 +11,25 @@ import { Download, Box } from "lucide-react";
 function ExternalSourceSettings(): JSX.Element {
   const { t } = useTranslation();
   const [isExporting, setIsExporting] = useState(false);
+  const [hasExportFailed, setHasExportFailed] = useState(false);
 
   /**
    * Triggers the IPC call to open the native save dialog and copy the
-   * extension.zip file to the selected destination.
+   * extension.zip file to the selected destination. A missing ZIP or a failed
+   * copy shows an error under the button; the details are in main.log.
    * @returns {Promise<void>}
    */
   const handleExport = async (): Promise<void> => {
     setIsExporting(true);
+    setHasExportFailed(false);
     try {
       await window.api.exportExtensionZip({
         title: t("common:dialog.exportExtensionTitle"),
         filterName: t("common:dialog.zipFilter"),
       });
+    } catch (err) {
+      console.error("Extension ZIP export failed", err);
+      setHasExportFailed(true);
     } finally {
       setIsExporting(false);
     }
@@ -55,6 +61,14 @@ function ExternalSourceSettings(): JSX.Element {
           <p className="text-xs text-slate-500 dark:text-gray-400 mt-1 leading-relaxed max-w-lg">
             {t("settings:externalSources.extensionDesc")}
           </p>
+          {hasExportFailed && (
+            <p
+              role="alert"
+              className="text-xs font-medium text-red-600 dark:text-red-400 mt-2 max-w-lg"
+            >
+              {t("settings:externalSources.exportFailed")}
+            </p>
+          )}
         </div>
         <button
           type="button"

@@ -7,8 +7,6 @@
     "backgroundTitle": "バックグラウンドで開く",
     "backgroundDesc": "ウィンドウなしでマイニングを実行できるように最小化して起動します",
     "display": "表示",
-    "currencyTitle": "デフォルト通貨",
-    "currencyDesc": "金額が表示されるすべての場所で使用されます",
     "title": "一般"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "レイアウト",
     "densityTitle": "表示密度",
     "densityDesc": "リストとテーブルの垂直間隔",
-    "showSidebarColorsTitle": "サイドバーアイコンをカラーで表示",
-    "showSidebarColorsDesc": "サイドバーのネットワーク項目を色で強調表示します",
     "animatedTransitionsTitle": "アニメーショントランジション",
     "animatedTransitionsDesc": "スムーズなページ切り替えとモーション",
     "title": "外観"
@@ -41,8 +37,6 @@
     "txDesc": "送信、確認、および失敗したトランザクション",
     "miningTitle": "マイニングイベント",
     "miningDesc": "ブロックの生成とマイニングの節目",
-    "securityTitle": "セキュリティイベント",
-    "securityDesc": "ウォレットのロック、キーの表示、その他の機密性の高いアクション",
     "title": "通知"
   },
   "network": {
@@ -81,17 +75,14 @@
     "extensionTitle": "コンパニオンブラウザ拡張機能",
     "extensionDesc": "このスタンドアロン拡張機能は、外部dAppsをデスクトップノードにブリッジします。同梱のZIPファイルをダウンロードし、解凍してブラウザに読み込むことで、Web3接続を有効にします。",
     "download": "ZIPをダウンロード",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "exportFailed": "拡張機能のZIPを保存できませんでした。別のフォルダーをお試しください。失敗が続く場合は、ログを添えて問題を報告してください。"
   },
   "advanced": {
     "subtitle": "開発者API、ローカルストレージ、および診断",
     "rpcNetwork": "RPC / ネットワーク",
     "httpRpcTitle": "HTTP経由のJSON-RPCを有効にする",
     "httpRpcDesc": "dApp接続のために127.0.0.1:8545でリッスンします",
-    "wsRpcTitle": "WebSocket RPCを有効にする",
-    "wsRpcDesc": "127.0.0.1:8546でリッスンします",
-    "corsTitle": "CORS許可オリジン",
-    "corsDesc": "RPCサーバーへの接続を許可するオリジン",
     "storage": "ストレージ",
     "datadirTitle": "データディレクトリ",
     "datadirDesc": "チェーンデータとキーストアが保存される場所",
@@ -163,18 +154,11 @@
     "peers": "ピア",
     "maxPeersTitle": "最大ピア数",
     "maxPeersDesc": "同時ピア接続の上限",
-    "discoveryTitle": "検出",
-    "discoveryDesc": "DHTを介して新しいピアを自動的に検索します",
     "listenPortTitle": "リッスンポート",
     "listenPortDesc": "ゴシッププロトコルで使用されるUDP / TCPポート",
+    "listenPortInvalid": "{{min}}〜{{max}}のポート番号を入力してください。",
     "connectedPeersTitle": "接続されたピア",
     "connectedPeersDesc_other": "{{count}} 個のノードが現在あなたと通信しています",
-    "viewList": "リストを表示",
-    "sync": "同期",
-    "syncModeTitle": "同期モード",
-    "syncModeDesc": "Snapは剪定された状態を素早くダウンロードします。Fullはジェネシスからすべてのブロックを検証します",
-    "pruneTitle": "古い状態を剪定する",
-    "pruneDesc": "ディスクを節約するために過去128ブロックの履歴状態を保持します",
     "advanced": "詳細設定",
     "bootnodes": {
       "title": "ブートノード",
@@ -211,14 +195,10 @@
     "mining": "マイニング",
     "enableTitle": "マイニングを有効にする",
     "enableDesc": "このクライアントがブロックハッシュを解決できるようにします",
-    "startLaunchTitle": "起動時にマイニングを開始する",
-    "startLaunchDesc": "CointMUの起動時に自動的にハッシュ化を開始します",
     "worker": "ワーカー",
     "cpuThreadsTitle": "CPUスレッド",
     "cpuThreadsDesc": "ハッシュ化に使用される最大コア数（{{count}}/{{max}} 割り当て済み）",
     "coreCount_other": "{{count}} コア",
-    "intensityTitle": "強度",
-    "intensityDesc": "スレッドあたりのCPU使用率を制限する",
     "pauseTitle": "バッテリー駆動時に一時停止",
     "pauseDesc": "ラップトップが電源から切断されたときにマイニングを停止します",
     "rewards": "報酬",
@@ -241,17 +221,13 @@
     "privateKeyTitle": "秘密鍵の表示",
     "privateKeyDesc": "アカウントの生の秘密鍵を復号化して表示します",
     "hardwareDesc": "USB経由で{{device}}デバイスを接続します",
-    "noUsb": "USBが検出されません",
+    "comingSoon": "近日対応予定",
     "resetWalletTitle": "ウォレットのリセット",
     "resetWalletDesc": "このデバイスからすべてのアカウントとキーを削除します。元に戻すことはできません。",
     "resetWalletBtn": "リセット...",
     "access": "アクセス",
     "backup": "バックアップ",
-    "hardware": "ハードウェア",
-    "biometricsTitle": "署名にTouch ID / Windows Helloを要求する",
-    "biometricsDesc": "すべてのトランザクションを承認するために生体認証を使用します",
-    "connecting": "接続中...",
-    "connect": "接続"
+    "hardware": "ハードウェア"
   },
   "privacy": {
     "title": "プライバシーと診断",
@@ -344,31 +320,14 @@
     "submit": "ウォレットを完全にリセット"
   },
   "options": {
-    "intensity": {
-      "eco": "エコ",
-      "balanced": "バランス",
-      "turbo": "ターボ"
-    },
     "density": {
       "compact": "コンパクト",
       "comfortable": "標準",
       "spacious": "ゆったり"
     },
-    "syncMode": {
-      "snap": "Snap（推奨）",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU（ネイティブ）",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "情報",
-      "debug": "デバッグ",
-      "warn": "警告",
-      "error": "エラー"
+      "debug": "デバッグ"
     },
     "recommendedValue": "{{value}}（推奨）"
   }

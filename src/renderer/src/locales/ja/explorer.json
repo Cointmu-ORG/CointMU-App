@@ -95,13 +95,12 @@
     "network": "ネットワーク",
     "explorer": "エクスプローラー",
     "blockHeight": "ブロック # {{height}}",
-    "disconnected": "切断されています",
-    "savedSearches": "保存された検索"
+    "disconnected": "切断されています"
   },
   "search": {
     "searchChain": "チェーンを検索",
     "title": "ブロック、トランザクション、またはアドレス",
-    "placeholder": "0x... アドレス、トランザクションハッシュ、ブロック番号、または username.cmu",
+    "placeholder": "0x... アドレス、トランザクションハッシュ、またはブロック番号",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

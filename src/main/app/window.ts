@@ -1,6 +1,7 @@
 import { BrowserWindow, shell } from "electron";
 import { join } from "path";
 import { is } from "@electron-toolkit/utils";
+import { wasOpenedInBackground } from "./loginItem";
 
 const WINDOW_DEFAULT_WIDTH = 1280;
 const WINDOW_DEFAULT_HEIGHT = 800;
@@ -37,7 +38,8 @@ export function createWindow(): BrowserWindow {
   });
 
   mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
+    if (wasOpenedInBackground()) mainWindow.minimize();
+    else mainWindow.show();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

@@ -7,8 +7,6 @@
     "backgroundTitle": "在后台打开",
     "backgroundDesc": "以最小化状态启动，以便挖矿可以在没有窗口的情况下运行",
     "display": "显示",
-    "currencyTitle": "默认货币",
-    "currencyDesc": "在所有显示金额的地方使用",
     "title": "常规"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "布局",
     "densityTitle": "密度",
     "densityDesc": "列表和表格中的垂直间距",
-    "showSidebarColorsTitle": "在侧边栏图标中显示颜色",
-    "showSidebarColorsDesc": "用颜色强调侧边栏中的网络项目",
     "animatedTransitionsTitle": "动画过渡",
     "animatedTransitionsDesc": "平滑的页面切换和运动",
     "title": "外观"
@@ -41,8 +37,6 @@
     "txDesc": "发送、确认和失败的交易",
     "miningTitle": "挖矿事件",
     "miningDesc": "您封存的区块和挖矿里程碑",
-    "securityTitle": "安全事件",
-    "securityDesc": "钱包锁定、密钥显示和其他敏感操作",
     "title": "通知"
   },
   "network": {
@@ -81,17 +75,14 @@
     "extensionTitle": "伴侣浏览器扩展",
     "extensionDesc": "此独立扩展可将外部 dApp 桥接到您的桌面节点。下载附带的 ZIP 文件并将其未打包地加载到您的浏览器中以启用 Web3 连接。",
     "download": "下载 ZIP",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "exportFailed": "无法保存扩展 ZIP。请尝试其他文件夹；如果仍然失败，请附上日志报告问题。"
   },
   "advanced": {
     "subtitle": "开发人员 API、本地存储和诊断",
     "rpcNetwork": "RPC/网络",
     "httpRpcTitle": "启用通过 HTTP 的 JSON-RPC",
     "httpRpcDesc": "监听 127.0.0.1:8545 以进行 dApp 连接",
-    "wsRpcTitle": "启用 WebSocket RPC",
-    "wsRpcDesc": "监听 127.0.0.1:8546",
-    "corsTitle": "允许的 CORS 源",
-    "corsDesc": "允许连接到 RPC 服务器的源",
     "storage": "存储",
     "datadirTitle": "数据目录",
     "datadirDesc": "链数据和密钥库的存储位置",
@@ -163,18 +154,11 @@
     "peers": "节点",
     "maxPeersTitle": "最大节点数",
     "maxPeersDesc": "并发节点连接的上限",
-    "discoveryTitle": "发现",
-    "discoveryDesc": "通过 DHT 自动寻找新节点",
     "listenPortTitle": "监听端口",
     "listenPortDesc": "Gossip 协议使用的 UDP / TCP 端口",
+    "listenPortInvalid": "请输入 {{min}} 到 {{max}} 之间的端口。",
     "connectedPeersTitle": "已连接节点",
     "connectedPeersDesc_other": "当前有 {{count}} 个节点与您通信",
-    "viewList": "查看列表",
-    "sync": "同步",
-    "syncModeTitle": "同步模式",
-    "syncModeDesc": "快照（Snap）快速下载修剪状态。完整（Full）从创世区块验证每个区块",
-    "pruneTitle": "修剪旧状态",
-    "pruneDesc": "保留最近 128 个区块的历史状态以节省磁盘空间",
     "advanced": "高级",
     "bootnodes": {
       "title": "引导节点",
@@ -211,14 +195,10 @@
     "mining": "挖矿",
     "enableTitle": "启用挖矿",
     "enableDesc": "允许此客户端解决区块哈希",
-    "startLaunchTitle": "启动时开始挖矿",
-    "startLaunchDesc": "当 CointMU 启动时自动开始计算哈希",
     "worker": "工作线程",
     "cpuThreadsTitle": "CPU 线程数",
     "cpuThreadsDesc": "用于哈希计算的最大核心数（已分配 {{count}}/{{max}}）",
     "coreCount_other": "{{count}} 核",
-    "intensityTitle": "强度",
-    "intensityDesc": "限制每个线程的 CPU 使用率",
     "pauseTitle": "使用电池时暂停",
     "pauseDesc": "断开笔记本电源时停止挖矿",
     "rewards": "奖励",
@@ -241,17 +221,13 @@
     "privateKeyTitle": "显示私钥",
     "privateKeyDesc": "解密并显示账户的原始私钥",
     "hardwareDesc": "通过 USB 连接 {{device}} 设备",
-    "noUsb": "未检测到 USB",
+    "comingSoon": "即将推出",
     "resetWalletTitle": "重置钱包",
     "resetWalletDesc": "从该设备删除所有帐户和密钥。无法撤销。",
     "resetWalletBtn": "重置...",
     "access": "访问",
     "backup": "备份",
-    "hardware": "硬件",
-    "biometricsTitle": "需要 Touch ID / Windows Hello 来签名",
-    "biometricsDesc": "使用生物识别技术授权每笔交易",
-    "connecting": "连接中...",
-    "connect": "连接"
+    "hardware": "硬件"
   },
   "privacy": {
     "title": "隐私与诊断",
@@ -344,31 +320,14 @@
     "submit": "永久重置钱包"
   },
   "options": {
-    "intensity": {
-      "eco": "节能",
-      "balanced": "均衡",
-      "turbo": "极速"
-    },
     "density": {
       "compact": "紧凑",
       "comfortable": "舒适",
       "spacious": "宽松"
     },
-    "syncMode": {
-      "snap": "快照（Snap，推荐）",
-      "full": "完整（Full）",
-      "light": "轻量（Light）"
-    },
-    "currency": {
-      "cmu": "CMU（原生）",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "信息",
-      "debug": "调试",
-      "warn": "警告",
-      "error": "错误"
+      "debug": "调试"
     },
     "recommendedValue": "{{value}}（推荐）"
   }

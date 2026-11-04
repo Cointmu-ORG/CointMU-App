@@ -5,8 +5,6 @@ import type { SettingsStore } from "@/features/settings";
 import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
-import { INTENSITY_LABEL_KEYS } from "@/shared/lib";
-import { MiningIntensity } from "@bridge/setting-values";
 
 interface MiningSettingsProps {
   config: SettingsStore["mining"];
@@ -15,8 +13,9 @@ interface MiningSettingsProps {
 }
 
 /**
- * Mining settings pane configuring internal node worker threads, intensity,
- * battery behavior, pool vs solo mode, and payout addresses. Actively controls
+ * Mining settings pane configuring internal node worker threads, battery
+ * behavior, pool vs solo mode, and payout addresses. Intensity and Start at
+ * launch are hidden until the miner uses them (#104). Actively controls
  * the underlying Geth node via IPC bridge when settings are changed.
  * @param {MiningSettingsProps} props - The configuration state and the update callback.
  * @returns {JSX.Element} The Mining Settings form component.
@@ -203,25 +202,6 @@ export function MiningSettings({
                 />
               </button>
             </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:miningSettings.startLaunchTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:miningSettings.startLaunchDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() => onUpdate("startAtLaunch", !config.startAtLaunch)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.startAtLaunch ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.startAtLaunch ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
           </div>
         </section>
 
@@ -272,32 +252,6 @@ export function MiningSettings({
                 <span>1</span>
                 <span>{Math.ceil(MAX_CORES / 2)}</span>
                 <span>{MAX_CORES}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:miningSettings.intensityTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:miningSettings.intensityDesc")}
-                </p>
-              </div>
-              <div className="flex items-center bg-slate-100 dark:bg-gray-800 rounded-lg p-1">
-                {Object.values(MiningIntensity).map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => onUpdate("intensity", opt)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                      config.intensity === opt
-                        ? "bg-white dark:bg-gray-700 text-slate-800 dark:text-gray-100 shadow-sm"
-                        : "text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200"
-                    }`}
-                  >
-                    {t(INTENSITY_LABEL_KEYS[opt])}
-                  </button>
-                ))}
               </div>
             </div>
 

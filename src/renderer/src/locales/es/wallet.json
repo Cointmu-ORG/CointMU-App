@@ -2,13 +2,10 @@
   "balanceFromNode": "Saldo del nodo",
   "send": "Enviar",
   "receive": "Recibir",
-  "swap": "Intercambiar",
   "copyAddress": "Copiar dirección",
   "copied": "¡Copiado!",
   "sidebar": {
     "accounts": "Cuentas",
-    "watchList": "Lista de Seguimiento",
-    "noWatched": "No hay Dirección en seguimiento",
     "importWallet": "+ Importar billetera",
     "manageHidden": "Gestionar cuentas ocultas",
     "hideAccount": "Ocultar cuenta"
@@ -20,6 +17,7 @@
     "workspace": "Espacio de Trabajo",
     "title": "Billetera",
     "synced": "Sincronizado",
+    "offline": "Desconectado",
     "backup": "Copia de Seguridad",
     "newAccount": "Nueva cuenta"
   },

@@ -42,6 +42,8 @@ const systemInfo = {
   codename: appInfo.codename,
   build: appInfo.build,
   platform: platformStr,
+  // Node's platform id; decides which OS-specific settings are shown.
+  os: process.platform,
   nodeVersion: process.versions.node,
   // App uptime from the main process start. process.uptime() has a bogus base
   // in a sandboxed preload.

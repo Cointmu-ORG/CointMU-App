@@ -70,8 +70,6 @@
     "subtitle": "当前内部节点配置",
     "workerThreads": "工作线程",
     "ofCores_other": "{{count}} 个核心中的 {{threads}} 个",
-    "intensityTitle": "强度",
-    "higherMoreHeat": "越高 = 越热，求解更快",
     "rewardAddressTitle": "奖励地址",
     "blockRewardsCreditedHere": "区块奖励将发送到此地址",
     "setInMiningSettings": "在挖矿设置中配置",

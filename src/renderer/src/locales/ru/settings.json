@@ -7,8 +7,6 @@
     "backgroundTitle": "Открывать в фоновом режиме",
     "backgroundDesc": "Запускать свернутым, чтобы майнинг работал без окна",
     "display": "Отображение",
-    "currencyTitle": "Валюта по умолчанию",
-    "currencyDesc": "Используется везде, где отображаются суммы",
     "title": "Общие"
   },
   "appearance": {
@@ -21,8 +19,6 @@
     "layout": "Макет",
     "densityTitle": "Плотность",
     "densityDesc": "Вертикальный интервал в списках и таблицах",
-    "showSidebarColorsTitle": "Показывать цветные значки в боковой панели",
-    "showSidebarColorsDesc": "Выделять цветом элементы сети",
     "animatedTransitionsTitle": "Анимированные переходы",
     "animatedTransitionsDesc": "Плавное переключение страниц",
     "title": "Внешний вид"
@@ -41,8 +37,6 @@
     "txDesc": "Отправки, подтверждения и ошибки",
     "miningTitle": "События майнинга",
     "miningDesc": "Найденные блоки и вехи майнинга",
-    "securityTitle": "События безопасности",
-    "securityDesc": "Блокировка, показ ключа и другие действия",
     "title": "Уведомления"
   },
   "network": {
@@ -81,17 +75,14 @@
     "extensionTitle": "Расширение для браузера",
     "extensionDesc": "Мост для внешних dApp к вашему узлу. Скачайте ZIP-архив и загрузите распакованным.",
     "download": "Скачать ZIP",
-    "saving": "Сохранение..."
+    "saving": "Сохранение...",
+    "exportFailed": "Не удалось сохранить ZIP расширения. Попробуйте другую папку; если ошибка повторяется, сообщите о проблеме и приложите логи."
   },
   "advanced": {
     "subtitle": "API разработчика, хранилище и диагностика",
     "rpcNetwork": "RPC/Сеть",
     "httpRpcTitle": "Включить JSON-RPC по HTTP",
     "httpRpcDesc": "Слушать на 127.0.0.1:8545",
-    "wsRpcTitle": "Включить WebSocket RPC",
-    "wsRpcDesc": "Слушать на 127.0.0.1:8546",
-    "corsTitle": "CORS разрешенные источники",
-    "corsDesc": "Источники, которым разрешено подключение",
     "storage": "Хранилище",
     "datadirTitle": "Каталог данных",
     "datadirDesc": "Где хранятся данные цепи",
@@ -163,21 +154,14 @@
     "peers": "Узлы",
     "maxPeersTitle": "Макс. узлов",
     "maxPeersDesc": "Верхний предел одновременных подключений",
-    "discoveryTitle": "Обнаружение",
-    "discoveryDesc": "Автоматически находить новые узлы через DHT",
     "listenPortTitle": "Порт прослушивания",
     "listenPortDesc": "Порт UDP / TCP протокола gossip",
+    "listenPortInvalid": "Введите порт от {{min}} до {{max}}.",
     "connectedPeersTitle": "Подключенные узлы",
     "connectedPeersDesc_one": "{{count}} узел в сети",
     "connectedPeersDesc_few": "{{count}} узла в сети",
     "connectedPeersDesc_many": "{{count}} узлов в сети",
     "connectedPeersDesc_other": "{{count}} узла в сети",
-    "viewList": "Список",
-    "sync": "Синхронизация",
-    "syncModeTitle": "Режим",
-    "syncModeDesc": "Snap загружает обрезанное состояние быстро. Full проверяет все блоки от генезиса",
-    "pruneTitle": "Обрезать старое состояние",
-    "pruneDesc": "Хранить последние 128 блоков для экономии места",
     "advanced": "Дополнительно",
     "bootnodes": {
       "title": "Bootnode-узлы",
@@ -214,8 +198,6 @@
     "mining": "Майнинг",
     "enableTitle": "Включить майнинг",
     "enableDesc": "Разрешить клиенту решать хеши блоков",
-    "startLaunchTitle": "Начинать майнинг при запуске",
-    "startLaunchDesc": "Автоматически начинать хеширование",
     "worker": "Воркер",
     "cpuThreadsTitle": "Потоки ЦП",
     "cpuThreadsDesc": "Максимум ядер для хеширования ({{count}}/{{max}})",
@@ -223,8 +205,6 @@
     "coreCount_few": "{{count}} ядра",
     "coreCount_many": "{{count}} ядер",
     "coreCount_other": "{{count}} ядра",
-    "intensityTitle": "Интенсивность",
-    "intensityDesc": "Ограничить использование ЦП на поток",
     "pauseTitle": "Пауза от батареи",
     "pauseDesc": "Остановить майнинг при отключении питания",
     "rewards": "Награды",
@@ -247,17 +227,13 @@
     "privateKeyTitle": "Показать приватный ключ",
     "privateKeyDesc": "Расшифровать и показать сырой ключ",
     "hardwareDesc": "Подключить устройство {{device}} по USB",
-    "noUsb": "USB не обнаружен",
+    "comingSoon": "Скоро",
     "resetWalletTitle": "Сбросить кошелек",
     "resetWalletDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",
     "resetWalletBtn": "Сбросить...",
     "access": "Доступ",
     "backup": "Резервное копирование",
-    "hardware": "Оборудование",
-    "biometricsTitle": "Требовать Touch ID / Windows Hello для подписи",
-    "biometricsDesc": "Использовать биометрию для подтверждения",
-    "connecting": "Подключение...",
-    "connect": "Подключить"
+    "hardware": "Оборудование"
   },
   "privacy": {
     "title": "Конфиденциальность и диагностика",
@@ -350,31 +326,14 @@
     "submit": "Безвозвратно сбросить кошелёк"
   },
   "options": {
-    "intensity": {
-      "eco": "Эко",
-      "balanced": "Сбалансированный",
-      "turbo": "Турбо"
-    },
     "density": {
       "compact": "Компактная",
       "comfortable": "Удобная",
       "spacious": "Просторная"
     },
-    "syncMode": {
-      "snap": "Snap (рекомендуется)",
-      "full": "Full",
-      "light": "Light"
-    },
-    "currency": {
-      "cmu": "CMU (нативная)",
-      "usd": "USD ($)",
-      "eur": "EUR (€)"
-    },
     "logLevel": {
       "info": "Информация",
-      "debug": "Отладка",
-      "warn": "Предупреждение",
-      "error": "Ошибка"
+      "debug": "Отладка"
     },
     "recommendedValue": "{{value}} (рекомендуется)"
   }
