@@ -81,7 +81,8 @@
     "extensionTitle": "Companion Browser Extension",
     "extensionDesc": "This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.",
     "download": "Download ZIP",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "exportFailed": "Could not save the extension ZIP. Try another folder; if it keeps failing, report an issue with the logs."
   },
   "advanced": {
     "subtitle": "Developer APIs, local storage, and diagnostics",

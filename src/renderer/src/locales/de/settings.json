@@ -81,7 +81,8 @@
     "extensionTitle": "Companion-Browser-Erweiterung",
     "extensionDesc": "Diese eigenständige Erweiterung überbrückt externe dApps zu Ihrem Desktop-Knoten. Laden Sie die mitgelieferte ZIP-Datei herunter und laden Sie sie entpackt in Ihren Browser, um Web3-Konnektivität zu aktivieren.",
     "download": "ZIP herunterladen",
-    "saving": "Speichern..."
+    "saving": "Speichern...",
+    "exportFailed": "Das Erweiterungs-ZIP konnte nicht gespeichert werden. Versuche einen anderen Ordner; wenn es weiter fehlschlägt, melde ein Problem mit den Logs."
   },
   "advanced": {
     "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",

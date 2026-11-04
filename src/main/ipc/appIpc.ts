@@ -5,6 +5,7 @@ import { copyFile } from "fs/promises";
 import { resolveDataDir } from "../geth/process/networkConfig";
 import { getDirectorySize } from "../app/directorySize";
 import { resolveDialogText } from "./dialogText";
+import { extensionZipPath } from "./extensionZipPath";
 
 const EXPORT_EXTENSION_DIALOG = {
   title: "Export Companion Browser Extension",
@@ -17,14 +18,14 @@ const EXPORT_EXTENSION_DIALOG = {
  * @returns {void}
  */
 export function registerAppHandlers(): void {
+  // Resolves true once saved and false when the dialog is cancelled; a missing
+  // ZIP or a failed copy rejects so the renderer can tell the user.
   ipcMain.handle("export-extension-zip", async (_, dialogText: unknown) => {
-    const sourcePath = app.isPackaged
-      ? join(process.resourcesPath, "extension.zip")
-      : join(app.getAppPath(), "resources", "extension.zip");
+    const sourcePath = extensionZipPath(app.getAppPath());
 
     if (!existsSync(sourcePath)) {
       console.error("[export] Extension ZIP not found at:", sourcePath);
-      return false;
+      throw new Error(`Extension ZIP not found at ${sourcePath}`);
     }
 
     const text = resolveDialogText(dialogText, EXPORT_EXTENSION_DIALOG);
@@ -43,7 +44,7 @@ export function registerAppHandlers(): void {
       return true;
     } catch (err) {
       console.error("[export] Failed to copy extension ZIP:", err);
-      return false;
+      throw err;
     }
   });
 

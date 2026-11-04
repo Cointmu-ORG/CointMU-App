@@ -81,7 +81,8 @@
     "extensionTitle": "Extensión de Navegador Complementaria",
     "extensionDesc": "Esta extensión conecta dApps externas a tu nodo de escritorio. Descarga el ZIP incluido y cárgalo sin empaquetar en tu navegador para la conectividad Web3.",
     "download": "Descargar ZIP",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "exportFailed": "No se pudo guardar el ZIP de la extensión. Prueba otra carpeta; si sigue fallando, informa del problema con los registros."
   },
   "advanced": {
     "subtitle": "APIs de desarrollo, almacenamiento local y diagnósticos",

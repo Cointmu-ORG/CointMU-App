@@ -81,7 +81,8 @@
     "extensionTitle": "伴侣浏览器扩展",
     "extensionDesc": "此独立扩展可将外部 dApp 桥接到您的桌面节点。下载附带的 ZIP 文件并将其未打包地加载到您的浏览器中以启用 Web3 连接。",
     "download": "下载 ZIP",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "exportFailed": "无法保存扩展 ZIP。请尝试其他文件夹；如果仍然失败，请附上日志报告问题。"
   },
   "advanced": {
     "subtitle": "开发人员 API、本地存储和诊断",

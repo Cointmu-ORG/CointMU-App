@@ -81,7 +81,8 @@
     "extensionTitle": "Ekstensi Peramban Pendamping",
     "extensionDesc": "Ekstensi mandiri ini menjembatani dApp eksternal ke node desktop Anda. Unduh file ZIP yang disertakan dan muat yang belum dibongkar ke peramban Anda untuk mengaktifkan konektivitas Web3.",
     "download": "Unduh ZIP",
-    "saving": "Menyimpan..."
+    "saving": "Menyimpan...",
+    "exportFailed": "ZIP ekstensi tidak dapat disimpan. Coba folder lain; jika masih gagal, laporkan masalah beserta log-nya."
   },
   "advanced": {
     "subtitle": "API Pengembang, penyimpanan lokal, dan diagnostik",
