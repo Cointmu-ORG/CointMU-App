@@ -36,7 +36,6 @@
     "balanceFromNode": "Saldo del nodo",
     "send": "Enviar",
     "receive": "Recibir",
-    "stake": "Apostar (Stake)",
     "miningLive": "Minería en vivo"
   },
   "activityFeed": {

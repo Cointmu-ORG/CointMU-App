@@ -7,8 +7,8 @@ interface ExplorerHeaderProps {
 }
 
 /**
- * Explorer header showing the network breadcrumb, the current block height or a
- * disconnected indicator, and the saved searches action.
+ * Explorer header showing the network breadcrumb and the current block height
+ * or a disconnected indicator.
  * @param props - Connection state and the formatted network height label.
  * @returns The rendered explorer header.
  */
@@ -43,10 +43,6 @@ function ExplorerHeader({
               : t("explorer:header.disconnected")}
           </span>
         </div>
-
-        <button className="px-4 py-1.5 rounded border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
-          {t("explorer:header.savedSearches")}
-        </button>
       </div>
     </header>
   );

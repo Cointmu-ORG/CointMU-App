@@ -2,7 +2,7 @@ import { type DerivedAccount, AccountIcon } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowUp, ArrowDown, RefreshCw, Check, Copy } from "lucide-react";
+import { ArrowUp, ArrowDown, Check, Copy } from "lucide-react";
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined;
@@ -15,7 +15,7 @@ interface AccountHeroCardProps {
 
 /**
  * Hero card for the selected account showing its identity, QR code, node-reported
- * balance, and the primary send, receive, swap, and copy actions.
+ * balance, and the primary send, receive, and copy actions.
  * @param props - The active account, gradient, balance, copy flag, and handlers.
  * @returns The rendered account hero card.
  */
@@ -93,10 +93,6 @@ function AccountHeroCard({
           >
             <ArrowDown width={12} height={12} strokeWidth={2.5} />
             {t("wallet:receive")}
-          </button>
-          <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors">
-            <RefreshCw width={12} height={12} />
-            {t("wallet:swap")}
           </button>
           <button
             onClick={onCopy}

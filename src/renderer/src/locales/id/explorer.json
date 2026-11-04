@@ -95,13 +95,12 @@
     "network": "Jaringan",
     "explorer": "Penjelajah",
     "blockHeight": "Blok # {{height}}",
-    "disconnected": "Terputus",
-    "savedSearches": "Pencarian tersimpan"
+    "disconnected": "Terputus"
   },
   "search": {
     "searchChain": "Cari di rantai",
     "title": "Blok, transaksi, atau alamat",
-    "placeholder": "0x... alamat, hash tx, nomor blok, atau username.cmu",
+    "placeholder": "0x... alamat, hash tx, atau nomor blok",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

@@ -95,13 +95,12 @@
     "network": "Network",
     "explorer": "Explorer",
     "blockHeight": "Block # {{height}}",
-    "disconnected": "Disconnected",
-    "savedSearches": "Saved searches"
+    "disconnected": "Disconnected"
   },
   "search": {
     "searchChain": "Search the chain",
     "title": "Block, transaction, or address",
-    "placeholder": "0x... address, transaction hash, block number, or username.cmu",
+    "placeholder": "0x... address, transaction hash, or block number",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

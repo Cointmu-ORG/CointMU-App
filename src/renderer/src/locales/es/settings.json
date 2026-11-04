@@ -168,11 +168,11 @@
     "discoveryDesc": "Encuentra automáticamente nuevos pares a través de DHT",
     "listenPortTitle": "Puerto de escucha",
     "listenPortDesc": "Puerto UDP / TCP usado por el protocolo gossip",
+    "listenPortInvalid": "Introduce un puerto entre {{min}} y {{max}}.",
     "connectedPeersTitle": "Pares conectados",
     "connectedPeersDesc_one": "{{count}} nodo interactuando actualmente contigo",
     "connectedPeersDesc_many": "{{count}} nodos interactuando actualmente contigo",
     "connectedPeersDesc_other": "{{count}} nodos interactuando actualmente contigo",
-    "viewList": "Ver lista",
     "sync": "Sincronización",
     "syncModeTitle": "Modo de sincronización",
     "syncModeDesc": "Snap descarga estado podado rápidamente. Full valida cada bloque desde la génesis",
@@ -246,7 +246,7 @@
     "privateKeyTitle": "Revelar clave privada",
     "privateKeyDesc": "Desencriptar y mostrar clave privada cruda de una cuenta",
     "hardwareDesc": "Conectar dispositivo {{device}} vía USB",
-    "noUsb": "No se detectó USB",
+    "comingSoon": "Próximamente",
     "resetWalletTitle": "Restablecer billetera",
     "resetWalletDesc": "Elimina cuentas y claves de este dispositivo. No se puede deshacer.",
     "resetWalletBtn": "Restablecer...",
@@ -254,9 +254,7 @@
     "backup": "Copia de seguridad",
     "hardware": "Hardware",
     "biometricsTitle": "Requerir Touch ID / Windows Hello para firmar",
-    "biometricsDesc": "Usar biometría para autorizar cada transacción",
-    "connecting": "Conectando...",
-    "connect": "Conectar"
+    "biometricsDesc": "Usar biometría para autorizar cada transacción"
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",

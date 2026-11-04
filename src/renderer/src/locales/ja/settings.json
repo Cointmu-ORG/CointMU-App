@@ -168,9 +168,9 @@
     "discoveryDesc": "DHTを介して新しいピアを自動的に検索します",
     "listenPortTitle": "リッスンポート",
     "listenPortDesc": "ゴシッププロトコルで使用されるUDP / TCPポート",
+    "listenPortInvalid": "{{min}}〜{{max}}のポート番号を入力してください。",
     "connectedPeersTitle": "接続されたピア",
     "connectedPeersDesc_other": "{{count}} 個のノードが現在あなたと通信しています",
-    "viewList": "リストを表示",
     "sync": "同期",
     "syncModeTitle": "同期モード",
     "syncModeDesc": "Snapは剪定された状態を素早くダウンロードします。Fullはジェネシスからすべてのブロックを検証します",
@@ -242,7 +242,7 @@
     "privateKeyTitle": "秘密鍵の表示",
     "privateKeyDesc": "アカウントの生の秘密鍵を復号化して表示します",
     "hardwareDesc": "USB経由で{{device}}デバイスを接続します",
-    "noUsb": "USBが検出されません",
+    "comingSoon": "近日対応予定",
     "resetWalletTitle": "ウォレットのリセット",
     "resetWalletDesc": "このデバイスからすべてのアカウントとキーを削除します。元に戻すことはできません。",
     "resetWalletBtn": "リセット...",
@@ -250,9 +250,7 @@
     "backup": "バックアップ",
     "hardware": "ハードウェア",
     "biometricsTitle": "署名にTouch ID / Windows Helloを要求する",
-    "biometricsDesc": "すべてのトランザクションを承認するために生体認証を使用します",
-    "connecting": "接続中...",
-    "connect": "接続"
+    "biometricsDesc": "すべてのトランザクションを承認するために生体認証を使用します"
   },
   "privacy": {
     "title": "プライバシーと診断",

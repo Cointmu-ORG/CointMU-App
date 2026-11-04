@@ -3,8 +3,6 @@ import { type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, EyeOff } from "lucide-react";
 
-const WATCH_LIST: never[] = [];
-
 interface AccountSidebarProps {
   accounts: DerivedAccount[];
   activeWalletAddress: string | null;
@@ -17,9 +15,8 @@ interface AccountSidebarProps {
 }
 
 /**
- * Wallet accounts sidebar listing visible accounts with balances, the watch
- * list placeholder, and entry points for deriving, importing, and managing
- * hidden accounts.
+ * Wallet accounts sidebar listing visible accounts with balances, and entry
+ * points for deriving, importing, and managing hidden accounts.
  * @param props - Account data, the active address, balance, and action handlers.
  * @returns The rendered account sidebar.
  */
@@ -104,21 +101,6 @@ function AccountSidebar({
                 </button>
               );
             })}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 mb-3">
-          {t("wallet:sidebar.watchList")}
-        </h3>
-        <div className="space-y-2">
-          {WATCH_LIST.length > 0 ? (
-            WATCH_LIST.map((_, i) => <div key={i} />)
-          ) : (
-            <p className="text-xs text-slate-400 px-3 py-2">
-              {t("wallet:sidebar.noWatched")}
-            </p>
-          )}
         </div>
       </div>
 

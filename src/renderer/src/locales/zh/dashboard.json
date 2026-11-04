@@ -36,7 +36,6 @@
     "balanceFromNode": "节点余额",
     "send": "发送",
     "receive": "接收",
-    "stake": "质押",
     "miningLive": "挖矿进行中"
   },
   "activityFeed": {

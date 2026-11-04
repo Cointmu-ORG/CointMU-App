@@ -2,13 +2,10 @@
   "balanceFromNode": "节点余额",
   "send": "发送",
   "receive": "接收",
-  "swap": "兑换",
   "copyAddress": "复制地址",
   "copied": "已复制！",
   "sidebar": {
     "accounts": "账户",
-    "watchList": "监控列表",
-    "noWatched": "没有监控地址",
     "importWallet": "+ 导入钱包",
     "manageHidden": "管理隐藏账户",
     "hideAccount": "隐藏账户"
@@ -20,6 +17,7 @@
     "workspace": "工作区",
     "title": "钱包",
     "synced": "已同步",
+    "offline": "离线",
     "backup": "备份",
     "newAccount": "新建账户"
   },

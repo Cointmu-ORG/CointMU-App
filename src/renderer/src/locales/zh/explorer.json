@@ -95,13 +95,12 @@
     "network": "网络",
     "explorer": "浏览器",
     "blockHeight": "区块 # {{height}}",
-    "disconnected": "已断开",
-    "savedSearches": "已保存的搜索"
+    "disconnected": "已断开"
   },
   "search": {
     "searchChain": "搜索链上数据",
     "title": "区块、交易或地址",
-    "placeholder": "0x... 地址、交易哈希、区块号或用户名.cmu",
+    "placeholder": "0x... 地址、交易哈希或区块号",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

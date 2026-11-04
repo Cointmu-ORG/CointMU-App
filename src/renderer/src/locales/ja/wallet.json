@@ -2,13 +2,10 @@
   "balanceFromNode": "ノードの残高",
   "send": "送信",
   "receive": "受信",
-  "swap": "スワップ",
   "copyAddress": "アドレスをコピー",
   "copied": "コピーしました！",
   "sidebar": {
     "accounts": "アカウント",
-    "watchList": "ウォッチリスト",
-    "noWatched": "ウォッチしているアドレスはありません",
     "importWallet": "+ ウォレットをインポート",
     "manageHidden": "非表示アカウントの管理",
     "hideAccount": "アカウントを非表示"
@@ -20,6 +17,7 @@
     "workspace": "ワークスペース",
     "title": "ウォレット",
     "synced": "同期済み",
+    "offline": "オフライン",
     "backup": "バックアップ",
     "newAccount": "新規アカウント"
   },

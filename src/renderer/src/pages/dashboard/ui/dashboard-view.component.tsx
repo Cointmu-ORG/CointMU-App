@@ -271,6 +271,9 @@ function DashboardPage({
             abbrAddress={abbrAddress}
             activeWalletAddress={activeWalletAddress}
             walletLabel={walletLabel}
+            onSend={handleSend}
+            onReceive={handleReceive}
+            onOpenMining={() => onNavigate("miner")}
           />
           <NetworkHealthPanel
             isConnected={isConnected}

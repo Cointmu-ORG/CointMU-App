@@ -36,7 +36,6 @@
     "balanceFromNode": "Guthaben vom Node",
     "send": "Senden",
     "receive": "Empfangen",
-    "stake": "Staken",
     "miningLive": "Mining aktiv"
   },
   "activityFeed": {

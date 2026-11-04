@@ -1,18 +1,14 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  useBiometrics,
-  useHardwareDetection,
-  CONNECT_FEEDBACK_MS,
-  useSecurityStore,
-} from "@/features/settings";
+import { useBiometrics, useSecurityStore } from "@/features/settings";
 import { ShieldCheck } from "lucide-react";
 import { RevealPrivateKeyModal } from "./reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "./recovery-phrase-modal.component";
 import { ExportKeystoreModal } from "./export-keystore-modal.component";
 import { ResetWalletModal } from "./reset-wallet-modal.component";
 
-type HardwareDevice = "ledger" | "trezor";
+// No device support yet (#106): the rows only announce it.
+const HARDWARE_WALLETS = ["Ledger", "Trezor"] as const;
 
 interface ToggleProps {
   value: boolean;
@@ -52,28 +48,11 @@ export function SecuritySettings(): JSX.Element {
     (s) => s.toggleRequireBiometrics,
   );
   const { isSupported: biometricsSupported } = useBiometrics();
-  const hasDevice = useHardwareDetection();
 
   const [showReveal, setShowReveal] = useState(false);
   const [showRecovery, setShowRecovery] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showReset, setShowReset] = useState(false);
-  const [connecting, setConnecting] = useState<HardwareDevice | null>(null);
-
-  const connectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (connectTimerRef.current) clearTimeout(connectTimerRef.current);
-    };
-  }, []);
-
-  const handleConnect = (device: HardwareDevice): void => {
-    setConnecting(device);
-    connectTimerRef.current = setTimeout(() => {
-      setConnecting(null);
-    }, CONNECT_FEEDBACK_MS);
-  };
 
   return (
     <div>
@@ -188,53 +167,27 @@ export function SecuritySettings(): JSX.Element {
             {t("settings:securitySettings.hardware")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  Ledger
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:securitySettings.hardwareDesc", {
-                    device: "Ledger",
-                  })}
-                </p>
-              </div>
-              <button
-                onClick={() => handleConnect("ledger")}
-                disabled={!hasDevice || connecting !== null}
-                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            {HARDWARE_WALLETS.map((device) => (
+              <div
+                key={device}
+                className="flex items-center justify-between p-4"
               >
-                {!hasDevice
-                  ? t("settings:securitySettings.noUsb")
-                  : connecting === "ledger"
-                    ? t("settings:securitySettings.connecting")
-                    : t("settings:securitySettings.connect")}
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  Trezor
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:securitySettings.hardwareDesc", {
-                    device: "Trezor",
-                  })}
-                </p>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
+                    {device}
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                    {t("settings:securitySettings.hardwareDesc", { device })}
+                  </p>
+                </div>
+                <button
+                  disabled
+                  className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 shadow-sm opacity-50 cursor-not-allowed"
+                >
+                  {t("settings:securitySettings.comingSoon")}
+                </button>
               </div>
-              <button
-                onClick={() => handleConnect("trezor")}
-                disabled={!hasDevice || connecting !== null}
-                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {!hasDevice
-                  ? t("settings:securitySettings.noUsb")
-                  : connecting === "trezor"
-                    ? t("settings:securitySettings.connecting")
-                    : t("settings:securitySettings.connect")}
-              </button>
-            </div>
+            ))}
 
             <div className="flex items-center justify-between p-4 mt-6 border-t border-slate-200 dark:border-gray-800">
               <div>

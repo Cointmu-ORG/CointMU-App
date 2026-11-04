@@ -2,13 +2,10 @@
   "balanceFromNode": "Saldo dari node",
   "send": "Kirim",
   "receive": "Terima",
-  "swap": "Tukar",
   "copyAddress": "Salin alamat",
   "copied": "Tersalin!",
   "sidebar": {
     "accounts": "Akun",
-    "watchList": "Daftar Pantau",
-    "noWatched": "Tidak ada alamat dipantau",
     "importWallet": "+ Impor dompet",
     "manageHidden": "Kelola akun tersembunyi",
     "hideAccount": "Sembunyikan akun"
@@ -20,6 +17,7 @@
     "workspace": "Ruang Kerja",
     "title": "Dompet",
     "synced": "Tersinkron",
+    "offline": "Luring",
     "backup": "Cadangkan",
     "newAccount": "Akun baru"
   },

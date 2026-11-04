@@ -168,9 +168,9 @@
     "discoveryDesc": "Temukan rekan baru secara otomatis melalui DHT",
     "listenPortTitle": "Port dengar",
     "listenPortDesc": "Port UDP / TCP yang digunakan oleh protokol gossip",
+    "listenPortInvalid": "Masukkan port antara {{min}} dan {{max}}.",
     "connectedPeersTitle": "Rekan terhubung",
     "connectedPeersDesc_other": "{{count}} node saat ini berkomunikasi dengan Anda",
-    "viewList": "Lihat daftar",
     "sync": "Sinkronisasi",
     "syncModeTitle": "Mode sinkronisasi",
     "syncModeDesc": "Snap mengunduh status terpangkas dengan cepat. Full memvalidasi setiap blok dari genesis",
@@ -242,7 +242,7 @@
     "privateKeyTitle": "Tampilkan kunci pribadi",
     "privateKeyDesc": "Dekripsi dan tampilkan kunci pribadi mentah untuk akun",
     "hardwareDesc": "Hubungkan perangkat {{device}} melalui USB",
-    "noUsb": "Tidak ada USB yang terdeteksi",
+    "comingSoon": "Segera hadir",
     "resetWalletTitle": "Reset dompet",
     "resetWalletDesc": "Menghapus semua akun dan kunci dari perangkat ini. Tidak dapat dibatalkan.",
     "resetWalletBtn": "Reset...",
@@ -250,9 +250,7 @@
     "backup": "Cadangan",
     "hardware": "Perangkat Keras",
     "biometricsTitle": "Perlukan Touch ID / Windows Hello untuk menandatangani",
-    "biometricsDesc": "Gunakan biometrik untuk mengotorisasi setiap transaksi",
-    "connecting": "Menghubungkan...",
-    "connect": "Hubungkan"
+    "biometricsDesc": "Gunakan biometrik untuk mengotorisasi setiap transaksi"
   },
   "privacy": {
     "title": "Privasi & Diagnostik",

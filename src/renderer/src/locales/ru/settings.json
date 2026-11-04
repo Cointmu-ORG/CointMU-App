@@ -168,12 +168,12 @@
     "discoveryDesc": "Автоматически находить новые узлы через DHT",
     "listenPortTitle": "Порт прослушивания",
     "listenPortDesc": "Порт UDP / TCP протокола gossip",
+    "listenPortInvalid": "Введите порт от {{min}} до {{max}}.",
     "connectedPeersTitle": "Подключенные узлы",
     "connectedPeersDesc_one": "{{count}} узел в сети",
     "connectedPeersDesc_few": "{{count}} узла в сети",
     "connectedPeersDesc_many": "{{count}} узлов в сети",
     "connectedPeersDesc_other": "{{count}} узла в сети",
-    "viewList": "Список",
     "sync": "Синхронизация",
     "syncModeTitle": "Режим",
     "syncModeDesc": "Snap загружает обрезанное состояние быстро. Full проверяет все блоки от генезиса",
@@ -248,7 +248,7 @@
     "privateKeyTitle": "Показать приватный ключ",
     "privateKeyDesc": "Расшифровать и показать сырой ключ",
     "hardwareDesc": "Подключить устройство {{device}} по USB",
-    "noUsb": "USB не обнаружен",
+    "comingSoon": "Скоро",
     "resetWalletTitle": "Сбросить кошелек",
     "resetWalletDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",
     "resetWalletBtn": "Сбросить...",
@@ -256,9 +256,7 @@
     "backup": "Резервное копирование",
     "hardware": "Оборудование",
     "biometricsTitle": "Требовать Touch ID / Windows Hello для подписи",
-    "biometricsDesc": "Использовать биометрию для подтверждения",
-    "connecting": "Подключение...",
-    "connect": "Подключить"
+    "biometricsDesc": "Использовать биометрию для подтверждения"
   },
   "privacy": {
     "title": "Конфиденциальность и диагностика",

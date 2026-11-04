@@ -168,9 +168,9 @@
     "discoveryDesc": "通过 DHT 自动寻找新节点",
     "listenPortTitle": "监听端口",
     "listenPortDesc": "Gossip 协议使用的 UDP / TCP 端口",
+    "listenPortInvalid": "请输入 {{min}} 到 {{max}} 之间的端口。",
     "connectedPeersTitle": "已连接节点",
     "connectedPeersDesc_other": "当前有 {{count}} 个节点与您通信",
-    "viewList": "查看列表",
     "sync": "同步",
     "syncModeTitle": "同步模式",
     "syncModeDesc": "快照（Snap）快速下载修剪状态。完整（Full）从创世区块验证每个区块",
@@ -242,7 +242,7 @@
     "privateKeyTitle": "显示私钥",
     "privateKeyDesc": "解密并显示账户的原始私钥",
     "hardwareDesc": "通过 USB 连接 {{device}} 设备",
-    "noUsb": "未检测到 USB",
+    "comingSoon": "即将推出",
     "resetWalletTitle": "重置钱包",
     "resetWalletDesc": "从该设备删除所有帐户和密钥。无法撤销。",
     "resetWalletBtn": "重置...",
@@ -250,9 +250,7 @@
     "backup": "备份",
     "hardware": "硬件",
     "biometricsTitle": "需要 Touch ID / Windows Hello 来签名",
-    "biometricsDesc": "使用生物识别技术授权每笔交易",
-    "connecting": "连接中...",
-    "connect": "连接"
+    "biometricsDesc": "使用生物识别技术授权每笔交易"
   },
   "privacy": {
     "title": "隐私与诊断",

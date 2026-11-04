@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import { existsSync } from "fs";
 import { spawn, ChildProcess } from "child_process";
 import ms from "ms";
+import { isListenPort } from "../../../bridge/network";
 import { buildGethHttpArgs, buildGethIpcArgs } from "./gethArgs";
 import { getNetworkId, resolveDataDir, resolveDataRoot } from "./networkConfig";
 import { findAvailableP2pPort, getAuthRpcPort, getRpcPort } from "./ports";
@@ -94,8 +95,10 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
   }
 
   const isRpcEnabled = store.get("advanced.httpRpc") ?? true;
-  const configuredListenPort =
-    store.get("network.listenPort") || DEFAULT_P2P_PORT;
+  const storedListenPort: unknown = store.get("network.listenPort");
+  const configuredListenPort = isListenPort(storedListenPort)
+    ? storedListenPort
+    : DEFAULT_P2P_PORT;
   const listenPort = await findAvailableP2pPort(configuredListenPort);
   if (listenPort !== configuredListenPort) {
     console.warn(

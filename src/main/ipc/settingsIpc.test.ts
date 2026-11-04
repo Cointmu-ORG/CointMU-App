@@ -1,5 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ipcMain } from "electron";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerSettingsHandlers } from "./settingsIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
@@ -7,10 +8,39 @@ vi.mock("../extension/extensionSyncServer", () => ({
   broadcastWalletState: vi.fn(),
 }));
 vi.mock("../geth/process/ports", () => ({ getRpcPort: () => 8545 }));
+vi.mock("../geth/process/nodeRestart", () => ({
+  restartNodeByUser: vi.fn(() => true),
+}));
 
 type Handler = (event: unknown, ...args: unknown[]) => unknown;
 
-function registerSet(): {
+/** A store with electron-store's dotted-key get/set over a plain object. */
+function createDottedStore(data: Record<string, unknown>): {
+  get: ReturnType<typeof vi.fn>;
+  set: ReturnType<typeof vi.fn>;
+  store: Record<string, unknown>;
+} {
+  const get = vi.fn((key: string) =>
+    key
+      .split(".")
+      .reduce<unknown>(
+        (node, part) => (node as Record<string, unknown> | undefined)?.[part],
+        data,
+      ),
+  );
+  const set = vi.fn((key: string, value: unknown) => {
+    const parts = key.split(".");
+    const last = parts.pop() ?? key;
+    const parent = parts.reduce<Record<string, unknown>>((node, part) => {
+      node[part] ??= {};
+      return node[part] as Record<string, unknown>;
+    }, data);
+    parent[last] = value;
+  });
+  return { get, set, store: data };
+}
+
+function registerSet(data: Record<string, unknown> = {}): {
   setHandler: Handler;
   store: { get: ReturnType<typeof vi.fn>; set: ReturnType<typeof vi.fn> };
 } {
@@ -18,7 +48,7 @@ function registerSet(): {
   vi.mocked(ipcMain.handle).mockImplementation((channel, handler) => {
     handlers.set(channel, handler as Handler);
   });
-  const store = { get: vi.fn(), set: vi.fn(), store: {} };
+  const store = createDottedStore(data);
   registerSettingsHandlers(store);
   const setHandler = handlers.get("settings:set");
   if (!setHandler) throw new Error("settings:set was not registered");
@@ -51,5 +81,35 @@ describe("settings:set", () => {
     setHandler(null, "network.maxPeers", 25);
 
     expect(store.set).toHaveBeenCalledWith("network.maxPeers", 25);
+  });
+});
+
+describe("settings:set and the running node", () => {
+  beforeEach(() => {
+    vi.mocked(restartNodeByUser).mockClear();
+  });
+
+  it("restarts geth when the listen port changes", () => {
+    const { setHandler } = registerSet({ network: { listenPort: 30303 } });
+
+    setHandler(null, "network.listenPort", 30310);
+
+    expect(restartNodeByUser).toHaveBeenCalledTimes(1);
+  });
+
+  it("leaves geth running when the saved port is the same", () => {
+    const { setHandler } = registerSet({ network: { listenPort: 30303 } });
+
+    setHandler(null, "network.listenPort", 30303);
+
+    expect(restartNodeByUser).not.toHaveBeenCalled();
+  });
+
+  it("leaves geth running for settings it does not read", () => {
+    const { setHandler } = registerSet({ general: { currency: "cmu" } });
+
+    setHandler(null, "general.currency", "usd");
+
+    expect(restartNodeByUser).not.toHaveBeenCalled();
   });
 });

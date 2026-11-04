@@ -12,6 +12,7 @@ import { useAppStore } from "@/shared/model";
 import { CustomDropdown } from "@/shared/ui";
 import { SYNC_MODE_LABEL_KEYS } from "@/shared/lib";
 import { BootnodeSettings } from "./bootnode-settings.component";
+import { ListenPortRow } from "./listen-port-row.component";
 
 interface NetworkSettingsProps {
   config: SettingsStore["network"];
@@ -128,19 +129,11 @@ export function NetworkSettings({
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:networkSettings.listenPortTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:networkSettings.listenPortDesc")}
-                </p>
-              </div>
-              <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
-                {config.listenPort}
-              </span>
-            </div>
+            <ListenPortRow
+              key={config.listenPort}
+              port={config.listenPort}
+              onSave={(port) => onUpdate("listenPort", port)}
+            />
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
@@ -155,9 +148,6 @@ export function NetworkSettings({
                   </p>
                 )}
               </div>
-              <button className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
-                {t("settings:networkSettings.viewList")}
-              </button>
             </div>
           </div>
         </section>

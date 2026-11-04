@@ -168,10 +168,10 @@
     "discoveryDesc": "Automatically find new peers via DHT",
     "listenPortTitle": "Listen port",
     "listenPortDesc": "UDP / TCP port used by the gossip protocol",
+    "listenPortInvalid": "Enter a port from {{min}} to {{max}}.",
     "connectedPeersTitle": "Connected peers",
     "connectedPeersDesc_one": "{{count}} node currently gossiping with you",
     "connectedPeersDesc_other": "{{count}} nodes currently gossiping with you",
-    "viewList": "View list",
     "sync": "Sync",
     "syncModeTitle": "Sync mode",
     "syncModeDesc": "Snap downloads pruned state quickly. Full validates every block from genesis",
@@ -244,7 +244,7 @@
     "privateKeyTitle": "Reveal private key",
     "privateKeyDesc": "Decrypt and display the raw private key for an account",
     "hardwareDesc": "Connect a {{device}} device via USB",
-    "noUsb": "No USB detected",
+    "comingSoon": "Coming soon",
     "resetWalletTitle": "Reset wallet",
     "resetWalletDesc": "Removes all accounts and keys from this device. Cannot be undone.",
     "resetWalletBtn": "Reset...",
@@ -252,9 +252,7 @@
     "backup": "Backup",
     "hardware": "Hardware",
     "biometricsTitle": "Require Touch ID / Windows Hello to sign",
-    "biometricsDesc": "Use biometrics to authorize every transaction",
-    "connecting": "Connecting...",
-    "connect": "Connect"
+    "biometricsDesc": "Use biometrics to authorize every transaction"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",

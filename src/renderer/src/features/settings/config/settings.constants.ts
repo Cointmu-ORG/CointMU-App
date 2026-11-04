@@ -5,7 +5,6 @@ export const SECURITY_SETTINGS_KEY = "security";
 export const ADVANCED_SETTINGS_KEY = "advanced";
 export const AUTO_HIDE_SECONDS = 30;
 export const RESET_CONFIRM_WORD = "RESET";
-export const CONNECT_FEEDBACK_MS = 1500;
 export const MINING_DEBOUNCE_DELAY_MS = 800;
 export const MAX_CORES = navigator.hardwareConcurrency || 8;
 export const UPTIME_REFRESH_MS = ms("1m");

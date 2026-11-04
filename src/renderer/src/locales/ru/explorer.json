@@ -95,13 +95,12 @@
     "network": "Сеть",
     "explorer": "Обозреватель",
     "blockHeight": "Блок # {{height}}",
-    "disconnected": "Отключено",
-    "savedSearches": "Сохранённые запросы"
+    "disconnected": "Отключено"
   },
   "search": {
     "searchChain": "Поиск по цепи",
     "title": "Блок, транзакция или адрес",
-    "placeholder": "Адрес 0x..., хеш транзакции, номер блока или имяпользователя.cmu",
+    "placeholder": "Адрес 0x..., хеш транзакции или номер блока",
     "shortcut": "Ctrl+K"
   },
   "txDetail": {

@@ -2,13 +2,10 @@
   "balanceFromNode": "Balance from node",
   "send": "Send",
   "receive": "Receive",
-  "swap": "Swap",
   "copyAddress": "Copy address",
   "copied": "Copied!",
   "sidebar": {
     "accounts": "Accounts",
-    "watchList": "Watch List",
-    "noWatched": "No watched addresses",
     "importWallet": "+ Import wallet",
     "manageHidden": "Manage hidden accounts",
     "hideAccount": "Hide account"
@@ -20,6 +17,7 @@
     "workspace": "Workspace",
     "title": "Wallet",
     "synced": "Synced",
+    "offline": "Offline",
     "backup": "Backup",
     "newAccount": "New account"
   },

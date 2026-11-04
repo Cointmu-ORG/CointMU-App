@@ -168,10 +168,10 @@
     "discoveryDesc": "Automatisch neue Peers über DHT finden",
     "listenPortTitle": "Listen-Port",
     "listenPortDesc": "UDP / TCP-Port, der vom Gossip-Protokoll verwendet wird",
+    "listenPortInvalid": "Gib einen Port von {{min}} bis {{max}} ein.",
     "connectedPeersTitle": "Verbundene Peers",
     "connectedPeersDesc_one": "{{count}} Knoten, der derzeit mit Ihnen kommuniziert",
     "connectedPeersDesc_other": "{{count}} Knoten, die derzeit mit Ihnen kommunizieren",
-    "viewList": "Liste ansehen",
     "sync": "Synchronisation",
     "syncModeTitle": "Sync-Modus",
     "syncModeDesc": "Snap lädt bereinigten Zustand schnell herunter. Full validiert jeden Block ab Genesis",
@@ -244,7 +244,7 @@
     "privateKeyTitle": "Privaten Schlüssel anzeigen",
     "privateKeyDesc": "Entschlüsseln und den rohen privaten Schlüssel für ein Konto anzeigen",
     "hardwareDesc": "{{device}}-Gerät über USB verbinden",
-    "noUsb": "Kein USB erkannt",
+    "comingSoon": "Demnächst verfügbar",
     "resetWalletTitle": "Wallet zurücksetzen",
     "resetWalletDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",
     "resetWalletBtn": "Zurücksetzen...",
@@ -252,9 +252,7 @@
     "backup": "Sicherung",
     "hardware": "Hardware",
     "biometricsTitle": "Touch ID / Windows Hello zum Signieren anfordern",
-    "biometricsDesc": "Biometrie verwenden, um jede Transaktion zu autorisieren",
-    "connecting": "Verbinden...",
-    "connect": "Verbinden"
+    "biometricsDesc": "Biometrie verwenden, um jede Transaktion zu autorisieren"
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",
