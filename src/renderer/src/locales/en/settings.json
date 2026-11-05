@@ -65,7 +65,15 @@
     "installModeTitle": "When an update is ready",
     "installModeDesc": "The node always shuts down cleanly before an update installs.",
     "installOnQuit": "Install when I quit",
-    "installAsk": "Ask me"
+    "installAsk": "Ask me",
+    "explorerCacheTitle": "Explorer cache",
+    "explorerCacheDesc": "The local block index behind the explorer's miner charts. Reset it if the charts look wrong.",
+    "explorerCacheReset": "Reset…",
+    "explorerCacheConfirmTitle": "Reset the explorer cache?",
+    "explorerCacheConfirmBody": "The index is deleted and rebuilt from your node in the background. Miner charts stay incomplete until it catches up. Your wallet and chain data are not touched.",
+    "explorerCacheConfirm": "Reset cache",
+    "explorerCacheDone": "Rebuilding in the background.",
+    "explorerCacheFailed": "The cache could not be reset."
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

@@ -64,6 +64,7 @@ interface CointmuAPI {
       range: MinerRange,
     ) => Promise<MinerDistributionResult | null>;
     getIndexStatus: () => Promise<ExplorerIndexStatus | null>;
+    rebuildIndex: () => Promise<void>;
   };
   network: {
     getInsights: () => Promise<{

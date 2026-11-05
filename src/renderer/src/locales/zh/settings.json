@@ -65,7 +65,15 @@
     "installModeTitle": "更新就绪时",
     "installModeDesc": "安装更新前，节点总会先正常关闭。",
     "installOnQuit": "退出时安装",
-    "installAsk": "询问我"
+    "installAsk": "询问我",
+    "explorerCacheTitle": "浏览器缓存",
+    "explorerCacheDesc": "浏览器矿工图表所用的本地区块索引。图表看起来不对时可以重置。",
+    "explorerCacheReset": "重置…",
+    "explorerCacheConfirmTitle": "重置浏览器缓存？",
+    "explorerCacheConfirmBody": "索引会被删除，并在后台从你的节点重新构建。在追上之前，矿工图表会不完整。你的钱包和链数据不会受影响。",
+    "explorerCacheConfirm": "重置缓存",
+    "explorerCacheDone": "正在后台重新构建。",
+    "explorerCacheFailed": "无法重置缓存。"
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

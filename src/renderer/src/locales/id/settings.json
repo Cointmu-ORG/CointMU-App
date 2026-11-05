@@ -65,7 +65,15 @@
     "installModeTitle": "Saat pembaruan siap",
     "installModeDesc": "Node selalu dimatikan dengan bersih sebelum pembaruan dipasang.",
     "installOnQuit": "Pasang saat keluar",
-    "installAsk": "Tanya dulu"
+    "installAsk": "Tanya dulu",
+    "explorerCacheTitle": "Cache explorer",
+    "explorerCacheDesc": "Indeks blok lokal untuk grafik miner di explorer. Reset jika grafiknya terlihat salah.",
+    "explorerCacheReset": "Reset…",
+    "explorerCacheConfirmTitle": "Reset cache explorer?",
+    "explorerCacheConfirmBody": "Indeks dihapus lalu dibangun ulang dari node kamu di latar belakang. Grafik miner belum lengkap sampai indeks menyusul. Wallet dan data chain tidak tersentuh.",
+    "explorerCacheConfirm": "Reset cache",
+    "explorerCacheDone": "Sedang dibangun ulang di latar belakang.",
+    "explorerCacheFailed": "Cache tidak bisa direset."
   },
   "appearance": {
     "subtitle": "Sesuaikan tampilan CointMU",

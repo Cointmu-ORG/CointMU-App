@@ -65,7 +65,15 @@
     "installModeTitle": "Wenn ein Update bereit ist",
     "installModeDesc": "Der Node wird vor jeder Installation sauber heruntergefahren.",
     "installOnQuit": "Beim Beenden installieren",
-    "installAsk": "Nachfragen"
+    "installAsk": "Nachfragen",
+    "explorerCacheTitle": "Explorer-Cache",
+    "explorerCacheDesc": "Der lokale Blockindex hinter den Miner-Diagrammen im Explorer. Setze ihn zurück, wenn die Diagramme falsch aussehen.",
+    "explorerCacheReset": "Zurücksetzen…",
+    "explorerCacheConfirmTitle": "Explorer-Cache zurücksetzen?",
+    "explorerCacheConfirmBody": "Der Index wird gelöscht und im Hintergrund aus deinem Node neu aufgebaut. Bis er aufgeholt hat, sind die Miner-Diagramme unvollständig. Wallet und Chain-Daten bleiben unberührt.",
+    "explorerCacheConfirm": "Cache zurücksetzen",
+    "explorerCacheDone": "Wird im Hintergrund neu aufgebaut.",
+    "explorerCacheFailed": "Der Cache konnte nicht zurückgesetzt werden."
   },
   "appearance": {
     "subtitle": "Passen Sie an, wie CointMU aussieht",

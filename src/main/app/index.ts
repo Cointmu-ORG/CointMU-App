@@ -56,6 +56,7 @@ import { setupTray } from "./traySetup";
 import {
   queryIndexStatus,
   queryMinerDistribution,
+  requestIndexRebuild,
 } from "../explorerIndex/explorerIndexService";
 
 // A second instance would spawn a second geth on the same datadir and fail on
@@ -104,6 +105,7 @@ app.whenReady().then(async () => {
   registerExplorerHandlers({
     minerDistribution: queryMinerDistribution,
     status: queryIndexStatus,
+    rebuild: requestIndexRebuild,
   });
 
   await resolveGethPorts();

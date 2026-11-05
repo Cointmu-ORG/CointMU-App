@@ -6,12 +6,13 @@ import {
   SettingRow,
   SettingsGroup,
 } from "./setting-controls.component";
+import { ExplorerCacheRow } from "./explorer-cache-row.component";
 
 type ExportStatus = "idle" | "busy" | "saved" | "failed";
 
 /**
- * Settings → General → Troubleshooting: the log folder and the diagnostic
- * bundle export.
+ * Settings → General → Troubleshooting: the log folder, the diagnostic
+ * bundle export and the explorer cache reset.
  * @returns The section.
  */
 export function TroubleshootingSettings(): JSX.Element {
@@ -73,6 +74,7 @@ export function TroubleshootingSettings(): JSX.Element {
           {t("settings:general.diagnosticsExport")}
         </SettingButton>
       </SettingRow>
+      <ExplorerCacheRow />
     </SettingsGroup>
   );
 }

@@ -14,6 +14,8 @@ export interface ExplorerIndexQueries {
     range: MinerRange,
   ) => Promise<MinerDistributionResult | null>;
   readonly status: () => Promise<ExplorerIndexStatus | null>;
+  /** Wipes the index; it refills from the node in the background. */
+  readonly rebuild: (reason: string) => void;
 }
 
 /** @returns True when the renderer sent a known miner range. */
@@ -41,8 +43,9 @@ export function answerMinerDistribution(
 }
 
 /**
- * Registers the explorer index queries: the miner distribution of a range and
- * the index status (backfill progress).
+ * Registers the explorer index queries: the miner distribution of a range,
+ * the index status (backfill progress), and the user's rebuild (Settings →
+ * General → Reset explorer cache).
  * @param queries - The index queries.
  */
 export function registerExplorerHandlers(queries: ExplorerIndexQueries): void {
@@ -51,4 +54,7 @@ export function registerExplorerHandlers(queries: ExplorerIndexQueries): void {
     (_, range: unknown) => answerMinerDistribution(queries, range),
   );
   ipcMain.handle(EXPLORER_CHANNELS.GET_INDEX_STATUS, () => queries.status());
+  ipcMain.handle(EXPLORER_CHANNELS.REBUILD_INDEX, () => {
+    queries.rebuild("reset by the user");
+  });
 }

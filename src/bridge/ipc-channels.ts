@@ -35,6 +35,7 @@ export const DIAGNOSTICS_CHANNELS = {
 export const EXPLORER_CHANNELS = {
   GET_MINER_DISTRIBUTION: "explorer:get-miner-distribution",
   GET_INDEX_STATUS: "explorer:get-index-status",
+  REBUILD_INDEX: "explorer:rebuild-index",
 } as const;
 
 export const SHELL_CHANNELS = {

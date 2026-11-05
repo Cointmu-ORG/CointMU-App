@@ -65,7 +65,15 @@
     "installModeTitle": "Cuando haya una actualización lista",
     "installModeDesc": "El nodo siempre se cierra de forma limpia antes de instalar una actualización.",
     "installOnQuit": "Instalar al salir",
-    "installAsk": "Preguntarme"
+    "installAsk": "Preguntarme",
+    "explorerCacheTitle": "Caché del explorador",
+    "explorerCacheDesc": "El índice local de bloques de los gráficos de mineros del explorador. Restablécelo si los gráficos parecen incorrectos.",
+    "explorerCacheReset": "Restablecer…",
+    "explorerCacheConfirmTitle": "¿Restablecer la caché del explorador?",
+    "explorerCacheConfirmBody": "El índice se borra y se reconstruye desde tu nodo en segundo plano. Los gráficos de mineros estarán incompletos hasta que se ponga al día. Tu billetera y los datos de la cadena no se tocan.",
+    "explorerCacheConfirm": "Restablecer caché",
+    "explorerCacheDone": "Reconstruyendo en segundo plano.",
+    "explorerCacheFailed": "No se pudo restablecer la caché."
   },
   "appearance": {
     "subtitle": "Personaliza cómo se ve CointMU",

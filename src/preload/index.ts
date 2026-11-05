@@ -108,6 +108,8 @@ const api = {
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_MINER_DISTRIBUTION, range),
     getIndexStatus: (): Promise<ExplorerIndexStatus | null> =>
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_INDEX_STATUS),
+    rebuildIndex: (): Promise<void> =>
+      ipcRenderer.invoke(EXPLORER_CHANNELS.REBUILD_INDEX),
   },
   network: {
     getInsights: () => ipcRenderer.invoke("network:getInsights"),

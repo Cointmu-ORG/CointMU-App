@@ -65,7 +65,15 @@
     "installModeTitle": "アップデートの準備ができたら",
     "installModeDesc": "アップデートをインストールする前に、ノードは必ず正常に終了します。",
     "installOnQuit": "終了時にインストール",
-    "installAsk": "確認する"
+    "installAsk": "確認する",
+    "explorerCacheTitle": "エクスプローラーのキャッシュ",
+    "explorerCacheDesc": "エクスプローラーのマイナーグラフに使うローカルのブロックインデックスです。グラフがおかしいときはリセットしてください。",
+    "explorerCacheReset": "リセット…",
+    "explorerCacheConfirmTitle": "エクスプローラーのキャッシュをリセットしますか？",
+    "explorerCacheConfirmBody": "インデックスを削除し、バックグラウンドでノードから再構築します。追いつくまでマイナーグラフは不完全になります。ウォレットとチェーンデータには影響しません。",
+    "explorerCacheConfirm": "キャッシュをリセット",
+    "explorerCacheDone": "バックグラウンドで再構築しています。",
+    "explorerCacheFailed": "キャッシュをリセットできませんでした。"
   },
   "appearance": {
     "subtitle": "CointMUの見た目をカスタマイズします",
