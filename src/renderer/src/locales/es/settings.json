@@ -15,7 +15,39 @@
     "closeTray": "Ocultar en la bandeja",
     "closeTrayHint": "CointMU sigue funcionando en la bandeja. Elige Salir en el menú de la bandeja para cerrarlo.",
     "confirmQuitTitle": "Preguntar antes de salir",
-    "confirmQuitDesc": "Pide confirmación al salir mientras se mina o se sincroniza. Nunca se pregunta en las actualizaciones ni al apagar el equipo."
+    "confirmQuitDesc": "Pide confirmación al salir mientras se mina o se sincroniza. Nunca se pregunta en las actualizaciones ni al apagar el equipo.",
+    "data": "Datos",
+    "chainDataTitle": "Ubicación de los datos de la cadena",
+    "chainDataLoading": "Cargando…",
+    "chainDataOpen": "Abrir",
+    "chainDataMove": "Mover…",
+    "chainDataPickTitle": "Elige una carpeta para los datos de la cadena",
+    "chainDataConfirmTitle": "¿Mover los datos de la cadena?",
+    "chainDataConfirmBody": "El nodo y la minería se detienen mientras se copian los datos y luego arrancan desde la carpeta nueva. El destino necesita {{size}} libres. Tus datos actuales se conservan hasta que los borres.",
+    "chainDataConfirmMove": "Mover",
+    "cancel": "Cancelar",
+    "chainDataMovingTitle": "Moviendo los datos de la cadena",
+    "chainDataMovedTitle": "Datos de la cadena movidos",
+    "chainDataMovedBody": "El nodo ya funciona desde la carpeta nueva. La copia antigua ({{size}}) sigue en el disco:",
+    "chainDataKeepOld": "Conservarla",
+    "chainDataDeleteOld": "Borrar la copia antigua",
+    "chainDataPhase": {
+      "stopping": "Deteniendo el nodo…",
+      "copying": "Copiando archivos…",
+      "verifying": "Comprobando la copia…",
+      "starting": "Iniciando el nodo…"
+    },
+    "chainDataError": {
+      "SAME_FOLDER": "Esa es la carpeta actual.",
+      "INSIDE_CURRENT": "Elige una carpeta fuera de la carpeta actual de datos.",
+      "NOT_EMPTY": "Elige una carpeta vacía o nueva.",
+      "NOT_WRITABLE": "CointMU no puede escribir en esa carpeta.",
+      "NOT_ENOUGH_SPACE": "No hay suficiente espacio libre en esa unidad.",
+      "COPY_FAILED": "La copia falló. El nodo sigue usando la carpeta actual; no se perdió nada.",
+      "VERIFY_FAILED": "La copia no coincide. El nodo sigue usando la carpeta actual; no se perdió nada.",
+      "BUSY": "Ya hay un traslado en curso.",
+      "UNKNOWN": "Algo salió mal. Los datos no se movieron."
+    }
   },
   "appearance": {
     "subtitle": "Personaliza cómo se ve CointMU",

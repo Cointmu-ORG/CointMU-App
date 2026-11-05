@@ -1,5 +1,8 @@
 import { CloseAction } from "../../bridge/setting-values";
 
+/** Where the chain data lives; "" is the default folder. Only the move writes it. */
+export const CHAIN_DATA_ROOT_KEY = "chainDataRoot";
+
 /** The default and the accepted values of one stored setting. */
 interface SettingRule {
   readonly fallback: unknown;
@@ -26,6 +29,10 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     isValid: isOneOf(Object.values(CloseAction)),
   },
   "general.confirmQuitWhileBusy": { fallback: true, isValid: isBoolean },
+  [CHAIN_DATA_ROOT_KEY]: {
+    fallback: "",
+    isValid: (value) => typeof value === "string",
+  },
 };
 
 /**

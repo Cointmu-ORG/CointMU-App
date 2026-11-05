@@ -15,7 +15,39 @@
     "closeTray": "隐藏到托盘",
     "closeTrayHint": "CointMU 会在托盘中继续运行。在托盘菜单中选择退出即可关闭。",
     "confirmQuitTitle": "退出前询问",
-    "confirmQuitDesc": "在挖矿或同步时退出需要确认。更新或电脑关机时不会询问。"
+    "confirmQuitDesc": "在挖矿或同步时退出需要确认。更新或电脑关机时不会询问。",
+    "data": "数据",
+    "chainDataTitle": "链数据位置",
+    "chainDataLoading": "加载中…",
+    "chainDataOpen": "打开",
+    "chainDataMove": "移动…",
+    "chainDataPickTitle": "选择存放链数据的文件夹",
+    "chainDataConfirmTitle": "移动链数据？",
+    "chainDataConfirmBody": "复制数据期间节点和挖矿会停止，完成后从新文件夹启动。目标位置需要 {{size}} 可用空间。在你删除之前，当前数据会保留。",
+    "chainDataConfirmMove": "移动",
+    "cancel": "取消",
+    "chainDataMovingTitle": "正在移动链数据",
+    "chainDataMovedTitle": "链数据已移动",
+    "chainDataMovedBody": "节点现在从新文件夹运行。旧副本（{{size}}）仍在磁盘上：",
+    "chainDataKeepOld": "保留",
+    "chainDataDeleteOld": "删除旧副本",
+    "chainDataPhase": {
+      "stopping": "正在停止节点…",
+      "copying": "正在复制文件…",
+      "verifying": "正在校验副本…",
+      "starting": "正在启动节点…"
+    },
+    "chainDataError": {
+      "SAME_FOLDER": "这就是当前文件夹。",
+      "INSIDE_CURRENT": "请选择当前链数据文件夹之外的文件夹。",
+      "NOT_EMPTY": "请选择空文件夹或新文件夹。",
+      "NOT_WRITABLE": "CointMU 无法写入该文件夹。",
+      "NOT_ENOUGH_SPACE": "该磁盘的可用空间不足。",
+      "COPY_FAILED": "复制失败。节点继续使用当前文件夹，没有数据丢失。",
+      "VERIFY_FAILED": "副本校验不一致。节点继续使用当前文件夹，没有数据丢失。",
+      "BUSY": "已有移动正在进行。",
+      "UNKNOWN": "出现问题，链数据未移动。"
+    }
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

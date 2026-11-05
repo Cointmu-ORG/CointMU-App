@@ -5,7 +5,7 @@ import { isBootnodeSettingKey } from "../geth/bootnode/bootnodeSettings";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { applyLoginItem } from "../app/loginItem";
 import type { AppStore } from "../store/appStore";
-import { findInvalidSetting } from "../store/settingRules";
+import { CHAIN_DATA_ROOT_KEY, findInvalidSetting } from "../store/settingRules";
 import { applySettingRules } from "../store/settingsMigration";
 
 // Read when geth starts (spawnGethProcess); saving a new value restarts it.
@@ -46,6 +46,11 @@ export function registerSettingsHandlers(store: AppStore): void {
     if (isBootnodeSettingKey(key)) {
       throw new Error(
         `settings:set cannot write "${key}"; use the bootnode settings channel`,
+      );
+    }
+    if (key === CHAIN_DATA_ROOT_KEY) {
+      throw new Error(
+        `settings:set cannot write "${key}"; use the chain data move channel`,
       );
     }
     const invalidKey = findInvalidSetting(key, value);

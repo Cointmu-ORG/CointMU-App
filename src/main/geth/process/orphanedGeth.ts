@@ -17,7 +17,7 @@ const SUPERVISOR_EXECUTABLE = "geth-supervisor.exe";
 const KILL_SETTLE_TIMEOUT_MS = 5_000;
 const EXIT_POLL_INTERVAL_MS = 250;
 const COMMAND_LINE_TIMEOUT_MS = 10_000;
-const PID_FILE_NAME = "geth.pid";
+export const PID_FILE_NAME = "geth.pid";
 // A path segment named geth or geth.exe. Searched only in the text before
 // --datadir, so installs under folders with spaces still match.
 const GETH_EXECUTABLE_RE = /(?:^|[\\/])geth(?:\.exe)?(?:\s|$)/i;

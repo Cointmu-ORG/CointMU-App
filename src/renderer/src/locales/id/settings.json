@@ -15,7 +15,39 @@
     "closeTray": "Sembunyikan ke tray",
     "closeTrayHint": "CointMU tetap berjalan di tray. Pilih Keluar di menu tray untuk keluar.",
     "confirmQuitTitle": "Tanya sebelum keluar",
-    "confirmQuitDesc": "Minta konfirmasi saat keluar ketika mining atau sinkronisasi berjalan. Tidak ditanyakan saat update atau saat komputer dimatikan."
+    "confirmQuitDesc": "Minta konfirmasi saat keluar ketika mining atau sinkronisasi berjalan. Tidak ditanyakan saat update atau saat komputer dimatikan.",
+    "data": "Data",
+    "chainDataTitle": "Lokasi data chain",
+    "chainDataLoading": "Memuat…",
+    "chainDataOpen": "Buka",
+    "chainDataMove": "Pindahkan…",
+    "chainDataPickTitle": "Pilih folder untuk data chain",
+    "chainDataConfirmTitle": "Pindahkan data chain?",
+    "chainDataConfirmBody": "Node dan mining berhenti selama data disalin, lalu berjalan lagi dari folder baru. Tujuan butuh ruang kosong {{size}}. Data lama tetap ada sampai kamu menghapusnya.",
+    "chainDataConfirmMove": "Pindahkan",
+    "cancel": "Batal",
+    "chainDataMovingTitle": "Memindahkan data chain",
+    "chainDataMovedTitle": "Data chain sudah dipindahkan",
+    "chainDataMovedBody": "Node sekarang berjalan dari folder baru. Salinan lama ({{size}}) masih ada di disk:",
+    "chainDataKeepOld": "Simpan",
+    "chainDataDeleteOld": "Hapus salinan lama",
+    "chainDataPhase": {
+      "stopping": "Menghentikan node…",
+      "copying": "Menyalin file…",
+      "verifying": "Memeriksa salinan…",
+      "starting": "Menjalankan node…"
+    },
+    "chainDataError": {
+      "SAME_FOLDER": "Itu folder yang sedang dipakai.",
+      "INSIDE_CURRENT": "Pilih folder di luar folder data chain saat ini.",
+      "NOT_EMPTY": "Pilih folder kosong atau baru.",
+      "NOT_WRITABLE": "CointMU tidak bisa menulis ke folder itu.",
+      "NOT_ENOUGH_SPACE": "Ruang kosong di drive itu tidak cukup.",
+      "COPY_FAILED": "Penyalinan gagal. Node tetap memakai folder saat ini; tidak ada data yang hilang.",
+      "VERIFY_FAILED": "Salinan tidak cocok. Node tetap memakai folder saat ini; tidak ada data yang hilang.",
+      "BUSY": "Pemindahan sedang berjalan.",
+      "UNKNOWN": "Terjadi kesalahan. Data chain tidak dipindahkan."
+    }
   },
   "appearance": {
     "subtitle": "Sesuaikan tampilan CointMU",

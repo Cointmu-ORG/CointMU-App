@@ -15,7 +15,39 @@
     "closeTray": "In den Infobereich minimieren",
     "closeTrayHint": "CointMU läuft im Infobereich weiter. Zum Beenden im Menü des Infobereichs „CointMU beenden“ wählen.",
     "confirmQuitTitle": "Vor dem Beenden fragen",
-    "confirmQuitDesc": "Bestätigung beim Beenden während Mining oder Synchronisierung. Bei Updates und beim Herunterfahren des Computers wird nie gefragt."
+    "confirmQuitDesc": "Bestätigung beim Beenden während Mining oder Synchronisierung. Bei Updates und beim Herunterfahren des Computers wird nie gefragt.",
+    "data": "Daten",
+    "chainDataTitle": "Speicherort der Chain-Daten",
+    "chainDataLoading": "Wird geladen…",
+    "chainDataOpen": "Öffnen",
+    "chainDataMove": "Verschieben…",
+    "chainDataPickTitle": "Ordner für die Chain-Daten wählen",
+    "chainDataConfirmTitle": "Chain-Daten verschieben?",
+    "chainDataConfirmBody": "Node und Mining stoppen, während die Daten kopiert werden, und starten danach aus dem neuen Ordner. Am Ziel werden {{size}} freier Speicher benötigt. Deine aktuellen Daten bleiben erhalten, bis du sie löschst.",
+    "chainDataConfirmMove": "Verschieben",
+    "cancel": "Abbrechen",
+    "chainDataMovingTitle": "Chain-Daten werden verschoben",
+    "chainDataMovedTitle": "Chain-Daten verschoben",
+    "chainDataMovedBody": "Der Node läuft jetzt aus dem neuen Ordner. Die alte Kopie ({{size}}) liegt noch auf der Festplatte:",
+    "chainDataKeepOld": "Behalten",
+    "chainDataDeleteOld": "Alte Kopie löschen",
+    "chainDataPhase": {
+      "stopping": "Node wird gestoppt…",
+      "copying": "Dateien werden kopiert…",
+      "verifying": "Kopie wird geprüft…",
+      "starting": "Node wird gestartet…"
+    },
+    "chainDataError": {
+      "SAME_FOLDER": "Das ist der aktuelle Ordner.",
+      "INSIDE_CURRENT": "Wähle einen Ordner außerhalb des aktuellen Datenordners.",
+      "NOT_EMPTY": "Wähle einen leeren oder neuen Ordner.",
+      "NOT_WRITABLE": "CointMU kann in diesen Ordner nicht schreiben.",
+      "NOT_ENOUGH_SPACE": "Auf diesem Laufwerk ist nicht genug Platz frei.",
+      "COPY_FAILED": "Kopieren fehlgeschlagen. Der Node nutzt weiter den aktuellen Ordner; nichts ging verloren.",
+      "VERIFY_FAILED": "Die Kopie stimmt nicht überein. Der Node nutzt weiter den aktuellen Ordner; nichts ging verloren.",
+      "BUSY": "Es läuft bereits ein Verschiebevorgang.",
+      "UNKNOWN": "Etwas ist schiefgelaufen. Die Chain-Daten wurden nicht verschoben."
+    }
   },
   "appearance": {
     "subtitle": "Passen Sie an, wie CointMU aussieht",

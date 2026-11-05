@@ -5,6 +5,7 @@ import {
   spawnGethProcess,
 } from "./gethProcess";
 import type { AppStore } from "../../store/appStore";
+import { isChainDataMoveInProgress } from "./chainDataMove";
 
 let isRestarting = false;
 
@@ -16,13 +17,15 @@ async function restartNode(store: AppStore): Promise<void> {
 
 /**
  * Restarts geth on a user action (retry, settings change), clearing any
- * blocked or failed recovery state first. Skipped while a recovery owns the
- * node lifecycle. A call while a restart is under way joins it instead of
+ * blocked or failed recovery state first. Skipped while a recovery or a
+ * chain data move owns the node lifecycle. A call while a restart is under way joins it instead of
  * spawning a second geth on the same datadir.
  * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {boolean} True when a restart was started or joined, false when skipped.
  */
 export function restartNodeByUser(store: AppStore): boolean {
+  // A move stops geth and starts it on the new folder itself.
+  if (isChainDataMoveInProgress()) return false;
   const nodeRecovery = getNodeRecovery();
   if (nodeRecovery && !nodeRecovery.resume()) return false;
   // ponytail: the joined change is picked up because spawn reads the store after

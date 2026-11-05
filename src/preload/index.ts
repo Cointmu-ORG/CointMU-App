@@ -3,6 +3,7 @@ import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import {
   BOOTNODE_CHANNELS,
+  CHAINDATA_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   EXPLORER_CHANNELS,
   NODE_CHANNELS,
@@ -16,6 +17,10 @@ import type {
   BootnodeSettings,
   BootnodeState,
   BootnodeStatus,
+  ChainDataInfo,
+  ChainDataMoveProgress,
+  ChainDataMoveResult,
+  ChainDataTarget,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -217,6 +222,23 @@ const api = {
     },
     respond: (approved: boolean) =>
       ipcRenderer.send("pairing:respond", approved),
+  },
+  chainData: {
+    getInfo: (): Promise<ChainDataInfo> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.GET_INFO),
+    pickTarget: (dialogText: DialogText): Promise<ChainDataTarget | null> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.PICK_TARGET, dialogText),
+    move: (target: string): Promise<ChainDataMoveResult> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.MOVE, target),
+    deleteOld: (): Promise<void> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_OLD),
+    onProgress: (callback: (progress: ChainDataMoveProgress) => void) => {
+      const handler = (_: unknown, progress: ChainDataMoveProgress): void =>
+        callback(progress);
+      ipcRenderer.on(CHAINDATA_CHANNELS.PROGRESS, handler);
+      return () =>
+        ipcRenderer.removeListener(CHAINDATA_CHANNELS.PROGRESS, handler);
+    },
   },
   shell: {
     setText: (text: ShellText): Promise<void> =>

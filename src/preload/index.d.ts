@@ -3,6 +3,10 @@ import type {
   BootnodeSettings,
   BootnodeState,
   BootnodeStatus,
+  ChainDataInfo,
+  ChainDataMoveProgress,
+  ChainDataMoveResult,
+  ChainDataTarget,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -148,6 +152,15 @@ interface CointmuAPI {
   pairing: {
     onRequest: (callback: () => void) => () => void;
     respond: (approved: boolean) => void;
+  };
+  chainData: {
+    getInfo: () => Promise<ChainDataInfo>;
+    pickTarget: (dialogText: DialogText) => Promise<ChainDataTarget | null>;
+    move: (target: string) => Promise<ChainDataMoveResult>;
+    deleteOld: () => Promise<void>;
+    onProgress: (
+      callback: (progress: ChainDataMoveProgress) => void,
+    ) => () => void;
   };
   shell: {
     setText: (text: ShellText) => Promise<void>;

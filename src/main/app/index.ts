@@ -13,7 +13,11 @@ import {
   loadNetworkId,
   resolveDataDir,
   resolveDataRoot,
+  setDataRoot,
 } from "../geth/process/networkConfig";
+import { storedDataRoot } from "../geth/process/chainDataMove";
+import { registerChainDataHandlers } from "../ipc/chainDataIpc";
+import { CHAIN_DATA_ROOT_KEY } from "../store/settingRules";
 import { startSession } from "./session";
 import { createWindow } from "./window";
 import { syncLoginItemFromOs } from "./loginItem";
@@ -83,6 +87,8 @@ app.whenReady().then(async () => {
 
   const store = await createAppStore();
   syncLoginItemFromOs(store);
+  // Before anything resolves the datadir: orphan check, init, spawn.
+  setDataRoot(storedDataRoot(store.get(CHAIN_DATA_ROOT_KEY)));
 
   registerDiagnosticsHandlers(store);
   registerSettingsHandlers(store);
@@ -94,6 +100,7 @@ app.whenReady().then(async () => {
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
+  registerChainDataHandlers(store);
   registerExplorerHandlers({
     minerDistribution: queryMinerDistribution,
     status: queryIndexStatus,

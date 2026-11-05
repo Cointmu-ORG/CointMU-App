@@ -15,7 +15,39 @@
     "closeTray": "Hide to tray",
     "closeTrayHint": "CointMU keeps running in the tray. Choose Quit in the tray menu to exit.",
     "confirmQuitTitle": "Ask before quitting",
-    "confirmQuitDesc": "Confirm when you quit while mining or syncing. Never asked for updates or when the computer shuts down."
+    "confirmQuitDesc": "Confirm when you quit while mining or syncing. Never asked for updates or when the computer shuts down.",
+    "data": "Data",
+    "chainDataTitle": "Chain data location",
+    "chainDataLoading": "Loading…",
+    "chainDataOpen": "Open",
+    "chainDataMove": "Move…",
+    "chainDataPickTitle": "Choose a folder for the chain data",
+    "chainDataConfirmTitle": "Move the chain data?",
+    "chainDataConfirmBody": "The node and mining stop while the data is copied, then start from the new folder. The target needs {{size}} free. Your current data stays until you delete it.",
+    "chainDataConfirmMove": "Move",
+    "cancel": "Cancel",
+    "chainDataMovingTitle": "Moving the chain data",
+    "chainDataMovedTitle": "Chain data moved",
+    "chainDataMovedBody": "The node now runs from the new folder. The old copy ({{size}}) is still on disk:",
+    "chainDataKeepOld": "Keep it",
+    "chainDataDeleteOld": "Delete old copy",
+    "chainDataPhase": {
+      "stopping": "Stopping the node…",
+      "copying": "Copying files…",
+      "verifying": "Checking the copy…",
+      "starting": "Starting the node…"
+    },
+    "chainDataError": {
+      "SAME_FOLDER": "That is the current folder.",
+      "INSIDE_CURRENT": "Pick a folder outside the current chain data folder.",
+      "NOT_EMPTY": "Pick an empty or new folder.",
+      "NOT_WRITABLE": "CointMU cannot write to that folder.",
+      "NOT_ENOUGH_SPACE": "Not enough free space on that drive.",
+      "COPY_FAILED": "Copying failed. The node keeps using the current folder; nothing was lost.",
+      "VERIFY_FAILED": "The copy did not match. The node keeps using the current folder; nothing was lost.",
+      "BUSY": "A move is already running.",
+      "UNKNOWN": "Something went wrong. The chain data was not moved."
+    }
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

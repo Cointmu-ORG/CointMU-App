@@ -114,6 +114,13 @@ describe("settings:set", () => {
     });
   });
 
+  it("refuses the chain data folder, which only the move may write", () => {
+    const { setHandler, store } = registerSet();
+
+    expect(() => setHandler(null, "chainDataRoot", "/tmp/x")).toThrow(/move/);
+    expect(store.set).not.toHaveBeenCalled();
+  });
+
   it("still writes ordinary dotted keys", () => {
     const { setHandler, store } = registerSet();
 

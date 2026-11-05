@@ -40,3 +40,11 @@ export const SHELL_CHANNELS = {
   SET_TEXT: "shell:set-text",
   GET_CAPABILITIES: "shell:get-capabilities",
 } as const;
+
+export const CHAINDATA_CHANNELS = {
+  GET_INFO: "chaindata:get-info",
+  PICK_TARGET: "chaindata:pick-target",
+  MOVE: "chaindata:move",
+  DELETE_OLD: "chaindata:delete-old",
+  PROGRESS: "chaindata:progress",
+} as const;

@@ -12,3 +12,4 @@ export * from "./lib/bootnode-settings.hook";
 export * from "./lib/bootnode-status.hook";
 
 export type * from "./model/settings.types";
+export * from "./lib/chain-data-move.hook";

@@ -323,3 +323,51 @@ export interface ShellCapabilities {
   /** False on macOS (dock convention) and on Linux desktops without a tray host. */
   readonly isTraySupported: boolean;
 }
+
+/** Why moving the chain data did not happen; the renderer localizes it. */
+export const ChainDataMoveError = {
+  SAME_FOLDER: "SAME_FOLDER",
+  INSIDE_CURRENT: "INSIDE_CURRENT",
+  NOT_EMPTY: "NOT_EMPTY",
+  NOT_WRITABLE: "NOT_WRITABLE",
+  NOT_ENOUGH_SPACE: "NOT_ENOUGH_SPACE",
+  COPY_FAILED: "COPY_FAILED",
+  VERIFY_FAILED: "VERIFY_FAILED",
+  BUSY: "BUSY",
+} as const;
+
+export type ChainDataMoveError =
+  (typeof ChainDataMoveError)[keyof typeof ChainDataMoveError];
+
+/** Where the chain data lives and how big it is. */
+export interface ChainDataInfo {
+  readonly root: string;
+  readonly sizeBytes: number;
+  readonly isDefault: boolean;
+}
+
+/** A folder the user picked for the move, already checked, or why it cannot be used. */
+export type ChainDataTarget =
+  | { readonly path: string; readonly requiredBytes: number }
+  | { readonly path: string; readonly error: ChainDataMoveError };
+
+export type ChainDataMoveResult =
+  | { readonly ok: true; readonly oldRoot: string }
+  | { readonly ok: false; readonly error: ChainDataMoveError };
+
+/** Steps of a move, sent while it runs. */
+export const ChainDataMovePhase = {
+  STOPPING: "stopping",
+  COPYING: "copying",
+  VERIFYING: "verifying",
+  STARTING: "starting",
+} as const;
+
+export type ChainDataMovePhase =
+  (typeof ChainDataMovePhase)[keyof typeof ChainDataMovePhase];
+
+export interface ChainDataMoveProgress {
+  readonly phase: ChainDataMovePhase;
+  /** Copy progress 0-100 while copying. */
+  readonly percent?: number;
+}
