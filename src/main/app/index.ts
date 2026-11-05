@@ -1,3 +1,5 @@
+// Must stay the first import: see bootstrap.ts for why the evaluation order matters.
+import "./bootstrap";
 import { app, BrowserWindow } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "../wallet/crypto";
@@ -6,9 +8,6 @@ import { initUpdater } from "./updater";
 import { registerRendererRpcHandler } from "../ipc/rendererRpc";
 import { startExtensionSyncServer } from "../extension/extensionSyncServer";
 import { registerDiagnosticsHandlers } from "../diagnostics/diagnosticsIpc";
-// Must stay below the imports above and above every local module below: see
-// bootstrap.ts for why the evaluation order matters.
-import "./bootstrap";
 import { getRpcPort, resolveGethPorts } from "../geth/process/ports";
 import {
   loadNetworkId,

@@ -4,8 +4,8 @@ import { join } from "path";
 import { initLogging } from "../diagnostics/logging";
 import { initErrorReporting } from "../diagnostics/errorReporting";
 
-// index.ts imports this after its other imports and before any module that
-// reads process.env or logs at load time. Imports evaluate before the importing
+// index.ts imports this first. Modules such as geth/process/ports read
+// process.env or log at load time, and imports evaluate before the importing
 // module's body, so logging, error reporting and .env must start here to stay
 // ahead of that code.
 initLogging();
