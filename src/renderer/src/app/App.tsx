@@ -11,7 +11,10 @@ import {
 } from "@/features/settings";
 import { getSetting } from "@/shared/api";
 import { useUpdater } from "@/shared/lib";
-import { useMiningLogStream } from "@/features/mining";
+import {
+  useBlockFoundNotifications,
+  useMiningLogStream,
+} from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
 
@@ -105,6 +108,7 @@ function App(): JSX.Element {
   };
 
   const accountsKey = accounts.map((a) => a.address).join(",");
+  useBlockFoundNotifications(accountsKey ? accountsKey.split(",") : []);
 
   useEffect(() => {
     const loadingTimer = setTimeout(

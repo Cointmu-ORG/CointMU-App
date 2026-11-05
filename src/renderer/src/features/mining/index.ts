@@ -32,3 +32,4 @@ export { NodeRecoveryBanner } from "./ui/node-recovery-banner.component";
 
 // API (Services)
 export * from "./api/mining.service";
+export { useBlockFoundNotifications } from "./lib/block-found-notifications.hook";
