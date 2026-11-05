@@ -38,10 +38,18 @@ export function AddBootnodeForm({
   const { t } = useTranslation("settings");
   const [enode, setEnode] = useState("");
   const [label, setLabel] = useState("");
-  const hasError = rejection !== null;
+  // The error is about what was submitted; editing either field hides it.
+  const [isEditedSinceSubmit, setIsEditedSinceSubmit] = useState(false);
+  const hasError = rejection !== null && !isEditedSinceSubmit;
+
+  const edit = (setValue: (value: string) => void, value: string): void => {
+    setValue(value);
+    setIsEditedSinceSubmit(true);
+  };
 
   const submit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
+    setIsEditedSinceSubmit(false);
     if (await onAdd(enode.trim(), label.trim())) {
       setEnode("");
       setLabel("");
@@ -63,7 +71,7 @@ export function AddBootnodeForm({
             value={label}
             maxLength={MAX_LABEL_LENGTH}
             disabled={isSaving}
-            onChange={(event) => setLabel(event.target.value)}
+            onChange={(event) => edit(setLabel, event.target.value)}
             className={`${INPUT} border-slate-200 dark:border-gray-700`}
           />
         </div>
@@ -81,7 +89,7 @@ export function AddBootnodeForm({
             aria-invalid={hasError}
             aria-describedby={hasError ? `${ERROR_ID} ${HINT_ID}` : HINT_ID}
             disabled={isSaving}
-            onChange={(event) => setEnode(event.target.value)}
+            onChange={(event) => edit(setEnode, event.target.value)}
             className={`${INPUT} font-mono ${hasError ? "border-red-400 dark:border-red-700" : "border-slate-200 dark:border-gray-700"}`}
           />
         </div>
