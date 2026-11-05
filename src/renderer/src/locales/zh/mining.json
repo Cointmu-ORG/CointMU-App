@@ -25,7 +25,8 @@
     "statusStopped": "已停止",
     "preferences": "偏好设置",
     "pausedBattery": "已暂停（电池）",
-    "pausedUserActive": "已暂停：你正在使用电脑"
+    "pausedUserActive": "已暂停：你正在使用电脑",
+    "pausedSchedule": "已暂停：不在时间表内"
   },
   "hero": {
     "rewardsToday": "今日奖励",

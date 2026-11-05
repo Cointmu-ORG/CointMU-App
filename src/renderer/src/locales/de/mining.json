@@ -26,7 +26,8 @@
     "statusStopped": "Gestoppt",
     "preferences": "Einstellungen",
     "pausedBattery": "Pausiert (Akku)",
-    "pausedUserActive": "Pausiert: du bist aktiv"
+    "pausedUserActive": "Pausiert: du bist aktiv",
+    "pausedSchedule": "Pausiert: außerhalb des Zeitplans"
   },
   "hero": {
     "rewardsToday": "Heutige Belohnungen",

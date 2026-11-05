@@ -316,7 +316,12 @@
     "minutes_other": "{{count}} mnt",
     "resourceUse": "Pemakaian sumber daya",
     "lowPriorityTitle": "Prioritas rendah",
-    "lowPriorityDesc": "Jalankan node dengan prioritas CPU di bawah normal agar aplikasi lain tetap responsif. Mematikannya bisa membuat node dimulai ulang."
+    "lowPriorityDesc": "Jalankan node dengan prioritas CPU di bawah normal agar aplikasi lain tetap responsif. Mematikannya bisa membuat node dimulai ulang.",
+    "scheduleTitle": "Mining sesuai jadwal",
+    "scheduleDesc": "Jeda mining di luar jam ini (waktu lokal). Jam selesai boleh melewati tengah malam.",
+    "scheduleWindow": "Jam",
+    "scheduleStart": "Jam mulai",
+    "scheduleEnd": "Jam selesai"
   },
   "securitySettings": {
     "subtitle": "Kelola pengaturan keamanan dompet Anda",

@@ -319,7 +319,12 @@
     "minutes_other": "{{count}} min",
     "resourceUse": "Resource use",
     "lowPriorityTitle": "Low priority",
-    "lowPriorityDesc": "Run the node at below-normal CPU priority so other apps stay responsive. Turning it off may restart the node."
+    "lowPriorityDesc": "Run the node at below-normal CPU priority so other apps stay responsive. Turning it off may restart the node.",
+    "scheduleTitle": "Mine on a schedule",
+    "scheduleDesc": "Pause mining outside these hours (local time). The end may be after midnight.",
+    "scheduleWindow": "Hours",
+    "scheduleStart": "Start time",
+    "scheduleEnd": "End time"
   },
   "securitySettings": {
     "subtitle": "Manage security settings for your wallet",

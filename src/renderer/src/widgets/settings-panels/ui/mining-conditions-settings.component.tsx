@@ -9,6 +9,64 @@ import {
 } from "./setting-controls.component";
 
 const IDLE_MINUTE_OPTIONS = [1, 2, 5, 10, 15] as const;
+const TIME_INPUT_CLASS =
+  "px-2 py-1.5 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-mono text-slate-800 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+
+/**
+ * The schedule window: start and end, local time; the end may be after
+ * midnight (22:00 to 07:00).
+ * @returns The schedule rows.
+ */
+function ScheduleRows(): JSX.Element {
+  const { t } = useTranslation();
+  const [isScheduled, setIsScheduled] = useStoredSetting(
+    "mining.schedule.enabled",
+    false,
+  );
+  const [start, setStart] = useStoredSetting("mining.schedule.start", "22:00");
+  const [end, setEnd] = useStoredSetting("mining.schedule.end", "07:00");
+  const title = t("settings:miningSettings.scheduleTitle");
+
+  return (
+    <>
+      <SettingRow
+        title={title}
+        description={t("settings:miningSettings.scheduleDesc")}
+      >
+        <SettingSwitch
+          label={title}
+          checked={isScheduled}
+          onChange={setIsScheduled}
+        />
+      </SettingRow>
+      {isScheduled && (
+        <SettingRow title={t("settings:miningSettings.scheduleWindow")}>
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-gray-400">
+            <input
+              type="time"
+              aria-label={t("settings:miningSettings.scheduleStart")}
+              value={start}
+              onChange={(event) =>
+                event.target.value && setStart(event.target.value)
+              }
+              className={TIME_INPUT_CLASS}
+            />
+            <span aria-hidden="true">–</span>
+            <input
+              type="time"
+              aria-label={t("settings:miningSettings.scheduleEnd")}
+              value={end}
+              onChange={(event) =>
+                event.target.value && setEnd(event.target.value)
+              }
+              className={TIME_INPUT_CLASS}
+            />
+          </div>
+        </SettingRow>
+      )}
+    </>
+  );
+}
 const DEFAULT_IDLE_MINUTES = 2;
 
 /**
@@ -84,6 +142,7 @@ export function MiningConditionsSettings(): JSX.Element {
             />
           </SettingRow>
         )}
+        <ScheduleRows />
       </SettingsGroup>
       <ResourceUseSettings />
     </>

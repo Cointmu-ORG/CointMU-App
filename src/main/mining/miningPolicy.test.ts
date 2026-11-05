@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { decideMining, type MiningConditions } from "./miningPolicy";
+import {
+  decideMining,
+  isWithinSchedule,
+  type MiningConditions,
+} from "./miningPolicy";
 import { MiningPolicy, POLICY_CHECK_INTERVAL_MS } from "./miningPolicyRunner";
 
 // No real mining anywhere in here: the miner is a fake (miner_* never runs).
@@ -11,6 +15,18 @@ const BASE: MiningConditions = {
   idleOnly: false,
   idleSeconds: 0,
   idleThresholdSeconds: 120,
+  isScheduled: false,
+  scheduleStartMinutes: 0,
+  scheduleEndMinutes: 0,
+  nowMinutes: 12 * 60,
+};
+
+const at = (hh: number, mm = 0): number => hh * 60 + mm;
+// 22:00-07:00, across midnight.
+const NIGHT = {
+  isScheduled: true,
+  scheduleStartMinutes: at(22),
+  scheduleEndMinutes: at(7),
 };
 
 describe("decideMining", () => {
@@ -39,6 +55,52 @@ describe("decideMining", () => {
       "MINING",
     ],
     ["active without idle-only", { idleSeconds: 0 }, "MINING"],
+    [
+      "inside a night schedule after midnight",
+      { ...NIGHT, nowMinutes: at(3) },
+      "MINING",
+    ],
+    [
+      "inside a night schedule before midnight",
+      { ...NIGHT, nowMinutes: at(23, 30) },
+      "MINING",
+    ],
+    [
+      "outside a night schedule",
+      { ...NIGHT, nowMinutes: at(12) },
+      "PAUSED_SCHEDULE",
+    ],
+    [
+      "at a night schedule's end",
+      { ...NIGHT, nowMinutes: at(7) },
+      "PAUSED_SCHEDULE",
+    ],
+    [
+      "outside the schedule and active: schedule before idle",
+      { ...NIGHT, nowMinutes: at(12), idleOnly: true, idleSeconds: 0 },
+      "PAUSED_SCHEDULE",
+    ],
+    [
+      "inside the schedule but active",
+      { ...NIGHT, nowMinutes: at(1), idleOnly: true, idleSeconds: 0 },
+      "PAUSED_USER_ACTIVE",
+    ],
+    [
+      "on battery inside the schedule and idle: battery first",
+      {
+        ...NIGHT,
+        nowMinutes: at(1),
+        idleOnly: true,
+        idleSeconds: 999,
+        isOnBattery: true,
+      },
+      "PAUSED_BATTERY",
+    ],
+    [
+      "scheduled but switched off",
+      { ...NIGHT, nowMinutes: at(12), isEnabled: false },
+      "STOPPED",
+    ],
     [
       "on battery and active: battery first",
       { idleOnly: true, idleSeconds: 0, isOnBattery: true },
@@ -137,6 +199,21 @@ describe("MiningPolicy", () => {
   });
 });
 
+describe("isWithinSchedule", () => {
+  it.each([
+    [at(9), at(17), at(9), true],
+    [at(9), at(17), at(16, 59), true],
+    [at(9), at(17), at(17), false],
+    [at(9), at(17), at(8, 59), false],
+    [at(22), at(7), at(0), true],
+    [at(22), at(7), at(6, 59), true],
+    [at(22), at(7), at(21, 59), false],
+    [at(8), at(8), at(3), true],
+  ])("start %i end %i at %i: %s", (start, end, now, expected) => {
+    expect(isWithinSchedule(start, end, now)).toBe(expected);
+  });
+});
+
 describe("MiningPolicy timer", () => {
   afterEach(() => {
     vi.useRealTimers();
@@ -160,5 +237,29 @@ describe("MiningPolicy timer", () => {
     const callsWhenOff = readConditions.mock.calls.length;
     await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS * 4);
     expect(readConditions.mock.calls.length).toBe(callsWhenOff);
+  });
+});
+
+describe("MiningPolicy schedule over time", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("pauses at the end of the window and resumes at its start, across midnight", async () => {
+    vi.useFakeTimers();
+    const node = fakeNode({ ...BASE, ...NIGHT, nowMinutes: at(6, 59) });
+    const policy = new MiningPolicy(node);
+
+    await policy.evaluate();
+    expect(node.isRunning).toBe(true);
+
+    node.conditions = { ...node.conditions, nowMinutes: at(7) };
+    await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS);
+    expect(node.isRunning).toBe(false);
+    expect(policy.getStatus()).toBe("PAUSED_SCHEDULE");
+
+    node.conditions = { ...node.conditions, nowMinutes: at(22) };
+    await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS);
+    expect(node.isRunning).toBe(true);
   });
 });

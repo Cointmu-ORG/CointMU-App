@@ -322,7 +322,12 @@
     "minutes_other": "{{count}} min",
     "resourceUse": "Uso de recursos",
     "lowPriorityTitle": "Prioridad baja",
-    "lowPriorityDesc": "Ejecuta el nodo con prioridad de CPU inferior a la normal para que las demás apps sigan respondiendo. Desactivarla puede reiniciar el nodo."
+    "lowPriorityDesc": "Ejecuta el nodo con prioridad de CPU inferior a la normal para que las demás apps sigan respondiendo. Desactivarla puede reiniciar el nodo.",
+    "scheduleTitle": "Minar según un horario",
+    "scheduleDesc": "Pausa la minería fuera de este horario (hora local). El final puede ser después de medianoche.",
+    "scheduleWindow": "Horario",
+    "scheduleStart": "Hora de inicio",
+    "scheduleEnd": "Hora de fin"
   },
   "securitySettings": {
     "subtitle": "Gestionar los ajustes de seguridad de tu billetera",

@@ -316,7 +316,12 @@
     "minutes_other": "{{count}} 分",
     "resourceUse": "リソースの使用",
     "lowPriorityTitle": "低優先度",
-    "lowPriorityDesc": "ノードを通常より低い CPU 優先度で実行し、ほかのアプリの動作を保ちます。オフにするとノードが再起動する場合があります。"
+    "lowPriorityDesc": "ノードを通常より低い CPU 優先度で実行し、ほかのアプリの動作を保ちます。オフにするとノードが再起動する場合があります。",
+    "scheduleTitle": "スケジュールでマイニング",
+    "scheduleDesc": "この時間帯以外はマイニングを一時停止します（現地時間）。終了は深夜 0 時を過ぎても構いません。",
+    "scheduleWindow": "時間帯",
+    "scheduleStart": "開始時刻",
+    "scheduleEnd": "終了時刻"
   },
   "securitySettings": {
     "subtitle": "ウォレットのセキュリティ設定を管理する",

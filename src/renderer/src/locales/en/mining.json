@@ -26,7 +26,8 @@
     "statusStopped": "Stopped",
     "preferences": "Preferences",
     "pausedBattery": "Paused (Battery)",
-    "pausedUserActive": "Paused: you are active"
+    "pausedUserActive": "Paused: you are active",
+    "pausedSchedule": "Paused: outside schedule"
   },
   "hero": {
     "rewardsToday": "Rewards today",

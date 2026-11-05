@@ -28,7 +28,8 @@
     "statusStopped": "Остановлен",
     "preferences": "Предпочтения",
     "pausedBattery": "Пауза (батарея)",
-    "pausedUserActive": "Пауза: вы за компьютером"
+    "pausedUserActive": "Пауза: вы за компьютером",
+    "pausedSchedule": "Пауза: вне расписания"
   },
   "hero": {
     "rewardsToday": "Награды за сегодня",

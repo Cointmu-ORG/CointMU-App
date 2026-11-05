@@ -27,7 +27,8 @@
     "statusStopped": "Detenido",
     "preferences": "Preferencias",
     "pausedBattery": "En pausa (batería)",
-    "pausedUserActive": "En pausa: estás usando el equipo"
+    "pausedUserActive": "En pausa: estás usando el equipo",
+    "pausedSchedule": "En pausa: fuera de horario"
   },
   "hero": {
     "rewardsToday": "Recompensas de hoy",

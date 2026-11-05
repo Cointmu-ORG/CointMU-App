@@ -25,7 +25,8 @@
     "statusStopped": "Berhenti",
     "preferences": "Preferensi",
     "pausedBattery": "Dijeda (baterai)",
-    "pausedUserActive": "Dijeda: kamu sedang aktif"
+    "pausedUserActive": "Dijeda: kamu sedang aktif",
+    "pausedSchedule": "Dijeda: di luar jadwal"
   },
   "hero": {
     "rewardsToday": "Hadiah hari ini",

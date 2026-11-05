@@ -15,6 +15,12 @@ interface SettingRule {
 
 const isBoolean = (value: unknown): boolean => typeof value === "boolean";
 
+const TIME_OF_DAY_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/** "HH:MM", 24-hour local time. */
+const isTimeOfDay = (value: unknown): boolean =>
+  typeof value === "string" && TIME_OF_DAY_PATTERN.test(value);
+
 const isIntegerIn =
   (min: number, max: number) =>
   (value: unknown): boolean =>
@@ -47,6 +53,9 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
   },
   "mining.idleOnly": { fallback: false, isValid: isBoolean },
   "mining.lowPriority": { fallback: false, isValid: isBoolean },
+  "mining.schedule.enabled": { fallback: false, isValid: isBoolean },
+  "mining.schedule.start": { fallback: "22:00", isValid: isTimeOfDay },
+  "mining.schedule.end": { fallback: "07:00", isValid: isTimeOfDay },
   "mining.idleThresholdMinutes": {
     fallback: 2,
     isValid: isIntegerIn(1, 60),

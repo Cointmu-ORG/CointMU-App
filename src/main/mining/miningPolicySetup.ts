@@ -8,6 +8,16 @@ import { MiningPolicy } from "./miningPolicyRunner";
 const DEFAULT_THREADS = 4;
 const DEFAULT_IDLE_MINUTES = 2;
 const SECONDS_PER_MINUTE = 60;
+const MINUTES_PER_HOUR = 60;
+
+/**
+ * @param time - "HH:MM", already validated by its setting rule.
+ * @returns Minutes after midnight.
+ */
+function minutesOfDay(time: unknown): number {
+  const [hours, minutes] = String(time).split(":").map(Number);
+  return (hours || 0) * MINUTES_PER_HOUR + (minutes || 0);
+}
 
 /**
  * @param store - The settings store.
@@ -21,6 +31,7 @@ function readConditions(
 ): MiningConditions {
   const isEnabled = isStarted() && store.get("mining.isMiningEnabled") === true;
   const idleOnly = store.get("mining.idleOnly") === true;
+  const now = new Date();
   const idleMinutes =
     Number(store.get("mining.idleThresholdMinutes")) || DEFAULT_IDLE_MINUTES;
   return {
@@ -31,6 +42,10 @@ function readConditions(
     // Asked of the OS only while it matters.
     idleSeconds: isEnabled && idleOnly ? powerMonitor.getSystemIdleTime() : 0,
     idleThresholdSeconds: idleMinutes * SECONDS_PER_MINUTE,
+    isScheduled: store.get("mining.schedule.enabled") === true,
+    scheduleStartMinutes: minutesOfDay(store.get("mining.schedule.start")),
+    scheduleEndMinutes: minutesOfDay(store.get("mining.schedule.end")),
+    nowMinutes: now.getHours() * MINUTES_PER_HOUR + now.getMinutes(),
   };
 }
 

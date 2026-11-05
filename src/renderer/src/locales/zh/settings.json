@@ -316,7 +316,12 @@
     "minutes_other": "{{count}} 分钟",
     "resourceUse": "资源占用",
     "lowPriorityTitle": "低优先级",
-    "lowPriorityDesc": "以低于正常的 CPU 优先级运行节点，让其他应用保持流畅。关闭此项可能会重启节点。"
+    "lowPriorityDesc": "以低于正常的 CPU 优先级运行节点，让其他应用保持流畅。关闭此项可能会重启节点。",
+    "scheduleTitle": "按时间表挖矿",
+    "scheduleDesc": "在此时间段之外暂停挖矿（本地时间）。结束时间可以跨过午夜。",
+    "scheduleWindow": "时间段",
+    "scheduleStart": "开始时间",
+    "scheduleEnd": "结束时间"
   },
   "securitySettings": {
     "subtitle": "管理你的钱包安全设置",

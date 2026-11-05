@@ -53,3 +53,23 @@ describe("applySettingRules", () => {
     expect(applySettingRules(once ?? {})).toBeNull();
   });
 });
+
+describe("mining condition rules", () => {
+  it.each([
+    ["mining.schedule.start", "22:00", null],
+    ["mining.schedule.end", "07:30", null],
+    ["mining.schedule.end", "24:00", "mining.schedule.end"],
+    ["mining.schedule.start", "7:00", "mining.schedule.start"],
+    ["mining.idleThresholdMinutes", 2, null],
+    ["mining.idleThresholdMinutes", 0, "mining.idleThresholdMinutes"],
+    ["mining.idleThresholdMinutes", 2.5, "mining.idleThresholdMinutes"],
+  ])("%s = %j → %j", (key, value, invalid) => {
+    expect(findInvalidSetting(key, value)).toBe(invalid);
+  });
+
+  it("checks the schedule inside a mining section write", () => {
+    expect(findInvalidSetting("mining", { schedule: { start: "25:00" } })).toBe(
+      "mining.schedule.start",
+    );
+  });
+});
