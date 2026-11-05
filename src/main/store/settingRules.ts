@@ -1,4 +1,8 @@
-import { CloseAction, UpdateInstallMode } from "../../bridge/setting-values";
+import {
+  CloseAction,
+  UpdateInstallMode,
+  ZOOM_PERCENT_OPTIONS,
+} from "../../bridge/setting-values";
 
 /** Where the chain data lives; "" is the default folder. Only the move writes it. */
 export const CHAIN_DATA_ROOT_KEY = "chainDataRoot";
@@ -33,6 +37,10 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
   "updates.installMode": {
     fallback: UpdateInstallMode.ON_QUIT,
     isValid: isOneOf(Object.values(UpdateInstallMode)),
+  },
+  "appearance.zoomPercent": {
+    fallback: 100,
+    isValid: isOneOf(ZOOM_PERCENT_OPTIONS),
   },
   [CHAIN_DATA_ROOT_KEY]: {
     fallback: "",

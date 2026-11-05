@@ -53,6 +53,7 @@ import { registerShellHandlers } from "../ipc/shellIpc";
 import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
 import { createQuitConfirmation } from "./quitConfirmation";
 import { setupTray } from "./traySetup";
+import { applyStoredZoom } from "./windowZoom";
 import {
   queryIndexStatus,
   queryMinerDistribution,
@@ -137,6 +138,7 @@ app.whenReady().then(async () => {
   registerRendererRpcHandler(getRpcPort);
 
   const win = createWindow();
+  applyStoredZoom(store, win);
   initUpdater(win, store);
   miningController.setWindow(win);
   registerShellHandlers(setupTray(store, win, miningController));

@@ -92,3 +92,8 @@ export const UpdateInstallMode = {
 
 export type UpdateInstallMode =
   (typeof UpdateInstallMode)[keyof typeof UpdateInstallMode];
+
+/** Window zoom choices in percent (Settings → Appearance); 100 is the default. */
+export const ZOOM_PERCENT_OPTIONS = [90, 100, 110, 125] as const;
+
+export type ZoomPercent = (typeof ZOOM_PERCENT_OPTIONS)[number];

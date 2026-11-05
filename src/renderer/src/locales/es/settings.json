@@ -90,7 +90,10 @@
     "title": "Apariencia",
     "privacy": "Privacidad",
     "privacyModeTitle": "Modo privado",
-    "privacyModeDesc": "Muestra •••• en lugar de saldos e importes, por ejemplo al compartir la pantalla. El botón del ojo de arriba hace lo mismo."
+    "privacyModeDesc": "Muestra •••• en lugar de saldos e importes, por ejemplo al compartir la pantalla. El botón del ojo de arriba hace lo mismo.",
+    "display": "Pantalla",
+    "zoomTitle": "Zoom",
+    "zoomDesc": "Tamaño del texto y los controles en la ventana"
   },
   "notifications": {
     "subtitle": "Alertas, canales de entrega y categorías de eventos",

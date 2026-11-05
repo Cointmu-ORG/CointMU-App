@@ -90,7 +90,10 @@
     "title": "Appearance",
     "privacy": "Privacy",
     "privacyModeTitle": "Privacy mode",
-    "privacyModeDesc": "Show •••• instead of balances and amounts, e.g. while sharing your screen. The eye button at the top does the same."
+    "privacyModeDesc": "Show •••• instead of balances and amounts, e.g. while sharing your screen. The eye button at the top does the same.",
+    "display": "Display",
+    "zoomTitle": "Zoom",
+    "zoomDesc": "Size of text and controls in the window"
   },
   "notifications": {
     "subtitle": "Alerts, delivery channels, and event categories",

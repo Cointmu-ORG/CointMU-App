@@ -90,7 +90,10 @@
     "title": "外观",
     "privacy": "隐私",
     "privacyModeTitle": "隐私模式",
-    "privacyModeDesc": "以 •••• 代替余额和金额显示，例如在共享屏幕时。顶部的眼睛按钮作用相同。"
+    "privacyModeDesc": "以 •••• 代替余额和金额显示，例如在共享屏幕时。顶部的眼睛按钮作用相同。",
+    "display": "显示",
+    "zoomTitle": "缩放",
+    "zoomDesc": "窗口中文字和控件的大小"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",

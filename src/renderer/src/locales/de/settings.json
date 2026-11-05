@@ -90,7 +90,10 @@
     "title": "Erscheinungsbild",
     "privacy": "Privatsphäre",
     "privacyModeTitle": "Privatsphäre-Modus",
-    "privacyModeDesc": "Zeigt •••• statt Guthaben und Beträgen, z. B. beim Teilen des Bildschirms. Die Augen-Schaltfläche oben macht dasselbe."
+    "privacyModeDesc": "Zeigt •••• statt Guthaben und Beträgen, z. B. beim Teilen des Bildschirms. Die Augen-Schaltfläche oben macht dasselbe.",
+    "display": "Anzeige",
+    "zoomTitle": "Zoom",
+    "zoomDesc": "Größe von Text und Bedienelementen im Fenster"
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",

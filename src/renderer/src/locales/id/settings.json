@@ -90,7 +90,10 @@
     "title": "Penampilan",
     "privacy": "Privasi",
     "privacyModeTitle": "Mode privasi",
-    "privacyModeDesc": "Tampilkan •••• sebagai ganti saldo dan nominal, misalnya saat berbagi layar. Tombol mata di atas melakukan hal yang sama."
+    "privacyModeDesc": "Tampilkan •••• sebagai ganti saldo dan nominal, misalnya saat berbagi layar. Tombol mata di atas melakukan hal yang sama.",
+    "display": "Tampilan",
+    "zoomTitle": "Zoom",
+    "zoomDesc": "Ukuran teks dan kontrol di jendela"
   },
   "notifications": {
     "subtitle": "Peringatan, saluran pengiriman, dan kategori acara",
