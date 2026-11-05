@@ -88,6 +88,21 @@
       "sendFailedWithReason": "交易失败：{{reason}}",
       "unknownError": "未知错误"
     },
+    "vault": {
+      "passwordLabel": "钱包密码",
+      "confirmLabel": "确认密码",
+      "newPasswordHint": "请设置至少 8 个字符的密码。它用于保护此浏览器中的密钥，且无法找回：如果忘记，请重置钱包并重新导入密钥。",
+      "existingPasswordHint": "输入钱包密码以添加此密钥。",
+      "unlockTitle": "解锁钱包",
+      "unlockBtn": "解锁",
+      "unlocking": "正在解锁...",
+      "encrypting": "正在加密你的密钥...",
+      "forgotHint": "忘记密码？密码无法找回。请重置钱包，然后重新导入你的私钥。",
+      "resetBtn": "重置钱包",
+      "resetConfirm": "这将从此浏览器中删除所有已导入的钱包。重新导入需要你的私钥。是否继续？",
+      "lockBtn": "锁定钱包",
+      "approvalLocked": "钱包已锁定。请输入密码以批准此请求。"
+    },
     "errors": {
       "desktopNotConnected": "CointMU Desktop 未连接。请打开桌面应用后重试。",
       "storageSaveFailed": "无法将钱包保存到浏览器存储中。",
@@ -96,7 +111,12 @@
       "networkNotFound": "未找到所选网络。",
       "providerFailed": "无法准备交易。",
       "txFailed": "交易失败。",
-      "forbiddenSender": "此请求并非来自 CointMU 弹出窗口，已被拒绝。"
+      "forbiddenSender": "此请求并非来自 CointMU 弹出窗口，已被拒绝。",
+      "wrongPassword": "密码错误。",
+      "weakPassword": "请使用至少 8 个字符的密码。",
+      "passwordMismatch": "两次输入的密码不一致。",
+      "vaultDamaged": "无法读取加密的钱包数据。请重置钱包并重新导入密钥。",
+      "walletLocked": "钱包已锁定。请解锁后重试。"
     }
   }
 }

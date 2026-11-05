@@ -37,6 +37,36 @@
               placeholder="0x..."
             />
           </div>
+          <div class="input-group">
+            <label
+              class="input-label"
+              for="import-password-input"
+              data-i18n="extension.vault.passwordLabel"
+              >Wallet password</label
+            >
+            <input
+              type="password"
+              id="import-password-input"
+              class="text-input"
+              autocomplete="new-password"
+            />
+          </div>
+          <div id="import-confirm-group" class="input-group">
+            <label
+              class="input-label"
+              for="import-confirm-input"
+              data-i18n="extension.vault.confirmLabel"
+              >Confirm password</label
+            >
+            <input
+              type="password"
+              id="import-confirm-input"
+              class="text-input"
+              autocomplete="new-password"
+            />
+          </div>
+          <p id="import-password-hint" class="form-hint"></p>
+          <p id="import-error" class="form-error hidden" role="alert"></p>
           <button id="import-btn" class="btn primary-btn mt-4">
             <span data-i18n="extension.wallet.importBtn">Login</span>
           </button>
@@ -44,6 +74,52 @@
             <span data-i18n="extension.wallet.cancel">Cancel</span>
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Unlock View (standalone wallet with a locked vault) -->
+    <div id="unlock-view" class="view hidden">
+      <div class="header">
+        <div class="brand">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
+            </svg>
+          </div>
+          <span class="brand-name">CointMU</span>
+        </div>
+      </div>
+      <div class="login-content">
+        <form id="unlock-form" class="form-card">
+          <h2 data-i18n="extension.vault.unlockTitle" class="login-title">
+            Unlock Wallet
+          </h2>
+          <div class="input-group">
+            <label
+              class="input-label"
+              for="unlock-password-input"
+              data-i18n="extension.vault.passwordLabel"
+              >Wallet password</label
+            >
+            <input
+              type="password"
+              id="unlock-password-input"
+              class="text-input"
+              autocomplete="current-password"
+            />
+          </div>
+          <p id="unlock-error" class="form-error hidden" role="alert"></p>
+          <button type="submit" id="unlock-btn" class="btn primary-btn mt-4">
+            <span data-i18n="extension.vault.unlockBtn">Unlock</span>
+          </button>
+          <p class="form-hint mt-4" data-i18n="extension.vault.forgotHint">
+            Forgot your password? It cannot be recovered. Reset the wallet, then
+            import your private keys again.
+          </p>
+          <button type="button" id="reset-vault-btn" class="btn text-btn">
+            <span data-i18n="extension.vault.resetBtn">Reset Wallet</span>
+          </button>
+        </form>
       </div>
     </div>
 
@@ -124,6 +200,28 @@
             </div>
             <ul class="dropdown-options hidden" id="network-options"></ul>
           </div>
+          <button
+            id="lock-btn"
+            class="icon-btn hidden"
+            title="Lock Wallet"
+            data-i18n-title="extension.vault.lockBtn"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 11h12v10H6zM8 11V7a4 4 0 018 0v4"
+              />
+            </svg>
+          </button>
           <button
             id="add-network-btn"
             class="icon-btn"
@@ -304,6 +402,37 @@
       </div>
 
       <div class="tx-content">
+        <form id="approval-unlock-form" class="approval-unlock hidden">
+          <p class="form-hint" data-i18n="extension.vault.approvalLocked">
+            Your wallet is locked. Enter your password to approve this request.
+          </p>
+          <div class="input-group">
+            <label
+              class="input-label"
+              for="approval-password-input"
+              data-i18n="extension.vault.passwordLabel"
+              >Wallet password</label
+            >
+            <input
+              type="password"
+              id="approval-password-input"
+              class="text-input"
+              autocomplete="current-password"
+            />
+          </div>
+          <p
+            id="approval-unlock-error"
+            class="form-error hidden"
+            role="alert"
+          ></p>
+          <button
+            type="submit"
+            id="approval-unlock-btn"
+            class="btn primary-btn"
+          >
+            <span data-i18n="extension.vault.unlockBtn">Unlock</span>
+          </button>
+        </form>
         <p
           id="approval-warning"
           class="approval-warning hidden"
@@ -469,6 +598,20 @@
           Are you sure?
         </h3>
         <p id="confirm-modal-message" class="modal-message"></p>
+        <div id="confirm-modal-password-group" class="input-group hidden">
+          <label
+            class="input-label"
+            for="confirm-modal-password"
+            data-i18n="extension.vault.passwordLabel"
+            >Wallet password</label
+          >
+          <input
+            type="password"
+            id="confirm-modal-password"
+            class="text-input"
+            autocomplete="current-password"
+          />
+        </div>
         <div class="modal-actions">
           <button
             id="confirm-modal-cancel"

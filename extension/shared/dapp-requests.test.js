@@ -17,6 +17,24 @@ const ErrorCode = {
 
 const signer = ethers.Wallet.createRandom();
 
+function createArea(data) {
+  return {
+    get: async (keys) =>
+      Object.fromEntries(
+        [keys]
+          .flat()
+          .filter((k) => k in data)
+          .map((k) => [k, data[k]]),
+      ),
+    set: async (values) => {
+      Object.assign(data, values);
+    },
+    remove: async (keys) => {
+      for (const key of [keys].flat()) delete data[key];
+    },
+  };
+}
+
 function createChromeStub(initialState) {
   const storage = { ...initialState };
   const openedWindows = [];
@@ -28,16 +46,14 @@ function createChromeStub(initialState) {
       runtime: {
         id: EXTENSION_ID,
         getURL: (path) => EXTENSION_BASE + path,
+        sendMessage: async () => {},
       },
       storage: {
-        local: {
-          get: async (keys) =>
-            Object.fromEntries(
-              keys.filter((k) => k in storage).map((k) => [k, storage[k]]),
-            ),
-          set: async (values) => Object.assign(storage, values),
-        },
+        local: createArea(storage),
+        session: { ...createArea({}), setAccessLevel: async () => {} },
       },
+      alarms: { create: async () => {}, clear: async () => true },
+      tabs: { query: async () => [], sendMessage: async () => {} },
       windows: {
         create: async ({ url }) => {
           const window = { id: nextWindowId++, url };
@@ -54,7 +70,7 @@ function standaloneState() {
   return {
     connectionMode: "standalone",
     activeStandaloneAddress: signer.address,
-    wallets: [{ address: signer.address, privateKey: signer.privateKey }],
+    wallets: [{ address: signer.address }],
     activeNetworkId: "net-1",
     customNetworks: [
       { id: "net-1", chainId: CHAIN_ID, rpcUrl: "http://127.0.0.1:1" },
@@ -90,6 +106,14 @@ async function flush() {
   await vi.advanceTimersByTimeAsync(0);
 }
 
+/** Unlocks the signer the way the vault does, through the session module. */
+async function unlockSigner() {
+  const { openSession } = await import("./vault-session.js");
+  await openSession([
+    { address: signer.address, privateKey: signer.privateKey },
+  ]);
+}
+
 describe("dapp-requests (standalone)", () => {
   let stub;
   let mod;
@@ -101,6 +125,7 @@ describe("dapp-requests (standalone)", () => {
     vi.stubGlobal("chrome", stub.chrome);
     vi.stubGlobal("ethers", ethers);
     mod = await import("./dapp-requests.js");
+    await unlockSigner();
   });
 
   afterEach(() => {
@@ -166,7 +191,9 @@ describe("dapp-requests (standalone)", () => {
 
     const query = vi.fn();
     mod.handlePendingRequestQuery({ reqId }, approvalSender(popup), query);
+    await flush();
     expect(query.mock.calls[0][0].view.rows.at(-1).value).toBe("hello");
+    expect(query.mock.calls[0][0].needsUnlock).toBe(false);
 
     const first = vi.fn();
     mod.handleApprovalResolution(
@@ -230,6 +257,7 @@ describe("dapp-requests (standalone)", () => {
     }
     const query = vi.fn();
     mod.handlePendingRequestQuery({ reqId }, approvalSender(signPopup), query);
+    await flush();
     expect(query).toHaveBeenCalledWith(
       expect.objectContaining({ success: true }),
     );
@@ -287,6 +315,7 @@ describe("dapp-requests (account lookups)", () => {
     stub = createChromeStub(standaloneState());
     vi.stubGlobal("chrome", stub.chrome);
     mod = await import("./dapp-requests.js");
+    await unlockSigner();
   });
 
   afterEach(() => {
@@ -307,6 +336,95 @@ describe("dapp-requests (account lookups)", () => {
   it("refuses eth_coinbase from a site that is not connected", async () => {
     const reply = await sendFromPage(mod, { id: 1, method: "eth_coinbase" });
     expect(reply.error.code).toBe(ErrorCode.UNAUTHORIZED);
+  });
+});
+
+describe("dapp-requests (locked wallet)", () => {
+  let stub;
+  let mod;
+
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "Date"] });
+    vi.resetModules();
+    stub = createChromeStub({ ...standaloneState(), connectedOrigins: [DAPP] });
+    vi.stubGlobal("chrome", stub.chrome);
+    vi.stubGlobal("ethers", ethers);
+    mod = await import("./dapp-requests.js");
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  async function openSignRequest() {
+    const reply = sendFromPage(mod, {
+      id: 1,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    await flush();
+    return { reply, popup: stub.openedWindows.at(-1) };
+  }
+
+  it("shows no accounts to a connected site while locked", async () => {
+    const reply = await sendFromPage(mod, { id: 1, method: "eth_accounts" });
+    expect(reply.result).toEqual([]);
+  });
+
+  it("sends a connected site through the popup to unlock", async () => {
+    const reply = sendFromPage(mod, { id: 1, method: "eth_requestAccounts" });
+    await flush();
+    expect(stub.openedWindows).toHaveLength(1);
+
+    await unlockSigner();
+    const popup = stub.openedWindows[0];
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    expect((await reply).result).toEqual([signer.address]);
+  });
+
+  it("asks the approval window to unlock before signing", async () => {
+    const { popup } = await openSignRequest();
+    const query = vi.fn();
+    mod.handlePendingRequestQuery(
+      { reqId: reqIdOf(popup) },
+      approvalSender(popup),
+      query,
+    );
+    await flush();
+    expect(query.mock.calls[0][0]).toMatchObject({
+      success: true,
+      needsUnlock: true,
+    });
+  });
+
+  it("refuses to sign when the wallet is still locked at approval", async () => {
+    const { reply, popup } = await openSignRequest();
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    const { error } = await reply;
+    expect(error.message).toMatch(/locked/);
+  });
+
+  it("signs once the approval window has unlocked the wallet", async () => {
+    const { reply, popup } = await openSignRequest();
+    await unlockSigner();
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    const { result } = await reply;
+    expect(ethers.verifyMessage(ethers.getBytes("0x00"), result)).toBe(
+      signer.address,
+    );
   });
 });
 

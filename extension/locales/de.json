@@ -88,6 +88,21 @@
       "sendFailedWithReason": "Transaktion fehlgeschlagen: {{reason}}",
       "unknownError": "Unbekannter Fehler"
     },
+    "vault": {
+      "passwordLabel": "Wallet-Passwort",
+      "confirmLabel": "Passwort bestätigen",
+      "newPasswordHint": "Wählen Sie ein Passwort mit mindestens 8 Zeichen. Es schützt Ihre Schlüssel in diesem Browser und kann nicht wiederhergestellt werden: Wenn Sie es vergessen, setzen Sie die Wallet zurück und importieren Sie Ihre Schlüssel erneut.",
+      "existingPasswordHint": "Geben Sie Ihr Wallet-Passwort ein, um diesen Schlüssel hinzuzufügen.",
+      "unlockTitle": "Wallet entsperren",
+      "unlockBtn": "Entsperren",
+      "unlocking": "Wird entsperrt...",
+      "encrypting": "Ihre Schlüssel werden verschlüsselt...",
+      "forgotHint": "Passwort vergessen? Es kann nicht wiederhergestellt werden. Setzen Sie die Wallet zurück und importieren Sie Ihre privaten Schlüssel erneut.",
+      "resetBtn": "Wallet zurücksetzen",
+      "resetConfirm": "Dadurch werden alle importierten Wallets aus diesem Browser entfernt. Zum erneuten Import benötigen Sie Ihre privaten Schlüssel. Fortfahren?",
+      "lockBtn": "Wallet sperren",
+      "approvalLocked": "Ihre Wallet ist gesperrt. Geben Sie Ihr Passwort ein, um diese Anfrage zu genehmigen."
+    },
     "errors": {
       "desktopNotConnected": "CointMU Desktop ist nicht verbunden. Öffnen Sie die Desktop-App und versuchen Sie es erneut.",
       "storageSaveFailed": "Die Wallet konnte nicht im Browserspeicher gespeichert werden.",
@@ -96,7 +111,12 @@
       "networkNotFound": "Das ausgewählte Netzwerk wurde nicht gefunden.",
       "providerFailed": "Die Transaktion konnte nicht vorbereitet werden.",
       "txFailed": "Die Transaktion ist fehlgeschlagen.",
-      "forbiddenSender": "Diese Anfrage kam nicht aus dem CointMU-Popup und wurde abgelehnt."
+      "forbiddenSender": "Diese Anfrage kam nicht aus dem CointMU-Popup und wurde abgelehnt.",
+      "wrongPassword": "Falsches Passwort.",
+      "weakPassword": "Verwenden Sie ein Passwort mit mindestens 8 Zeichen.",
+      "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+      "vaultDamaged": "Die verschlüsselten Wallet-Daten konnten nicht gelesen werden. Setzen Sie die Wallet zurück und importieren Sie Ihre Schlüssel erneut.",
+      "walletLocked": "Die Wallet ist gesperrt. Entsperren Sie sie und versuchen Sie es erneut."
     }
   }
 }

@@ -1,26 +1,47 @@
 "use strict";
 
 import { BackgroundErrorCode, backgroundError } from "./background-errors.js";
-import { isFromPopupPage } from "./dapp-approvals.js";
+import { isFromApprovalPopup, isFromPopupPage } from "./dapp-approvals.js";
 import {
   handleApprovalResolution,
   handleContentMessage,
   handlePendingRequestQuery,
 } from "./dapp-requests.js";
 import { handleInternalMessage } from "./wallet.js";
+import { VAULT_HANDLERS } from "./wallet-vault.js";
 
 /**
  * Routes chrome.runtime messages by sender. Messages without an `action` are
- * dApp JSON-RPC requests relayed by the content script. Approval actions
- * check that they come from one of our approval windows; every other action
- * is accepted only from the toolbar popup, never from a content script.
+ * dApp JSON-RPC requests relayed by the content script. An approval window we
+ * opened may only read and answer its request and unlock the wallet; every
+ * other action is accepted only from the toolbar popup, never from a content
+ * script.
  */
 
-/** Actions answered for the approval window; each handler checks the sender. */
-const APPROVAL_HANDLERS = Object.freeze({
+const APPROVAL_WINDOW_HANDLERS = Object.freeze({
   GET_PENDING_REQ: handlePendingRequestQuery,
   RESOLVE_REQ: handleApprovalResolution,
+  UNLOCK: VAULT_HANDLERS.UNLOCK,
 });
+
+function ownHandler(handlers, action) {
+  return Object.hasOwn(handlers, action) ? handlers[action] : null;
+}
+
+/**
+ * @param {string} action
+ * @param {chrome.runtime.MessageSender} sender
+ * @returns {Function | null} The handler this sender may use, or null.
+ */
+function pickHandler(action, sender) {
+  if (isFromApprovalPopup(sender)) {
+    return ownHandler(APPROVAL_WINDOW_HANDLERS, action);
+  }
+  if (isFromPopupPage(sender)) {
+    return ownHandler(VAULT_HANDLERS, action) ?? handleInternalMessage;
+  }
+  return null;
+}
 
 /**
  * @param {any} message
@@ -33,12 +54,10 @@ export function handleRuntimeMessage(message, sender, sendResponse) {
   if (typeof action !== "string") {
     return handleContentMessage(message, sender, sendResponse);
   }
-  if (Object.hasOwn(APPROVAL_HANDLERS, action)) {
-    return APPROVAL_HANDLERS[action](message, sender, sendResponse);
-  }
-  if (!isFromPopupPage(sender)) {
+  const handler = pickHandler(action, sender);
+  if (!handler) {
     sendResponse(backgroundError(BackgroundErrorCode.FORBIDDEN_SENDER));
     return false;
   }
-  return handleInternalMessage(message, sender, sendResponse);
+  return handler(message, sender, sendResponse);
 }

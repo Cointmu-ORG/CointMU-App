@@ -19,6 +19,24 @@ const CONTENT_SCRIPT = {
   frameId: 0,
 };
 
+function createArea(data) {
+  return {
+    get: async (keys) =>
+      Object.fromEntries(
+        [keys]
+          .flat()
+          .filter((k) => k in data)
+          .map((k) => [k, data[k]]),
+      ),
+    set: async (values) => {
+      Object.assign(data, values);
+    },
+    remove: async (keys) => {
+      for (const key of [keys].flat()) delete data[key];
+    },
+  };
+}
+
 function createChromeStub(storage) {
   const openedWindows = [];
   return {
@@ -27,16 +45,14 @@ function createChromeStub(storage) {
       runtime: {
         id: EXTENSION_ID,
         getURL: (p) => EXTENSION_BASE + p,
+        sendMessage: async () => {},
       },
       storage: {
-        local: {
-          get: async (keys) =>
-            Object.fromEntries(
-              keys.filter((k) => k in storage).map((k) => [k, storage[k]]),
-            ),
-          set: async (values) => Object.assign(storage, values),
-        },
+        local: createArea(storage),
+        session: { ...createArea({}), setAccessLevel: async () => {} },
       },
+      alarms: { create: async () => {}, clear: async () => true },
+      tabs: { query: async () => [], sendMessage: async () => {} },
       windows: {
         create: async ({ url }) => {
           const window = { id: 200 + openedWindows.length, url };
@@ -124,6 +140,24 @@ describe("runtime-router sender checks", () => {
       approvalWindow,
     );
     expect(pending.success).toBe(true);
+
+    // Reaches the vault (no vault yet), instead of being refused as a sender.
+    const unlock = await send(
+      mod,
+      { action: "UNLOCK", password: "whatever1" },
+      approvalWindow,
+    );
+    expect(unlock.errorCode).toBe("PRIVATE_KEY_NOT_FOUND");
+
+    const lock = await send(mod, { action: "LOCK" }, approvalWindow);
+    expect(lock.errorCode).toBe("FORBIDDEN_SENDER");
+  });
+
+  it("refuses vault actions from a content script", async () => {
+    for (const action of ["UNLOCK", "LOCK", "RESET_VAULT"]) {
+      const reply = await send(mod, { action }, CONTENT_SCRIPT);
+      expect(reply.errorCode).toBe("FORBIDDEN_SENDER");
+    }
   });
 
   it("sends messages without an action down the dApp path", async () => {

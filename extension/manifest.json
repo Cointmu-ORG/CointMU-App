@@ -4,7 +4,7 @@
   "version": "1.0.17",
   "default_locale": "en",
   "description": "Connects dApps to the CointMU desktop wallet via a local WebSocket relay or custom RPC.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "alarms"],
   "host_permissions": ["<all_urls>"],
   "icons": {
     "16": "assets/icon-16.png",
