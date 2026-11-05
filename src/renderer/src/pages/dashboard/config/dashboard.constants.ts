@@ -8,6 +8,4 @@ export const SPARKLINE_BUCKET_MS = ms("10m");
 export const SPARKLINE_WINDOW_MS = ms("1h");
 export const TARGET_BLOCK_TIME_SECONDS = 30;
 
-export const CMU_PER_MINED_BLOCK = 10;
-
 export const ACTIVITY_CSV_FILENAME = "cointmu-activity.csv";

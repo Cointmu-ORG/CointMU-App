@@ -46,7 +46,6 @@ export const SELF_BLOCK_REWARD = "+2.00";
 export const ACTIVITY_WINDOW_MS = ms("30d");
 export const ACTIVITY_WINDOW_DAYS = 30;
 export const SECONDS_TO_MS = 1000;
-export const YEARLY_WINDOW_DAYS = 365;
 
 export const ACTIVITY_TAB_FOUND = "Found";
 export const ACTIVITY_TAB_LOG = "Log";
