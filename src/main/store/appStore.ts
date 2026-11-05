@@ -6,7 +6,11 @@ import {
   SyncMode,
   ThemeMode,
 } from "../../bridge/setting-values";
-import { migrateSettingValues } from "./settingsMigration";
+import {
+  applySettingRules,
+  migrateAutoLock,
+  migrateSettingValues,
+} from "./settingsMigration";
 
 // TODO(types): replace with the typed electron-store instance (Store<Schema>).
 // Callers read and write dotted keys the typed API would reject today, so the
@@ -60,7 +64,6 @@ export async function createAppStore() {
         poolAddress: "",
       },
       security: {
-        autoLock: true,
         requireBiometrics: false,
       },
       advanced: {
@@ -88,6 +91,14 @@ export async function createAppStore() {
   const migrated = migrateSettingValues(store.store);
   if (migrated) {
     store.store = migrated;
+  }
+  const autoLock = migrateAutoLock(store.store);
+  if (autoLock) {
+    store.store = autoLock;
+  }
+  const filled = applySettingRules(store.store);
+  if (filled) {
+    store.store = filled;
   }
   return store;
 }

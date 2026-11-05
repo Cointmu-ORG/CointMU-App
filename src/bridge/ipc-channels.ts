@@ -29,9 +29,28 @@ export const DIAGNOSTICS_CHANNELS = {
   ACKNOWLEDGE_NOTICE: "diagnostics:acknowledge-notice",
   LIST_QUEUED_REPORTS: "diagnostics:list-queued-reports",
   CLEAR_QUEUED_REPORTS: "diagnostics:clear-queued-reports",
+  EXPORT_BUNDLE: "diagnostics:export-bundle",
 } as const;
 
 export const EXPLORER_CHANNELS = {
   GET_MINER_DISTRIBUTION: "explorer:get-miner-distribution",
   GET_INDEX_STATUS: "explorer:get-index-status",
+  REBUILD_INDEX: "explorer:rebuild-index",
+} as const;
+
+export const SHELL_CHANNELS = {
+  SET_TEXT: "shell:set-text",
+  GET_CAPABILITIES: "shell:get-capabilities",
+} as const;
+
+export const CHAINDATA_CHANNELS = {
+  GET_INFO: "chaindata:get-info",
+  PICK_TARGET: "chaindata:pick-target",
+  MOVE: "chaindata:move",
+  DELETE_OLD: "chaindata:delete-old",
+  PROGRESS: "chaindata:progress",
+} as const;
+
+export const CLIPBOARD_CHANNELS = {
+  COPY_SENSITIVE: "clipboard:copy-sensitive",
 } as const;

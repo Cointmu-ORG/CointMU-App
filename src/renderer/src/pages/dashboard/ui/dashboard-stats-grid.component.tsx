@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Activity, ChevronRight, Grid, Globe, Link } from "lucide-react";
+import { PrivateAmount } from "@/shared/ui";
 
 interface DashboardStatsGridProps {
   isConnected: boolean;
@@ -68,9 +69,14 @@ function DashboardStatsGrid({
           {isConnected ? minedBlocksCount : "0"}
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          {isConnected
-            ? `+${minedBlocksCount * 2} CMU ${t("dashboard:statsGrid.rewards")}`
-            : "--"}
+          {isConnected ? (
+            <>
+              <PrivateAmount>{`+${minedBlocksCount * 2}`}</PrivateAmount>
+              {` CMU ${t("dashboard:statsGrid.rewards")}`}
+            </>
+          ) : (
+            "--"
+          )}
         </p>
       </div>
 

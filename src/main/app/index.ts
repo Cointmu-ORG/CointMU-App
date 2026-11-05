@@ -13,18 +13,21 @@ import {
   loadNetworkId,
   resolveDataDir,
   resolveDataRoot,
+  setDataRoot,
 } from "../geth/process/networkConfig";
+import { storedDataRoot } from "../geth/process/chainDataMove";
+import { watchGethPriority } from "../geth/process/gethPrioritySetup";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
+import { registerChainDataHandlers } from "../ipc/chainDataIpc";
+import { registerClipboardHandlers } from "../ipc/clipboardIpc";
+import { CHAIN_DATA_ROOT_KEY } from "../store/settingRules";
 import { startSession } from "./session";
 import { createWindow } from "./window";
 import { syncLoginItemFromOs } from "./loginItem";
 import { createAppStore } from "../store/appStore";
-import {
-  prepareGethIpcEndpoint,
-  removeTemporaryIpcDir,
-} from "../geth/process/ipcEndpointLifecycle";
+import { prepareGethIpcEndpoint } from "../geth/process/ipcEndpointLifecycle";
 import {
   attachNodeRecovery,
-  killGethProcess,
   spawnGethProcess,
 } from "../geth/process/gethProcess";
 import {
@@ -49,12 +52,16 @@ import {
   registerNodeStatusHandlers,
 } from "../ipc/nodeIpc";
 import { registerExplorerHandlers } from "../ipc/explorerIpc";
+import { registerShellHandlers } from "../ipc/shellIpc";
+import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
+import { createQuitConfirmation } from "./quitConfirmation";
+import { setupTray } from "./traySetup";
+import { applyStoredZoom } from "./windowZoom";
 import {
   queryIndexStatus,
   queryMinerDistribution,
+  requestIndexRebuild,
 } from "../explorerIndex/explorerIndexService";
-
-let isAppQuitting = false;
 
 // A second instance would spawn a second geth on the same datadir and fail on
 // the database lock, so it quits and hands focus to the running instance.
@@ -85,6 +92,8 @@ app.whenReady().then(async () => {
 
   const store = await createAppStore();
   syncLoginItemFromOs(store);
+  // Before anything resolves the datadir: orphan check, init, spawn.
+  setDataRoot(storedDataRoot(store.get(CHAIN_DATA_ROOT_KEY)));
 
   registerDiagnosticsHandlers(store);
   registerSettingsHandlers(store);
@@ -96,9 +105,12 @@ app.whenReady().then(async () => {
   registerNodeControlHandlers(store);
   registerBootnodeHandlers(store);
   registerWindowHandlers();
+  registerChainDataHandlers(store);
+  registerClipboardHandlers(store);
   registerExplorerHandlers({
     minerDistribution: queryMinerDistribution,
     status: queryIndexStatus,
+    rebuild: requestIndexRebuild,
   });
 
   await resolveGethPorts();
@@ -124,14 +136,18 @@ app.whenReady().then(async () => {
   }
 
   await prepareGethIpcEndpoint(store);
+  watchGethPriority(store, () => restartNodeByUser(store));
   await spawnGethProcess(store);
 
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
 
   const win = createWindow();
-  initUpdater(win);
+  applyStoredZoom(store, win);
+  initUpdater(win, store);
   miningController.setWindow(win);
+  registerShellHandlers(setupTray(store, win, miningController));
+  setQuitConfirmation(createQuitConfirmation(store, win, getRpcPort));
 
   const extSyncServer = startExtensionSyncServer(store, getRpcPort(), win);
 
@@ -146,22 +162,7 @@ app.whenReady().then(async () => {
   });
 });
 
-/**
- * Intercepts the quit sequence so the app does not terminate until the geth
- * child process has been given a chance to persist its chain state to disk.
- */
-app.on("before-quit", (e) => {
-  if (isAppQuitting) {
-    return;
-  }
-  e.preventDefault();
-  isAppQuitting = true;
-  killGethProcess()
-    .then(removeTemporaryIpcDir)
-    .then(() => {
-      app.exit();
-    });
-});
+registerQuitHandler();
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

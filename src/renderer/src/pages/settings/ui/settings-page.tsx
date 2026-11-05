@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { type SettingsStore } from "@/features/settings";
 import { resetAllSettings } from "@/features/settings";
 import { getAllSettings, setSetting } from "@/shared/api";
+import { useDisplayPrefs } from "@/shared/model";
 import { useAppearanceStore } from "@/features/settings";
 import { ErrorReportingSettings } from "@/features/error-reporting";
 import {
@@ -269,6 +270,7 @@ function SettingsPage({
                 onClick={async () => {
                   await resetAllSettings();
                   useAppearanceStore.getState().resetToDefaults();
+                  useDisplayPrefs.getState().resetDisplayPrefs();
 
                   useNotificationStore.getState().clearAll();
                   useNotificationStore.setState({ hydrated: false });

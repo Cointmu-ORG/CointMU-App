@@ -69,5 +69,34 @@
     "WALLET_INCORRECT_PASSWORD": "密码错误。",
     "MINING_NO_REWARD_ADDRESS": "未配置挖矿奖励地址。请在挖矿设置中设置。",
     "decryptFailed": "无法解密钱包。"
+  },
+  "shell": {
+    "trayOpen": "打开 CointMU",
+    "trayStartMining": "开始挖矿",
+    "trayStopMining": "停止挖矿",
+    "trayQuit": "退出 CointMU",
+    "traySyncing": "正在同步 {{percent}}%",
+    "traySynced": "已同步",
+    "trayOffline": "节点离线",
+    "trayMining": "正在挖矿",
+    "trayNotMining": "未在挖矿",
+    "trayPeers": "节点数：{{count}}",
+    "quitConfirmTitle": "退出 CointMU",
+    "quitConfirmMessage": "节点正在挖矿或同步，确定要退出吗？",
+    "quitConfirmDetail": "在你再次打开 CointMU 之前，挖矿和同步都会停止。节点会先正常关闭。",
+    "quitConfirmQuit": "退出",
+    "quitConfirmCancel": "取消",
+    "quitConfirmNeverAsk": "不再询问"
+  },
+  "update": {
+    "readyTitle": "更新已就绪",
+    "readyBody": "版本 {{version}} 已下载。重启即可安装；节点会先正常关闭。",
+    "restartNow": "立即重启",
+    "later": "稍后"
+  },
+  "privacy": {
+    "hideAmounts": "隐藏余额",
+    "showAmounts": "显示余额",
+    "hiddenAmount": "金额已隐藏"
   }
 }

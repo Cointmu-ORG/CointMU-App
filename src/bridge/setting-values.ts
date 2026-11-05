@@ -75,3 +75,46 @@ export function toSettingCode<T extends string>(
   const lower = value.toLowerCase();
   return codes.find((code) => code === lower) ?? fallback;
 }
+
+/** What the window's close button does (Settings → General). */
+export const CloseAction = {
+  QUIT: "quit",
+  TRAY: "tray",
+} as const;
+
+export type CloseAction = (typeof CloseAction)[keyof typeof CloseAction];
+
+/** When a downloaded update is installed (Settings → General → Updates). */
+export const UpdateInstallMode = {
+  ON_QUIT: "on-quit",
+  ASK: "ask",
+} as const;
+
+export type UpdateInstallMode =
+  (typeof UpdateInstallMode)[keyof typeof UpdateInstallMode];
+
+/** Window zoom choices in percent (Settings → Appearance); 100 is the default. */
+export const ZOOM_PERCENT_OPTIONS = [90, 100, 110, 125] as const;
+
+export type ZoomPercent = (typeof ZOOM_PERCENT_OPTIONS)[number];
+
+/** Interface motion (Settings → Appearance): follow the OS, or force on/off. */
+export const MotionPreference = {
+  AUTO: "auto",
+  ON: "on",
+  OFF: "off",
+} as const;
+
+export type MotionPreference =
+  (typeof MotionPreference)[keyof typeof MotionPreference];
+
+/** Wallet auto-lock after this many idle minutes; 0 is Never. */
+export const AUTO_LOCK_MINUTE_OPTIONS = [0, 5, 15, 30, 60] as const;
+
+export type AutoLockMinutes = (typeof AUTO_LOCK_MINUTE_OPTIONS)[number];
+
+/** Seconds after which a copied address or key leaves the clipboard; 0 is Never. */
+export const CLIPBOARD_CLEAR_SECOND_OPTIONS = [0, 15, 30, 60, 120] as const;
+
+export type ClipboardClearSeconds =
+  (typeof CLIPBOARD_CLEAR_SECOND_OPTIONS)[number];

@@ -11,14 +11,19 @@ import {
 } from "@/features/settings";
 import { getSetting } from "@/shared/api";
 import { useUpdater } from "@/shared/lib";
-import { useMiningLogStream } from "@/features/mining";
+import {
+  useBlockFoundNotifications,
+  useMiningLogStream,
+} from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
+import { lockSession } from "@/entities/wallet";
 
-import { Sidebar, AppHeader } from "@/widgets/layout";
+import { Sidebar, AppHeader, UpdateReadyBanner } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "./lib/auto-lock.hook";
+import { useShellText } from "./lib/shell-text.hook";
 import { FirstRunNotice } from "@/features/error-reporting";
 
 const Miner = lazy(() =>
@@ -62,6 +67,7 @@ function App(): JSX.Element {
   const [settingsTab, setSettingsTab] = useState<string>("general");
   const updater = useUpdater();
   useMiningLogStream();
+  useShellText();
 
   useEffect(() => {
     void useNotificationStore.getState().hydrate();
@@ -103,6 +109,7 @@ function App(): JSX.Element {
   };
 
   const accountsKey = accounts.map((a) => a.address).join(",");
+  useBlockFoundNotifications(accountsKey ? accountsKey.split(",") : []);
 
   useEffect(() => {
     const loadingTimer = setTimeout(
@@ -129,11 +136,14 @@ function App(): JSX.Element {
   }, [activeWalletAddress, accountsKey]);
 
   /**
-   * Locks the wallet by clearing the decrypted session state in React.
-   * Does NOT delete the encrypted payload from the persistent electron-store.
-   * Also resets the transient AuthFlow UI state back to the initial screen.
+   * Locks the wallet: forgets the session password kept in memory and clears
+   * the decrypted session state in React, so the password is needed again.
+   * Does NOT delete the encrypted payload from the persistent electron-store,
+   * and mining and the node keep running. Also resets the transient AuthFlow
+   * UI state back to the initial screen.
    */
   const handleLogout = (): void => {
+    lockSession();
     useAuthStore.getState().reset();
     setActiveWalletAddress(null);
     setAccounts([]);
@@ -183,6 +193,7 @@ function App(): JSX.Element {
       <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
         <ToastViewport />
+        <UpdateReadyBanner updater={updater} />
         <FirstRunNotice />
         <Sidebar
           accounts={accounts}

@@ -1,5 +1,7 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
+import { Eye, EyeOff } from "lucide-react";
+import { useDisplayPrefs } from "@/shared/model";
 
 /**
  * A custom frameless window title bar.
@@ -8,6 +10,11 @@ import { useTranslation } from "react-i18next";
  */
 export function CustomTitleBar(): JSX.Element {
   const { t } = useTranslation(["common"]);
+  const isPrivacyMode = useDisplayPrefs((s) => s.isPrivacyMode);
+  const setPrivacyMode = useDisplayPrefs((s) => s.setPrivacyMode);
+  const privacyLabel = isPrivacyMode
+    ? t("common:privacy.showAmounts")
+    : t("common:privacy.hideAmounts");
 
   const handleMinimize = (): void => {
     window.api.window.minimize();
@@ -27,6 +34,20 @@ export function CustomTitleBar(): JSX.Element {
         className="flex h-full"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
+        <button
+          type="button"
+          onClick={() => setPrivacyMode(!isPrivacyMode)}
+          aria-pressed={isPrivacyMode}
+          aria-label={privacyLabel}
+          title={privacyLabel}
+          className="flex items-center justify-center w-12 h-full text-slate-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+        >
+          {isPrivacyMode ? (
+            <EyeOff width={14} height={14} aria-hidden="true" />
+          ) : (
+            <Eye width={14} height={14} aria-hidden="true" />
+          )}
+        </button>
         <button
           onClick={handleMinimize}
           title={t("ui:window.minimize")}

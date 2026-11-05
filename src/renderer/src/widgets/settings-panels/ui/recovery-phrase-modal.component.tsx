@@ -9,6 +9,7 @@ import {
   type JSX,
 } from "react";
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
+import { copySensitive } from "@/shared/api";
 
 interface RecoveryPhraseModalProps {
   onClose: () => void;
@@ -105,7 +106,7 @@ export function RecoveryPhraseModal({
 
   const handleCopy = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(phrase);
+      await copySensitive(phrase);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {

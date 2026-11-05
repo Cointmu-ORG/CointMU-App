@@ -8,6 +8,7 @@ import {
   listQueuedReports,
 } from "./errorReporting";
 import { copyRecentLogs, openLogsFolder } from "./logging";
+import { exportDiagnosticBundle } from "./diagnosticExport";
 import {
   TELEMETRY_ENABLED_KEY,
   TELEMETRY_NOTICE_KEY,
@@ -17,6 +18,8 @@ import {
 
 export interface SettingsStore extends SettingsReader {
   set(key: string, value: unknown): void;
+  /** The whole content; the diagnostic bundle picks its non-secret sections. */
+  readonly store: Readonly<Record<string, unknown>>;
 }
 
 function readTelemetryState(store: SettingsReader): TelemetryState {
@@ -70,5 +73,8 @@ export function registerDiagnosticsHandlers(store: SettingsStore): void {
   );
   ipcMain.handle(DIAGNOSTICS_CHANNELS.CLEAR_QUEUED_REPORTS, () =>
     clearQueuedReports(),
+  );
+  ipcMain.handle(DIAGNOSTICS_CHANNELS.EXPORT_BUNDLE, (_, dialogText: unknown) =>
+    exportDiagnosticBundle(store, dialogText),
   );
 }

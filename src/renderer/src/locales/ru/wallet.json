@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "Транзакция подтверждена",
       "notifConfirmedDesc": "Отправлено {{asset}} на {{to}}",
       "notifFailedTitle": "Транзакция не удалась",
-      "notifFailedDesc": "Перевод {{asset}} на {{to}} не удалось подтвердить"
+      "notifFailedDesc": "Перевод {{asset}} на {{to}} не удалось подтвердить",
+      "passwordLabel": "Пароль кошелька",
+      "passwordRequired": "Введите пароль кошелька, чтобы отправить."
     },
     "importKeystore": {
       "title": "Импорт keystore",

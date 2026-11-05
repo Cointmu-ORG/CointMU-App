@@ -28,3 +28,4 @@ export * from "./ui.constants";
 
 export * from "./activity";
 export * from "./icons";
+export { PrivateAmount } from "./private-amount.component";

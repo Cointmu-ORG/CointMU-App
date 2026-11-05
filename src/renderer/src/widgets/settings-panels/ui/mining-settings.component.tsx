@@ -5,6 +5,7 @@ import type { SettingsStore } from "@/features/settings";
 import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
+import { MiningConditionsSettings } from "./mining-conditions-settings.component";
 
 interface MiningSettingsProps {
   config: SettingsStore["mining"];
@@ -277,6 +278,8 @@ export function MiningSettings({
             </div>
           </div>
         </section>
+
+        <MiningConditionsSettings />
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">

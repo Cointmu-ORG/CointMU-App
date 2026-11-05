@@ -3,6 +3,10 @@ import type {
   BootnodeSettings,
   BootnodeState,
   BootnodeStatus,
+  ChainDataInfo,
+  ChainDataMoveProgress,
+  ChainDataMoveResult,
+  ChainDataTarget,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -11,6 +15,8 @@ import type {
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
+  ShellCapabilities,
+  ShellText,
   TelemetryState,
   WalletActivity,
 } from "../bridge/types";
@@ -37,6 +43,7 @@ interface UpdaterEvent {
   info?: UpdaterEventInfo;
   progress?: UpdaterProgress;
   error?: string;
+  shouldAskToInstall?: boolean;
 }
 
 interface CointmuAPI {
@@ -57,6 +64,7 @@ interface CointmuAPI {
       range: MinerRange,
     ) => Promise<MinerDistributionResult | null>;
     getIndexStatus: () => Promise<ExplorerIndexStatus | null>;
+    rebuildIndex: () => Promise<void>;
   };
   network: {
     getInsights: () => Promise<{
@@ -128,6 +136,7 @@ interface CointmuAPI {
       difficulty: number;
       blockNumber: number;
     }>;
+    getPowerStatus: () => Promise<string>;
     onDagProgress: (callback: (progress: number) => void) => () => void;
     onMiningStatusChanged: (callback: (status: string) => void) => () => void;
     onMiningLog: (
@@ -146,6 +155,22 @@ interface CointmuAPI {
   pairing: {
     onRequest: (callback: () => void) => () => void;
     respond: (approved: boolean) => void;
+  };
+  chainData: {
+    getInfo: () => Promise<ChainDataInfo>;
+    pickTarget: (dialogText: DialogText) => Promise<ChainDataTarget | null>;
+    move: (target: string) => Promise<ChainDataMoveResult>;
+    deleteOld: () => Promise<void>;
+    onProgress: (
+      callback: (progress: ChainDataMoveProgress) => void,
+    ) => () => void;
+  };
+  clipboard: {
+    copySensitive: (text: string) => Promise<void>;
+  };
+  shell: {
+    setText: (text: ShellText) => Promise<void>;
+    getCapabilities: () => Promise<ShellCapabilities>;
   };
   window: {
     minimize: () => void;
@@ -175,6 +200,7 @@ interface CointmuAPI {
     acknowledgeNotice: () => Promise<TelemetryState>;
     listQueuedReports: () => Promise<QueuedReport[]>;
     clearQueuedReports: () => Promise<void>;
+    exportBundle: (dialogText: DialogText) => Promise<boolean>;
   };
   extension: {
     unlink: () => void;

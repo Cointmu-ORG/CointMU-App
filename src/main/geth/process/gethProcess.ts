@@ -23,6 +23,7 @@ import {
   writeGethPidFile,
 } from "./orphanedGeth";
 import { startGethWatcher } from "./gethWatcherProcess";
+import { applyPriorityOnSpawn } from "./gethPrioritySetup";
 import { gethLaunchCommand } from "./gethSupervisor";
 import { parseGethLogChunk } from "../recovery/gethLogParser";
 import { gethLog } from "../../diagnostics/logging";
@@ -164,6 +165,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     const spawnedPid = gethProcess.pid;
     if (spawnedPid !== undefined) {
       writeGethPidFile(resolveDataRoot(), spawnedPid);
+      applyPriorityOnSpawn(store, spawnedPid);
     }
 
     /**

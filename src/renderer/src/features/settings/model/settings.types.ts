@@ -1,4 +1,5 @@
 import type {
+  CloseAction,
   DisplayCurrency,
   LogLevel,
   MiningIntensity,
@@ -15,6 +16,8 @@ export interface SettingsStore {
     pushNotifications: boolean;
     notificationSound: boolean;
     currency: DisplayCurrency;
+    closeAction: CloseAction;
+    confirmQuitWhileBusy: boolean;
   };
   appearance: {
     theme: string;
@@ -40,7 +43,7 @@ export interface SettingsStore {
     poolAddress: string;
   };
   security: {
-    autoLock: boolean;
+    autoLockMinutes: number;
     requireBiometrics: boolean;
   };
   advanced: {

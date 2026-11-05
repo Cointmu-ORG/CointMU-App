@@ -70,5 +70,34 @@
     "WALLET_INCORRECT_PASSWORD": "Falsches Passwort.",
     "MINING_NO_REWARD_ADDRESS": "Keine Belohnungsadresse für das Mining festgelegt. Lege eine in den Mining-Einstellungen fest.",
     "decryptFailed": "Die Wallet konnte nicht entschlüsselt werden."
+  },
+  "shell": {
+    "trayOpen": "CointMU öffnen",
+    "trayStartMining": "Mining starten",
+    "trayStopMining": "Mining stoppen",
+    "trayQuit": "CointMU beenden",
+    "traySyncing": "Synchronisiere {{percent}} %",
+    "traySynced": "Synchronisiert",
+    "trayOffline": "Node offline",
+    "trayMining": "Mining läuft",
+    "trayNotMining": "Kein Mining",
+    "trayPeers": "Peers: {{count}}",
+    "quitConfirmTitle": "CointMU beenden",
+    "quitConfirmMessage": "Beenden, während der Node mint oder synchronisiert?",
+    "quitConfirmDetail": "Mining und Synchronisierung stoppen, bis du CointMU wieder öffnest. Der Node wird vorher sauber heruntergefahren.",
+    "quitConfirmQuit": "Beenden",
+    "quitConfirmCancel": "Abbrechen",
+    "quitConfirmNeverAsk": "Nicht mehr fragen"
+  },
+  "update": {
+    "readyTitle": "Update bereit",
+    "readyBody": "Version {{version}} ist heruntergeladen. Starte neu, um sie zu installieren; der Node wird vorher sauber heruntergefahren.",
+    "restartNow": "Jetzt neu starten",
+    "later": "Später"
+  },
+  "privacy": {
+    "hideAmounts": "Guthaben ausblenden",
+    "showAmounts": "Guthaben anzeigen",
+    "hiddenAmount": "Ausgeblendeter Betrag"
   }
 }

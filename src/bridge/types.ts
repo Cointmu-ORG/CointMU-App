@@ -199,10 +199,16 @@ export const IpcErrorCode = {
 
 export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
 
-/** Payload of the `mining:status-changed` event. */
+/**
+ * Payload of the `mining:status-changed` event: what the mining policy
+ * decided for mining the user switched on, or STOPPED while it is off.
+ */
 export const MiningPowerStatus = {
   MINING: "MINING",
   PAUSED_BATTERY: "PAUSED_BATTERY",
+  PAUSED_USER_ACTIVE: "PAUSED_USER_ACTIVE",
+  PAUSED_SCHEDULE: "PAUSED_SCHEDULE",
+  STOPPED: "STOPPED",
 } as const;
 
 export type MiningPowerStatus =
@@ -290,4 +296,84 @@ export interface MinerDistributionResult {
   /** False while the index does not yet cover the whole range up to the node head. */
   readonly isComplete: boolean;
   readonly status: ExplorerIndexStatus;
+}
+
+/**
+ * Localized strings the main process shows outside the renderer: the tray
+ * menu and its status lines, and the quit confirmation dialog. The renderer sends them on every language
+ * change; `{{name}}` placeholders are filled in main.
+ */
+export interface ShellText {
+  readonly trayOpen: string;
+  readonly trayStartMining: string;
+  readonly trayStopMining: string;
+  readonly trayQuit: string;
+  /** `{{percent}}` */
+  readonly traySyncing: string;
+  readonly traySynced: string;
+  readonly trayOffline: string;
+  readonly trayMining: string;
+  readonly trayNotMining: string;
+  /** `{{count}}` */
+  readonly trayPeers: string;
+  readonly quitConfirmTitle: string;
+  readonly quitConfirmMessage: string;
+  readonly quitConfirmDetail: string;
+  readonly quitConfirmQuit: string;
+  readonly quitConfirmCancel: string;
+  readonly quitConfirmNeverAsk: string;
+}
+
+/** What the desktop shell supports on this OS and desktop environment. */
+export interface ShellCapabilities {
+  /** False on macOS (dock convention) and on Linux desktops without a tray host. */
+  readonly isTraySupported: boolean;
+}
+
+/** Why moving the chain data did not happen; the renderer localizes it. */
+export const ChainDataMoveError = {
+  SAME_FOLDER: "SAME_FOLDER",
+  INSIDE_CURRENT: "INSIDE_CURRENT",
+  NOT_EMPTY: "NOT_EMPTY",
+  NOT_WRITABLE: "NOT_WRITABLE",
+  NOT_ENOUGH_SPACE: "NOT_ENOUGH_SPACE",
+  COPY_FAILED: "COPY_FAILED",
+  VERIFY_FAILED: "VERIFY_FAILED",
+  BUSY: "BUSY",
+} as const;
+
+export type ChainDataMoveError =
+  (typeof ChainDataMoveError)[keyof typeof ChainDataMoveError];
+
+/** Where the chain data lives and how big it is. */
+export interface ChainDataInfo {
+  readonly root: string;
+  readonly sizeBytes: number;
+  readonly isDefault: boolean;
+}
+
+/** A folder the user picked for the move, already checked, or why it cannot be used. */
+export type ChainDataTarget =
+  | { readonly path: string; readonly requiredBytes: number }
+  | { readonly path: string; readonly error: ChainDataMoveError };
+
+export type ChainDataMoveResult =
+  | { readonly ok: true; readonly oldRoot: string }
+  | { readonly ok: false; readonly error: ChainDataMoveError };
+
+/** Steps of a move, sent while it runs. */
+export const ChainDataMovePhase = {
+  STOPPING: "stopping",
+  COPYING: "copying",
+  VERIFYING: "verifying",
+  STARTING: "starting",
+} as const;
+
+export type ChainDataMovePhase =
+  (typeof ChainDataMovePhase)[keyof typeof ChainDataMovePhase];
+
+export interface ChainDataMoveProgress {
+  readonly phase: ChainDataMovePhase;
+  /** Copy progress 0-100 while copying. */
+  readonly percent?: number;
 }

@@ -105,7 +105,21 @@ async function fetchMiningStats(): Promise<MiningStats | null> {
 function subscribeMiningStatus(
   callback: (status: string) => void,
 ): Unsubscribe {
-  return window.api.mining.onMiningStatusChanged(callback);
+  let isActive = true;
+  // The current status first: a pause may have started before the page opened.
+  window.api.mining
+    .getPowerStatus()
+    .then((status) => {
+      if (isActive) callback(status);
+    })
+    .catch((err: unknown) => {
+      console.error("Failed to read the mining status", err);
+    });
+  const unsubscribe = window.api.mining.onMiningStatusChanged(callback);
+  return () => {
+    isActive = false;
+    unsubscribe();
+  };
 }
 
 /**

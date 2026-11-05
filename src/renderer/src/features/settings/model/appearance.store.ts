@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
+import {
+  LayoutDensity,
+  MotionPreference,
+  ThemeMode,
+} from "@bridge/setting-values";
 import {
   APPEARANCE_STORAGE_VERSION,
   migrateAppearance,
@@ -12,11 +16,11 @@ export interface AppearanceState {
   density: LayoutDensity;
   // No control yet (#104): the sidebar icons have no colors to switch.
   showSidebarColors: boolean;
-  animatedTransitions: boolean;
+  motion: MotionPreference;
   setTheme: (theme: ThemeMode) => void;
   setAccentColor: (color: string) => void;
   setDensity: (density: LayoutDensity) => void;
-  setAnimatedTransitions: (animate: boolean) => void;
+  setMotion: (motion: MotionPreference) => void;
   resetToDefaults: () => void;
 }
 
@@ -27,19 +31,18 @@ export const useAppearanceStore = create<AppearanceState>()(
       accentColor: "#3b82f6",
       density: LayoutDensity.COMFORTABLE,
       showSidebarColors: true,
-      animatedTransitions: true,
+      motion: MotionPreference.AUTO,
       setTheme: (theme) => set({ theme }),
       setAccentColor: (accentColor) => set({ accentColor }),
       setDensity: (density) => set({ density }),
-      setAnimatedTransitions: (animatedTransitions) =>
-        set({ animatedTransitions }),
+      setMotion: (motion) => set({ motion }),
       resetToDefaults: () =>
         set({
           theme: ThemeMode.LIGHT,
           accentColor: "#3b82f6",
           density: LayoutDensity.COMFORTABLE,
           showSidebarColors: true,
-          animatedTransitions: true,
+          motion: MotionPreference.AUTO,
         }),
     }),
     {
@@ -72,9 +75,33 @@ const applyAppearanceEffects = (state: AppearanceState) => {
 
   // Handle Layout Attributes
   root.setAttribute("data-density", state.density);
-  root.setAttribute("data-animations", state.animatedTransitions.toString());
+  root.setAttribute(
+    "data-animations",
+    String(isMotionOn(state.motion, reducedMotionQuery.matches)),
+  );
 };
+
+const reducedMotionQuery = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+);
+
+/**
+ * @param motion - The user's choice.
+ * @param prefersReduced - The OS asks for reduced motion.
+ * @returns Whether transitions and animations run.
+ */
+export function isMotionOn(
+  motion: MotionPreference,
+  prefersReduced: boolean,
+): boolean {
+  if (motion === MotionPreference.AUTO) return !prefersReduced;
+  return motion === MotionPreference.ON;
+}
 
 // Global initializer to apply appearance effects
 useAppearanceStore.subscribe(applyAppearanceEffects);
 applyAppearanceEffects(useAppearanceStore.getState());
+// Automatic follows the OS setting while the app runs.
+reducedMotionQuery.addEventListener("change", () =>
+  applyAppearanceEffects(useAppearanceStore.getState()),
+);

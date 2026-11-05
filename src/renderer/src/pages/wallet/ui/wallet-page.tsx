@@ -11,7 +11,7 @@ import type { DerivedAccount } from "@/entities/account";
 import { COPY_FEEDBACK_MS } from "@/features/wallet";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { call, getSetting, setSetting } from "@/shared/api";
+import { call, getSetting, setSetting, copySensitive } from "@/shared/api";
 import { ethers } from "ethers";
 import { useAppStore } from "@/shared/model";
 import { useWalletUiStore } from "@/features/wallet";
@@ -119,7 +119,9 @@ function WalletPage({
 
   const handleCopy = (): void => {
     if (activeAccount?.address) {
-      navigator.clipboard.writeText(activeAccount.address);
+      copySensitive(activeAccount.address).catch((err: unknown) => {
+        console.error("Failed to copy the address", err);
+      });
       setCopied(true);
       setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
     }

@@ -6,6 +6,12 @@ import {
 } from "electron-updater";
 import { is } from "@electron-toolkit/utils";
 import { killGethProcess } from "../geth/process/gethProcess";
+import { UpdateInstallMode } from "../../bridge/setting-values";
+import type { AppStore } from "../store/appStore";
+import { QuitReason, markQuitReason, setQuitFinisher } from "./appQuit";
+
+// If the installer does not end the app, it still has to exit: geth is gone.
+const INSTALL_EXIT_FALLBACK_MS = 10_000;
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the
@@ -28,29 +34,57 @@ interface UpdaterStatePayload {
     bytesPerSecond: number;
   };
   error?: string;
+  /** downloaded only: show the "Restart now" prompt (install mode Ask). */
+  shouldAskToInstall?: boolean;
 }
 
 /**
  * Stops geth, then quits and installs the downloaded update. On Windows the
  * installer terminates every process under the install folder, geth.exe
  * included, about a second after it starts: long before before-quit has let
- * geth shut down, which would leave its database unclean (#97).
+ * geth shut down, which would leave its database unclean (#97). The quit it
+ * starts is marked as the updater's, so it is never held for confirmation.
  * @returns {Promise<void>} Resolves once the install has been started.
  */
 async function stopGethAndInstall(): Promise<void> {
+  // The install must not wait on the quit confirmation.
+  markQuitReason(QuitReason.UPDATER);
   await killGethProcess();
   autoUpdater.quitAndInstall();
 }
 
 /**
+ * Installs a waiting update while the app quits (install mode "on quit").
+ * Runs from the quit sequence after geth has stopped, so no relaunch.
+ * @param isUpdateReady - Whether an update was downloaded.
+ * @param store - The settings store.
+ */
+function finishQuit(isUpdateReady: boolean, store: AppStore): void {
+  const mode = store.get("updates.installMode");
+  if (!isUpdateReady || mode !== UpdateInstallMode.ON_QUIT) {
+    app.exit();
+    return;
+  }
+  console.log("[updater] Installing the downloaded update on quit");
+  autoUpdater.quitAndInstall(true, false);
+  setTimeout(() => app.exit(), INSTALL_EXIT_FALLBACK_MS);
+}
+
+/**
  * Initializes the Electron auto-updater with automatic download enabled and
- * wires its lifecycle events and renderer-facing IPC handlers. When an update
- * is downloaded it is installed immediately via quitAndInstall, restarting the
- * application on the new version.
+ * wires its lifecycle events and renderer-facing IPC handlers. A downloaded
+ * update waits: it is installed when the user quits (install mode "on quit")
+ * or when they choose Restart now (mode "ask" shows that prompt). The check
+ * at start runs only while Settings → General → Updates allows it.
  * @param {BrowserWindow} mainWindow - The main BrowserWindow used to forward update events.
+ * @param store - The settings store (updates.autoCheck, updates.installMode).
  * @returns {void}
  */
-function initUpdater(mainWindow: BrowserWindow): void {
+function initUpdater(mainWindow: BrowserWindow, store: AppStore): void {
+  let isUpdateReady = false;
+  setQuitFinisher(() => finishQuit(isUpdateReady, store));
+  // The quit sequence installs it itself, after geth has stopped.
+  autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.autoDownload = true;
   autoUpdater.logger = console;
   autoUpdater.allowPrerelease = true;
@@ -100,11 +134,14 @@ function initUpdater(mainWindow: BrowserWindow): void {
   });
 
   autoUpdater.on("update-downloaded", (info: UpdateInfo) => {
-    console.log(
-      `[updater] Update downloaded: ${info.version}. Restarting to apply update.`,
-    );
-    send({ status: "downloaded", info: { version: info.version } });
-    void stopGethAndInstall();
+    console.log(`[updater] Update downloaded: ${info.version}`);
+    isUpdateReady = true;
+    send({
+      status: "downloaded",
+      info: { version: info.version },
+      shouldAskToInstall:
+        store.get("updates.installMode") === UpdateInstallMode.ASK,
+    });
   });
 
   autoUpdater.on("error", (err: Error) => {
@@ -139,7 +176,9 @@ function initUpdater(mainWindow: BrowserWindow): void {
 
   ipcMain.handle("updater:install", () => stopGethAndInstall());
 
-  if (app.isPackaged) {
+  if (store.get("updates.autoCheck") === false) {
+    console.log("[updater] Automatic update check is off.");
+  } else if (app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
       console.error("[updater] Initial update check failed:", err.message);
     });

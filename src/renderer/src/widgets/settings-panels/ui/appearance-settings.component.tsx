@@ -2,7 +2,14 @@ import { COLORS, useAppearanceStore } from "@/features/settings";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { DENSITY_LABEL_KEYS } from "@/shared/lib";
-import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
+import {
+  LayoutDensity,
+  MotionPreference,
+  ThemeMode,
+} from "@bridge/setting-values";
+import { SettingChoice, SettingRow } from "./setting-controls.component";
+import { PrivacySettings } from "./privacy-settings.component";
+import { DisplaySettings } from "./display-settings.component";
 
 /**
  * Appearance settings pane containing theme (light/dark/auto),
@@ -158,30 +165,36 @@ export function AppearanceSettings(): JSX.Element {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:appearance.animatedTransitionsTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:appearance.animatedTransitionsDesc")}
-                </p>
-              </div>
-              <button
-                onClick={() =>
-                  appearanceStore.setAnimatedTransitions(
-                    !appearanceStore.animatedTransitions,
-                  )
-                }
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${appearanceStore.animatedTransitions ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700"}`}
-              >
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${appearanceStore.animatedTransitions ? "translate-x-5" : "translate-x-0"}`}
-                />
-              </button>
-            </div>
+            <SettingRow
+              title={t("settings:appearance.animatedTransitionsTitle")}
+              description={t("settings:appearance.motionDesc")}
+            >
+              <SettingChoice
+                label={t("settings:appearance.animatedTransitionsTitle")}
+                value={appearanceStore.motion}
+                options={[
+                  {
+                    value: MotionPreference.AUTO,
+                    label: t("settings:appearance.motionAuto"),
+                  },
+                  {
+                    value: MotionPreference.ON,
+                    label: t("settings:appearance.motionOn"),
+                  },
+                  {
+                    value: MotionPreference.OFF,
+                    label: t("settings:appearance.motionOff"),
+                  },
+                ]}
+                onChange={appearanceStore.setMotion}
+              />
+            </SettingRow>
           </div>
         </section>
+
+        <DisplaySettings />
+
+        <PrivacySettings />
       </div>
     </div>
   );

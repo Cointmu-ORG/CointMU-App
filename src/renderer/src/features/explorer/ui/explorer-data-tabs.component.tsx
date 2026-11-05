@@ -3,7 +3,12 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/entities/block";
 import { useAppStore } from "@/shared/model";
-import { SkeletonTable, Pagination, type ActivityData } from "@/shared/ui";
+import {
+  SkeletonTable,
+  Pagination,
+  type ActivityData,
+  PrivateAmount,
+} from "@/shared/ui";
 import { MinerDistribution } from "./miner-distribution.component";
 import { formatAge } from "@/shared/lib";
 
@@ -413,11 +418,18 @@ function ExplorerDataTabs({
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <p className="text-xs font-bold text-slate-800 dark:text-gray-100">
-                            {acc.balance.toLocaleString(undefined, {
-                              minimumFractionDigits:
-                                acc.balance % 1 === 0 ? 1 : 2,
-                              maximumFractionDigits: 2,
-                            })}
+                            <PrivateAmount
+                              isPrivate={checkIfMinedByMe(
+                                acc.address,
+                                balances,
+                              )}
+                            >
+                              {acc.balance.toLocaleString(undefined, {
+                                minimumFractionDigits:
+                                  acc.balance % 1 === 0 ? 1 : 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </PrivateAmount>
                           </p>
                           <span className="text-[9px] font-semibold text-slate-400 dark:text-gray-400">
                             CMU

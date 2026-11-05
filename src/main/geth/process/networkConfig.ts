@@ -36,20 +36,40 @@ export function buildGenesis(): GenesisBlock {
     config: { ...GENESIS_BLOCK.config, chainId: Number(GETH_NETWORK_ID) },
   };
 }
-const GETH_DATA_DIR = join(app.getPath("userData"), "cointmu-chaindata");
+const DEFAULT_DATA_ROOT = join(app.getPath("userData"), "cointmu-chaindata");
+
+let dataRoot = DEFAULT_DATA_ROOT;
 
 /**
- * @returns The folder holding the geth datadir of every network.
+ * @returns The data root used when the user never moved it:
+ *   <userData>/cointmu-chaindata.
+ */
+export function defaultDataRoot(): string {
+  return DEFAULT_DATA_ROOT;
+}
+
+/**
+ * Points geth at another data root (Settings → General → Move…). Only call
+ * it while geth is stopped.
+ * @param root - Absolute folder, or null for the default.
+ */
+export function setDataRoot(root: string | null): void {
+  dataRoot = root ?? DEFAULT_DATA_ROOT;
+}
+
+/**
+ * @returns The folder holding the geth datadir of every network, its PID
+ *   file and (inside each datadir) the chaindata quarantine.
  */
 export function resolveDataRoot(): string {
-  return GETH_DATA_DIR;
+  return dataRoot;
 }
 
 /**
  * Resolves the absolute geth data directory for the active network:
- * <userData>/cointmu-chaindata/<networkId>.
+ * <data root>/<networkId>.
  * @returns {string} The absolute data directory path.
  */
 export function resolveDataDir(): string {
-  return join(GETH_DATA_DIR, GETH_NETWORK_ID);
+  return join(dataRoot, GETH_NETWORK_ID);
 }

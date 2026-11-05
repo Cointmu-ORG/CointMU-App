@@ -72,5 +72,34 @@
     "WALLET_INCORRECT_PASSWORD": "Неверный пароль.",
     "MINING_NO_REWARD_ADDRESS": "Адрес вознаграждения за майнинг не задан. Укажите его в настройках майнинга.",
     "decryptFailed": "Не удалось расшифровать кошелёк."
+  },
+  "shell": {
+    "trayOpen": "Открыть CointMU",
+    "trayStartMining": "Начать майнинг",
+    "trayStopMining": "Остановить майнинг",
+    "trayQuit": "Выйти из CointMU",
+    "traySyncing": "Синхронизация {{percent}}%",
+    "traySynced": "Синхронизировано",
+    "trayOffline": "Узел не в сети",
+    "trayMining": "Майнинг идёт",
+    "trayNotMining": "Майнинг остановлен",
+    "trayPeers": "Пиры: {{count}}",
+    "quitConfirmTitle": "Выход из CointMU",
+    "quitConfirmMessage": "Выйти, пока узел майнит или синхронизируется?",
+    "quitConfirmDetail": "Майнинг и синхронизация остановятся до следующего запуска CointMU. Сначала узел корректно завершит работу.",
+    "quitConfirmQuit": "Выйти",
+    "quitConfirmCancel": "Отмена",
+    "quitConfirmNeverAsk": "Больше не спрашивать"
+  },
+  "update": {
+    "readyTitle": "Обновление готово",
+    "readyBody": "Версия {{version}} загружена. Перезапустите приложение, чтобы установить её; сначала узел корректно завершит работу.",
+    "restartNow": "Перезапустить",
+    "later": "Позже"
+  },
+  "privacy": {
+    "hideAmounts": "Скрыть балансы",
+    "showAmounts": "Показать балансы",
+    "hiddenAmount": "Сумма скрыта"
   }
 }

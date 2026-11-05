@@ -14,7 +14,7 @@ import {
 } from "../config/auth.constants";
 import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { getSetting, setSetting } from "@/shared/api";
+import { getSetting, setSetting, copySensitive } from "@/shared/api";
 import { useAuthStore } from "../model/auth.store";
 import { AuthShell } from "./auth-shell.component";
 import { WelcomeStep } from "./welcome-step.component";
@@ -70,7 +70,7 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
 
   const handleCopySeed = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(mnemonic);
+      await copySensitive(mnemonic);
       setCopied(true);
       setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
     } catch {

@@ -6,35 +6,23 @@ import { RevealPrivateKeyModal } from "./reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "./recovery-phrase-modal.component";
 import { ExportKeystoreModal } from "./export-keystore-modal.component";
 import { ResetWalletModal } from "./reset-wallet-modal.component";
+import {
+  SettingChoice,
+  SettingRow,
+  SettingSwitch,
+} from "./setting-controls.component";
+import {
+  AUTO_LOCK_MINUTE_OPTIONS,
+  CLIPBOARD_CLEAR_SECOND_OPTIONS,
+  type AutoLockMinutes,
+  type ClipboardClearSeconds,
+} from "@bridge/setting-values";
 
 // No device support yet (#106): the rows only announce it.
 const HARDWARE_WALLETS = ["Ledger", "Trezor"] as const;
 
-interface ToggleProps {
-  value: boolean;
-  onChange: () => void;
-}
-
 /**
- * Pill-switch toggle for the auto-lock preference.
- * @param props - The current value and the change handler.
- * @returns The rendered toggle button.
- */
-function Toggle({ value, onChange }: ToggleProps): JSX.Element {
-  return (
-    <button
-      onClick={onChange}
-      className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${value ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
-    >
-      <div
-        className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${value ? "translate-x-5" : "translate-x-0"}`}
-      />
-    </button>
-  );
-}
-
-/**
- * Security settings pane. Self-contained: the auto-lock preference comes from
+ * Security settings pane. Self-contained: the auto-lock time comes from
  * the security store, and the recovery, keystore-export, private-key, and
  * reset flows each open a dedicated password-gated modal. The biometric
  * signing toggle is hidden until signing checks it (#104); its stored value
@@ -44,7 +32,8 @@ function Toggle({ value, onChange }: ToggleProps): JSX.Element {
 export function SecuritySettings(): JSX.Element {
   const { t } = useTranslation();
   const settings = useSecurityStore((s) => s.settings);
-  const toggleAutoLock = useSecurityStore((s) => s.toggleAutoLock);
+  const updateSettings = useSecurityStore((s) => s.updateSettings);
+  const autoLockTitle = t("settings:securitySettings.autoLockTitle");
 
   const [showReveal, setShowReveal] = useState(false);
   const [showRecovery, setShowRecovery] = useState(false);
@@ -63,17 +52,60 @@ export function SecuritySettings(): JSX.Element {
             {t("settings:securitySettings.access")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings:securitySettings.autoLockTitle")}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:securitySettings.autoLockDesc")}
-                </p>
-              </div>
-              <Toggle value={settings.autoLock} onChange={toggleAutoLock} />
-            </div>
+            <SettingRow
+              title={autoLockTitle}
+              description={t("settings:securitySettings.autoLockMinutesDesc")}
+            >
+              <SettingChoice<AutoLockMinutes>
+                label={autoLockTitle}
+                value={settings.autoLockMinutes}
+                options={AUTO_LOCK_MINUTE_OPTIONS.map((minutes) => ({
+                  value: minutes,
+                  label:
+                    minutes === 0
+                      ? t("settings:securitySettings.never")
+                      : t("settings:securitySettings.minutes", {
+                          count: minutes,
+                        }),
+                }))}
+                onChange={(autoLockMinutes) =>
+                  updateSettings({ autoLockMinutes })
+                }
+              />
+            </SettingRow>
+            <SettingRow
+              title={t("settings:securitySettings.sendPasswordTitle")}
+              description={t("settings:securitySettings.sendPasswordDesc")}
+            >
+              <SettingSwitch
+                label={t("settings:securitySettings.sendPasswordTitle")}
+                checked={settings.confirmPasswordOnSend}
+                onChange={(confirmPasswordOnSend) =>
+                  updateSettings({ confirmPasswordOnSend })
+                }
+              />
+            </SettingRow>
+            <SettingRow
+              title={t("settings:securitySettings.clipboardTitle")}
+              description={t("settings:securitySettings.clipboardDesc")}
+            >
+              <SettingChoice<ClipboardClearSeconds>
+                label={t("settings:securitySettings.clipboardTitle")}
+                value={settings.clipboardClearSeconds}
+                options={CLIPBOARD_CLEAR_SECOND_OPTIONS.map((seconds) => ({
+                  value: seconds,
+                  label:
+                    seconds === 0
+                      ? t("settings:securitySettings.never")
+                      : t("settings:securitySettings.seconds", {
+                          count: seconds,
+                        }),
+                }))}
+                onChange={(clipboardClearSeconds) =>
+                  updateSettings({ clipboardClearSeconds })
+                }
+              />
+            </SettingRow>
           </div>
         </section>
 

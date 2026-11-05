@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "交易已确认",
       "notifConfirmedDesc": "已发送 {{asset}} 到 {{to}}",
       "notifFailedTitle": "交易失败",
-      "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认"
+      "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认",
+      "passwordLabel": "钱包密码",
+      "passwordRequired": "请输入钱包密码后再发送。"
     },
     "importKeystore": {
       "title": "导入密钥库",

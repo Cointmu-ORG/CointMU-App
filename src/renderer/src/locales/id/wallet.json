@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "Transaksi dikonfirmasi",
       "notifConfirmedDesc": "Mengirim {{asset}} ke {{to}}",
       "notifFailedTitle": "Transaksi gagal",
-      "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi"
+      "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi",
+      "passwordLabel": "Password wallet",
+      "passwordRequired": "Masukkan password wallet untuk mengirim."
     },
     "importKeystore": {
       "title": "Impor keystore",

@@ -71,5 +71,34 @@
     "WALLET_INCORRECT_PASSWORD": "Contraseña incorrecta.",
     "MINING_NO_REWARD_ADDRESS": "No hay una dirección de recompensa de minería configurada. Establece una en los ajustes de minería.",
     "decryptFailed": "No se pudo descifrar la billetera."
+  },
+  "shell": {
+    "trayOpen": "Abrir CointMU",
+    "trayStartMining": "Iniciar minería",
+    "trayStopMining": "Detener minería",
+    "trayQuit": "Salir de CointMU",
+    "traySyncing": "Sincronizando {{percent}}%",
+    "traySynced": "Sincronizado",
+    "trayOffline": "Nodo sin conexión",
+    "trayMining": "Minando",
+    "trayNotMining": "Sin minar",
+    "trayPeers": "Pares: {{count}}",
+    "quitConfirmTitle": "Salir de CointMU",
+    "quitConfirmMessage": "¿Salir mientras el nodo mina o se sincroniza?",
+    "quitConfirmDetail": "La minería y la sincronización se detienen hasta que vuelvas a abrir CointMU. Primero el nodo se cierra de forma limpia.",
+    "quitConfirmQuit": "Salir",
+    "quitConfirmCancel": "Cancelar",
+    "quitConfirmNeverAsk": "No volver a preguntar"
+  },
+  "update": {
+    "readyTitle": "Actualización lista",
+    "readyBody": "La versión {{version}} ya está descargada. Reinicia para instalarla; primero el nodo se cierra de forma limpia.",
+    "restartNow": "Reiniciar ahora",
+    "later": "Más tarde"
+  },
+  "privacy": {
+    "hideAmounts": "Ocultar saldos",
+    "showAmounts": "Mostrar saldos",
+    "hiddenAmount": "Importe oculto"
   }
 }

@@ -1,9 +1,14 @@
 import i18next from "i18next";
+import { formatEther } from "ethers";
+import { useDisplayPrefs } from "../model/display-prefs.store";
 
 const HEX_RADIX = 16;
 const WEI_PER_GWEI = 1_000_000_000;
 const WEI_PER_CMU = 1e18;
-const BALANCE_DECIMAL_PLACES = 2;
+const BALANCE_LOCALE = "en-US";
+// "full" still shows at least this many, like the default.
+const MIN_BALANCE_DECIMAL_PLACES = 2;
+const CMU_DECIMALS = 18;
 const LATEST_BLOCK_TAG = "latest";
 
 interface RpcResponse {
@@ -174,31 +179,49 @@ async function fetchSyncingStatus(): Promise<SyncingDto | false | null> {
 }
 
 /**
- * Formats a numeric CMU value into the canonical localized balance string used
- * across the wallet UI (grouped thousands, fixed two decimal places).
+ * Formats a numeric CMU value into the canonical balance string used across
+ * the wallet UI: grouped thousands and the decimals chosen in Settings →
+ * Appearance (2 by default). The grouping stays en-US because callers parse
+ * the string back by stripping commas.
  * @param cmuValue - The balance value expressed in whole CMU.
  * @returns The formatted CMU string (e.g. "1,284.67").
  */
 function formatBalance(cmuValue: number): string {
-  return cmuValue.toLocaleString("en-US", {
-    minimumFractionDigits: BALANCE_DECIMAL_PLACES,
-    maximumFractionDigits: BALANCE_DECIMAL_PLACES,
+  const decimals = useDisplayPrefs.getState().balanceDecimals;
+  const isFull = decimals === "full";
+  return cmuValue.toLocaleString(BALANCE_LOCALE, {
+    minimumFractionDigits: isFull ? MIN_BALANCE_DECIMAL_PLACES : decimals,
+    maximumFractionDigits: isFull ? CMU_DECIMALS : decimals,
   });
 }
 
 /**
+ * Formats a balance in wei. With "full" decimals it is exact (no float
+ * rounding); otherwise it goes through formatBalance.
+ * @param wei - The balance in wei.
+ * @returns The formatted CMU string.
+ */
+function formatWeiBalance(wei: bigint): string {
+  if (useDisplayPrefs.getState().balanceDecimals !== "full") {
+    return formatBalance(Number(wei) / WEI_PER_CMU);
+  }
+  const [whole, fraction = ""] = formatEther(wei).split(".");
+  const grouped = BigInt(whole).toLocaleString(BALANCE_LOCALE);
+  const trimmed = fraction.replace(/0+$/, "");
+  return `${grouped}.${trimmed.padEnd(MIN_BALANCE_DECIMAL_PLACES, "0")}`;
+}
+
+/**
  * Fetches the CMU balance for a given wallet address by calling eth_getBalance.
- * Converts the hexadecimal Wei result to CMU (divided by 1e18) and formats
- * the output to two decimal places.
+ * Converts the hexadecimal Wei result to CMU and formats it with the
+ * chosen balance decimals.
  * @param address - The wallet address to query the balance for.
  * @returns The balance as a formatted CMU string (e.g. "1,284.67"), or null on failure.
  */
 async function fetchBalance(address: string): Promise<string | null> {
   const result = await call("eth_getBalance", [address, LATEST_BLOCK_TAG]);
   if (result === null) return null;
-  const weiValue = parseInt(result, HEX_RADIX);
-  const cmuValue = weiValue / WEI_PER_CMU;
-  return formatBalance(cmuValue);
+  return formatWeiBalance(BigInt(result));
 }
 
 /**
@@ -331,6 +354,7 @@ export {
   fetchSyncingStatus,
   fetchBalance,
   formatBalance,
+  formatWeiBalance,
   waitForTransactionReceipt,
   setEtherbase,
   startMiner,

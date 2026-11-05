@@ -1,4 +1,3 @@
-import { dispatchNotification } from "@/entities/notification";
 import {
   MAX_LOG_ENTRIES,
   LOG_TIME_FORMAT,
@@ -109,16 +108,6 @@ function useMiningActivity(
           timestamp: block.timestamp,
         })),
       );
-      selfMined.forEach((block) => {
-        dispatchNotification(
-          "mining",
-          i18next.t("mining:notification.blockMinedTitle"),
-          i18next.t("mining:notification.blockMinedMessage", {
-            number: block.number,
-          }),
-          { hash: block.hash, number: block.number },
-        );
-      });
     }
   }, [recentBlocks, ownedKey, recordFoundBlocks]);
 

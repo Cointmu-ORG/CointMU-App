@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge, Sparkline } from "@/shared/ui";
+import { Badge, Sparkline, PrivateAmount } from "@/shared/ui";
 import { StatCard } from "./stat-card.component";
 
 interface MiningStatsGridProps {
@@ -46,7 +46,7 @@ function MiningStatsGrid({
         label={t("mining:stats.totalEarned")}
         value={
           <>
-            +{balance}
+            <PrivateAmount>+{balance}</PrivateAmount>
             <span className="text-sm font-medium text-slate-400 ml-1.5">
               CMU
             </span>

@@ -25,7 +25,9 @@
     "statusMining": "Mining",
     "statusStopped": "Stopped",
     "preferences": "Preferences",
-    "pausedBattery": "Paused (Battery)"
+    "pausedBattery": "Paused (Battery)",
+    "pausedUserActive": "Paused: you are active",
+    "pausedSchedule": "Paused: outside schedule"
   },
   "hero": {
     "rewardsToday": "Rewards today",

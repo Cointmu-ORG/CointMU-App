@@ -3,10 +3,13 @@ import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import {
   BOOTNODE_CHANNELS,
+  CHAINDATA_CHANNELS,
+  CLIPBOARD_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   EXPLORER_CHANNELS,
   NODE_CHANNELS,
   RPC_CHANNELS,
+  SHELL_CHANNELS,
   SYSTEM_CHANNELS,
 } from "../bridge/ipc-channels";
 import type {
@@ -15,6 +18,10 @@ import type {
   BootnodeSettings,
   BootnodeState,
   BootnodeStatus,
+  ChainDataInfo,
+  ChainDataMoveProgress,
+  ChainDataMoveResult,
+  ChainDataTarget,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -23,6 +30,8 @@ import type {
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
+  ShellCapabilities,
+  ShellText,
   TelemetryState,
   WalletActivity,
 } from "../bridge/types";
@@ -77,6 +86,7 @@ interface UpdaterEvent {
   info?: { version: string };
   progress?: UpdaterProgress;
   error?: string;
+  shouldAskToInstall?: boolean;
 }
 
 const api = {
@@ -99,6 +109,8 @@ const api = {
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_MINER_DISTRIBUTION, range),
     getIndexStatus: (): Promise<ExplorerIndexStatus | null> =>
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_INDEX_STATUS),
+    rebuildIndex: (): Promise<void> =>
+      ipcRenderer.invoke(EXPLORER_CHANNELS.REBUILD_INDEX),
   },
   network: {
     getInsights: () => ipcRenderer.invoke("network:getInsights"),
@@ -172,6 +184,8 @@ const api = {
     setPoolAddress: (address: string) =>
       ipcRenderer.invoke("mining:setPoolAddress", address),
     getStats: () => ipcRenderer.invoke("mining:getStats"),
+    getPowerStatus: (): Promise<string> =>
+      ipcRenderer.invoke("mining:getPowerStatus"),
     onDagProgress: (callback: (progress: number) => void) => {
       const handler = (_event: any, value: number): void => {
         callback(value);
@@ -214,6 +228,33 @@ const api = {
     },
     respond: (approved: boolean) =>
       ipcRenderer.send("pairing:respond", approved),
+  },
+  chainData: {
+    getInfo: (): Promise<ChainDataInfo> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.GET_INFO),
+    pickTarget: (dialogText: DialogText): Promise<ChainDataTarget | null> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.PICK_TARGET, dialogText),
+    move: (target: string): Promise<ChainDataMoveResult> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.MOVE, target),
+    deleteOld: (): Promise<void> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_OLD),
+    onProgress: (callback: (progress: ChainDataMoveProgress) => void) => {
+      const handler = (_: unknown, progress: ChainDataMoveProgress): void =>
+        callback(progress);
+      ipcRenderer.on(CHAINDATA_CHANNELS.PROGRESS, handler);
+      return () =>
+        ipcRenderer.removeListener(CHAINDATA_CHANNELS.PROGRESS, handler);
+    },
+  },
+  clipboard: {
+    copySensitive: (text: string): Promise<void> =>
+      ipcRenderer.invoke(CLIPBOARD_CHANNELS.COPY_SENSITIVE, text),
+  },
+  shell: {
+    setText: (text: ShellText): Promise<void> =>
+      ipcRenderer.invoke(SHELL_CHANNELS.SET_TEXT, text),
+    getCapabilities: (): Promise<ShellCapabilities> =>
+      ipcRenderer.invoke(SHELL_CHANNELS.GET_CAPABILITIES),
   },
   window: {
     minimize: (): void => ipcRenderer.send("window-minimize"),
@@ -263,6 +304,8 @@ const api = {
       ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.LIST_QUEUED_REPORTS),
     clearQueuedReports: (): Promise<void> =>
       ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.CLEAR_QUEUED_REPORTS),
+    exportBundle: (dialogText: DialogText): Promise<boolean> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.EXPORT_BUNDLE, dialogText),
   },
   extension: {
     unlink: () => {

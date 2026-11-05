@@ -2,6 +2,7 @@ import { AccountIcon } from "@/entities/account";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
+import { copySensitive } from "@/shared/api";
 
 interface AddressBadgeProps {
   address: string | null;
@@ -40,7 +41,9 @@ function AddressBadge({
    * @returns Nothing.
    */
   const handleCopy = (): void => {
-    navigator.clipboard.writeText(address);
+    copySensitive(address).catch((err: unknown) => {
+      console.error("Failed to copy the address", err);
+    });
   };
 
   return (

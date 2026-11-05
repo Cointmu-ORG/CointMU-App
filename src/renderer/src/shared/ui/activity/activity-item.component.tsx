@@ -2,6 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActivityKind } from "@bridge/types";
 import { ContractIcon, MiningIcon, ReceiveIcon, SendIcon } from "../icons";
+import { PrivateAmount } from "../private-amount.component";
 
 export type ActivityType = "mining" | "send" | "receive" | "contract";
 
@@ -97,7 +98,7 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
         <p
           className={`text-sm font-bold font-mono ${activity.pending ? "text-slate-400" : amountClass}`}
         >
-          {displayAmount}{" "}
+          <PrivateAmount>{displayAmount}</PrivateAmount>{" "}
           <span className="text-[10px] text-slate-400 font-sans ml-0.5">
             CMU
           </span>
