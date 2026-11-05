@@ -3,7 +3,7 @@ import { join } from "path";
 import { is } from "@electron-toolkit/utils";
 import { wasOpenedInBackground } from "./loginItem";
 import { isTrayShown } from "./tray";
-import { isQuitInProgress } from "./appQuit";
+import { isQuitInProgress, quitForSessionEnd } from "./appQuit";
 
 const WINDOW_DEFAULT_WIDTH = 1280;
 const WINDOW_DEFAULT_HEIGHT = 800;
@@ -51,6 +51,9 @@ export function createWindow(): BrowserWindow {
     event.preventDefault();
     mainWindow.hide();
   });
+
+  // Windows: shutdown, restart or log off.
+  mainWindow.on("session-end", quitForSessionEnd);
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);

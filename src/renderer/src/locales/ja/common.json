@@ -80,6 +80,12 @@
     "trayOffline": "ノードはオフライン",
     "trayMining": "マイニング中",
     "trayNotMining": "マイニング停止中",
-    "trayPeers": "ピア: {{count}}"
+    "trayPeers": "ピア: {{count}}",
+    "quitConfirmTitle": "CointMU を終了",
+    "quitConfirmMessage": "ノードがマイニングまたは同期中です。終了しますか？",
+    "quitConfirmDetail": "CointMU を再び開くまで、マイニングと同期は停止します。ノードは先に正常に終了します。",
+    "quitConfirmQuit": "終了",
+    "quitConfirmCancel": "キャンセル",
+    "quitConfirmNeverAsk": "今後確認しない"
   }
 }

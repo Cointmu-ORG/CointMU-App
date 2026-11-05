@@ -80,6 +80,12 @@
     "trayOffline": "Node offline",
     "trayMining": "Sedang mining",
     "trayNotMining": "Tidak mining",
-    "trayPeers": "Peer: {{count}}"
+    "trayPeers": "Peer: {{count}}",
+    "quitConfirmTitle": "Keluar dari CointMU",
+    "quitConfirmMessage": "Keluar saat node sedang mining atau sinkronisasi?",
+    "quitConfirmDetail": "Mining dan sinkronisasi berhenti sampai kamu membuka CointMU lagi. Node dimatikan dengan bersih terlebih dahulu.",
+    "quitConfirmQuit": "Keluar",
+    "quitConfirmCancel": "Batal",
+    "quitConfirmNeverAsk": "Jangan tanya lagi"
   }
 }

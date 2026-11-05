@@ -13,7 +13,9 @@
     "closeActionDesc": "Was beim Schließen des Fensters passiert",
     "closeQuit": "Beenden",
     "closeTray": "In den Infobereich minimieren",
-    "closeTrayHint": "CointMU läuft im Infobereich weiter. Zum Beenden im Menü des Infobereichs „CointMU beenden“ wählen."
+    "closeTrayHint": "CointMU läuft im Infobereich weiter. Zum Beenden im Menü des Infobereichs „CointMU beenden“ wählen.",
+    "confirmQuitTitle": "Vor dem Beenden fragen",
+    "confirmQuitDesc": "Bestätigung beim Beenden während Mining oder Synchronisierung. Bei Updates und beim Herunterfahren des Computers wird nie gefragt."
   },
   "appearance": {
     "subtitle": "Passen Sie an, wie CointMU aussieht",

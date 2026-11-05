@@ -13,7 +13,9 @@
     "closeActionDesc": "What happens when you close the window",
     "closeQuit": "Quit",
     "closeTray": "Hide to tray",
-    "closeTrayHint": "CointMU keeps running in the tray. Choose Quit in the tray menu to exit."
+    "closeTrayHint": "CointMU keeps running in the tray. Choose Quit in the tray menu to exit.",
+    "confirmQuitTitle": "Ask before quitting",
+    "confirmQuitDesc": "Confirm when you quit while mining or syncing. Never asked for updates or when the computer shuts down."
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

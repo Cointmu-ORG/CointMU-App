@@ -6,7 +6,7 @@ import { setShellText } from "@/shared/api";
 
 /**
  * @param t - Translation function.
- * @returns The tray text in the current language; placeholders stay for main.
+ * @returns The shell text in the current language; placeholders stay for main.
  */
 function buildShellText(t: TFunction): ShellText {
   const keep = { interpolation: { skipOnVariables: true } };
@@ -24,11 +24,17 @@ function buildShellText(t: TFunction): ShellText {
     trayMining: t("common:shell.trayMining"),
     trayNotMining: t("common:shell.trayNotMining"),
     trayPeers: t("common:shell.trayPeers", { ...keep, count: "{{count}}" }),
+    quitConfirmTitle: t("common:shell.quitConfirmTitle"),
+    quitConfirmMessage: t("common:shell.quitConfirmMessage"),
+    quitConfirmDetail: t("common:shell.quitConfirmDetail"),
+    quitConfirmQuit: t("common:shell.quitConfirmQuit"),
+    quitConfirmCancel: t("common:shell.quitConfirmCancel"),
+    quitConfirmNeverAsk: t("common:shell.quitConfirmNeverAsk"),
   };
 }
 
 /**
- * Keeps the main process's tray text in the UI language: sends it on start
+ * Keeps the main process's tray and quit dialog text in the UI language: sends it on start
  * and on every language change.
  */
 export function useShellText(): void {

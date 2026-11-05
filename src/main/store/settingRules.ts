@@ -6,6 +6,8 @@ interface SettingRule {
   readonly isValid: (value: unknown) => boolean;
 }
 
+const isBoolean = (value: unknown): boolean => typeof value === "boolean";
+
 const isOneOf =
   (codes: readonly unknown[]) =>
   (value: unknown): boolean =>
@@ -23,6 +25,7 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     fallback: CloseAction.QUIT,
     isValid: isOneOf(Object.values(CloseAction)),
   },
+  "general.confirmQuitWhileBusy": { fallback: true, isValid: isBoolean },
 };
 
 /**

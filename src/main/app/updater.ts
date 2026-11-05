@@ -6,6 +6,7 @@ import {
 } from "electron-updater";
 import { is } from "@electron-toolkit/utils";
 import { killGethProcess } from "../geth/process/gethProcess";
+import { QuitReason, markQuitReason } from "./appQuit";
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the
@@ -34,10 +35,13 @@ interface UpdaterStatePayload {
  * Stops geth, then quits and installs the downloaded update. On Windows the
  * installer terminates every process under the install folder, geth.exe
  * included, about a second after it starts: long before before-quit has let
- * geth shut down, which would leave its database unclean (#97).
+ * geth shut down, which would leave its database unclean (#97). The quit it
+ * starts is marked as the updater's, so it is never held for confirmation.
  * @returns {Promise<void>} Resolves once the install has been started.
  */
 async function stopGethAndInstall(): Promise<void> {
+  // The install must not wait on the quit confirmation.
+  markQuitReason(QuitReason.UPDATER);
   await killGethProcess();
   autoUpdater.quitAndInstall();
 }

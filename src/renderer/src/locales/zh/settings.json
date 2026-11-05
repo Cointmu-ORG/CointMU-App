@@ -13,7 +13,9 @@
     "closeActionDesc": "关闭窗口时的操作",
     "closeQuit": "退出",
     "closeTray": "隐藏到托盘",
-    "closeTrayHint": "CointMU 会在托盘中继续运行。在托盘菜单中选择退出即可关闭。"
+    "closeTrayHint": "CointMU 会在托盘中继续运行。在托盘菜单中选择退出即可关闭。",
+    "confirmQuitTitle": "退出前询问",
+    "confirmQuitDesc": "在挖矿或同步时退出需要确认。更新或电脑关机时不会询问。"
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

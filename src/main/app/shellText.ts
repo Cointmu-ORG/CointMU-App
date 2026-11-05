@@ -1,6 +1,6 @@
 import type { ShellText } from "../../bridge/types";
 
-const MAX_TEXT_LENGTH = 200;
+const MAX_TEXT_LENGTH = 400;
 
 /** English, used until the renderer sends the user's language. */
 const DEFAULT_SHELL_TEXT: ShellText = {
@@ -13,7 +13,14 @@ const DEFAULT_SHELL_TEXT: ShellText = {
   trayOffline: "Node offline",
   trayMining: "Mining",
   trayNotMining: "Not mining",
-  trayPeers: "{{count}} peers",
+  trayPeers: "Peers: {{count}}",
+  quitConfirmTitle: "Quit CointMU",
+  quitConfirmMessage: "Quit while the node is mining or syncing?",
+  quitConfirmDetail:
+    "Mining and syncing stop until you open CointMU again. The node shuts down cleanly first.",
+  quitConfirmQuit: "Quit",
+  quitConfirmCancel: "Cancel",
+  quitConfirmNeverAsk: "Don't ask again",
 };
 
 let current: ShellText = DEFAULT_SHELL_TEXT;

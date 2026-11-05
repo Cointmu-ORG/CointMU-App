@@ -17,6 +17,7 @@ export interface SettingsStore {
     notificationSound: boolean;
     currency: DisplayCurrency;
     closeAction: CloseAction;
+    confirmQuitWhileBusy: boolean;
   };
   appearance: {
     theme: string;

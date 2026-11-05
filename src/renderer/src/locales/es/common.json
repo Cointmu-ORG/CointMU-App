@@ -82,6 +82,12 @@
     "trayOffline": "Nodo sin conexión",
     "trayMining": "Minando",
     "trayNotMining": "Sin minar",
-    "trayPeers": "Pares: {{count}}"
+    "trayPeers": "Pares: {{count}}",
+    "quitConfirmTitle": "Salir de CointMU",
+    "quitConfirmMessage": "¿Salir mientras el nodo mina o se sincroniza?",
+    "quitConfirmDetail": "La minería y la sincronización se detienen hasta que vuelvas a abrir CointMU. Primero el nodo se cierra de forma limpia.",
+    "quitConfirmQuit": "Salir",
+    "quitConfirmCancel": "Cancelar",
+    "quitConfirmNeverAsk": "No volver a preguntar"
   }
 }

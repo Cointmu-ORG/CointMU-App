@@ -46,7 +46,8 @@ import {
 } from "../ipc/nodeIpc";
 import { registerExplorerHandlers } from "../ipc/explorerIpc";
 import { registerShellHandlers } from "../ipc/shellIpc";
-import { registerQuitHandler } from "./appQuit";
+import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
+import { createQuitConfirmation } from "./quitConfirmation";
 import { setupTray } from "./traySetup";
 import {
   queryIndexStatus,
@@ -130,6 +131,7 @@ app.whenReady().then(async () => {
   initUpdater(win);
   miningController.setWindow(win);
   registerShellHandlers(setupTray(store, win, miningController));
+  setQuitConfirmation(createQuitConfirmation(store, win, getRpcPort));
 
   const extSyncServer = startExtensionSyncServer(store, getRpcPort(), win);
 

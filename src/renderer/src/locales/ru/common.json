@@ -83,6 +83,12 @@
     "trayOffline": "Узел не в сети",
     "trayMining": "Майнинг идёт",
     "trayNotMining": "Майнинг остановлен",
-    "trayPeers": "Пиры: {{count}}"
+    "trayPeers": "Пиры: {{count}}",
+    "quitConfirmTitle": "Выход из CointMU",
+    "quitConfirmMessage": "Выйти, пока узел майнит или синхронизируется?",
+    "quitConfirmDetail": "Майнинг и синхронизация остановятся до следующего запуска CointMU. Сначала узел корректно завершит работу.",
+    "quitConfirmQuit": "Выйти",
+    "quitConfirmCancel": "Отмена",
+    "quitConfirmNeverAsk": "Больше не спрашивать"
   }
 }

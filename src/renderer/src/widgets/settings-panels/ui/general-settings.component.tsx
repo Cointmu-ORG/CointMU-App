@@ -97,7 +97,11 @@ export function GeneralSettings({
           </section>
         )}
 
-        <WindowSettings closeAction={config.closeAction} onUpdate={onUpdate} />
+        <WindowSettings
+          closeAction={config.closeAction}
+          confirmQuitWhileBusy={config.confirmQuitWhileBusy}
+          onUpdate={onUpdate}
+        />
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">

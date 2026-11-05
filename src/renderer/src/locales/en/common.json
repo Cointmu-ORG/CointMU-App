@@ -81,6 +81,12 @@
     "trayOffline": "Node offline",
     "trayMining": "Mining",
     "trayNotMining": "Not mining",
-    "trayPeers": "Peers: {{count}}"
+    "trayPeers": "Peers: {{count}}",
+    "quitConfirmTitle": "Quit CointMU",
+    "quitConfirmMessage": "Quit while the node is mining or syncing?",
+    "quitConfirmDetail": "Mining and syncing stop until you open CointMU again. The node shuts down cleanly first.",
+    "quitConfirmQuit": "Quit",
+    "quitConfirmCancel": "Cancel",
+    "quitConfirmNeverAsk": "Don't ask again"
   }
 }

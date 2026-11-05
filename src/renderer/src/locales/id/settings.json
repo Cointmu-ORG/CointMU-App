@@ -13,7 +13,9 @@
     "closeActionDesc": "Yang terjadi saat kamu menutup jendela",
     "closeQuit": "Keluar",
     "closeTray": "Sembunyikan ke tray",
-    "closeTrayHint": "CointMU tetap berjalan di tray. Pilih Keluar di menu tray untuk keluar."
+    "closeTrayHint": "CointMU tetap berjalan di tray. Pilih Keluar di menu tray untuk keluar.",
+    "confirmQuitTitle": "Tanya sebelum keluar",
+    "confirmQuitDesc": "Minta konfirmasi saat keluar ketika mining atau sinkronisasi berjalan. Tidak ditanyakan saat update atau saat komputer dimatikan."
   },
   "appearance": {
     "subtitle": "Sesuaikan tampilan CointMU",

@@ -80,6 +80,12 @@
     "trayOffline": "节点离线",
     "trayMining": "正在挖矿",
     "trayNotMining": "未在挖矿",
-    "trayPeers": "节点数：{{count}}"
+    "trayPeers": "节点数：{{count}}",
+    "quitConfirmTitle": "退出 CointMU",
+    "quitConfirmMessage": "节点正在挖矿或同步，确定要退出吗？",
+    "quitConfirmDetail": "在你再次打开 CointMU 之前，挖矿和同步都会停止。节点会先正常关闭。",
+    "quitConfirmQuit": "退出",
+    "quitConfirmCancel": "取消",
+    "quitConfirmNeverAsk": "不再询问"
   }
 }

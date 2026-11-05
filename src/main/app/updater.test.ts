@@ -3,6 +3,7 @@ import { ipcMain, type BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import { killGethProcess } from "../geth/process/gethProcess";
 import { initUpdater } from "./updater";
+import { markQuitReason } from "./appQuit";
 
 // The real module downloads the Electron binary on first require (#74).
 vi.mock("electron", () => ({
@@ -14,6 +15,10 @@ vi.mock("electron-updater", () => ({
 }));
 vi.mock("@electron-toolkit/utils", () => ({ is: { dev: false } }));
 vi.mock("../geth/process/gethProcess", () => ({ killGethProcess: vi.fn() }));
+vi.mock("./appQuit", () => ({
+  QuitReason: { UPDATER: "updater" },
+  markQuitReason: vi.fn(),
+}));
 
 const window = {
   isDestroyed: () => false,
@@ -61,6 +66,8 @@ describe("installing an update", () => {
 
     expect(killGethProcess).toHaveBeenCalledOnce();
     expect(autoUpdater.quitAndInstall).not.toHaveBeenCalled();
+    // Its quit must skip the "quit while mining?" question.
+    expect(markQuitReason).toHaveBeenCalledWith("updater");
 
     releaseGeth();
     await installed;

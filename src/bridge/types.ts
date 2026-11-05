@@ -294,7 +294,7 @@ export interface MinerDistributionResult {
 
 /**
  * Localized strings the main process shows outside the renderer: the tray
- * menu and its status lines. The renderer sends them on every language
+ * menu and its status lines, and the quit confirmation dialog. The renderer sends them on every language
  * change; `{{name}}` placeholders are filled in main.
  */
 export interface ShellText {
@@ -310,6 +310,12 @@ export interface ShellText {
   readonly trayNotMining: string;
   /** `{{count}}` */
   readonly trayPeers: string;
+  readonly quitConfirmTitle: string;
+  readonly quitConfirmMessage: string;
+  readonly quitConfirmDetail: string;
+  readonly quitConfirmQuit: string;
+  readonly quitConfirmCancel: string;
+  readonly quitConfirmNeverAsk: string;
 }
 
 /** What the desktop shell supports on this OS and desktop environment. */

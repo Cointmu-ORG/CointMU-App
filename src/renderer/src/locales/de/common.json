@@ -81,6 +81,12 @@
     "trayOffline": "Node offline",
     "trayMining": "Mining läuft",
     "trayNotMining": "Kein Mining",
-    "trayPeers": "Peers: {{count}}"
+    "trayPeers": "Peers: {{count}}",
+    "quitConfirmTitle": "CointMU beenden",
+    "quitConfirmMessage": "Beenden, während der Node mint oder synchronisiert?",
+    "quitConfirmDetail": "Mining und Synchronisierung stoppen, bis du CointMU wieder öffnest. Der Node wird vorher sauber heruntergefahren.",
+    "quitConfirmQuit": "Beenden",
+    "quitConfirmCancel": "Abbrechen",
+    "quitConfirmNeverAsk": "Nicht mehr fragen"
   }
 }

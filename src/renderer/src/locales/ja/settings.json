@@ -13,7 +13,9 @@
     "closeActionDesc": "ウィンドウを閉じたときの動作",
     "closeQuit": "終了",
     "closeTray": "トレイに隠す",
-    "closeTrayHint": "CointMU はトレイで動作し続けます。終了するにはトレイメニューで「CointMU を終了」を選んでください。"
+    "closeTrayHint": "CointMU はトレイで動作し続けます。終了するにはトレイメニューで「CointMU を終了」を選んでください。",
+    "confirmQuitTitle": "終了前に確認する",
+    "confirmQuitDesc": "マイニングまたは同期中に終了するときに確認します。アップデート時やコンピューターのシャットダウン時は確認しません。"
   },
   "appearance": {
     "subtitle": "CointMUの見た目をカスタマイズします",

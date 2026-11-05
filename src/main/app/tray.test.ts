@@ -18,6 +18,12 @@ const TEXT: ShellText = {
   trayMining: "Mining",
   trayNotMining: "Idle",
   trayPeers: "Peers: {{count}}",
+  quitConfirmTitle: "Quit",
+  quitConfirmMessage: "Quit now?",
+  quitConfirmDetail: "Mining stops.",
+  quitConfirmQuit: "Quit",
+  quitConfirmCancel: "Cancel",
+  quitConfirmNeverAsk: "Don't ask again",
 };
 
 describe("describeTrayStatus", () => {
@@ -114,7 +120,7 @@ describe("shell text", () => {
   it("rejects a missing, non-string or oversized value", () => {
     expect(parseShellText({ ...TEXT, trayQuit: undefined })).toBeNull();
     expect(parseShellText({ ...TEXT, trayQuit: 1 })).toBeNull();
-    expect(parseShellText({ ...TEXT, trayQuit: "x".repeat(201) })).toBeNull();
+    expect(parseShellText({ ...TEXT, trayQuit: "x".repeat(401) })).toBeNull();
     expect(parseShellText(null)).toBeNull();
   });
 
