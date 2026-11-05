@@ -82,8 +82,8 @@ export async function initPopup() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
-  const reqIdParam = urlParams.get("reqId");
-  const reqId = reqIdParam ? parseInt(reqIdParam, 10) : null;
+  // A UUID from the approval queue; parsing it as a number lost the request.
+  const reqId = urlParams.get("reqId");
 
   // Dropdown state
   let currentNetworkId = "desktop_connection";
