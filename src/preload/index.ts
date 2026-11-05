@@ -12,7 +12,9 @@ import {
 import type {
   AppInfo,
   BootnodeSaveResult,
+  BootnodeSettings,
   BootnodeState,
+  BootnodeStatus,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -239,10 +241,12 @@ const api = {
   bootnode: {
     get: (): Promise<BootnodeState> =>
       ipcRenderer.invoke(BOOTNODE_CHANNELS.GET),
-    set: (text: string): Promise<BootnodeSaveResult> =>
-      ipcRenderer.invoke(BOOTNODE_CHANNELS.SET, text),
+    set: (settings: BootnodeSettings): Promise<BootnodeSaveResult> =>
+      ipcRenderer.invoke(BOOTNODE_CHANNELS.SET, settings),
     reset: (): Promise<BootnodeState> =>
       ipcRenderer.invoke(BOOTNODE_CHANNELS.RESET),
+    probe: (enode?: string): Promise<BootnodeStatus[]> =>
+      ipcRenderer.invoke(BOOTNODE_CHANNELS.PROBE, enode),
   },
   diagnostics: {
     openLogsFolder: (): Promise<void> =>

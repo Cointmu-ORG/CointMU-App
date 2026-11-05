@@ -160,34 +160,53 @@
     "connectedPeersTitle": "Connected peers",
     "connectedPeersDesc_one": "{{count}} node currently gossiping with you",
     "connectedPeersDesc_other": "{{count}} nodes currently gossiping with you",
-    "advanced": "Advanced",
     "bootnodes": {
-      "title": "Bootnodes",
-      "desc": "Nodes your node contacts first to find peers on the network",
-      "active": "Active bootnodes",
+      "title": "CointMU nodes",
+      "desc": "Your node connects to every node that is on and keeps reconnecting, so each one backs up the others. Each is also a bootnode for finding more peers.",
+      "autoCheck": "Checked every {{seconds}} s while this page is open.",
       "loading": "Loading…",
-      "source": {
-        "user": "Custom",
-        "build": "Default (build)",
-        "fallback": "Default"
+      "nodeName": "Node {{number}}",
+      "default": "Default",
+      "custom": "Custom",
+      "checkAll": "Check all",
+      "check": "Check connection",
+      "checkNode": "Check connection to {{name}}",
+      "checking": "Checking…",
+      "status": {
+        "reachable": "Reachable · {{ms}} ms",
+        "unreachable": "Unreachable",
+        "unchecked": "Not checked",
+        "disabled": "Off"
       },
-      "restartPending": "Your saved bootnodes take effect the next time the node restarts.",
-      "warning": "Only enter enodes you received from the CointMU admins. A bootnode from anyone else can connect you to fake peers and show you a false view of the network.",
-      "customLabel": "Custom bootnodes",
-      "customHint": "One enode per line or comma-separated, up to 10. Saving restarts the node.",
-      "reset": "Reset to default",
-      "save": "Save and restart",
+      "peer": {
+        "connected": "Peer connected",
+        "notConnected": "Not a peer",
+        "unknown": "Node stopped"
+      },
+      "lastChecked": "Checked at {{time}}",
+      "remove": "Remove",
+      "removeNode": "Remove {{name}}",
+      "addTitle": "Add a node",
+      "labelField": "Label (optional)",
+      "enodeField": "Enode",
+      "addHint": "Up to 10 nodes in all. A new node is connected right away, without a restart.",
+      "add": "Add node",
       "saving": "Saving…",
-      "invalidEntry": "Entry {{position}}: {{value}}",
-      "requestFailed": "Could not update the bootnodes. Your previous setting is still in use.",
+      "restartPending": "A node you removed or turned off stays a bootnode until the node restarts.",
+      "warning": "Only enter enodes you received from the CointMU admins. A bootnode from anyone else can connect you to fake peers and show you a false view of the network.",
+      "reset": "Reset to default",
+      "requestFailed": "Could not update the node list. Your previous setting is still in use.",
       "errors": {
-        "INVALID_ENODE": "These entries are not valid enodes (enode://<128-hex public key>@<host>:<port>). Nothing was saved.",
-        "EMPTY": "Enter at least one enode, or use Reset to default.",
-        "TOO_MANY": "Too many bootnodes. Enter at most 10."
+        "INVALID_ENODE": "Not a valid enode (enode://<128-hex public key>@<host>:<port>).",
+        "EMPTY": "Keep at least one node on.",
+        "TOO_MANY": "Too many nodes. The list holds at most 10.",
+        "DUPLICATE": "This node is already in the list.",
+        "INVALID_LABEL": "Use a label of up to 40 characters on one line."
       },
       "notice": {
-        "saved": "Bootnodes saved.",
-        "reset": "Default bootnodes restored."
+        "added": "Node added. Your node is connecting to it now.",
+        "saved": "Node list saved.",
+        "reset": "Default nodes restored."
       }
     }
   },

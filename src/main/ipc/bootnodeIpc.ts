@@ -1,69 +1,111 @@
 import { ipcMain } from "electron";
 import { BOOTNODE_CHANNELS } from "../../bridge/ipc-channels";
-import type { BootnodeSaveResult, BootnodeState } from "../../bridge/types";
+import type {
+  BootnodeSaveResult,
+  BootnodeState,
+  BootnodeStatus,
+} from "../../bridge/types";
 import {
   BOOTNODES_SETTING_KEY,
-  buildBootnodeState,
-  checkBootnodeInput,
-  hasSameEnodes,
+  EMPTY_BOOTNODE_SETTINGS,
+  checkBootnodeSettings,
+  migrateBootnodeSetting,
 } from "../geth/bootnode/bootnodeSettings";
+import {
+  buildBootnodeState,
+  hasRemovedEnodes,
+} from "../geth/bootnode/bootnodeState";
 import {
   DEFAULT_BOOTNODE_CONFIG,
   getActiveBootnodeConfig,
+  getBootnodeConfig,
 } from "../geth/bootnode/bootnodeWatcher";
+import { syncStaticPeers } from "../geth/bootnode/staticPeers";
+import {
+  LIVE_PROBE_DEPS,
+  probeBootnodes,
+} from "../geth/bootnode/bootnodeStatus";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import type { AppStore } from "../store/appStore";
 
-/**
- * Restarts the node so it dials the saved bootnodes, then describes the
- * result. When a recovery owns the node the restart is skipped and the state
- * reports it as pending.
- */
-function applyBootnodeChange(store: AppStore): BootnodeState {
-  const isRestarting = restartNodeByUser(store);
-  const running = isRestarting ? null : getActiveBootnodeConfig();
-  return buildBootnodeState(store, DEFAULT_BOOTNODE_CONFIG, running);
+function describe(store: AppStore): BootnodeState {
+  return buildBootnodeState(
+    store,
+    DEFAULT_BOOTNODE_CONFIG,
+    getActiveBootnodeConfig(),
+  );
 }
 
 /**
- * Registers the bootnode setting handlers. Every entry is validated here, in
- * main; a rejected list leaves the saved one (and the running node) untouched.
+ * Applies the saved list to the running node. Added nodes become static peers
+ * at once; a removed or disabled node is still one of the running node's
+ * --bootnodes, so only that case restarts it. When a recovery owns the node
+ * the restart is skipped and the state reports it as pending.
+ */
+async function applyBootnodeChange(store: AppStore): Promise<BootnodeState> {
+  const running = getActiveBootnodeConfig();
+  const next = getBootnodeConfig(store);
+  const needsRestart =
+    running !== null && hasRemovedEnodes(running.enodes, next.enodes);
+  if (needsRestart && restartNodeByUser(store)) {
+    return buildBootnodeState(store, DEFAULT_BOOTNODE_CONFIG, null);
+  }
+  await syncStaticPeers(next.enodes);
+  return describe(store);
+}
+
+/**
+ * @param store - The settings store.
+ * @returns Every listed node, disabled ones included.
+ */
+function listedEnodes(store: AppStore): string[] {
+  return describe(store).nodes.map((node) => node.enode);
+}
+
+/**
+ * Registers the node setting handlers and converts a setting saved in the #70
+ * format. Every payload is validated here, in main; a rejected one leaves the
+ * saved setting (and the running node) untouched.
  * @param {AppStore} store - The electron-store instance containing user preferences.
  * @returns {void}
  */
 export function registerBootnodeHandlers(store: AppStore): void {
-  ipcMain.handle(BOOTNODE_CHANNELS.GET, () =>
-    buildBootnodeState(
-      store,
-      DEFAULT_BOOTNODE_CONFIG,
-      getActiveBootnodeConfig(),
-    ),
-  );
+  migrateBootnodeSetting(store, DEFAULT_BOOTNODE_CONFIG.enodes);
+
+  ipcMain.handle(BOOTNODE_CHANNELS.GET, () => describe(store));
   ipcMain.handle(
     BOOTNODE_CHANNELS.SET,
-    (_, input: unknown): BootnodeSaveResult => {
-      const check = checkBootnodeInput(input);
+    async (_, input: unknown): Promise<BootnodeSaveResult> => {
+      const check = checkBootnodeSettings(
+        input,
+        DEFAULT_BOOTNODE_CONFIG.enodes,
+      );
       if (!check.isValid) {
-        console.warn(`[bootnode] Rejected custom bootnodes (${check.error})`);
-        return { isSaved: false, error: check.error, invalid: check.invalid };
+        console.warn(`[bootnode] Rejected the node list (${check.error})`);
+        return { isSaved: false, error: check.error };
       }
-      store.set(BOOTNODES_SETTING_KEY, check.enodes);
-      console.log(`[bootnode] Saved ${check.enodes.length} custom bootnode(s)`);
-      return { isSaved: true, state: applyBootnodeChange(store) };
+      store.set(BOOTNODES_SETTING_KEY, check.settings);
+      console.log(
+        `[bootnode] Saved ${check.settings.custom.length} custom node(s), ${check.settings.disabled.length} default(s) off`,
+      );
+      return { isSaved: true, state: await applyBootnodeChange(store) };
     },
   );
-  ipcMain.handle(BOOTNODE_CHANNELS.RESET, (): BootnodeState => {
-    store.set(BOOTNODES_SETTING_KEY, []);
-    console.log("[bootnode] Reset to the default bootnodes");
-    const running = getActiveBootnodeConfig();
-    // "Reset all settings" always calls this; skip the restart when the
-    // running node (or a node not started yet) already uses the defaults.
-    const isAlreadyDefault =
-      running === null ||
-      hasSameEnodes(running.enodes, DEFAULT_BOOTNODE_CONFIG.enodes);
-    if (isAlreadyDefault) {
-      return buildBootnodeState(store, DEFAULT_BOOTNODE_CONFIG, running);
-    }
+  ipcMain.handle(BOOTNODE_CHANNELS.RESET, async (): Promise<BootnodeState> => {
+    store.set(BOOTNODES_SETTING_KEY, EMPTY_BOOTNODE_SETTINGS);
+    console.log("[bootnode] Reset to the default nodes");
+    // "Reset all settings" always calls this; with nothing removed from the
+    // running node's list it only syncs the static peers.
     return applyBootnodeChange(store);
   });
+  ipcMain.handle(
+    BOOTNODE_CHANNELS.PROBE,
+    (_, enode: unknown): Promise<BootnodeStatus[]> => {
+      // Only listed nodes: the renderer must not turn this into a port scanner.
+      const listed = listedEnodes(store);
+      const targets =
+        enode === undefined ? listed : listed.filter((item) => item === enode);
+      return probeBootnodes(targets, LIVE_PROBE_DEPS);
+    },
+  );
 }

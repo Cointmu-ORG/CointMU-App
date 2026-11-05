@@ -159,34 +159,53 @@
     "listenPortInvalid": "Masukkan port antara {{min}} dan {{max}}.",
     "connectedPeersTitle": "Rekan terhubung",
     "connectedPeersDesc_other": "{{count}} node saat ini berkomunikasi dengan Anda",
-    "advanced": "Lanjutan",
     "bootnodes": {
-      "title": "Bootnode",
-      "desc": "Node yang pertama kali dihubungi node Anda untuk menemukan peer di jaringan",
-      "active": "Bootnode aktif",
+      "title": "Node CointMU",
+      "desc": "Node Anda terhubung ke setiap node yang aktif dan terus menyambung ulang, jadi tiap node saling jadi cadangan. Semuanya juga dipakai sebagai bootnode untuk menemukan peer lain.",
+      "autoCheck": "Dicek tiap {{seconds}} detik selama halaman ini terbuka.",
       "loading": "Memuat…",
-      "source": {
-        "user": "Kustom",
-        "build": "Default (build)",
-        "fallback": "Default"
+      "nodeName": "Node {{number}}",
+      "default": "Default",
+      "custom": "Tambahan",
+      "checkAll": "Cek semua",
+      "check": "Cek koneksi",
+      "checkNode": "Cek koneksi ke {{name}}",
+      "checking": "Mengecek…",
+      "status": {
+        "reachable": "Terjangkau · {{ms}} ms",
+        "unreachable": "Tidak terjangkau",
+        "unchecked": "Belum dicek",
+        "disabled": "Nonaktif"
       },
-      "restartPending": "Bootnode yang disimpan berlaku saat node dimulai ulang berikutnya.",
-      "warning": "Hanya isi enode yang Anda terima dari admin CointMU. Bootnode dari pihak lain bisa menghubungkan Anda ke peer palsu dan menampilkan kondisi jaringan yang tidak benar.",
-      "customLabel": "Bootnode kustom",
-      "customHint": "Satu enode per baris atau dipisah koma, maksimal 10. Menyimpan akan memulai ulang node.",
-      "reset": "Reset ke default",
-      "save": "Simpan dan mulai ulang",
+      "peer": {
+        "connected": "Terhubung sebagai peer",
+        "notConnected": "Bukan peer",
+        "unknown": "Node berhenti"
+      },
+      "lastChecked": "Dicek {{time}}",
+      "remove": "Hapus",
+      "removeNode": "Hapus {{name}}",
+      "addTitle": "Tambah node",
+      "labelField": "Label (opsional)",
+      "enodeField": "Enode",
+      "addHint": "Maksimal 10 node. Node baru langsung disambungkan tanpa restart.",
+      "add": "Tambah node",
       "saving": "Menyimpan…",
-      "invalidEntry": "Entri {{position}}: {{value}}",
-      "requestFailed": "Bootnode gagal diperbarui. Pengaturan sebelumnya masih dipakai.",
+      "restartPending": "Node yang Anda hapus atau nonaktifkan tetap jadi bootnode sampai node dimulai ulang.",
+      "warning": "Hanya isi enode yang Anda terima dari admin CointMU. Bootnode dari pihak lain bisa menghubungkan Anda ke peer palsu dan menampilkan kondisi jaringan yang tidak benar.",
+      "reset": "Reset ke default",
+      "requestFailed": "Daftar node gagal diperbarui. Pengaturan sebelumnya masih dipakai.",
       "errors": {
-        "INVALID_ENODE": "Entri ini bukan enode yang valid (enode://<public key 128 hex>@<host>:<port>). Tidak ada yang disimpan.",
-        "EMPTY": "Isi minimal satu enode, atau gunakan Reset ke default.",
-        "TOO_MANY": "Terlalu banyak bootnode. Maksimal 10."
+        "INVALID_ENODE": "Bukan enode yang valid (enode://<public key 128 hex>@<host>:<port>).",
+        "EMPTY": "Minimal satu node harus tetap aktif.",
+        "TOO_MANY": "Terlalu banyak node. Daftar berisi maksimal 10.",
+        "DUPLICATE": "Node ini sudah ada di daftar.",
+        "INVALID_LABEL": "Label maksimal 40 karakter dalam satu baris."
       },
       "notice": {
-        "saved": "Bootnode disimpan.",
-        "reset": "Bootnode default dipulihkan."
+        "added": "Node ditambahkan. Node Anda sedang menyambung ke sana.",
+        "saved": "Daftar node disimpan.",
+        "reset": "Node default dipulihkan."
       }
     }
   },

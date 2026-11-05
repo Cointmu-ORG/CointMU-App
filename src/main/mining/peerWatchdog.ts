@@ -84,29 +84,47 @@ export class PeerWatchdog {
 }
 
 /**
- * Checks whether a TCP connection to host:port can be opened. Outbound only;
- * the socket is closed as soon as the outcome is known.
+ * Times a TCP connect to host:port. Outbound only; the socket is closed as
+ * soon as the outcome is known.
+ * @param host - Hostname or IP.
+ * @param port - TCP port.
+ * @param timeoutMs - How long to wait for the connection.
+ * @returns The connect time in whole ms, or null when it failed or timed out.
+ */
+export function probeTcpLatency(
+  host: string,
+  port: number,
+  timeoutMs: number,
+): Promise<number | null> {
+  return new Promise((resolve) => {
+    const startedAt = performance.now();
+    const socket = connect({ host, port });
+    const finish = (latencyMs: number | null): void => {
+      socket.destroy();
+      resolve(latencyMs);
+    };
+    socket.setTimeout(timeoutMs);
+    socket.once("connect", () =>
+      finish(Math.round(performance.now() - startedAt)),
+    );
+    socket.once("timeout", () => finish(null));
+    socket.once("error", () => finish(null));
+  });
+}
+
+/**
+ * Checks whether a TCP connection to host:port can be opened.
  * @param host - Hostname or IP.
  * @param port - TCP port.
  * @param timeoutMs - How long to wait for the connection.
  * @returns True when the connection was established in time.
  */
-export function isTcpReachable(
+export async function isTcpReachable(
   host: string,
   port: number,
   timeoutMs: number,
 ): Promise<boolean> {
-  return new Promise((resolve) => {
-    const socket = connect({ host, port });
-    const finish = (isReachable: boolean): void => {
-      socket.destroy();
-      resolve(isReachable);
-    };
-    socket.setTimeout(timeoutMs);
-    socket.once("connect", () => finish(true));
-    socket.once("timeout", () => finish(false));
-    socket.once("error", () => finish(false));
-  });
+  return (await probeTcpLatency(host, port, timeoutMs)) !== null;
 }
 
 /**

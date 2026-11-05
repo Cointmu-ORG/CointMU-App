@@ -160,34 +160,53 @@
     "connectedPeersTitle": "Verbundene Peers",
     "connectedPeersDesc_one": "{{count}} Knoten, der derzeit mit Ihnen kommuniziert",
     "connectedPeersDesc_other": "{{count}} Knoten, die derzeit mit Ihnen kommunizieren",
-    "advanced": "Erweitert",
     "bootnodes": {
-      "title": "Bootnodes",
-      "desc": "Knoten, die dein Node zuerst kontaktiert, um Peers im Netzwerk zu finden",
-      "active": "Aktive Bootnodes",
+      "title": "CointMU-Knoten",
+      "desc": "Dein Node verbindet sich mit jedem eingeschalteten Knoten und baut die Verbindung immer wieder auf, sodass sich die Knoten gegenseitig absichern. Jeder dient außerdem als Bootnode, um weitere Peers zu finden.",
+      "autoCheck": "Wird alle {{seconds}} s geprüft, solange diese Seite geöffnet ist.",
       "loading": "Wird geladen…",
-      "source": {
-        "user": "Benutzerdefiniert",
-        "build": "Standard (Build)",
-        "fallback": "Standard"
+      "nodeName": "Knoten {{number}}",
+      "default": "Standard",
+      "custom": "Eigener",
+      "checkAll": "Alle prüfen",
+      "check": "Verbindung prüfen",
+      "checkNode": "Verbindung zu {{name}} prüfen",
+      "checking": "Wird geprüft…",
+      "status": {
+        "reachable": "Erreichbar · {{ms}} ms",
+        "unreachable": "Nicht erreichbar",
+        "unchecked": "Nicht geprüft",
+        "disabled": "Aus"
       },
-      "restartPending": "Die gespeicherten Bootnodes gelten ab dem nächsten Neustart des Nodes.",
-      "warning": "Gib nur Enodes ein, die du von den CointMU-Admins erhalten hast. Ein fremder Bootnode kann dich mit gefälschten Peers verbinden und dir ein falsches Bild des Netzwerks zeigen.",
-      "customLabel": "Benutzerdefinierte Bootnodes",
-      "customHint": "Ein Enode pro Zeile oder durch Kommas getrennt, höchstens 10. Speichern startet den Node neu.",
-      "reset": "Auf Standard zurücksetzen",
-      "save": "Speichern und neu starten",
+      "peer": {
+        "connected": "Als Peer verbunden",
+        "notConnected": "Kein Peer",
+        "unknown": "Node gestoppt"
+      },
+      "lastChecked": "Geprüft um {{time}}",
+      "remove": "Entfernen",
+      "removeNode": "{{name}} entfernen",
+      "addTitle": "Knoten hinzufügen",
+      "labelField": "Bezeichnung (optional)",
+      "enodeField": "Enode",
+      "addHint": "Höchstens 10 Knoten insgesamt. Ein neuer Knoten wird sofort verbunden, ohne Neustart.",
+      "add": "Knoten hinzufügen",
       "saving": "Wird gespeichert…",
-      "invalidEntry": "Eintrag {{position}}: {{value}}",
-      "requestFailed": "Die Bootnodes konnten nicht aktualisiert werden. Die vorherige Einstellung bleibt aktiv.",
+      "restartPending": "Ein entfernter oder ausgeschalteter Knoten bleibt Bootnode, bis der Node neu startet.",
+      "warning": "Gib nur Enodes ein, die du von den CointMU-Admins erhalten hast. Ein fremder Bootnode kann dich mit gefälschten Peers verbinden und dir ein falsches Bild des Netzwerks zeigen.",
+      "reset": "Auf Standard zurücksetzen",
+      "requestFailed": "Die Knotenliste konnte nicht aktualisiert werden. Die vorherige Einstellung bleibt aktiv.",
       "errors": {
-        "INVALID_ENODE": "Diese Einträge sind keine gültigen Enodes (enode://<128-Hex-Public-Key>@<Host>:<Port>). Es wurde nichts gespeichert.",
-        "EMPTY": "Gib mindestens einen Enode ein oder setze auf Standard zurück.",
-        "TOO_MANY": "Zu viele Bootnodes. Höchstens 10 sind erlaubt."
+        "INVALID_ENODE": "Kein gültiger Enode (enode://<128-Hex-Public-Key>@<Host>:<Port>).",
+        "EMPTY": "Mindestens ein Knoten muss eingeschaltet bleiben.",
+        "TOO_MANY": "Zu viele Knoten. Die Liste fasst höchstens 10.",
+        "DUPLICATE": "Dieser Knoten ist bereits in der Liste.",
+        "INVALID_LABEL": "Verwende eine einzeilige Bezeichnung mit höchstens 40 Zeichen."
       },
       "notice": {
-        "saved": "Bootnodes gespeichert.",
-        "reset": "Standard-Bootnodes wiederhergestellt."
+        "added": "Knoten hinzugefügt. Dein Node verbindet sich jetzt mit ihm.",
+        "saved": "Knotenliste gespeichert.",
+        "reset": "Standardknoten wiederhergestellt."
       }
     }
   },

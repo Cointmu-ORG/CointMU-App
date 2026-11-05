@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import type {
+  BootnodeEntry,
   BootnodeSaveError,
+  BootnodeSettings,
   BootnodeState,
-  InvalidBootnodeEntry,
 } from "@bridge/types";
 import {
   getBootnodeState,
@@ -10,16 +11,8 @@ import {
   saveBootnodes,
 } from "../api/bootnode.service";
 
-// Mirrors the main-process list format: one per line, comma-separated, or both.
-const LIST_SEPARATOR = /[\s,]+/;
-const LINE_BREAK = "\n";
-
-export interface BootnodeRejection {
-  readonly error: BootnodeSaveError;
-  readonly invalid: readonly InvalidBootnodeEntry[];
-}
-
 export const BootnodeNotice = {
+  ADDED: "added",
   SAVED: "saved",
   RESET: "reset",
   REQUEST_FAILED: "requestFailed",
@@ -31,103 +24,135 @@ export type BootnodeNotice =
 export interface BootnodeSettingsHook {
   /** Null while loading or when the state could not be read. */
   readonly state: BootnodeState | null;
-  readonly draft: string;
-  readonly setDraft: (text: string) => void;
-  /** True when the draft lists different enodes than the saved custom list. */
-  readonly isDirty: boolean;
   readonly isSaving: boolean;
-  readonly rejection: BootnodeRejection | null;
+  /** Why main rejected the last change. */
+  readonly rejection: BootnodeSaveError | null;
   readonly notice: BootnodeNotice | null;
-  readonly save: () => Promise<void>;
+  /** Resolves true when the node was saved. */
+  readonly addNode: (enode: string, label: string) => Promise<boolean>;
+  readonly removeNode: (enode: string) => Promise<void>;
+  readonly setNodeEnabled: (enode: string, isEnabled: boolean) => Promise<void>;
   readonly reset: () => Promise<void>;
 }
 
-function normalizeList(text: string): string {
-  return text.split(LIST_SEPARATOR).filter(Boolean).join(LINE_BREAK);
+/**
+ * @param nodes - The listed nodes.
+ * @returns The setting that keeps them as listed.
+ */
+export function toBootnodeSettings(
+  nodes: readonly BootnodeEntry[],
+): BootnodeSettings {
+  return {
+    custom: nodes
+      .filter((node) => !node.isDefault)
+      .map(({ enode, label }) => ({ enode, label })),
+    disabled: nodes
+      .filter((node) => node.isDefault && !node.isEnabled)
+      .map((node) => node.enode),
+  };
 }
 
 /**
- * Loads the bootnode setting and exposes save and reset. Validation happens
- * in main; a rejection is kept so the form can point at the bad entries.
- * @returns The state, the editable draft, and the actions.
+ * Loads the node list and exposes add, remove, enable/disable and reset. Main
+ * validates every change; a rejection is kept for the form to show.
+ * @returns The state and the actions.
  */
 export function useBootnodeSettings(): BootnodeSettingsHook {
   const [state, setState] = useState<BootnodeState | null>(null);
-  const [draft, setDraft] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [rejection, setRejection] = useState<BootnodeRejection | null>(null);
+  const [rejection, setRejection] = useState<BootnodeSaveError | null>(null);
   const [notice, setNotice] = useState<BootnodeNotice | null>(null);
-
-  const apply = useCallback((next: BootnodeState): void => {
-    setState(next);
-    setDraft(next.customEnodes.join(LINE_BREAK));
-    setRejection(null);
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
     getBootnodeState()
       .then((next) => {
-        if (isMounted) apply(next);
+        if (isMounted) setState(next);
       })
       .catch((err: unknown) => {
-        console.error("[bootnode] Failed to load bootnode settings", err);
+        console.error("[bootnode] Failed to load the node list", err);
         if (isMounted) setNotice(BootnodeNotice.REQUEST_FAILED);
       });
     return (): void => {
       isMounted = false;
     };
-  }, [apply]);
+  }, []);
 
-  const run = useCallback(async (action: () => Promise<void>) => {
+  const save = useCallback(
+    async (nodes: readonly BootnodeEntry[], success: BootnodeNotice) => {
+      setIsSaving(true);
+      setNotice(null);
+      setRejection(null);
+      try {
+        const result = await saveBootnodes(toBootnodeSettings(nodes));
+        if (!result.isSaved) {
+          setRejection(result.error);
+          return false;
+        }
+        setState(result.state);
+        setNotice(success);
+        return true;
+      } catch (err) {
+        console.error("[bootnode] Failed to save the node list", err);
+        setNotice(BootnodeNotice.REQUEST_FAILED);
+        return false;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [],
+  );
+
+  const nodes = state?.nodes ?? [];
+
+  const addNode = (enode: string, label: string): Promise<boolean> =>
+    save(
+      [...nodes, { enode, label, host: "", isDefault: false, isEnabled: true }],
+      BootnodeNotice.ADDED,
+    );
+
+  const removeNode = async (enode: string): Promise<void> => {
+    await save(
+      nodes.filter((node) => node.enode !== enode),
+      BootnodeNotice.SAVED,
+    );
+  };
+
+  const setNodeEnabled = async (
+    enode: string,
+    isEnabled: boolean,
+  ): Promise<void> => {
+    await save(
+      nodes.map((node) =>
+        node.enode === enode ? { ...node, isEnabled } : node,
+      ),
+      BootnodeNotice.SAVED,
+    );
+  };
+
+  const reset = async (): Promise<void> => {
     setIsSaving(true);
     setNotice(null);
+    setRejection(null);
     try {
-      await action();
+      setState(await resetBootnodes());
+      setNotice(BootnodeNotice.RESET);
     } catch (err) {
-      console.error("[bootnode] Failed to update bootnode settings", err);
+      console.error("[bootnode] Failed to reset the node list", err);
       setNotice(BootnodeNotice.REQUEST_FAILED);
     } finally {
       setIsSaving(false);
     }
-  }, []);
-
-  const save = useCallback(
-    () =>
-      run(async () => {
-        const result = await saveBootnodes(draft);
-        if (!result.isSaved) {
-          setRejection({ error: result.error, invalid: result.invalid });
-          return;
-        }
-        apply(result.state);
-        setNotice(BootnodeNotice.SAVED);
-      }),
-    [run, apply, draft],
-  );
-
-  const reset = useCallback(
-    () =>
-      run(async () => {
-        apply(await resetBootnodes());
-        setNotice(BootnodeNotice.RESET);
-      }),
-    [run, apply],
-  );
-
-  const isDirty =
-    state !== null &&
-    normalizeList(draft) !== state.customEnodes.join(LINE_BREAK);
+  };
 
   return {
     state,
-    draft,
-    setDraft,
-    isDirty,
     isSaving,
     rejection,
     notice,
-    save,
+    addNode,
+    removeNode,
+    setNodeEnabled,
     reset,
   };
 }

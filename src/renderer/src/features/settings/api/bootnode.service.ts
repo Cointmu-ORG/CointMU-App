@@ -1,7 +1,12 @@
-import type { BootnodeSaveResult, BootnodeState } from "@bridge/types";
+import type {
+  BootnodeSaveResult,
+  BootnodeSettings,
+  BootnodeState,
+  BootnodeStatus,
+} from "@bridge/types";
 
 /**
- * Fetches the active bootnodes, their source and the saved custom list.
+ * Fetches the node list and whether a restart is still pending.
  * @returns The bootnode state.
  */
 async function getBootnodeState(): Promise<BootnodeState> {
@@ -9,21 +14,32 @@ async function getBootnodeState(): Promise<BootnodeState> {
 }
 
 /**
- * Saves a custom bootnode list and restarts the node. Main validates every
- * entry; a rejected list leaves the saved one in place.
- * @param text - One enode per line or comma-separated.
- * @returns The new state, or why the list was rejected.
+ * Saves the node setting. Main validates it, adds new nodes as peers at once
+ * and restarts the node only when a running bootnode was removed.
+ * @param settings - The custom nodes and the defaults turned off.
+ * @returns The new state, or why the setting was rejected.
  */
-async function saveBootnodes(text: string): Promise<BootnodeSaveResult> {
-  return window.api.bootnode.set(text);
+async function saveBootnodes(
+  settings: BootnodeSettings,
+): Promise<BootnodeSaveResult> {
+  return window.api.bootnode.set(settings);
 }
 
 /**
- * Clears the custom list so the default bootnodes apply, and restarts the node.
+ * Removes the custom nodes and turns every default back on.
  * @returns The new state.
  */
 async function resetBootnodes(): Promise<BootnodeState> {
   return window.api.bootnode.reset();
 }
 
-export { getBootnodeState, saveBootnodes, resetBootnodes };
+/**
+ * Checks TCP reachability and peer status of listed nodes.
+ * @param enode - One listed node; omit to check them all.
+ * @returns One status per checked node.
+ */
+async function probeBootnodes(enode?: string): Promise<BootnodeStatus[]> {
+  return window.api.bootnode.probe(enode);
+}
+
+export { getBootnodeState, saveBootnodes, resetBootnodes, probeBootnodes };

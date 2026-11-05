@@ -47,8 +47,8 @@ export async function createAppStore() {
         listenPort: 30303,
         syncMode: SyncMode.SNAP,
         pruneOldState: true,
-        // Custom bootnode enodes; empty means the build or built-in default.
-        bootnodes: [],
+        // Nodes the user added and default nodes turned off (BootnodeSettings).
+        bootnodes: { custom: [], disabled: [] },
       },
       mining: {
         isMiningEnabled: false,
