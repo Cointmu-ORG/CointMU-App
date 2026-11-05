@@ -30,6 +30,12 @@ function buildShellText(t: TFunction): ShellText {
     quitConfirmQuit: t("common:shell.quitConfirmQuit"),
     quitConfirmCancel: t("common:shell.quitConfirmCancel"),
     quitConfirmNeverAsk: t("common:shell.quitConfirmNeverAsk"),
+    autoStartTitle: t("common:shell.autoStartTitle", {
+      ...keep,
+      seconds: "{{seconds}}",
+    }),
+    autoStartBody: t("common:shell.autoStartBody"),
+    autoStartCancel: t("common:shell.autoStartCancel"),
   };
 }
 

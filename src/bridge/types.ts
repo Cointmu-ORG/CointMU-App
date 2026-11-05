@@ -214,6 +214,26 @@ export const MiningPowerStatus = {
 export type MiningPowerStatus =
   (typeof MiningPowerStatus)[keyof typeof MiningPowerStatus];
 
+/** Where "Start mining at launch" is in this session. */
+export const MiningAutoStartPhase = {
+  /** Waiting for the node and the settings to allow mining. */
+  WAITING: "waiting",
+  /** Mining starts at startsAt unless cancelled or a condition is lost. */
+  COUNTDOWN: "countdown",
+  /** Started, cancelled, taken over by the user, or off: not again this session. */
+  DONE: "done",
+} as const;
+
+export type MiningAutoStartPhase =
+  (typeof MiningAutoStartPhase)[keyof typeof MiningAutoStartPhase];
+
+/** Payload of the `mining:auto-start` event. */
+export interface MiningAutoStartState {
+  readonly phase: MiningAutoStartPhase;
+  /** Epoch ms when mining starts; set only while counting down. */
+  readonly startsAt: number | null;
+}
+
 /** What a wallet activity row is; also the raw value of the CSV type column. */
 export const ActivityKind = {
   SEND: "send",
@@ -322,6 +342,10 @@ export interface ShellText {
   readonly quitConfirmQuit: string;
   readonly quitConfirmCancel: string;
   readonly quitConfirmNeverAsk: string;
+  /** `{{seconds}}`; the desktop notification before mining starts at launch. */
+  readonly autoStartTitle: string;
+  readonly autoStartBody: string;
+  readonly autoStartCancel: string;
 }
 
 /** What the desktop shell supports on this OS and desktop environment. */

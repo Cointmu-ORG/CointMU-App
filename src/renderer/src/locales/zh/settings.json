@@ -104,7 +104,9 @@
     "motionDesc": "平滑的页面切换和动效。“自动”会在系统要求减少动态效果时关闭它们。",
     "motionAuto": "自动",
     "motionOn": "开",
-    "motionOff": "关"
+    "motionOff": "关",
+    "sidebarColorsTitle": "彩色侧边栏图标",
+    "sidebarColorsDesc": "侧边栏的每一项使用各自的图标颜色。当前打开的页面仍会突出显示。"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",
@@ -321,7 +323,9 @@
     "scheduleDesc": "在此时间段之外暂停挖矿（本地时间）。结束时间可以跨过午夜。",
     "scheduleWindow": "时间段",
     "scheduleStart": "开始时间",
-    "scheduleEnd": "结束时间"
+    "scheduleEnd": "结束时间",
+    "autoStartTitle": "启动时开始挖矿",
+    "autoStartDesc": "在节点有对等节点、同步完成且已设置奖励地址 30 秒后开始挖矿，在此之前可以取消。挖矿会占用 CPU、约 2 GB 内存（用于 DAG）并消耗电池。“使用电池时暂停”“按时间表挖矿”和“仅在空闲时挖矿”仍然有效。"
   },
   "securitySettings": {
     "subtitle": "管理你的钱包安全设置",

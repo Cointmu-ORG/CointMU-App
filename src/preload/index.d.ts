@@ -12,6 +12,7 @@ import type {
   JsonRpcEnvelope,
   MinerDistributionResult,
   MinerRange,
+  MiningAutoStartState,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
@@ -137,6 +138,11 @@ interface CointmuAPI {
       blockNumber: number;
     }>;
     getPowerStatus: () => Promise<string>;
+    getAutoStart: () => Promise<MiningAutoStartState>;
+    cancelAutoStart: () => Promise<void>;
+    onAutoStartChanged: (
+      callback: (state: MiningAutoStartState) => void,
+    ) => () => void;
     onDagProgress: (callback: (progress: number) => void) => () => void;
     onMiningStatusChanged: (callback: (status: string) => void) => () => void;
     onMiningLog: (

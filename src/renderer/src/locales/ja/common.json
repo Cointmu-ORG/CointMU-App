@@ -86,7 +86,10 @@
     "quitConfirmDetail": "CointMU を再び開くまで、マイニングと同期は停止します。ノードは先に正常に終了します。",
     "quitConfirmQuit": "終了",
     "quitConfirmCancel": "キャンセル",
-    "quitConfirmNeverAsk": "今後確認しない"
+    "quitConfirmNeverAsk": "今後確認しない",
+    "autoStartTitle": "{{seconds}} 秒後にマイニングを開始します",
+    "autoStartBody": "「起動時にマイニングを開始」がオンです。このセッションで取り消すには CointMU を開いてください。",
+    "autoStartCancel": "キャンセル"
   },
   "update": {
     "readyTitle": "アップデートの準備完了",

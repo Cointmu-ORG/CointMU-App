@@ -116,5 +116,10 @@
   "notification": {
     "blockMinedTitle": "Block mined",
     "blockMinedMessage": "You sealed block #{{number}}"
+  },
+  "autoStart": {
+    "title": "Mining starts in {{seconds}} s",
+    "body": "Start mining at launch is on. Mining uses CPU, memory and battery. Cancel skips it for this session only.",
+    "cancel": "Cancel"
   }
 }

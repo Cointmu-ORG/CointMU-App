@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { COINTMU_NETWORK } from "@bridge/network";
 import { PrivateAmount } from "@/shared/ui";
+import { useAppearanceStore } from "@/features/settings";
+import { navIconClass } from "../config/nav-icon-colors";
 
 interface SidebarProps {
   accounts: DerivedAccount[];
@@ -44,6 +46,9 @@ export function Sidebar({
   const balance = useAppStore((s) => s.balance);
   const peerCount = useAppStore((s) => s.peerCount);
   const peerHintKey = usePeerHintKey();
+  const isColored = useAppearanceStore((s) => s.sidebarIconColors);
+  const iconClass = (view: string): string | undefined =>
+    navIconClass(view, activeView, isColored);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(["common", "mining"]);
@@ -132,7 +137,7 @@ export function Sidebar({
               : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
-          <Grid width={18} height={18} />
+          <Grid width={18} height={18} className={iconClass("dashboard")} />
           {t("sidebar.dashboard")}
         </button>
 
@@ -144,7 +149,7 @@ export function Sidebar({
               : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
-          <Cpu width={18} height={18} />
+          <Cpu width={18} height={18} className={iconClass("miner")} />
           {t("sidebar.mining")}
           <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </button>
@@ -157,7 +162,7 @@ export function Sidebar({
               : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
-          <Wallet width={18} height={18} />
+          <Wallet width={18} height={18} className={iconClass("wallet")} />
           {t("sidebar.wallet")}
         </button>
 
@@ -169,7 +174,7 @@ export function Sidebar({
               : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
-          <Search width={18} height={18} />
+          <Search width={18} height={18} className={iconClass("explorer")} />
           {t("sidebar.explorer")}
         </button>
 
@@ -187,7 +192,7 @@ export function Sidebar({
               : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
-          <Settings width={18} height={18} />
+          <Settings width={18} height={18} className={iconClass("settings")} />
           {t("sidebar.settings")}
           {(updateStatus === "available" ||
             updateStatus === "downloading" ||

@@ -19,6 +19,15 @@
   --color-text-secondary: #64748b;
   --color-text-muted: #94a3b8;
   --color-accent: var(--color-accent);
+  /* Sidebar icon colors (Settings → Appearance → Colored sidebar icons), one
+     hue per item; the dark values are set in the base layer. Each keeps at
+     least 3:1 against the sidebar and its hover background
+     (sidebar-colors.test.ts). */
+  --color-nav-dashboard: #7c3aed; /* violet-600 */
+  --color-nav-mining: #b45309; /* amber-700 */
+  --color-nav-wallet: #047857; /* emerald-700 */
+  --color-nav-explorer: #0284c7; /* sky-600 */
+  --color-nav-settings: #db2777; /* pink-600 */
   --font-family-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-family-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
 }
@@ -54,6 +63,14 @@
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark {
+    --color-nav-dashboard: #a78bfa; /* violet-400 */
+    --color-nav-mining: #fbbf24; /* amber-400 */
+    --color-nav-wallet: #34d399; /* emerald-400 */
+    --color-nav-explorer: #38bdf8; /* sky-400 */
+    --color-nav-settings: #f472b6; /* pink-400 */
   }
 
   .dark body,

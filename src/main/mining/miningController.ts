@@ -5,9 +5,17 @@ import {
   fetchNetworkInsights,
 } from "../wallet/activityScanner";
 import type { AppStore } from "../store/appStore";
-import { IpcErrorCode, type MiningPowerStatus } from "../../bridge/types";
+import {
+  IpcErrorCode,
+  MiningAutoStartPhase,
+  type MiningAutoStartState,
+  type MiningPowerStatus,
+} from "../../bridge/types";
 import type { MiningPolicy } from "./miningPolicyRunner";
 import { createMiningPolicy } from "./miningPolicySetup";
+import type { MiningAutoStart } from "./miningAutoStart";
+import { createMiningAutoStart } from "./miningAutoStartSetup";
+import { showAutoStartNotice } from "./miningAutoStartNotice";
 
 /**
  * Central controller for managing the underlying Geth mining process.
@@ -19,8 +27,10 @@ export class MiningController {
   private store: AppStore;
   private win: BrowserWindow | null;
   private policy: MiningPolicy;
-  // Started from the Mining page or the tray in this session; mining never
-  // starts on its own at launch (the stored flag is only the permission).
+  private autoStart: MiningAutoStart;
+  private closeAutoStartNotice: (() => void) | null = null;
+  // Started this session from the Mining page, the tray, or "Start mining
+  // at launch" (the stored mining.isMiningEnabled is only the permission).
   private isStarted = false;
 
   constructor(rpcPort: number, store: AppStore) {
@@ -34,6 +44,11 @@ export class MiningController {
       () => this.isStarted,
       (status) => this.publishStatus(status),
     );
+    this.autoStart = createMiningAutoStart(rpcPort, store, {
+      isStarted: () => this.isStarted,
+      start: () => this.applyMining(true),
+      publish: (state) => this.publishAutoStart(state),
+    });
     this.setupIpcHandlers();
   }
 
@@ -43,8 +58,25 @@ export class MiningController {
     }
   }
 
+  private publishAutoStart(state: MiningAutoStartState): void {
+    this.closeAutoStartNotice?.();
+    this.closeAutoStartNotice = null;
+    if (!this.win || this.win.isDestroyed()) return;
+    this.win.webContents.send("mining:auto-start", state);
+    if (state.phase === MiningAutoStartPhase.COUNTDOWN) {
+      this.closeAutoStartNotice = showAutoStartNotice(this.win, () =>
+        this.autoStart.cancel(),
+      );
+    }
+  }
+
   public setWindow(win: BrowserWindow): void {
     this.win = win;
+  }
+
+  /** Starts "Start mining at launch" for this session; call once the window exists. */
+  public beginAutoStart(): void {
+    this.autoStart.begin();
   }
 
   /** @returns Whether the user has mining started (it may be paused). */
@@ -62,6 +94,17 @@ export class MiningController {
   }
 
   /**
+   * The user switched mining on or off (Mining page, tray, Settings). Either
+   * way, mining is no longer started automatically this session.
+   * @param enabled - Target mining state.
+   * @throws MINING_NO_REWARD_ADDRESS, see applyMining.
+   */
+  private async toggleMining(enabled: boolean): Promise<void> {
+    this.autoStart.endForSession();
+    await this.applyMining(enabled);
+  }
+
+  /**
    * Switches mining on or off. On: the policy starts the miner (etherbase =
    * the persisted reward address, mining.poolAddress, never the active
    * wallet) unless a condition pauses it. Off: the miner stops at once.
@@ -70,7 +113,7 @@ export class MiningController {
    * @throws MINING_NO_REWARD_ADDRESS when switching on without a reward
    *   address; mining then stays off.
    */
-  private async toggleMining(enabled: boolean): Promise<void> {
+  private async applyMining(enabled: boolean): Promise<void> {
     if (enabled && !this.store.get("mining.poolAddress")) {
       throw new Error(IpcErrorCode.MINING_NO_REWARD_ADDRESS);
     }
@@ -121,6 +164,10 @@ export class MiningController {
     });
 
     ipcMain.handle("mining:getPowerStatus", () => this.policy.getStatus());
+
+    ipcMain.handle("mining:getAutoStart", () => this.autoStart.getState());
+
+    ipcMain.handle("mining:cancelAutoStart", () => this.autoStart.cancel());
 
     /**
      * Retrieves the current mining status, hashrate, block difficulty, and latest block height directly from the Geth node.

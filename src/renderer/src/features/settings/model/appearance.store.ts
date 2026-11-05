@@ -14,12 +14,13 @@ export interface AppearanceState {
   theme: ThemeMode;
   accentColor: string;
   density: LayoutDensity;
-  // No control yet (#104): the sidebar icons have no colors to switch.
-  showSidebarColors: boolean;
+  /** One color per sidebar item instead of monochrome icons. */
+  sidebarIconColors: boolean;
   motion: MotionPreference;
   setTheme: (theme: ThemeMode) => void;
   setAccentColor: (color: string) => void;
   setDensity: (density: LayoutDensity) => void;
+  setSidebarIconColors: (isColored: boolean) => void;
   setMotion: (motion: MotionPreference) => void;
   resetToDefaults: () => void;
 }
@@ -30,18 +31,19 @@ export const useAppearanceStore = create<AppearanceState>()(
       theme: ThemeMode.AUTO,
       accentColor: "#3b82f6",
       density: LayoutDensity.COMFORTABLE,
-      showSidebarColors: true,
+      sidebarIconColors: false,
       motion: MotionPreference.AUTO,
       setTheme: (theme) => set({ theme }),
       setAccentColor: (accentColor) => set({ accentColor }),
       setDensity: (density) => set({ density }),
+      setSidebarIconColors: (sidebarIconColors) => set({ sidebarIconColors }),
       setMotion: (motion) => set({ motion }),
       resetToDefaults: () =>
         set({
           theme: ThemeMode.LIGHT,
           accentColor: "#3b82f6",
           density: LayoutDensity.COMFORTABLE,
-          showSidebarColors: true,
+          sidebarIconColors: false,
           motion: MotionPreference.AUTO,
         }),
     }),

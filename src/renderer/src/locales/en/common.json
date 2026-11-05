@@ -87,7 +87,10 @@
     "quitConfirmDetail": "Mining and syncing stop until you open CointMU again. The node shuts down cleanly first.",
     "quitConfirmQuit": "Quit",
     "quitConfirmCancel": "Cancel",
-    "quitConfirmNeverAsk": "Don't ask again"
+    "quitConfirmNeverAsk": "Don't ask again",
+    "autoStartTitle": "Mining starts in {{seconds}} seconds",
+    "autoStartBody": "Start mining at launch is on. Open CointMU to cancel it for this session.",
+    "autoStartCancel": "Cancel"
   },
   "update": {
     "readyTitle": "Update ready",

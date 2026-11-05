@@ -112,5 +112,10 @@
   "notification": {
     "blockMinedTitle": "Blok ditambang",
     "blockMinedMessage": "Anda menyegel blok #{{number}}"
+  },
+  "autoStart": {
+    "title": "Mining akan dimulai dalam {{seconds}} detik",
+    "body": "Mulai mining saat dibuka sedang aktif. Mining memakai CPU, RAM, dan baterai. Batalkan hanya berlaku untuk sesi ini.",
+    "cancel": "Batalkan"
   }
 }

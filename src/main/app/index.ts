@@ -146,6 +146,7 @@ app.whenReady().then(async () => {
   applyStoredZoom(store, win);
   initUpdater(win, store);
   miningController.setWindow(win);
+  miningController.beginAutoStart();
   registerShellHandlers(setupTray(store, win, miningController));
   setQuitConfirmation(createQuitConfirmation(store, win, getRpcPort));
 

@@ -104,7 +104,9 @@
     "motionDesc": "Weiche Seitenwechsel und Bewegung. Automatisch schaltet sie aus, wenn dein System reduzierte Bewegung verlangt.",
     "motionAuto": "Automatisch",
     "motionOn": "An",
-    "motionOff": "Aus"
+    "motionOff": "Aus",
+    "sidebarColorsTitle": "Farbige Symbole in der Seitenleiste",
+    "sidebarColorsDesc": "Jeder Eintrag der Seitenleiste erhält eine eigene Symbolfarbe. Die geöffnete Seite bleibt hervorgehoben."
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",
@@ -324,7 +326,9 @@
     "scheduleDesc": "Mining außerhalb dieser Zeiten pausieren (Ortszeit). Das Ende darf nach Mitternacht liegen.",
     "scheduleWindow": "Zeiten",
     "scheduleStart": "Startzeit",
-    "scheduleEnd": "Endzeit"
+    "scheduleEnd": "Endzeit",
+    "autoStartTitle": "Mining beim Start",
+    "autoStartDesc": "Startet das Mining 30 Sekunden, nachdem der Knoten einen Peer hat, synchronisiert ist und eine Belohnungsadresse gesetzt ist; bis dahin kannst du es abbrechen. Mining belastet die CPU, belegt etwa 2 GB Arbeitsspeicher für den DAG und verbraucht Akku. „Im Akkubetrieb pausieren“, „Nach Zeitplan minen“ und „Nur im Leerlauf minen“ gelten weiterhin."
   },
   "securitySettings": {
     "subtitle": "Verwalten Sie die Sicherheitseinstellungen für Ihr Wallet",

@@ -86,7 +86,10 @@
     "quitConfirmDetail": "Mining dan sinkronisasi berhenti sampai kamu membuka CointMU lagi. Node dimatikan dengan bersih terlebih dahulu.",
     "quitConfirmQuit": "Keluar",
     "quitConfirmCancel": "Batal",
-    "quitConfirmNeverAsk": "Jangan tanya lagi"
+    "quitConfirmNeverAsk": "Jangan tanya lagi",
+    "autoStartTitle": "Mining akan dimulai dalam {{seconds}} detik",
+    "autoStartBody": "Mulai mining saat dibuka sedang aktif. Buka CointMU untuk membatalkannya di sesi ini.",
+    "autoStartCancel": "Batalkan"
   },
   "update": {
     "readyTitle": "Pembaruan siap",

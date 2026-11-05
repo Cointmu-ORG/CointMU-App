@@ -89,7 +89,10 @@
     "quitConfirmDetail": "Майнинг и синхронизация остановятся до следующего запуска CointMU. Сначала узел корректно завершит работу.",
     "quitConfirmQuit": "Выйти",
     "quitConfirmCancel": "Отмена",
-    "quitConfirmNeverAsk": "Больше не спрашивать"
+    "quitConfirmNeverAsk": "Больше не спрашивать",
+    "autoStartTitle": "Майнинг начнётся через {{seconds}} с",
+    "autoStartBody": "Включён «Майнинг при запуске». Откройте CointMU, чтобы отменить его в этом сеансе.",
+    "autoStartCancel": "Отмена"
   },
   "update": {
     "readyTitle": "Обновление готово",

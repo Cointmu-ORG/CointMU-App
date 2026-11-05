@@ -27,6 +27,7 @@ import type {
   JsonRpcEnvelope,
   MinerDistributionResult,
   MinerRange,
+  MiningAutoStartState,
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
@@ -186,6 +187,17 @@ const api = {
     getStats: () => ipcRenderer.invoke("mining:getStats"),
     getPowerStatus: (): Promise<string> =>
       ipcRenderer.invoke("mining:getPowerStatus"),
+    getAutoStart: (): Promise<MiningAutoStartState> =>
+      ipcRenderer.invoke("mining:getAutoStart"),
+    cancelAutoStart: (): Promise<void> =>
+      ipcRenderer.invoke("mining:cancelAutoStart"),
+    onAutoStartChanged: (callback: (state: MiningAutoStartState) => void) => {
+      const handler = (_: unknown, state: MiningAutoStartState): void => {
+        callback(state);
+      };
+      ipcRenderer.on("mining:auto-start", handler);
+      return () => ipcRenderer.removeListener("mining:auto-start", handler);
+    },
     onDagProgress: (callback: (progress: number) => void) => {
       const handler = (_event: any, value: number): void => {
         callback(value);

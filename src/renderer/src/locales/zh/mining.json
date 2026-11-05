@@ -112,5 +112,10 @@
   "notification": {
     "blockMinedTitle": "已挖出区块",
     "blockMinedMessage": "你封装了区块 #{{number}}"
+  },
+  "autoStart": {
+    "title": "{{seconds}} 秒后开始挖矿",
+    "body": "已开启“启动时开始挖矿”。挖矿会占用 CPU、内存和电池。取消仅对本次会话有效。",
+    "cancel": "取消"
   }
 }

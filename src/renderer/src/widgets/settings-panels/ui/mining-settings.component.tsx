@@ -6,6 +6,7 @@ import { setSetting } from "@/shared/api";
 import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
 import { CustomDropdown } from "@/shared/ui";
 import { MiningConditionsSettings } from "./mining-conditions-settings.component";
+import { MiningAutoStartSetting } from "./mining-auto-start-setting.component";
 
 interface MiningSettingsProps {
   config: SettingsStore["mining"];
@@ -15,8 +16,8 @@ interface MiningSettingsProps {
 
 /**
  * Mining settings pane configuring internal node worker threads, battery
- * behavior, pool vs solo mode, and payout addresses. Intensity and Start at
- * launch are hidden until the miner uses them (#104). Actively controls
+ * behavior, pool vs solo mode, and payout addresses. Intensity is hidden
+ * until the miner uses it (#104). Actively controls
  * the underlying Geth node via IPC bridge when settings are changed.
  * @param {MiningSettingsProps} props - The configuration state and the update callback.
  * @returns {JSX.Element} The Mining Settings form component.
@@ -203,6 +204,7 @@ export function MiningSettings({
                 />
               </button>
             </div>
+            {config.isMiningEnabled && <MiningAutoStartSetting />}
           </div>
         </section>
 

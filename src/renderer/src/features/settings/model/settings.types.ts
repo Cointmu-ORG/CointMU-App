@@ -23,7 +23,6 @@ export interface SettingsStore {
     theme: string;
     accentColor: string;
     density: string;
-    showSidebarColors: boolean;
     animatedTransitions: boolean;
   };
   network: {
@@ -35,7 +34,7 @@ export interface SettingsStore {
   };
   mining: {
     isMiningEnabled: boolean;
-    startAtLaunch: boolean;
+    autoStartAtLaunch: boolean;
     cpuThreads: number;
     intensity: MiningIntensity;
     pauseOnBattery: boolean;

@@ -116,5 +116,10 @@
   "notification": {
     "blockMinedTitle": "Block gemint",
     "blockMinedMessage": "Du hast Block #{{number}} versiegelt"
+  },
+  "autoStart": {
+    "title": "Mining startet in {{seconds}} s",
+    "body": "„Mining beim Start“ ist an. Mining belastet CPU, Arbeitsspeicher und Akku. Abbrechen gilt nur für diese Sitzung.",
+    "cancel": "Abbrechen"
   }
 }
