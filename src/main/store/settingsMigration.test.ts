@@ -41,8 +41,26 @@ describe("migrateSettingValues", () => {
       listenPort: (before.network as Record<string, unknown>).listenPort,
       bootnodes: (before.network as Record<string, unknown>).bootnodes,
     });
-    expect({ ...migrated, network: before.network }).toEqual(before);
+    // Everything else is untouched, apart from the retired keys.
+    expect({
+      ...migrated,
+      network: before.network,
+      appearance: before.appearance,
+    }).toEqual(before);
   });
+
+  it.each(["1.6.18", "1.7.1"])(
+    "drops the showSidebarColors true a %s store holds",
+    (version) => {
+      const before = snapshot(version);
+      expect(before.appearance).toMatchObject({ showSidebarColors: true });
+
+      const migrated = migrateSettingValues(before);
+
+      expect(migrated?.appearance).not.toHaveProperty("showSidebarColors");
+      expect(migrated?.appearance).toMatchObject({ accentColor: "#3b82f6" });
+    },
+  );
 
   it("leaves wallet data and unrelated settings untouched", () => {
     const before = snapshot();

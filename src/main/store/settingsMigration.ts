@@ -78,6 +78,15 @@ const REMOVED_NETWORK_KEYS = [
   "rpcEndpoint",
 ] as const;
 
+/** Keys that nothing reads any more, by section. */
+const RETIRED_KEYS: readonly (readonly [section: string, key: string])[] = [
+  // The UI language lives in the renderer's localStorage.
+  ["general", "language"],
+  // Stored as true for everyone while no control existed. The renderer's
+  // appearance.sidebarIconColors (off by default) replaces it.
+  ["appearance", "showSidebarColors"],
+];
+
 /**
  * @param value - A store value.
  * @returns The value as a plain object section, or null.
@@ -91,8 +100,7 @@ function asSection(value: unknown): StoreData | null {
 /**
  * Converts the stored settings from earlier versions: labels (1.6.18 and
  * earlier) become codes, the network choice (1.7.2 and earlier) is removed,
- * and the unused `general.language` (the UI language lives in the renderer's
- * localStorage) is removed. Missing
+ * and the retired keys (RETIRED_KEYS) are removed. Missing
  * sections and keys are left missing; the store defaults cover them.
  * Idempotent: running it on its own output changes nothing.
  * @param data - The whole store content.
@@ -125,10 +133,12 @@ export function migrateSettingValues<T extends StoreData>(data: T): T | null {
     }
   }
 
-  const general = asSection(migrated.general);
-  if (general && "language" in general) {
-    delete general.language;
-    hasChanged = true;
+  for (const [sectionName, key] of RETIRED_KEYS) {
+    const section = asSection(migrated[sectionName]);
+    if (section && key in section) {
+      delete section[key];
+      hasChanged = true;
+    }
   }
 
   return hasChanged ? (migrated as T) : null;

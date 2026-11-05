@@ -104,7 +104,9 @@
     "motionDesc": "Weiche Seitenwechsel und Bewegung. Automatisch schaltet sie aus, wenn dein System reduzierte Bewegung verlangt.",
     "motionAuto": "Automatisch",
     "motionOn": "An",
-    "motionOff": "Aus"
+    "motionOff": "Aus",
+    "sidebarColorsTitle": "Farbige Symbole in der Seitenleiste",
+    "sidebarColorsDesc": "Jeder Eintrag der Seitenleiste erhält eine eigene Symbolfarbe. Die geöffnete Seite bleibt hervorgehoben."
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",

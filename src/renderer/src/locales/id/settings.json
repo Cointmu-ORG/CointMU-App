@@ -104,7 +104,9 @@
     "motionDesc": "Perpindahan halaman dan gerakan yang halus. Otomatis mematikannya jika sistem meminta gerakan dikurangi.",
     "motionAuto": "Otomatis",
     "motionOn": "Nyala",
-    "motionOff": "Mati"
+    "motionOff": "Mati",
+    "sidebarColorsTitle": "Ikon sidebar berwarna",
+    "sidebarColorsDesc": "Setiap item sidebar mendapat warna ikon sendiri. Halaman yang terbuka tetap disorot."
   },
   "notifications": {
     "subtitle": "Peringatan, saluran pengiriman, dan kategori acara",

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { migrateAppearance } from "./appearance-migration";
+import {
+  APPEARANCE_STORAGE_VERSION,
+  migrateAppearance,
+} from "./appearance-migration";
 
 // localStorage "cointmu-appearance-storage" as the released 1.6.18 app wrote
 // it after choosing Dark and Compact in its UI.
@@ -14,9 +17,36 @@ describe("migrateAppearance", () => {
       theme: "dark",
       accentColor: "#3b82f6",
       density: "compact",
-      showSidebarColors: true,
       motion: "auto",
+      sidebarIconColors: false,
     });
+  });
+
+  it("turns colored sidebar icons off for a stored showSidebarColors true", () => {
+    // Version 2 as 1.7.x wrote it: true for everyone, with no control shown.
+    const stored = {
+      theme: "light",
+      density: "comfortable",
+      motion: "auto",
+      showSidebarColors: true,
+    };
+
+    const migrated = migrateAppearance(stored);
+
+    expect(migrated.sidebarIconColors).toBe(false);
+    expect(migrated).not.toHaveProperty("showSidebarColors");
+    expect(migrateAppearance(migrated)).toEqual(migrated);
+  });
+
+  it("runs for the version 2 stores 1.7.x wrote", () => {
+    // zustand calls migrate only for a stored version below the current one.
+    expect(APPEARANCE_STORAGE_VERSION).toBeGreaterThan(2);
+  });
+
+  it("keeps colored sidebar icons a user turned on", () => {
+    const stored = { theme: "dark", sidebarIconColors: true };
+
+    expect(migrateAppearance(stored).sidebarIconColors).toBe(true);
   });
 
   it("is idempotent", () => {
@@ -45,6 +75,7 @@ describe("migrateAppearance", () => {
         theme: "auto",
         density: "comfortable",
         motion: "auto",
+        sidebarIconColors: false,
       });
     },
   );

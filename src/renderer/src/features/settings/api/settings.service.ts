@@ -43,7 +43,6 @@ async function resetAllSettings(): Promise<void> {
       theme: ThemeMode.LIGHT,
       accentColor: "#3b82f6",
       density: LayoutDensity.COMFORTABLE,
-      showSidebarColors: true,
       animatedTransitions: true,
     }),
     ...Object.entries(NETWORK_DEFAULTS).map(([key, value]) =>

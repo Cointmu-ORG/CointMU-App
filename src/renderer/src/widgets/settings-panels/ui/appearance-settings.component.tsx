@@ -7,7 +7,11 @@ import {
   MotionPreference,
   ThemeMode,
 } from "@bridge/setting-values";
-import { SettingChoice, SettingRow } from "./setting-controls.component";
+import {
+  SettingChoice,
+  SettingRow,
+  SettingSwitch,
+} from "./setting-controls.component";
 import { PrivacySettings } from "./privacy-settings.component";
 import { DisplaySettings } from "./display-settings.component";
 
@@ -187,6 +191,17 @@ export function AppearanceSettings(): JSX.Element {
                   },
                 ]}
                 onChange={appearanceStore.setMotion}
+              />
+            </SettingRow>
+
+            <SettingRow
+              title={t("settings:appearance.sidebarColorsTitle")}
+              description={t("settings:appearance.sidebarColorsDesc")}
+            >
+              <SettingSwitch
+                label={t("settings:appearance.sidebarColorsTitle")}
+                checked={appearanceStore.sidebarIconColors}
+                onChange={appearanceStore.setSidebarIconColors}
               />
             </SettingRow>
           </div>

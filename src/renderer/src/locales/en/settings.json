@@ -104,7 +104,9 @@
     "motionDesc": "Smooth page changes and motion. Automatic turns them off when your system asks for reduced motion.",
     "motionAuto": "Automatic",
     "motionOn": "On",
-    "motionOff": "Off"
+    "motionOff": "Off",
+    "sidebarColorsTitle": "Colored sidebar icons",
+    "sidebarColorsDesc": "Give each sidebar item its own icon color. The open page stays highlighted."
   },
   "notifications": {
     "subtitle": "Alerts, delivery channels, and event categories",

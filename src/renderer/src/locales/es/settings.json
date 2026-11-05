@@ -104,7 +104,9 @@
     "motionDesc": "Transiciones y movimiento suaves. Automático los desactiva cuando el sistema pide reducir el movimiento.",
     "motionAuto": "Automático",
     "motionOn": "Activado",
-    "motionOff": "Desactivado"
+    "motionOff": "Desactivado",
+    "sidebarColorsTitle": "Iconos de la barra lateral en color",
+    "sidebarColorsDesc": "Cada elemento de la barra lateral tiene su propio color de icono. La página abierta sigue resaltada."
   },
   "notifications": {
     "subtitle": "Alertas, canales de entrega y categorías de eventos",

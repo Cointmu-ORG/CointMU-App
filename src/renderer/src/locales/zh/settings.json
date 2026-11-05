@@ -104,7 +104,9 @@
     "motionDesc": "平滑的页面切换和动效。“自动”会在系统要求减少动态效果时关闭它们。",
     "motionAuto": "自动",
     "motionOn": "开",
-    "motionOff": "关"
+    "motionOff": "关",
+    "sidebarColorsTitle": "彩色侧边栏图标",
+    "sidebarColorsDesc": "侧边栏的每一项使用各自的图标颜色。当前打开的页面仍会突出显示。"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",

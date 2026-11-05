@@ -42,7 +42,6 @@ export async function createAppStore() {
         theme: ThemeMode.LIGHT,
         accentColor: "#3b82f6", // blue-500
         density: LayoutDensity.COMFORTABLE,
-        showSidebarColors: true,
         animatedTransitions: true,
       },
       network: {

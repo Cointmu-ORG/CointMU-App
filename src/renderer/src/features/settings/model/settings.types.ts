@@ -23,7 +23,6 @@ export interface SettingsStore {
     theme: string;
     accentColor: string;
     density: string;
-    showSidebarColors: boolean;
     animatedTransitions: boolean;
   };
   network: {
