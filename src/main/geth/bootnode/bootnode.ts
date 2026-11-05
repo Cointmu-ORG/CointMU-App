@@ -18,12 +18,14 @@ const LIST_SEPARATOR = /[\s,]+/;
 export const MAX_BOOTNODES = 10;
 
 /**
- * The live campus bootnodes. Each key is pinned on its server (--nodekey
- * boot.key), so an enode only changes if that key does. Used when neither the
- * user nor the build (MAIN_VITE_BOOTNODE_ENODE) sets bootnodes.
+ * The live campus nodes; each backs up the others. Each key is pinned on its
+ * server (--nodekey), so an enode only changes if that key does. Used as the
+ * default list unless the build (MAIN_VITE_BOOTNODE_ENODE) sets one.
  */
 export const FALLBACK_BOOTNODE_ENODES: readonly string[] = [
   "enode://aafe317d76f528fde06ee7b4017b5dda1e0ac20c25444e4218bfa6ce79a8bd2449eb258c3f077358d0fa02e727f53482d0582d64ef0f95e80d146222606c4dd5@10.64.24.101:30303",
+  "enode://5237f2e2fec3e827364e6cfcd75a959db77d896d6deae3ba3d583fa4acbfe14e71f7c62c7a11323335345157c6a7cd03473c5c897de53f7a10bc2a10243e6131@10.64.24.106:30303",
+  "enode://bbfba15f0da951b7a22b8264777f8bb871eecd5475fbcb38f44339de46bb32584418a585c1facd65094db45b06950d24aa5f2e5cbfd6228d4f425af9480d76b0@10.64.24.113:30303",
 ];
 
 export interface BootnodeList {

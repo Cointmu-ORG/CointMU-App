@@ -30,6 +30,18 @@ describe("parseEnode", () => {
     },
   );
 
+  it("ships three distinct campus nodes", () => {
+    const hosts = FALLBACK_BOOTNODE_ENODES.map(
+      (enode) => parseEnode(enode)?.host,
+    );
+    const ids = new Set(
+      FALLBACK_BOOTNODE_ENODES.map((enode) => parseEnode(enode)?.nodeId),
+    );
+
+    expect(hosts).toEqual(["10.64.24.101", "10.64.24.106", "10.64.24.113"]);
+    expect(ids.size).toBe(3);
+  });
+
   it("parses an IP enode", () => {
     expect(parseEnode(ENODE)).toEqual({
       nodeId: NODE_ID,
