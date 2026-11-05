@@ -86,7 +86,6 @@
     "densityTitle": "密度",
     "densityDesc": "列表和表格中的垂直间距",
     "animatedTransitionsTitle": "动画过渡",
-    "animatedTransitionsDesc": "平滑的页面切换和运动",
     "title": "外观",
     "privacy": "隐私",
     "privacyModeTitle": "隐私模式",
@@ -101,7 +100,11 @@
     "time24": "24 小时制",
     "decimalsTitle": "余额小数位",
     "decimalsDesc": "CMU 余额显示的小数位数。“完整”显示精确金额。",
-    "decimalsFull": "完整"
+    "decimalsFull": "完整",
+    "motionDesc": "平滑的页面切换和动效。“自动”会在系统要求减少动态效果时关闭它们。",
+    "motionAuto": "自动",
+    "motionOn": "开",
+    "motionOff": "关"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",

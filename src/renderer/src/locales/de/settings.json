@@ -86,7 +86,6 @@
     "densityTitle": "Dichte",
     "densityDesc": "Vertikaler Abstand in Listen und Tabellen",
     "animatedTransitionsTitle": "Animierte Übergänge",
-    "animatedTransitionsDesc": "Reibungslose Seitenwechsel und Bewegungen",
     "title": "Erscheinungsbild",
     "privacy": "Privatsphäre",
     "privacyModeTitle": "Privatsphäre-Modus",
@@ -101,7 +100,11 @@
     "time24": "24 Stunden",
     "decimalsTitle": "Nachkommastellen",
     "decimalsDesc": "Nachkommastellen von CMU-Guthaben. „Vollständig“ zeigt den genauen Betrag.",
-    "decimalsFull": "Vollständig"
+    "decimalsFull": "Vollständig",
+    "motionDesc": "Weiche Seitenwechsel und Bewegung. Automatisch schaltet sie aus, wenn dein System reduzierte Bewegung verlangt.",
+    "motionAuto": "Automatisch",
+    "motionOn": "An",
+    "motionOff": "Aus"
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",

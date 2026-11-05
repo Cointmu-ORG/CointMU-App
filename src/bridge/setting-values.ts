@@ -97,3 +97,13 @@ export type UpdateInstallMode =
 export const ZOOM_PERCENT_OPTIONS = [90, 100, 110, 125] as const;
 
 export type ZoomPercent = (typeof ZOOM_PERCENT_OPTIONS)[number];
+
+/** Interface motion (Settings → Appearance): follow the OS, or force on/off. */
+export const MotionPreference = {
+  AUTO: "auto",
+  ON: "on",
+  OFF: "off",
+} as const;
+
+export type MotionPreference =
+  (typeof MotionPreference)[keyof typeof MotionPreference];

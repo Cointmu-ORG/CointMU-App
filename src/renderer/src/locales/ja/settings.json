@@ -86,7 +86,6 @@
     "densityTitle": "表示密度",
     "densityDesc": "リストとテーブルの垂直間隔",
     "animatedTransitionsTitle": "アニメーショントランジション",
-    "animatedTransitionsDesc": "スムーズなページ切り替えとモーション",
     "title": "外観",
     "privacy": "プライバシー",
     "privacyModeTitle": "プライバシーモード",
@@ -101,7 +100,11 @@
     "time24": "24 時間制",
     "decimalsTitle": "残高の小数点以下",
     "decimalsDesc": "CMU 残高の小数点以下の桁数です。「すべて」は正確な金額を表示します。",
-    "decimalsFull": "すべて"
+    "decimalsFull": "すべて",
+    "motionDesc": "ページ切り替えや動きを滑らかにします。「自動」は、システムが視差効果を減らすよう求めているときにオフになります。",
+    "motionAuto": "自動",
+    "motionOn": "オン",
+    "motionOff": "オフ"
   },
   "notifications": {
     "subtitle": "アラート、配信チャネル、およびイベントカテゴリ",

@@ -86,7 +86,6 @@
     "densityTitle": "Density",
     "densityDesc": "Vertical spacing in lists and tables",
     "animatedTransitionsTitle": "Animated transitions",
-    "animatedTransitionsDesc": "Smooth page changes and motion",
     "title": "Appearance",
     "privacy": "Privacy",
     "privacyModeTitle": "Privacy mode",
@@ -101,7 +100,11 @@
     "time24": "24-hour",
     "decimalsTitle": "Balance decimals",
     "decimalsDesc": "Decimal places of CMU balances. Full shows the exact amount.",
-    "decimalsFull": "Full"
+    "decimalsFull": "Full",
+    "motionDesc": "Smooth page changes and motion. Automatic turns them off when your system asks for reduced motion.",
+    "motionAuto": "Automatic",
+    "motionOn": "On",
+    "motionOff": "Off"
   },
   "notifications": {
     "subtitle": "Alerts, delivery channels, and event categories",

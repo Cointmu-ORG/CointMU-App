@@ -86,7 +86,6 @@
     "densityTitle": "Kerapatan",
     "densityDesc": "Jarak vertikal dalam daftar dan tabel",
     "animatedTransitionsTitle": "Transisi animasi",
-    "animatedTransitionsDesc": "Perubahan halaman dan gerakan yang mulus",
     "title": "Penampilan",
     "privacy": "Privasi",
     "privacyModeTitle": "Mode privasi",
@@ -101,7 +100,11 @@
     "time24": "24 jam",
     "decimalsTitle": "Desimal saldo",
     "decimalsDesc": "Jumlah angka desimal saldo CMU. Penuh menampilkan jumlah persisnya.",
-    "decimalsFull": "Penuh"
+    "decimalsFull": "Penuh",
+    "motionDesc": "Perpindahan halaman dan gerakan yang halus. Otomatis mematikannya jika sistem meminta gerakan dikurangi.",
+    "motionAuto": "Otomatis",
+    "motionOn": "Nyala",
+    "motionOff": "Mati"
   },
   "notifications": {
     "subtitle": "Peringatan, saluran pengiriman, dan kategori acara",

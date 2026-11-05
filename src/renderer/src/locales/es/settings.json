@@ -86,7 +86,6 @@
     "densityTitle": "Densidad",
     "densityDesc": "Espaciado vertical en listas y tablas",
     "animatedTransitionsTitle": "Transiciones animadas",
-    "animatedTransitionsDesc": "Cambios de página y movimiento fluidos",
     "title": "Apariencia",
     "privacy": "Privacidad",
     "privacyModeTitle": "Modo privado",
@@ -101,7 +100,11 @@
     "time24": "24 horas",
     "decimalsTitle": "Decimales del saldo",
     "decimalsDesc": "Decimales de los saldos en CMU. Completo muestra el importe exacto.",
-    "decimalsFull": "Completo"
+    "decimalsFull": "Completo",
+    "motionDesc": "Transiciones y movimiento suaves. Automático los desactiva cuando el sistema pide reducir el movimiento.",
+    "motionAuto": "Automático",
+    "motionOn": "Activado",
+    "motionOff": "Desactivado"
   },
   "notifications": {
     "subtitle": "Alertas, canales de entrega y categorías de eventos",
