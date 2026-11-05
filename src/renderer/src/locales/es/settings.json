@@ -82,7 +82,7 @@
     "subtitle": "APIs de desarrollo, almacenamiento local y diagnósticos",
     "rpcNetwork": "RPC/Red",
     "httpRpcTitle": "Habilitar JSON-RPC vía HTTP",
-    "httpRpcDesc": "Escuchar en 127.0.0.1:8545 para conexiones dApp",
+    "httpRpcDesc": "Escuchar en 127.0.0.1:{{port}} para conexiones dApp",
     "storage": "Almacenamiento",
     "datadirTitle": "Directorio de datos",
     "datadirDesc": "Donde se almacenan los datos de la cadena y keystore",

@@ -4,7 +4,7 @@ import {
   useAdvancedStore,
 } from "@/features/settings";
 import { purgeSecondaryAccounts } from "@/entities/wallet";
-import { useEffect, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { CustomDropdown } from "@/shared/ui";
 import { LOG_LEVEL_LABEL_KEYS } from "@/shared/lib";
@@ -38,6 +38,7 @@ export function AdvancedSettings(): JSX.Element {
   const storage = useAdvancedStore((s) => s.storage);
   const updateSettings = useAdvancedStore((s) => s.updateSettings);
   const fetchStorageInfo = useAdvancedStore((s) => s.fetchStorageInfo);
+  const [rpcPort, setRpcPort] = useState<number | null>(null);
 
   // A warn or error level (offered up to 1.7.4) runs geth at info (gethArgs.ts).
   const shownLogLevel =
@@ -46,6 +47,10 @@ export function AdvancedSettings(): JSX.Element {
   useEffect(() => {
     void fetchStorageInfo();
   }, [fetchStorageInfo]);
+
+  useEffect(() => {
+    void window.api.getRpcPort().then(setRpcPort);
+  }, []);
 
   const handlePurge = async (): Promise<void> => {
     if (window.confirm(t("settings:advanced.purgeWalletsConfirm"))) {
@@ -71,9 +76,11 @@ export function AdvancedSettings(): JSX.Element {
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings:advanced.httpRpcTitle")}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings:advanced.httpRpcDesc")}
-                </p>
+                {rpcPort !== null && (
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                    {t("settings:advanced.httpRpcDesc", { port: rpcPort })}
+                  </p>
+                )}
               </div>
               <button
                 onClick={() => updateSettings({ httpRpc: !settings.httpRpc })}
