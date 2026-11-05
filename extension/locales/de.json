@@ -95,7 +95,8 @@
       "privateKeyNotFound": "Der private Schlüssel dieser Wallet wurde nicht gefunden.",
       "networkNotFound": "Das ausgewählte Netzwerk wurde nicht gefunden.",
       "providerFailed": "Die Transaktion konnte nicht vorbereitet werden.",
-      "txFailed": "Die Transaktion ist fehlgeschlagen."
+      "txFailed": "Die Transaktion ist fehlgeschlagen.",
+      "forbiddenSender": "Diese Anfrage kam nicht aus dem CointMU-Popup und wurde abgelehnt."
     }
   }
 }

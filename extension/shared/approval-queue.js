@@ -84,6 +84,18 @@ export function createApprovalQueue({
     },
 
     /**
+     * @param {unknown} windowId
+     * @returns {boolean} True when a live entry was opened in that window.
+     */
+    hasWindow(windowId) {
+      if (!Number.isInteger(windowId)) return false;
+      for (const entry of entries.values()) {
+        if (entry.windowId === windowId && !isExpired(entry)) return true;
+      }
+      return false;
+    },
+
+    /**
      * @param {string} origin
      * @param {string} method
      * @returns {boolean} True when that origin already has a live request for the method.

@@ -95,7 +95,8 @@
       "privateKeyNotFound": "The private key for this wallet was not found.",
       "networkNotFound": "The selected network was not found.",
       "providerFailed": "Could not prepare the transaction.",
-      "txFailed": "The transaction failed."
+      "txFailed": "The transaction failed.",
+      "forbiddenSender": "This request did not come from the CointMU popup and was refused."
     }
   }
 }

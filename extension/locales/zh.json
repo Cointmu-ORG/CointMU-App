@@ -95,7 +95,8 @@
       "privateKeyNotFound": "未找到此钱包的私钥。",
       "networkNotFound": "未找到所选网络。",
       "providerFailed": "无法准备交易。",
-      "txFailed": "交易失败。"
+      "txFailed": "交易失败。",
+      "forbiddenSender": "此请求并非来自 CointMU 弹出窗口，已被拒绝。"
     }
   }
 }

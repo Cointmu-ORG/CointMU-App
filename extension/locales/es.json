@@ -95,7 +95,8 @@
       "privateKeyNotFound": "No se encontró la clave privada de esta billetera.",
       "networkNotFound": "No se encontró la red seleccionada.",
       "providerFailed": "No se pudo preparar la transacción.",
-      "txFailed": "La transacción falló."
+      "txFailed": "La transacción falló.",
+      "forbiddenSender": "Esta solicitud no provino de la ventana emergente de CointMU y fue rechazada."
     }
   }
 }

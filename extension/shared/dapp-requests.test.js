@@ -3,10 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const EXTENSION_ID = "abcdefghijklmnopabcdefghijklmnop";
 const EXTENSION_BASE = `chrome-extension://${EXTENSION_ID}/`;
-const POPUP_SENDER = {
-  id: EXTENSION_ID,
-  url: `${EXTENSION_BASE}popup/popup.html?mode=approve`,
-};
+const APPROVAL_TAB_ID = 500;
 const DAPP = "https://dapp.example";
 const TAB_ID = 7;
 const CHAIN_ID = "1912";
@@ -76,6 +73,15 @@ function sendFromPage(mod, message, sender = pageSender()) {
   });
 }
 
+/** The sender Chrome reports for the page inside an approval window. */
+function approvalSender(window) {
+  return {
+    id: EXTENSION_ID,
+    url: window.url,
+    tab: { id: APPROVAL_TAB_ID, windowId: window.id },
+  };
+}
+
 function reqIdOf(window) {
   return new URL(window.url).searchParams.get("reqId");
 }
@@ -108,7 +114,7 @@ describe("dapp-requests (standalone)", () => {
     const popup = stub.openedWindows.at(-1);
     mod.handleApprovalResolution(
       { reqId: reqIdOf(popup), approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       () => {},
     );
     return reply;
@@ -155,16 +161,17 @@ describe("dapp-requests (standalone)", () => {
       params: [ethers.hexlify(ethers.toUtf8Bytes("hello")), signer.address],
     });
     await flush();
-    const reqId = reqIdOf(stub.openedWindows.at(-1));
+    const popup = stub.openedWindows.at(-1);
+    const reqId = reqIdOf(popup);
 
     const query = vi.fn();
-    mod.handlePendingRequestQuery({ reqId }, POPUP_SENDER, query);
+    mod.handlePendingRequestQuery({ reqId }, approvalSender(popup), query);
     expect(query.mock.calls[0][0].view.rows.at(-1).value).toBe("hello");
 
     const first = vi.fn();
     mod.handleApprovalResolution(
       { reqId, approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       first,
     );
     expect(ethers.verifyMessage("hello", (await reply).result)).toBe(
@@ -174,7 +181,7 @@ describe("dapp-requests (standalone)", () => {
     const second = vi.fn();
     mod.handleApprovalResolution(
       { reqId, approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       second,
     );
     expect(first).toHaveBeenCalledWith({ success: true });
@@ -194,6 +201,37 @@ describe("dapp-requests (standalone)", () => {
     );
     expect(answer).toHaveBeenCalledWith(
       expect.objectContaining({ success: false }),
+    );
+  });
+
+  it("ignores approvals from the toolbar popup or another approval window", async () => {
+    await connect();
+    sendFromPage(mod, {
+      id: 3,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    await flush();
+    const [, signPopup] = stub.openedWindows;
+    const reqId = reqIdOf(signPopup);
+    const toolbarPopup = {
+      id: EXTENSION_ID,
+      url: `${EXTENSION_BASE}popup/popup.html?mode=approve&reqId=${reqId}`,
+    };
+    const otherWindow = { ...approvalSender(signPopup) };
+    otherWindow.tab = { id: APPROVAL_TAB_ID, windowId: signPopup.id + 1 };
+
+    for (const sender of [toolbarPopup, otherWindow]) {
+      const answer = vi.fn();
+      mod.handleApprovalResolution({ reqId, approved: true }, sender, answer);
+      expect(answer).toHaveBeenCalledWith(
+        expect.objectContaining({ success: false }),
+      );
+    }
+    const query = vi.fn();
+    mod.handlePendingRequestQuery({ reqId }, approvalSender(signPopup), query);
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({ success: true }),
     );
   });
 

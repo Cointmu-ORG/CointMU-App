@@ -95,7 +95,8 @@
       "privateKeyNotFound": "このウォレットの秘密鍵が見つかりません。",
       "networkNotFound": "選択したネットワークが見つかりません。",
       "providerFailed": "トランザクションを準備できませんでした。",
-      "txFailed": "トランザクションに失敗しました。"
+      "txFailed": "トランザクションに失敗しました。",
+      "forbiddenSender": "このリクエストはCointMUのポップアップから送信されたものではないため、拒否されました。"
     }
   }
 }

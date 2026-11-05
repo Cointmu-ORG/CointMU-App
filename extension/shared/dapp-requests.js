@@ -280,6 +280,16 @@ export function handleContentMessage(message, sender, sendResponse) {
 }
 
 /**
+ * @returns {Object | null} The live request the sender's approval window was
+ * opened for; null for any other sender or request.
+ */
+function approvalOfSender(message, sender) {
+  if (!isFromApprovalPopup(sender)) return null;
+  const entry = peekApproval(String(message.reqId));
+  return entry && entry.windowId === sender.tab.windowId ? entry : null;
+}
+
+/**
  * Answers the approval popup's request for what to display.
  * @param {{ reqId: string }} message
  * @param {chrome.runtime.MessageSender} sender
@@ -287,9 +297,7 @@ export function handleContentMessage(message, sender, sendResponse) {
  * @returns {boolean} False; the reply is synchronous.
  */
 export function handlePendingRequestQuery(message, sender, sendResponse) {
-  const entry = isFromApprovalPopup(sender)
-    ? peekApproval(String(message.reqId))
-    : null;
+  const entry = approvalOfSender(message, sender);
   sendResponse(
     entry
       ? { success: true, view: buildApprovalView(entry) }
@@ -343,7 +351,7 @@ async function executeApproved(entry) {
  * @returns {boolean} False; the popup gets its reply synchronously.
  */
 export function handleApprovalResolution(message, sender, sendResponse) {
-  const entry = isFromApprovalPopup(sender)
+  const entry = approvalOfSender(message, sender)
     ? takeApproval(String(message.reqId))
     : null;
   if (!entry) {

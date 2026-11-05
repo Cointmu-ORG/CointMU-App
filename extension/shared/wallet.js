@@ -260,7 +260,8 @@ export function handleInternalMessage(message, sender, sendResponse) {
           isReconnecting: res.isReconnecting === true,
           walletState: res.walletState,
           connectionMode: res.connectionMode || "desktop",
-          wallets: res.wallets || [],
+          // Addresses only: private keys never leave the background.
+          wallets: (res.wallets || []).map(({ address }) => ({ address })),
           customNetworks: res.customNetworks || [],
           activeStandaloneAddress: res.activeStandaloneAddress || null,
           activeNetworkId: res.activeNetworkId || "desktop_connection",
@@ -343,11 +344,6 @@ export function handleInternalMessage(message, sender, sendResponse) {
       customNetworks = customNetworks.filter((n) => n.id !== message.networkId);
       chrome.storage.local.set({ customNetworks }).then(() => {
         sendResponse({ success: true });
-        chrome.storage.local.get(null).then((allState) => {
-          chrome.runtime
-            .sendMessage({ action: "STATE_UPDATED", state: allState })
-            .catch(() => {});
-        });
       });
     });
     return true;
@@ -425,11 +421,6 @@ export function handleInternalMessage(message, sender, sendResponse) {
 
         chrome.storage.local.set(updates).then(() => {
           sendResponse({ success: true });
-          chrome.storage.local.get(null).then((allState) => {
-            chrome.runtime
-              .sendMessage({ action: "STATE_UPDATED", state: allState })
-              .catch(() => {});
-          });
         });
       });
     return true;

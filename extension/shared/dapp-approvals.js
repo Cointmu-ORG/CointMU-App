@@ -14,6 +14,7 @@ const APPROVAL_TIMEOUT_MS = 5 * 60 * 1000;
 const POPUP_WIDTH_PX = 360;
 const POPUP_HEIGHT_PX = 700;
 const POPUP_PATH = "popup/popup.html";
+const APPROVE_MODE = "approve";
 
 const queue = createApprovalQueue({ timeoutMs: APPROVAL_TIMEOUT_MS });
 
@@ -65,7 +66,7 @@ export async function enqueueApproval(pending) {
   setTimeout(sweepExpired, APPROVAL_TIMEOUT_MS);
   const popup = await chrome.windows.create({
     url: chrome.runtime.getURL(
-      `${POPUP_PATH}?mode=approve&reqId=${encodeURIComponent(entry.id)}`,
+      `${POPUP_PATH}?mode=${APPROVE_MODE}&reqId=${encodeURIComponent(entry.id)}`,
     ),
     type: "popup",
     width: POPUP_WIDTH_PX,
@@ -100,14 +101,42 @@ export function takeApproval(id) {
 }
 
 /**
+ * @param {unknown} url - A sender URL.
+ * @returns {URL | null} The URL when it is this extension's popup page.
+ */
+function parsePopupUrl(url) {
+  if (typeof url !== "string") return null;
+  // Compared as text: URL.origin is "null" for non-special schemes such as
+  // chrome-extension: outside Chrome.
+  const page = url.split(/[?#]/, 1)[0];
+  return page === chrome.runtime.getURL(POPUP_PATH) ? new URL(url) : null;
+}
+
+/**
+ * Accepts only an approval window this queue opened: the popup page in
+ * approve mode, inside a window that a live request is waiting on.
  * @param {chrome.runtime.MessageSender} sender
- * @returns {boolean} True when the message comes from this extension's popup page.
+ * @returns {boolean} True when the message comes from one of our approval windows.
  */
 export function isFromApprovalPopup(sender) {
   return (
     sender.id === chrome.runtime.id &&
-    typeof sender.url === "string" &&
-    sender.url.startsWith(chrome.runtime.getURL(POPUP_PATH))
+    parsePopupUrl(sender.url)?.searchParams.get("mode") === APPROVE_MODE &&
+    queue.hasWindow(sender.tab?.windowId)
+  );
+}
+
+/**
+ * Accepts only the toolbar popup: this extension's popup page, outside any
+ * tab. Content scripts always have a tab and a web page URL.
+ * @param {chrome.runtime.MessageSender} sender
+ * @returns {boolean} True when the message comes from the toolbar popup.
+ */
+export function isFromPopupPage(sender) {
+  return (
+    sender.id === chrome.runtime.id &&
+    sender.tab === undefined &&
+    parsePopupUrl(sender.url) !== null
   );
 }
 

@@ -95,7 +95,8 @@
       "privateKeyNotFound": "Kunci pribadi untuk dompet ini tidak ditemukan.",
       "networkNotFound": "Jaringan yang dipilih tidak ditemukan.",
       "providerFailed": "Tidak dapat menyiapkan transaksi.",
-      "txFailed": "Transaksi gagal."
+      "txFailed": "Transaksi gagal.",
+      "forbiddenSender": "Permintaan ini tidak berasal dari popup CointMU sehingga ditolak."
     }
   }
 }

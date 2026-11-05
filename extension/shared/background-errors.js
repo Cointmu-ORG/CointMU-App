@@ -16,6 +16,7 @@ export const BackgroundErrorCode = Object.freeze({
   NETWORK_NOT_FOUND: "NETWORK_NOT_FOUND",
   PROVIDER_FAILED: "PROVIDER_FAILED",
   TX_FAILED: "TX_FAILED",
+  FORBIDDEN_SENDER: "FORBIDDEN_SENDER",
 });
 
 // Literal keys, so i18n:audit can match them against en.json.
@@ -29,6 +30,7 @@ const ERROR_KEYS = Object.freeze({
   NETWORK_NOT_FOUND: "extension.errors.networkNotFound",
   PROVIDER_FAILED: "extension.errors.providerFailed",
   TX_FAILED: "extension.errors.txFailed",
+  FORBIDDEN_SENDER: "extension.errors.forbiddenSender",
 });
 
 /**
