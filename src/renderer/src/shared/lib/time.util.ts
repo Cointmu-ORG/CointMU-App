@@ -1,4 +1,5 @@
 import { intervalToDuration, isAfter, subDays } from "date-fns";
+import { TimeFormat, useDisplayPrefs } from "@/shared/model";
 
 const IDLE_DURATION_PLACEHOLDER = "--";
 const MILLISECONDS_PER_SECOND = 1000;
@@ -75,8 +76,19 @@ function formatAge(timestampSeconds: number, locale: string): string {
 }
 
 /**
+ * @returns The 12/24-hour override from Settings → Appearance, or nothing
+ *   to follow the language.
+ */
+function clockOptions(): Pick<Intl.DateTimeFormatOptions, "hour12"> {
+  const format = useDisplayPrefs.getState().timeFormat;
+  if (format === TimeFormat.AUTO) return {};
+  return { hour12: format === TimeFormat.H12 };
+}
+
+/**
  * Formats a timestamp as a medium date with a short time in the given
- * language (e.g. 'Oct 24, 2026, 1:05 PM', '2026/10/24 13:05').
+ * language (e.g. 'Oct 24, 2026, 1:05 PM', '2026/10/24 13:05'), in the
+ * clock style chosen in Settings → Appearance.
  * @param timestampMs - Milliseconds since the epoch.
  * @param locale - BCP 47 language tag, usually i18n.language.
  * @returns The formatted date and time.
@@ -85,6 +97,20 @@ function formatDateTime(timestampMs: number, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
+    ...clockOptions(),
+  }).format(timestampMs);
+}
+
+/**
+ * Formats the time of day with seconds, in the chosen clock style.
+ * @param timestampMs - Milliseconds since the epoch.
+ * @param locale - BCP 47 language tag, usually i18n.language.
+ * @returns The formatted time, e.g. '1:05:09 PM' or '13:05:09'.
+ */
+function formatTime(timestampMs: number, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeStyle: "medium",
+    ...clockOptions(),
   }).format(timestampMs);
 }
 
@@ -103,4 +129,10 @@ function isWithinLastDay(timestampSeconds: number): boolean {
   return isAfter(date, subDays(new Date(), 1));
 }
 
-export { formatElapsed, formatAge, formatDateTime, isWithinLastDay };
+export {
+  formatElapsed,
+  formatAge,
+  formatDateTime,
+  formatTime,
+  isWithinLastDay,
+};

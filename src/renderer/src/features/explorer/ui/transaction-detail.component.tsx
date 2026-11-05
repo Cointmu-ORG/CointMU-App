@@ -8,6 +8,7 @@ import {
 } from "../api/explorer.service";
 import { useAppStore } from "@/shared/model";
 import { AddressBadge } from "./address-badge.component";
+import { formatDateTime } from "@/shared/lib";
 
 interface TransactionDetailProps {
   tx: { hash: string };
@@ -30,7 +31,7 @@ function TransactionDetail({
   onBlockSelect,
   onAddressSelect,
 }: TransactionDetailProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const blockHeight = useAppStore((s) => s.blockHeight);
   const [detail, setDetail] = useState<TransactionDetailData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -184,7 +185,7 @@ function TransactionDetail({
               </span>
               <span className="text-sm text-slate-800 dark:text-gray-100">
                 {detail.timestamp !== null
-                  ? new Date(detail.timestamp * 1000).toLocaleString()
+                  ? formatDateTime(detail.timestamp * 1000, i18n.language)
                   : "--"}
               </span>
             </div>

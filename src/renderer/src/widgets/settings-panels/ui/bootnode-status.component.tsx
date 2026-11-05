@@ -9,6 +9,7 @@ import {
   Unlink,
   XCircle,
 } from "lucide-react";
+import { formatTime } from "@/shared/lib";
 
 const ICON_SIZE = 14;
 const PILL =
@@ -113,9 +114,7 @@ export function BootnodeStatusLine({
           {isChecking
             ? t("networkSettings.bootnodes.checking")
             : t("networkSettings.bootnodes.lastChecked", {
-                time: new Date(status.checkedAtMs).toLocaleTimeString(
-                  i18n.language,
-                ),
+                time: formatTime(status.checkedAtMs, i18n.language),
               })}
         </span>
       )}

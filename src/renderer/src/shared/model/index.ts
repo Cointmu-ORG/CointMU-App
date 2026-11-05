@@ -4,5 +4,9 @@ export type {
   HistoryFilter,
   PendingTransaction,
 } from "./useAppStore";
-export { useDisplayPrefs } from "./display-prefs.store";
-export type { DisplayPrefsState } from "./display-prefs.store";
+export {
+  useDisplayPrefs,
+  TimeFormat,
+  BALANCE_DECIMAL_OPTIONS,
+} from "./display-prefs.store";
+export type { DisplayPrefsState, BalanceDecimals } from "./display-prefs.store";

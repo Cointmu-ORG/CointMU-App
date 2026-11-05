@@ -5,6 +5,7 @@ import {
   clearQueuedReports,
   listQueuedReports,
 } from "../api/error-reporting.service";
+import { formatDateTime } from "@/shared/lib";
 
 const ACTION_BUTTON =
   "px-3 py-1.5 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors disabled:opacity-60";
@@ -15,7 +16,7 @@ const ACTION_BUTTON =
  * @returns The queue panel.
  */
 export function QueuedReports(): JSX.Element {
-  const { t } = useTranslation("settings");
+  const { t, i18n } = useTranslation("settings");
   const [reports, setReports] = useState<QueuedReport[] | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
@@ -112,7 +113,7 @@ export function QueuedReports(): JSX.Element {
                   dateTime={new Date(report.createdMs).toISOString()}
                   className="ml-auto text-slate-500 dark:text-gray-400"
                 >
-                  {new Date(report.createdMs).toLocaleString()}
+                  {formatDateTime(report.createdMs, i18n.language)}
                 </time>
               </summary>
               <pre className="mt-2 max-h-64 overflow-auto text-[11px] font-mono bg-slate-50 dark:bg-gray-950 p-2 rounded whitespace-pre-wrap break-all">

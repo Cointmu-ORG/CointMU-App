@@ -93,7 +93,15 @@
     "privacyModeDesc": "Muestra •••• en lugar de saldos e importes, por ejemplo al compartir la pantalla. El botón del ojo de arriba hace lo mismo.",
     "display": "Pantalla",
     "zoomTitle": "Zoom",
-    "zoomDesc": "Tamaño del texto y los controles en la ventana"
+    "zoomDesc": "Tamaño del texto y los controles en la ventana",
+    "timeFormatTitle": "Formato de hora",
+    "timeFormatDesc": "Cómo se muestran las horas en el historial, el explorador y los registros",
+    "timeAuto": "Automático",
+    "time12": "12 horas",
+    "time24": "24 horas",
+    "decimalsTitle": "Decimales del saldo",
+    "decimalsDesc": "Decimales de los saldos en CMU. Completo muestra el importe exacto.",
+    "decimalsFull": "Completo"
   },
   "notifications": {
     "subtitle": "Alertas, canales de entrega y categorías de eventos",

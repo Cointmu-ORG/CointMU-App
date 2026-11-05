@@ -93,7 +93,15 @@
     "privacyModeDesc": "Tampilkan •••• sebagai ganti saldo dan nominal, misalnya saat berbagi layar. Tombol mata di atas melakukan hal yang sama.",
     "display": "Tampilan",
     "zoomTitle": "Zoom",
-    "zoomDesc": "Ukuran teks dan kontrol di jendela"
+    "zoomDesc": "Ukuran teks dan kontrol di jendela",
+    "timeFormatTitle": "Format waktu",
+    "timeFormatDesc": "Cara menampilkan waktu di riwayat, explorer, dan log",
+    "timeAuto": "Otomatis",
+    "time12": "12 jam",
+    "time24": "24 jam",
+    "decimalsTitle": "Desimal saldo",
+    "decimalsDesc": "Jumlah angka desimal saldo CMU. Penuh menampilkan jumlah persisnya.",
+    "decimalsFull": "Penuh"
   },
   "notifications": {
     "subtitle": "Peringatan, saluran pengiriman, dan kategori acara",

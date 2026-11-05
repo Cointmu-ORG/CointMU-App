@@ -93,7 +93,15 @@
     "privacyModeDesc": "Zeigt •••• statt Guthaben und Beträgen, z. B. beim Teilen des Bildschirms. Die Augen-Schaltfläche oben macht dasselbe.",
     "display": "Anzeige",
     "zoomTitle": "Zoom",
-    "zoomDesc": "Größe von Text und Bedienelementen im Fenster"
+    "zoomDesc": "Größe von Text und Bedienelementen im Fenster",
+    "timeFormatTitle": "Zeitformat",
+    "timeFormatDesc": "Wie Uhrzeiten in Verlauf, Explorer und Protokollen angezeigt werden",
+    "timeAuto": "Automatisch",
+    "time12": "12 Stunden",
+    "time24": "24 Stunden",
+    "decimalsTitle": "Nachkommastellen",
+    "decimalsDesc": "Nachkommastellen von CMU-Guthaben. „Vollständig“ zeigt den genauen Betrag.",
+    "decimalsFull": "Vollständig"
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",

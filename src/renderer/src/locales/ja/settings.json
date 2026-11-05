@@ -93,7 +93,15 @@
     "privacyModeDesc": "残高や金額の代わりに •••• を表示します（画面共有中など）。上部の目のボタンでも切り替えられます。",
     "display": "表示",
     "zoomTitle": "ズーム",
-    "zoomDesc": "ウィンドウ内の文字やコントロールの大きさ"
+    "zoomDesc": "ウィンドウ内の文字やコントロールの大きさ",
+    "timeFormatTitle": "時刻の形式",
+    "timeFormatDesc": "履歴・エクスプローラー・ログでの時刻の表示方法",
+    "timeAuto": "自動",
+    "time12": "12 時間制",
+    "time24": "24 時間制",
+    "decimalsTitle": "残高の小数点以下",
+    "decimalsDesc": "CMU 残高の小数点以下の桁数です。「すべて」は正確な金額を表示します。",
+    "decimalsFull": "すべて"
   },
   "notifications": {
     "subtitle": "アラート、配信チャネル、およびイベントカテゴリ",

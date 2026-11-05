@@ -23,7 +23,7 @@ import { useAppStore } from "@/shared/model";
 import { call, fetchBalance } from "@/shared/api";
 import { getNetworkInsights } from "@/features/settings";
 import { detectSearchType } from "@/features/explorer";
-import { formatBlockNumber } from "@/shared/lib";
+import { formatBlockNumber, formatDateTime } from "@/shared/lib";
 import { type ActivityData } from "@/shared/ui";
 import { ActivityKind } from "@bridge/types";
 import { Insights } from "@/features/explorer";
@@ -79,7 +79,8 @@ function ExplorerPage({
   activeWalletAddress,
   accounts,
 }: ExplorerProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const blockHeight = useAppStore((s) => s.blockHeight);
   const isConnected = useAppStore((s) => s.isConnected);
 
@@ -102,17 +103,7 @@ function ExplorerPage({
             subtitle: "",
             amount: amountCmu,
             timestamp: block.timestamp,
-            timestampStr: new Date(block.timestamp * 1000).toLocaleString(
-              "en-US",
-              {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true,
-              },
-            ),
+            timestampStr: formatDateTime(block.timestamp * 1000, locale),
             blockNumber: block.number,
             hash: tx.hash,
             from: tx.from,
@@ -122,7 +113,7 @@ function ExplorerPage({
       }
     });
     return txs.sort((a, b) => b.timestamp - a.timestamp);
-  }, [recentBlocks]);
+  }, [recentBlocks, t, locale]);
 
   const txPagination = usePagination(globalTransactions, EXPLORER_TX_PAGE_SIZE);
 

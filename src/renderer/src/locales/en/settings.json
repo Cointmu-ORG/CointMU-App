@@ -93,7 +93,15 @@
     "privacyModeDesc": "Show •••• instead of balances and amounts, e.g. while sharing your screen. The eye button at the top does the same.",
     "display": "Display",
     "zoomTitle": "Zoom",
-    "zoomDesc": "Size of text and controls in the window"
+    "zoomDesc": "Size of text and controls in the window",
+    "timeFormatTitle": "Time format",
+    "timeFormatDesc": "How times are shown in history, the explorer and logs",
+    "timeAuto": "Automatic",
+    "time12": "12-hour",
+    "time24": "24-hour",
+    "decimalsTitle": "Balance decimals",
+    "decimalsDesc": "Decimal places of CMU balances. Full shows the exact amount.",
+    "decimalsFull": "Full"
   },
   "notifications": {
     "subtitle": "Alerts, delivery channels, and event categories",

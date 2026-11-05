@@ -93,7 +93,15 @@
     "privacyModeDesc": "以 •••• 代替余额和金额显示，例如在共享屏幕时。顶部的眼睛按钮作用相同。",
     "display": "显示",
     "zoomTitle": "缩放",
-    "zoomDesc": "窗口中文字和控件的大小"
+    "zoomDesc": "窗口中文字和控件的大小",
+    "timeFormatTitle": "时间格式",
+    "timeFormatDesc": "历史记录、浏览器和日志中时间的显示方式",
+    "timeAuto": "自动",
+    "time12": "12 小时制",
+    "time24": "24 小时制",
+    "decimalsTitle": "余额小数位",
+    "decimalsDesc": "CMU 余额显示的小数位数。“完整”显示精确金额。",
+    "decimalsFull": "完整"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",
