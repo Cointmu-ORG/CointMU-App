@@ -3,10 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const EXTENSION_ID = "abcdefghijklmnopabcdefghijklmnop";
 const EXTENSION_BASE = `chrome-extension://${EXTENSION_ID}/`;
-const POPUP_SENDER = {
-  id: EXTENSION_ID,
-  url: `${EXTENSION_BASE}popup/popup.html?mode=approve`,
-};
+const APPROVAL_TAB_ID = 500;
 const DAPP = "https://dapp.example";
 const TAB_ID = 7;
 const CHAIN_ID = "1912";
@@ -20,6 +17,24 @@ const ErrorCode = {
 
 const signer = ethers.Wallet.createRandom();
 
+function createArea(data) {
+  return {
+    get: async (keys) =>
+      Object.fromEntries(
+        [keys]
+          .flat()
+          .filter((k) => k in data)
+          .map((k) => [k, data[k]]),
+      ),
+    set: async (values) => {
+      Object.assign(data, values);
+    },
+    remove: async (keys) => {
+      for (const key of [keys].flat()) delete data[key];
+    },
+  };
+}
+
 function createChromeStub(initialState) {
   const storage = { ...initialState };
   const openedWindows = [];
@@ -31,16 +46,14 @@ function createChromeStub(initialState) {
       runtime: {
         id: EXTENSION_ID,
         getURL: (path) => EXTENSION_BASE + path,
+        sendMessage: async () => {},
       },
       storage: {
-        local: {
-          get: async (keys) =>
-            Object.fromEntries(
-              keys.filter((k) => k in storage).map((k) => [k, storage[k]]),
-            ),
-          set: async (values) => Object.assign(storage, values),
-        },
+        local: createArea(storage),
+        session: { ...createArea({}), setAccessLevel: async () => {} },
       },
+      alarms: { create: async () => {}, clear: async () => true },
+      tabs: { query: async () => [], sendMessage: async () => {} },
       windows: {
         create: async ({ url }) => {
           const window = { id: nextWindowId++, url };
@@ -57,7 +70,7 @@ function standaloneState() {
   return {
     connectionMode: "standalone",
     activeStandaloneAddress: signer.address,
-    wallets: [{ address: signer.address, privateKey: signer.privateKey }],
+    wallets: [{ address: signer.address }],
     activeNetworkId: "net-1",
     customNetworks: [
       { id: "net-1", chainId: CHAIN_ID, rpcUrl: "http://127.0.0.1:1" },
@@ -76,12 +89,29 @@ function sendFromPage(mod, message, sender = pageSender()) {
   });
 }
 
+/** The sender Chrome reports for the page inside an approval window. */
+function approvalSender(window) {
+  return {
+    id: EXTENSION_ID,
+    url: window.url,
+    tab: { id: APPROVAL_TAB_ID, windowId: window.id },
+  };
+}
+
 function reqIdOf(window) {
   return new URL(window.url).searchParams.get("reqId");
 }
 
 async function flush() {
   await vi.advanceTimersByTimeAsync(0);
+}
+
+/** Unlocks the signer the way the vault does, through the session module. */
+async function unlockSigner() {
+  const { openSession } = await import("./vault-session.js");
+  await openSession([
+    { address: signer.address, privateKey: signer.privateKey },
+  ]);
 }
 
 describe("dapp-requests (standalone)", () => {
@@ -95,6 +125,7 @@ describe("dapp-requests (standalone)", () => {
     vi.stubGlobal("chrome", stub.chrome);
     vi.stubGlobal("ethers", ethers);
     mod = await import("./dapp-requests.js");
+    await unlockSigner();
   });
 
   afterEach(() => {
@@ -108,7 +139,7 @@ describe("dapp-requests (standalone)", () => {
     const popup = stub.openedWindows.at(-1);
     mod.handleApprovalResolution(
       { reqId: reqIdOf(popup), approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       () => {},
     );
     return reply;
@@ -155,16 +186,19 @@ describe("dapp-requests (standalone)", () => {
       params: [ethers.hexlify(ethers.toUtf8Bytes("hello")), signer.address],
     });
     await flush();
-    const reqId = reqIdOf(stub.openedWindows.at(-1));
+    const popup = stub.openedWindows.at(-1);
+    const reqId = reqIdOf(popup);
 
     const query = vi.fn();
-    mod.handlePendingRequestQuery({ reqId }, POPUP_SENDER, query);
+    mod.handlePendingRequestQuery({ reqId }, approvalSender(popup), query);
+    await flush();
     expect(query.mock.calls[0][0].view.rows.at(-1).value).toBe("hello");
+    expect(query.mock.calls[0][0].needsUnlock).toBe(false);
 
     const first = vi.fn();
     mod.handleApprovalResolution(
       { reqId, approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       first,
     );
     expect(ethers.verifyMessage("hello", (await reply).result)).toBe(
@@ -174,7 +208,7 @@ describe("dapp-requests (standalone)", () => {
     const second = vi.fn();
     mod.handleApprovalResolution(
       { reqId, approved: true },
-      POPUP_SENDER,
+      approvalSender(popup),
       second,
     );
     expect(first).toHaveBeenCalledWith({ success: true });
@@ -194,6 +228,38 @@ describe("dapp-requests (standalone)", () => {
     );
     expect(answer).toHaveBeenCalledWith(
       expect.objectContaining({ success: false }),
+    );
+  });
+
+  it("ignores approvals from the toolbar popup or another approval window", async () => {
+    await connect();
+    sendFromPage(mod, {
+      id: 3,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    await flush();
+    const [, signPopup] = stub.openedWindows;
+    const reqId = reqIdOf(signPopup);
+    const toolbarPopup = {
+      id: EXTENSION_ID,
+      url: `${EXTENSION_BASE}popup/popup.html?mode=approve&reqId=${reqId}`,
+    };
+    const otherWindow = { ...approvalSender(signPopup) };
+    otherWindow.tab = { id: APPROVAL_TAB_ID, windowId: signPopup.id + 1 };
+
+    for (const sender of [toolbarPopup, otherWindow]) {
+      const answer = vi.fn();
+      mod.handleApprovalResolution({ reqId, approved: true }, sender, answer);
+      expect(answer).toHaveBeenCalledWith(
+        expect.objectContaining({ success: false }),
+      );
+    }
+    const query = vi.fn();
+    mod.handlePendingRequestQuery({ reqId }, approvalSender(signPopup), query);
+    await flush();
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({ success: true }),
     );
   });
 
@@ -249,6 +315,7 @@ describe("dapp-requests (account lookups)", () => {
     stub = createChromeStub(standaloneState());
     vi.stubGlobal("chrome", stub.chrome);
     mod = await import("./dapp-requests.js");
+    await unlockSigner();
   });
 
   afterEach(() => {
@@ -272,6 +339,95 @@ describe("dapp-requests (account lookups)", () => {
   });
 });
 
+describe("dapp-requests (locked wallet)", () => {
+  let stub;
+  let mod;
+
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "Date"] });
+    vi.resetModules();
+    stub = createChromeStub({ ...standaloneState(), connectedOrigins: [DAPP] });
+    vi.stubGlobal("chrome", stub.chrome);
+    vi.stubGlobal("ethers", ethers);
+    mod = await import("./dapp-requests.js");
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  async function openSignRequest() {
+    const reply = sendFromPage(mod, {
+      id: 1,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    await flush();
+    return { reply, popup: stub.openedWindows.at(-1) };
+  }
+
+  it("shows no accounts to a connected site while locked", async () => {
+    const reply = await sendFromPage(mod, { id: 1, method: "eth_accounts" });
+    expect(reply.result).toEqual([]);
+  });
+
+  it("sends a connected site through the popup to unlock", async () => {
+    const reply = sendFromPage(mod, { id: 1, method: "eth_requestAccounts" });
+    await flush();
+    expect(stub.openedWindows).toHaveLength(1);
+
+    await unlockSigner();
+    const popup = stub.openedWindows[0];
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    expect((await reply).result).toEqual([signer.address]);
+  });
+
+  it("asks the approval window to unlock before signing", async () => {
+    const { popup } = await openSignRequest();
+    const query = vi.fn();
+    mod.handlePendingRequestQuery(
+      { reqId: reqIdOf(popup) },
+      approvalSender(popup),
+      query,
+    );
+    await flush();
+    expect(query.mock.calls[0][0]).toMatchObject({
+      success: true,
+      needsUnlock: true,
+    });
+  });
+
+  it("refuses to sign when the wallet is still locked at approval", async () => {
+    const { reply, popup } = await openSignRequest();
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    const { error } = await reply;
+    expect(error.message).toMatch(/locked/);
+  });
+
+  it("signs once the approval window has unlocked the wallet", async () => {
+    const { reply, popup } = await openSignRequest();
+    await unlockSigner();
+    mod.handleApprovalResolution(
+      { reqId: reqIdOf(popup), approved: true },
+      approvalSender(popup),
+      () => {},
+    );
+    const { result } = await reply;
+    expect(ethers.verifyMessage(ethers.getBytes("0x00"), result)).toBe(
+      signer.address,
+    );
+  });
+});
+
 describe("dapp-requests (desktop)", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -289,5 +445,48 @@ describe("dapp-requests (desktop)", () => {
     });
     expect(reply.error.code).toBe(ErrorCode.UNSUPPORTED_METHOD);
     expect(stub.openedWindows).toHaveLength(0);
+  });
+});
+
+describe("dapp-requests (plain-text keys awaiting migration)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  async function setup(connectionMode) {
+    vi.resetModules();
+    const stub = createChromeStub({
+      ...standaloneState(),
+      connectionMode,
+      connectedOrigins: [DAPP],
+      wallets: [{ address: signer.address, privateKey: signer.privateKey }],
+    });
+    vi.stubGlobal("chrome", stub.chrome);
+    return { stub, mod: await import("./dapp-requests.js") };
+  }
+
+  it.each([
+    ["eth_requestAccounts", []],
+    ["eth_accounts", []],
+    ["personal_sign", ["0x00", signer.address]],
+  ])(
+    "answers %s with a clear error, without a popup",
+    async (method, params) => {
+      const { stub, mod } = await setup("standalone");
+      const reply = await sendFromPage(mod, { id: 1, method, params });
+      expect(reply.error.code).toBe(ErrorCode.UNAUTHORIZED);
+      expect(reply.error.message).toMatch(/password/);
+      expect(stub.openedWindows).toHaveLength(0);
+    },
+  );
+
+  it("leaves desktop mode alone", async () => {
+    const { mod } = await setup("desktop");
+    const reply = await sendFromPage(mod, {
+      id: 1,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    expect(reply.error.code).toBe(ErrorCode.UNSUPPORTED_METHOD);
   });
 });

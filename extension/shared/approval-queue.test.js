@@ -95,6 +95,20 @@ describe("createApprovalQueue", () => {
     expect(queue.size).toBe(0);
   });
 
+  it("knows only the windows it opened for live requests", () => {
+    const { queue, advance } = setup();
+    const entry = queue.add(pending());
+    expect(queue.hasWindow(POPUP_WINDOW)).toBe(false);
+
+    queue.attachWindow(entry.id, POPUP_WINDOW);
+    expect(queue.hasWindow(POPUP_WINDOW)).toBe(true);
+    expect(queue.hasWindow(POPUP_WINDOW + 1)).toBe(false);
+    expect(queue.hasWindow(undefined)).toBe(false);
+
+    advance(TIMEOUT_MS);
+    expect(queue.hasWindow(POPUP_WINDOW)).toBe(false);
+  });
+
   it("reports a pending request per origin and method", () => {
     const { queue, advance } = setup();
     queue.add(pending({ method: "eth_requestAccounts" }));

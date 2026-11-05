@@ -16,6 +16,13 @@ export const BackgroundErrorCode = Object.freeze({
   NETWORK_NOT_FOUND: "NETWORK_NOT_FOUND",
   PROVIDER_FAILED: "PROVIDER_FAILED",
   TX_FAILED: "TX_FAILED",
+  FORBIDDEN_SENDER: "FORBIDDEN_SENDER",
+  WRONG_PASSWORD: "WRONG_PASSWORD",
+  WEAK_PASSWORD: "WEAK_PASSWORD",
+  PASSWORD_MISMATCH: "PASSWORD_MISMATCH",
+  VAULT_DAMAGED: "VAULT_DAMAGED",
+  WALLET_LOCKED: "WALLET_LOCKED",
+  MIGRATION_REQUIRED: "MIGRATION_REQUIRED",
 });
 
 // Literal keys, so i18n:audit can match them against en.json.
@@ -29,7 +36,24 @@ const ERROR_KEYS = Object.freeze({
   NETWORK_NOT_FOUND: "extension.errors.networkNotFound",
   PROVIDER_FAILED: "extension.errors.providerFailed",
   TX_FAILED: "extension.errors.txFailed",
+  FORBIDDEN_SENDER: "extension.errors.forbiddenSender",
+  WRONG_PASSWORD: "extension.errors.wrongPassword",
+  WEAK_PASSWORD: "extension.errors.weakPassword",
+  PASSWORD_MISMATCH: "extension.errors.passwordMismatch",
+  VAULT_DAMAGED: "extension.errors.vaultDamaged",
+  WALLET_LOCKED: "extension.errors.walletLocked",
+  MIGRATION_REQUIRED: "extension.errors.migrationRequired",
 });
+
+/** A failure the background reports to the popup as a BackgroundErrorCode. */
+export class BackgroundFailure extends Error {
+  /** @param {string} code - A BackgroundErrorCode. */
+  constructor(code) {
+    super(code);
+    this.name = "BackgroundFailure";
+    this.code = code;
+  }
+}
 
 /**
  * Builds a failed response for the popup.

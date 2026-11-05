@@ -14,6 +14,16 @@ import {
   removeConnectedOrigin,
   selectConnectedTabIds,
 } from "./site-permissions.js";
+import { isSameAddress } from "./signing-request.js";
+import {
+  getPrivateKey,
+  getVaultStatus,
+  hasPlaintextKeys,
+  importKey,
+  removeKey,
+  replyWhenSettled,
+  textField,
+} from "./wallet-vault.js";
 
 const { RuntimeMessage } = globalThis.CointMUProtocol;
 
@@ -36,7 +46,7 @@ function sendToTabs(tabIds, message) {
  * @param {string[]} accounts - The new account list.
  * @returns {Promise<void>}
  */
-async function notifyConnectedTabs(accounts) {
+export async function notifyConnectedTabs(accounts) {
   const [tabs, origins] = await Promise.all([
     chrome.tabs.query({}),
     getConnectedOrigins(),
@@ -164,6 +174,53 @@ export function handleSocketMessage(event) {
 }
 
 /**
+ * Imports a key into the encrypted vault and switches to standalone mode.
+ * @param {Object} message - privateKey, password, confirmPassword.
+ * @returns {Promise<{ address: string }>}
+ */
+async function importAndActivate(message) {
+  const address = await importKey({
+    privateKey: textField(message, "privateKey"),
+    password: textField(message, "password"),
+    confirmPassword: textField(message, "confirmPassword"),
+  });
+  connectionMode = "standalone";
+  await chrome.storage.local.set({
+    isLinked: true,
+    connectionMode: "standalone",
+    activeStandaloneAddress: address,
+  });
+  disconnect(); // Standalone mode does not use the desktop WebSocket.
+  return { address };
+}
+
+/**
+ * Removes a key from the vault; when it was the active account, the first
+ * remaining wallet becomes active.
+ * @param {Object} message - address, password.
+ * @returns {Promise<void>}
+ */
+async function deleteWallet(message) {
+  const address = textField(message, "address");
+  const remaining = await removeKey({
+    address,
+    password: textField(message, "password"),
+  });
+  const res = await chrome.storage.local.get([
+    "activeStandaloneAddress",
+    "connectionMode",
+  ]);
+  if (
+    res.connectionMode === "standalone" &&
+    isSameAddress(res.activeStandaloneAddress, address)
+  ) {
+    await chrome.storage.local.set({
+      activeStandaloneAddress: remaining[0]?.address ?? null,
+    });
+  }
+}
+
+/**
  * Handles internal extension messages from the popup UI.
  * @param {any} message - The message payload.
  * @param {chrome.runtime.MessageSender} sender - The sender.
@@ -233,7 +290,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
         "activeNetworkId",
         "bridgeNotice",
       ])
-      .then((res) => {
+      .then(async (res) => {
         const isDesktopMode = (res.connectionMode || "desktop") === "desktop";
         const hasNoDesktopAccounts =
           !res.walletState ||
@@ -260,53 +317,21 @@ export function handleInternalMessage(message, sender, sendResponse) {
           isReconnecting: res.isReconnecting === true,
           walletState: res.walletState,
           connectionMode: res.connectionMode || "desktop",
-          wallets: res.wallets || [],
+          // Addresses only: private keys never leave the background.
+          wallets: (res.wallets || []).map(({ address }) => ({ address })),
           customNetworks: res.customNetworks || [],
           activeStandaloneAddress: res.activeStandaloneAddress || null,
           activeNetworkId: res.activeNetworkId || "desktop_connection",
           bridgeNotice: res.bridgeNotice || null,
+          ...(await getVaultStatus()),
+          needsMigration: hasPlaintextKeys(res.wallets),
         });
       });
     return true;
   }
 
   if (message.action === "IMPORT_PRIVATE_KEY") {
-    try {
-      const wallet = new globalThis.ethers.Wallet(message.privateKey);
-      const address = wallet.address;
-
-      chrome.storage.local.get(["wallets"], (res) => {
-        let wallets = res.wallets || [];
-        const exists = wallets.find((w) => w.address === address);
-        if (!exists) {
-          wallets.push({ privateKey: message.privateKey, address });
-        }
-
-        connectionMode = "standalone";
-
-        chrome.storage.local
-          .set({
-            isLinked: true,
-            connectionMode: "standalone",
-            wallets: wallets,
-            activeStandaloneAddress: address,
-          })
-          .then(() => {
-            disconnect(); // Disconnect from desktop WS
-            sendResponse({ success: true, address });
-          })
-          .catch((err) => {
-            console.error("Failed to save to local storage", err);
-            sendResponse(
-              backgroundError(BackgroundErrorCode.STORAGE_SAVE_FAILED),
-            );
-          });
-      });
-    } catch (err) {
-      console.error("Derivation error:", err);
-      sendResponse(backgroundError(BackgroundErrorCode.IMPORT_FAILED));
-    }
-    return true;
+    return replyWhenSettled(sendResponse, importAndActivate(message));
   }
 
   if (message.action === "ADD_CUSTOM_NETWORK") {
@@ -343,11 +368,6 @@ export function handleInternalMessage(message, sender, sendResponse) {
       customNetworks = customNetworks.filter((n) => n.id !== message.networkId);
       chrome.storage.local.set({ customNetworks }).then(() => {
         sendResponse({ success: true });
-        chrome.storage.local.get(null).then((allState) => {
-          chrome.runtime
-            .sendMessage({ action: "STATE_UPDATED", state: allState })
-            .catch(() => {});
-        });
       });
     });
     return true;
@@ -390,56 +410,14 @@ export function handleInternalMessage(message, sender, sendResponse) {
   }
 
   if (message.action === "DELETE_WALLET") {
-    chrome.storage.local
-      .get(["wallets", "activeStandaloneAddress", "connectionMode"])
-      .then((res) => {
-        let wallets = res.wallets || [];
-        wallets = wallets.filter(
-          (w) => w.address.toLowerCase() !== message.address.toLowerCase(),
-        );
-
-        const updates = { wallets };
-
-        if (
-          res.connectionMode === "standalone" &&
-          res.activeStandaloneAddress &&
-          res.activeStandaloneAddress.toLowerCase() ===
-            message.address.toLowerCase()
-        ) {
-          if (wallets.length > 0) {
-            updates.activeStandaloneAddress = wallets[0].address;
-            handleInternalMessage(
-              {
-                action: "SWITCH_ACCOUNT",
-                address: wallets[0].address,
-                mode: "standalone",
-              },
-              sender,
-              () => {},
-            );
-          } else {
-            updates.activeStandaloneAddress = null;
-            // updates.walletState = null;
-          }
-        }
-
-        chrome.storage.local.set(updates).then(() => {
-          sendResponse({ success: true });
-          chrome.storage.local.get(null).then((allState) => {
-            chrome.runtime
-              .sendMessage({ action: "STATE_UPDATED", state: allState })
-              .catch(() => {});
-          });
-        });
-      });
-    return true;
+    return replyWhenSettled(sendResponse, deleteWallet(message));
   }
 
   if (message.action === "EXECUTE_SEND") {
     if (message.mode === "standalone") {
       chrome.storage.local
-        .get(["wallets", "activeStandaloneAddress", "customNetworks"])
-        .then((res) => {
+        .get(["activeStandaloneAddress", "customNetworks"])
+        .then(async (res) => {
           const addr = res.activeStandaloneAddress;
           if (!addr) {
             sendResponse(
@@ -447,12 +425,15 @@ export function handleInternalMessage(message, sender, sendResponse) {
             );
             return;
           }
-          const walletData = (res.wallets || []).find(
-            (w) => w.address === addr,
-          );
-          if (!walletData || !walletData.privateKey) {
+          const privateKey = await getPrivateKey(addr);
+          if (!privateKey) {
+            const { isLocked } = await getVaultStatus();
             sendResponse(
-              backgroundError(BackgroundErrorCode.PRIVATE_KEY_NOT_FOUND),
+              backgroundError(
+                isLocked
+                  ? BackgroundErrorCode.WALLET_LOCKED
+                  : BackgroundErrorCode.PRIVATE_KEY_NOT_FOUND,
+              ),
             );
             return;
           }
@@ -473,10 +454,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
               parseInt(customNet.chainId, 10),
               { staticNetwork: true },
             );
-            const signer = new globalThis.ethers.Wallet(
-              walletData.privateKey,
-              provider,
-            );
+            const signer = new globalThis.ethers.Wallet(privateKey, provider);
             signer
               .sendTransaction({
                 to: message.to,

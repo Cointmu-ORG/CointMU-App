@@ -3,6 +3,17 @@
 import { formatMessage, loadTranslations } from "./locale.js";
 import { describeBackgroundError } from "./background-errors.js";
 import { renderApprovalView } from "./approval-popup.js";
+import {
+  WALLET_LOCK_CHANGED,
+  askPassword,
+  bindLockButton,
+  bindMigrateForm,
+  bindResetButton,
+  bindUnlockForm,
+  sendVaultAction,
+  showFormError,
+} from "./ui-lock.js";
+import { isAcceptablePassword } from "./vault-crypto.js";
 
 /** Translation keys for bridge refusal codes sent by the desktop app. */
 const BRIDGE_NOTICE_KEYS = {
@@ -19,8 +30,18 @@ export async function initPopup() {
   const defaultView = document.getElementById("default-view");
   const approvalView = document.getElementById("approval-view");
   const addNetworkView = document.getElementById("add-network-view");
+  const unlockView = document.getElementById("unlock-view");
+  const migrateView = document.getElementById("migrate-view");
+  const migrateConfirmGroup = document.getElementById("migrate-confirm-group");
+  const migrateRestartBtn = document.getElementById("migrate-restart-btn");
 
   const privKeyInput = document.getElementById("priv-key-input");
+  const importPasswordInput = document.getElementById("import-password-input");
+  const importConfirmInput = document.getElementById("import-confirm-input");
+  const importConfirmGroup = document.getElementById("import-confirm-group");
+  const importPasswordHint = document.getElementById("import-password-hint");
+  const importError = document.getElementById("import-error");
+  const lockBtn = document.getElementById("lock-btn");
   const importBtn = document.getElementById("import-btn");
   const cancelImportBtn = document.getElementById("cancel-import-btn");
   const selectImportBtn = document.getElementById("select-import-btn");
@@ -82,8 +103,8 @@ export async function initPopup() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
-  const reqIdParam = urlParams.get("reqId");
-  const reqId = reqIdParam ? parseInt(reqIdParam, 10) : null;
+  // A UUID from the approval queue; parsing it as a number lost the request.
+  const reqId = urlParams.get("reqId");
 
   // Dropdown state
   let currentNetworkId = "desktop_connection";
@@ -123,18 +144,31 @@ export async function initPopup() {
       warning: document.getElementById("approval-warning"),
       approve: btnApproveConfirm,
     };
+    const approvalUnlockForm = document.getElementById("approval-unlock-form");
     // Stays disabled until the request details are shown.
     btnApproveConfirm.disabled = true;
     chrome.runtime.sendMessage(
       { action: "GET_PENDING_REQ", reqId },
       (response) => {
-        renderApprovalView(
-          approvalElements,
-          translations,
-          response && response.success ? response.view : null,
-        );
+        const view = response && response.success ? response.view : null;
+        renderApprovalView(approvalElements, translations, view);
+        if (view && response.needsUnlock) {
+          btnApproveConfirm.disabled = true;
+          approvalUnlockForm.classList.remove("hidden");
+        }
       },
     );
+    bindUnlockForm({
+      form: approvalUnlockForm,
+      input: document.getElementById("approval-password-input"),
+      error: document.getElementById("approval-unlock-error"),
+      button: document.getElementById("approval-unlock-btn"),
+      translations,
+      onUnlocked: () => {
+        approvalUnlockForm.classList.add("hidden");
+        btnApproveConfirm.disabled = false;
+      },
+    });
 
     btnApproveConfirm.addEventListener("click", () => {
       chrome.runtime.sendMessage(
@@ -219,7 +253,64 @@ export async function initPopup() {
     });
   };
 
+  // Whether an encrypted vault exists: a first import creates its password.
+  let hasVault = false;
+
+  const renderImportPasswordFields = () => {
+    importConfirmGroup.classList.toggle("hidden", hasVault);
+    importConfirmInput.autocomplete = hasVault ? "off" : "new-password";
+    importPasswordInput.autocomplete = hasVault
+      ? "current-password"
+      : "new-password";
+    importPasswordHint.textContent = hasVault
+      ? translations["extension.vault.existingPasswordHint"] ||
+        "Enter your wallet password to add this key."
+      : translations["extension.vault.newPasswordHint"] ||
+        "Choose a password of at least 8 characters. It protects your keys in this browser and cannot be recovered: if you forget it, reset the wallet and import your keys again.";
+  };
+
+  // An interrupted migration left a vault: its password is asked again.
+  const renderMigrateFields = () => {
+    migrateConfirmGroup.classList.toggle("hidden", hasVault);
+    migrateRestartBtn.classList.toggle("hidden", !hasVault);
+    document.getElementById("migrate-hint").textContent = hasVault
+      ? translations["extension.vault.migrateResumeHint"] ||
+        "An earlier attempt to encrypt your keys was interrupted. Enter the password you chose then."
+      : translations["extension.vault.migrateBody"] ||
+        "This version encrypts the private keys stored in this browser. Set a wallet password of at least 8 characters to continue. It cannot be recovered: if you forget it, reset the wallet and import your keys again.";
+  };
+
+  /** Shows one full-screen password view and hides every other view. */
+  const showOnlyView = (view, inputId) => {
+    for (const other of [
+      loginView,
+      selectionView,
+      defaultView,
+      addNetworkView,
+      sendView,
+      unlockView,
+      migrateView,
+    ]) {
+      other.classList.toggle("hidden", other !== view);
+    }
+    document.getElementById(inputId).focus();
+  };
+
   const updateUI = async (res) => {
+    hasVault = res.hasVault === true;
+    renderImportPasswordFields();
+    lockBtn.classList.toggle("hidden", !hasVault || res.isLocked);
+    if (res.needsMigration) {
+      renderMigrateFields();
+      showOnlyView(migrateView, "migrate-password-input");
+      return;
+    }
+    if (res.connectionMode === "standalone" && hasVault && res.isLocked) {
+      showOnlyView(unlockView, "unlock-password-input");
+      return;
+    }
+    unlockView.classList.add("hidden");
+    migrateView.classList.add("hidden");
     currentNetworkId = res.activeNetworkId || "desktop_connection";
 
     // Populate Custom Networks
@@ -550,33 +641,117 @@ export async function initPopup() {
     }
   });
 
-  importBtn.addEventListener("click", (e) => {
+  const refreshState = () => {
+    chrome.runtime.sendMessage({ action: "GET_CURRENT_STATE" }, (res) => {
+      if (res) updateUI(res);
+    });
+  };
+
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message?.action === WALLET_LOCK_CHANGED) refreshState();
+  });
+
+  bindUnlockForm({
+    form: document.getElementById("unlock-form"),
+    input: document.getElementById("unlock-password-input"),
+    error: document.getElementById("unlock-error"),
+    button: document.getElementById("unlock-btn"),
+    translations,
+    onUnlocked: refreshState,
+  });
+  bindLockButton(lockBtn);
+  bindResetButton(
+    document.getElementById("reset-vault-btn"),
+    {
+      message:
+        translations["extension.vault.resetConfirm"] ||
+        "This removes every imported wallet from this browser. You need your private keys to import them again. Continue?",
+      title: translations["extension.vault.resetBtn"] || "Reset Wallet",
+    },
+    showConfirmModal,
+  );
+  bindResetButton(
+    migrateRestartBtn,
+    {
+      message:
+        translations["extension.vault.migrateRestartConfirm"] ||
+        "This discards the interrupted attempt so you can choose a new password. Your keys stay in this browser until they are encrypted. Continue?",
+      title:
+        translations["extension.vault.migrateRestart"] ||
+        "Start Over With a New Password",
+    },
+    showConfirmModal,
+  );
+
+  /**
+   * @returns {string | null} Why the password fields are not usable: an
+   * existing vault needs its password; a new one needs 8+ characters, twice.
+   */
+  const passwordProblem = (password, confirmPassword) => {
+    if (hasVault) {
+      return password
+        ? null
+        : translations["extension.errors.wrongPassword"] || "Wrong password.";
+    }
+    if (!isAcceptablePassword(password)) {
+      return (
+        translations["extension.errors.weakPassword"] ||
+        "Use a password of at least 8 characters."
+      );
+    }
+    return password === confirmPassword
+      ? null
+      : translations["extension.errors.passwordMismatch"] ||
+          "The passwords do not match.";
+  };
+
+  bindMigrateForm({
+    form: document.getElementById("migrate-form"),
+    password: document.getElementById("migrate-password-input"),
+    confirm: document.getElementById("migrate-confirm-input"),
+    error: document.getElementById("migrate-error"),
+    button: document.getElementById("migrate-btn"),
+    translations,
+    check: passwordProblem,
+    onDone: refreshState,
+  });
+
+  importBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const pk = privKeyInput.value.trim();
     if (!pk) return;
-    chrome.runtime.sendMessage(
-      { action: "IMPORT_PRIVATE_KEY", privateKey: pk },
-      (res) => {
-        if (res && res.success) {
-          privKeyInput.value = "";
-          loginView.classList.add("hidden");
-          defaultView.classList.remove("hidden");
+    const password = importPasswordInput.value;
+    const confirmPassword = importConfirmInput.value;
+    const problem = passwordProblem(password, confirmPassword);
+    showFormError(importError, problem);
+    if (problem) return;
 
-          chrome.runtime.sendMessage(
-            { action: "GET_CURRENT_STATE" },
-            (newState) => {
-              if (newState) updateUI(newState);
-            },
-          );
-        } else if (res?.errorCode) {
-          alert(describeBackgroundError(res, translations));
-        } else {
-          alert(
-            translations["extension.wallet.importFailed"] ||
-              "Failed to import key",
-          );
-        }
+    const res = await sendVaultAction({
+      message: {
+        action: "IMPORT_PRIVATE_KEY",
+        privateKey: pk,
+        password,
+        confirmPassword,
       },
+      button: importBtn,
+      busyText:
+        translations["extension.vault.encrypting"] || "Encrypting your keys...",
+    });
+    if (res && res.success) {
+      privKeyInput.value = "";
+      importPasswordInput.value = "";
+      importConfirmInput.value = "";
+      loginView.classList.add("hidden");
+      defaultView.classList.remove("hidden");
+      refreshState();
+      return;
+    }
+    showFormError(
+      importError,
+      res?.errorCode
+        ? describeBackgroundError(res, translations)
+        : translations["extension.wallet.importFailed"] ||
+            "Failed to import key",
     );
   });
 
@@ -586,6 +761,7 @@ export async function initPopup() {
   });
 
   selectImportBtn.addEventListener("click", () => {
+    showFormError(importError, null);
     selectionView.classList.add("hidden");
     loginView.classList.remove("hidden");
   });
@@ -625,16 +801,20 @@ export async function initPopup() {
   const deleteBtn = document.getElementById("delete-wallet-btn");
   if (deleteBtn) {
     deleteBtn.addEventListener("click", async () => {
-      const confirmed = await showConfirmModal(
+      if (!currentAccountAddress) return;
+      // Removing a key re-encrypts the vault, so it needs the password.
+      const password = await askPassword(
+        translations,
         translations["extension.wallet.deleteWalletConfirm"] ||
           "Are you sure you want to remove this wallet?",
       );
-      if (confirmed && currentAccountAddress) {
-        chrome.runtime.sendMessage({
-          action: "DELETE_WALLET",
-          address: currentAccountAddress,
-        });
-      }
+      if (!password) return;
+      const res = await chrome.runtime.sendMessage({
+        action: "DELETE_WALLET",
+        address: currentAccountAddress,
+        password,
+      });
+      if (!res?.success) alert(describeBackgroundError(res, translations));
     });
   }
 

@@ -26,6 +26,7 @@ import {
 } from "./site-permissions.js";
 import { socket } from "./socket.js";
 import { JSON_RPC_VERSION, pendingCallbacks, pendingKey } from "./wallet.js";
+import { getPrivateKey, hasPlaintextKeys, isUnlocked } from "./wallet-vault.js";
 
 /**
  * Handles JSON-RPC requests from dApp pages (via the content script) and the
@@ -49,6 +50,10 @@ const STATE_KEYS = [
 const STANDALONE_MODE = "standalone";
 const DESKTOP_SIGNING_MESSAGE =
   "Signing is not supported in desktop mode yet. Switch the CointMU extension to standalone mode to sign.";
+const LOCKED_MESSAGE =
+  "The CointMU wallet is locked. Unlock it in the extension and try again.";
+const MIGRATION_MESSAGE =
+  "The CointMU wallet needs a password before it can use this account. Open the CointMU extension to set one, then try again.";
 
 function readSender(sender) {
   const tabId = sender.tab?.id;
@@ -98,8 +103,10 @@ function forwardToDesktop(request, sendResponse) {
 
 async function forwardToCustomRpc(request, state, sendResponse) {
   if (request.method === ACCOUNTS_METHOD) {
+    // EIP-1193: a locked wallet exposes no accounts.
     const address = state.activeStandaloneAddress;
-    replyResult(sendResponse, address ? [address] : []);
+    const isOpen = Boolean(address) && (await isUnlocked());
+    replyResult(sendResponse, isOpen ? [address] : []);
     return;
   }
   const network = activeNetwork(state);
@@ -143,7 +150,13 @@ async function handleConnect(request, state, sendResponse) {
     );
     return;
   }
-  if (isOriginConnected(await getConnectedOrigins(), request.origin)) {
+  // A locked wallet goes through the popup, which asks for the password first.
+  const isLockedStandalone = isStandalone && !(await isUnlocked());
+  const isConnected = isOriginConnected(
+    await getConnectedOrigins(),
+    request.origin,
+  );
+  if (isConnected && !isLockedStandalone) {
     if (isStandalone) {
       replyResult(sendResponse, [state.activeStandaloneAddress]);
     } else {
@@ -207,11 +220,29 @@ async function answerUnconnectedAccountLookup(request, sendResponse) {
   return true;
 }
 
+/**
+ * @returns {boolean} True for requests that need the standalone account,
+ * which waits until its plain-text keys are migrated into the vault.
+ */
+function needsAccount(method) {
+  return (
+    method === CONNECT_METHOD ||
+    ACCOUNT_LOOKUP_METHODS.includes(method) ||
+    isSigningMethod(method)
+  );
+}
+
 async function routeContentRequest(request, sendResponse) {
   const state = await chrome.storage.local.get(STATE_KEYS);
   const isStandalone = state.connectionMode === STANDALONE_MODE;
 
-  if (request.method === CONNECT_METHOD) {
+  if (
+    isStandalone &&
+    hasPlaintextKeys(state.wallets) &&
+    needsAccount(request.method)
+  ) {
+    replyError(sendResponse, ErrorCode.UNAUTHORIZED, MIGRATION_MESSAGE);
+  } else if (request.method === CONNECT_METHOD) {
     await handleConnect(request, state, sendResponse);
   } else if (await answerUnconnectedAccountLookup(request, sendResponse)) {
     return;
@@ -280,22 +311,48 @@ export function handleContentMessage(message, sender, sendResponse) {
 }
 
 /**
- * Answers the approval popup's request for what to display.
+ * @returns {Object | null} The live request the sender's approval window was
+ * opened for; null for any other sender or request.
+ */
+function approvalOfSender(message, sender) {
+  if (!isFromApprovalPopup(sender)) return null;
+  const entry = peekApproval(String(message.reqId));
+  return entry && entry.windowId === sender.tab.windowId ? entry : null;
+}
+
+/**
+ * Answers the approval popup's request for what to display, and whether the
+ * wallet must be unlocked before the request can be approved.
  * @param {{ reqId: string }} message
  * @param {chrome.runtime.MessageSender} sender
  * @param {Function} sendResponse
- * @returns {boolean} False; the reply is synchronous.
+ * @returns {boolean} True when the reply is asynchronous.
  */
 export function handlePendingRequestQuery(message, sender, sendResponse) {
-  const entry = isFromApprovalPopup(sender)
-    ? peekApproval(String(message.reqId))
-    : null;
-  sendResponse(
-    entry
-      ? { success: true, view: buildApprovalView(entry) }
-      : { success: false },
-  );
-  return false;
+  const entry = approvalOfSender(message, sender);
+  if (!entry) {
+    sendResponse({ success: false });
+    return false;
+  }
+  approvalNeedsUnlock()
+    .then((needsUnlock) => {
+      sendResponse({
+        success: true,
+        view: buildApprovalView(entry),
+        needsUnlock,
+      });
+    })
+    .catch((err) => {
+      console.error("[CointMU-bg] Failed to read the lock state:", err);
+      sendResponse({ success: false });
+    });
+  return true;
+}
+
+/** @returns {Promise<boolean>} True when a standalone wallet must be unlocked first. */
+async function approvalNeedsUnlock() {
+  const { connectionMode } = await chrome.storage.local.get(["connectionMode"]);
+  return connectionMode === STANDALONE_MODE && !(await isUnlocked());
 }
 
 async function signWithStandaloneWallet(entry) {
@@ -308,23 +365,24 @@ async function signWithStandaloneWallet(entry) {
   ) {
     throw new Error("The active account or network changed; please retry.");
   }
-  const wallet = (state.wallets || []).find((w) =>
-    isSameAddress(w.address, context.activeAddress),
-  );
-  if (!wallet?.privateKey) {
-    throw new Error("Private key not found for the active account.");
-  }
+  const privateKey = await getPrivateKey(context.activeAddress);
+  if (!privateKey) throw new Error(LOCKED_MESSAGE);
   return executeSigning(entry.request, {
-    privateKey: wallet.privateKey,
+    privateKey,
     network: activeNetwork(state),
   });
 }
 
 async function executeApproved(entry) {
   if (entry.request === null) {
-    await addConnectedOrigin(entry.origin);
     const state = await chrome.storage.local.get(STATE_KEYS);
-    if (state.connectionMode === STANDALONE_MODE) {
+    const isStandalone = state.connectionMode === STANDALONE_MODE;
+    if (isStandalone && !(await isUnlocked())) {
+      replyError(entry.sendResponse, ErrorCode.UNAUTHORIZED, LOCKED_MESSAGE);
+      return;
+    }
+    await addConnectedOrigin(entry.origin);
+    if (isStandalone) {
       replyResult(entry.sendResponse, [state.activeStandaloneAddress]);
     } else {
       forwardToDesktop({ ...entry, params: [] }, entry.sendResponse);
@@ -343,7 +401,7 @@ async function executeApproved(entry) {
  * @returns {boolean} False; the popup gets its reply synchronously.
  */
 export function handleApprovalResolution(message, sender, sendResponse) {
-  const entry = isFromApprovalPopup(sender)
+  const entry = approvalOfSender(message, sender)
     ? takeApproval(String(message.reqId))
     : null;
   if (!entry) {

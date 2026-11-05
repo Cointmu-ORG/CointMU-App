@@ -88,6 +88,27 @@
       "sendFailedWithReason": "Transaksi Gagal: {{reason}}",
       "unknownError": "Kesalahan tidak diketahui"
     },
+    "vault": {
+      "passwordLabel": "Kata sandi dompet",
+      "confirmLabel": "Konfirmasi kata sandi",
+      "newPasswordHint": "Pilih kata sandi minimal 8 karakter. Kata sandi ini melindungi kunci Anda di browser ini dan tidak dapat dipulihkan: jika lupa, reset dompet lalu impor ulang kunci Anda.",
+      "existingPasswordHint": "Masukkan kata sandi dompet untuk menambahkan kunci ini.",
+      "unlockTitle": "Buka Kunci Dompet",
+      "unlockBtn": "Buka Kunci",
+      "unlocking": "Membuka kunci...",
+      "encrypting": "Mengenkripsi kunci Anda...",
+      "forgotHint": "Lupa kata sandi? Kata sandi tidak dapat dipulihkan. Reset dompet, lalu impor ulang kunci pribadi Anda.",
+      "resetBtn": "Reset Dompet",
+      "resetConfirm": "Ini menghapus semua dompet yang diimpor dari browser ini. Anda memerlukan kunci pribadi untuk mengimpornya kembali. Lanjutkan?",
+      "lockBtn": "Kunci Dompet",
+      "approvalLocked": "Dompet Anda terkunci. Masukkan kata sandi untuk menyetujui permintaan ini.",
+      "migrateTitle": "Lindungi Kunci Anda",
+      "migrateBody": "Versi ini mengenkripsi kunci pribadi yang tersimpan di browser ini. Buat kata sandi dompet minimal 8 karakter untuk melanjutkan. Kata sandi tidak dapat dipulihkan: jika lupa, reset dompet lalu impor ulang kunci Anda.",
+      "migrateResumeHint": "Upaya sebelumnya untuk mengenkripsi kunci Anda terputus. Masukkan kata sandi yang Anda pilih saat itu.",
+      "migrateBtn": "Enkripsi Kunci",
+      "migrateRestart": "Mulai Ulang dengan Kata Sandi Baru",
+      "migrateRestartConfirm": "Ini membatalkan upaya yang terputus agar Anda dapat memilih kata sandi baru. Kunci Anda tetap ada di browser ini sampai dienkripsi. Lanjutkan?"
+    },
     "errors": {
       "desktopNotConnected": "CointMU Desktop tidak terhubung. Buka aplikasi desktop, lalu coba lagi.",
       "storageSaveFailed": "Tidak dapat menyimpan dompet di penyimpanan browser.",
@@ -95,7 +116,14 @@
       "privateKeyNotFound": "Kunci pribadi untuk dompet ini tidak ditemukan.",
       "networkNotFound": "Jaringan yang dipilih tidak ditemukan.",
       "providerFailed": "Tidak dapat menyiapkan transaksi.",
-      "txFailed": "Transaksi gagal."
+      "txFailed": "Transaksi gagal.",
+      "forbiddenSender": "Permintaan ini tidak berasal dari popup CointMU sehingga ditolak.",
+      "wrongPassword": "Kata sandi salah.",
+      "weakPassword": "Gunakan kata sandi minimal 8 karakter.",
+      "passwordMismatch": "Kata sandi tidak cocok.",
+      "vaultDamaged": "Data dompet terenkripsi tidak dapat dibaca. Reset dompet lalu impor ulang kunci Anda.",
+      "walletLocked": "Dompet terkunci. Buka kuncinya, lalu coba lagi.",
+      "migrationRequired": "Buat kata sandi dompet terlebih dahulu untuk melindungi kunci yang sudah tersimpan."
     }
   }
 }
