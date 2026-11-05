@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "診断パッケージを保存",
     "diagnosticsZip": "ZIP アーカイブ",
     "diagnosticsSaved": "パッケージを保存しました。",
-    "diagnosticsFailed": "パッケージを保存できませんでした。"
+    "diagnosticsFailed": "パッケージを保存できませんでした。",
+    "updates": "アップデート",
+    "autoCheckTitle": "アップデートを自動で確認",
+    "autoCheckDesc": "CointMU の起動時に新しいバージョンを確認します。「情報」からいつでも確認できます。",
+    "installModeTitle": "アップデートの準備ができたら",
+    "installModeDesc": "アップデートをインストールする前に、ノードは必ず正常に終了します。",
+    "installOnQuit": "終了時にインストール",
+    "installAsk": "確認する"
   },
   "appearance": {
     "subtitle": "CointMUの見た目をカスタマイズします",

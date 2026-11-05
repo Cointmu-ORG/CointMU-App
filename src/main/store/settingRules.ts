@@ -1,4 +1,4 @@
-import { CloseAction } from "../../bridge/setting-values";
+import { CloseAction, UpdateInstallMode } from "../../bridge/setting-values";
 
 /** Where the chain data lives; "" is the default folder. Only the move writes it. */
 export const CHAIN_DATA_ROOT_KEY = "chainDataRoot";
@@ -29,6 +29,11 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     isValid: isOneOf(Object.values(CloseAction)),
   },
   "general.confirmQuitWhileBusy": { fallback: true, isValid: isBoolean },
+  "updates.autoCheck": { fallback: true, isValid: isBoolean },
+  "updates.installMode": {
+    fallback: UpdateInstallMode.ON_QUIT,
+    isValid: isOneOf(Object.values(UpdateInstallMode)),
+  },
   [CHAIN_DATA_ROOT_KEY]: {
     fallback: "",
     isValid: (value) => typeof value === "string",

@@ -89,5 +89,11 @@
     "quitConfirmQuit": "Salir",
     "quitConfirmCancel": "Cancelar",
     "quitConfirmNeverAsk": "No volver a preguntar"
+  },
+  "update": {
+    "readyTitle": "Actualización lista",
+    "readyBody": "La versión {{version}} ya está descargada. Reinicia para instalarla; primero el nodo se cierra de forma limpia.",
+    "restartNow": "Reiniciar ahora",
+    "later": "Más tarde"
   }
 }

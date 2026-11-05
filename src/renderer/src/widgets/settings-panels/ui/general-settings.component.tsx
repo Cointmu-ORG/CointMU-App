@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "./language-switcher.component";
 import { WindowSettings } from "./window-settings.component";
 import { ChainDataSettings } from "./chain-data-settings.component";
 import { TroubleshootingSettings } from "./troubleshooting-settings.component";
+import { UpdatesSettings } from "./updates-settings.component";
 
 // Login items exist on Windows and macOS; only the Windows entry can carry
 // the argument that starts the app minimized (main/app/loginItem.ts).
@@ -106,6 +107,8 @@ export function GeneralSettings({
         />
 
         <ChainDataSettings />
+
+        <UpdatesSettings />
 
         <TroubleshootingSettings />
 

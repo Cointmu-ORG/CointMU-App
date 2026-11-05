@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "Сохранить диагностический пакет",
     "diagnosticsZip": "Архив ZIP",
     "diagnosticsSaved": "Пакет сохранён.",
-    "diagnosticsFailed": "Не удалось сохранить пакет."
+    "diagnosticsFailed": "Не удалось сохранить пакет.",
+    "updates": "Обновления",
+    "autoCheckTitle": "Проверять обновления автоматически",
+    "autoCheckDesc": "Искать новую версию при запуске CointMU. Проверить вручную можно в разделе «О программе».",
+    "installModeTitle": "Когда обновление готово",
+    "installModeDesc": "Перед установкой обновления узел всегда корректно завершает работу.",
+    "installOnQuit": "Установить при выходе",
+    "installAsk": "Спросить меня"
   },
   "appearance": {
     "subtitle": "Настройте внешний вид CointMU",

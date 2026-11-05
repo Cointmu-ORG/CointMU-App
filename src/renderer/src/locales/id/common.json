@@ -87,5 +87,11 @@
     "quitConfirmQuit": "Keluar",
     "quitConfirmCancel": "Batal",
     "quitConfirmNeverAsk": "Jangan tanya lagi"
+  },
+  "update": {
+    "readyTitle": "Pembaruan siap",
+    "readyBody": "Versi {{version}} sudah diunduh. Mulai ulang untuk memasangnya; node dimatikan dengan bersih terlebih dahulu.",
+    "restartNow": "Mulai ulang sekarang",
+    "later": "Nanti"
   }
 }

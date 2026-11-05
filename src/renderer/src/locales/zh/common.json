@@ -87,5 +87,11 @@
     "quitConfirmQuit": "退出",
     "quitConfirmCancel": "取消",
     "quitConfirmNeverAsk": "不再询问"
+  },
+  "update": {
+    "readyTitle": "更新已就绪",
+    "readyBody": "版本 {{version}} 已下载。重启即可安装；节点会先正常关闭。",
+    "restartNow": "立即重启",
+    "later": "稍后"
   }
 }

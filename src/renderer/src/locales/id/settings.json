@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "Simpan paket diagnostik",
     "diagnosticsZip": "Arsip ZIP",
     "diagnosticsSaved": "Paket tersimpan.",
-    "diagnosticsFailed": "Paket tidak bisa disimpan."
+    "diagnosticsFailed": "Paket tidak bisa disimpan.",
+    "updates": "Pembaruan",
+    "autoCheckTitle": "Cek pembaruan otomatis",
+    "autoCheckDesc": "Cari versi baru saat CointMU dibuka. Kamu tetap bisa mengecek di Tentang.",
+    "installModeTitle": "Saat pembaruan siap",
+    "installModeDesc": "Node selalu dimatikan dengan bersih sebelum pembaruan dipasang.",
+    "installOnQuit": "Pasang saat keluar",
+    "installAsk": "Tanya dulu"
   },
   "appearance": {
     "subtitle": "Sesuaikan tampilan CointMU",

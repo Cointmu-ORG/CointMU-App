@@ -88,5 +88,11 @@
     "quitConfirmQuit": "Beenden",
     "quitConfirmCancel": "Abbrechen",
     "quitConfirmNeverAsk": "Nicht mehr fragen"
+  },
+  "update": {
+    "readyTitle": "Update bereit",
+    "readyBody": "Version {{version}} ist heruntergeladen. Starte neu, um sie zu installieren; der Node wird vorher sauber heruntergefahren.",
+    "restartNow": "Jetzt neu starten",
+    "later": "Später"
   }
 }

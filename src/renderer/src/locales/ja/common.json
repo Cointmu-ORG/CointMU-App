@@ -87,5 +87,11 @@
     "quitConfirmQuit": "終了",
     "quitConfirmCancel": "キャンセル",
     "quitConfirmNeverAsk": "今後確認しない"
+  },
+  "update": {
+    "readyTitle": "アップデートの準備完了",
+    "readyBody": "バージョン {{version}} をダウンロードしました。再起動するとインストールされます。ノードは先に正常に終了します。",
+    "restartNow": "今すぐ再起動",
+    "later": "後で"
   }
 }

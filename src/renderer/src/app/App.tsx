@@ -15,7 +15,7 @@ import { useMiningLogStream } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
 
-import { Sidebar, AppHeader } from "@/widgets/layout";
+import { Sidebar, AppHeader, UpdateReadyBanner } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "./lib/auto-lock.hook";
@@ -185,6 +185,7 @@ function App(): JSX.Element {
       <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
         <ToastViewport />
+        <UpdateReadyBanner updater={updater} />
         <FirstRunNotice />
         <Sidebar
           accounts={accounts}

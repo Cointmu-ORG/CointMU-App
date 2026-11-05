@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "Guardar paquete de diagnóstico",
     "diagnosticsZip": "Archivo ZIP",
     "diagnosticsSaved": "Paquete guardado.",
-    "diagnosticsFailed": "No se pudo guardar el paquete."
+    "diagnosticsFailed": "No se pudo guardar el paquete.",
+    "updates": "Actualizaciones",
+    "autoCheckTitle": "Buscar actualizaciones automáticamente",
+    "autoCheckDesc": "Busca una versión nueva al iniciar CointMU. Siempre puedes comprobarlo en Acerca de.",
+    "installModeTitle": "Cuando haya una actualización lista",
+    "installModeDesc": "El nodo siempre se cierra de forma limpia antes de instalar una actualización.",
+    "installOnQuit": "Instalar al salir",
+    "installAsk": "Preguntarme"
   },
   "appearance": {
     "subtitle": "Personaliza cómo se ve CointMU",

@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "保存诊断包",
     "diagnosticsZip": "ZIP 压缩包",
     "diagnosticsSaved": "诊断包已保存。",
-    "diagnosticsFailed": "无法保存诊断包。"
+    "diagnosticsFailed": "无法保存诊断包。",
+    "updates": "更新",
+    "autoCheckTitle": "自动检查更新",
+    "autoCheckDesc": "CointMU 启动时检查新版本。你随时可以在“关于”中手动检查。",
+    "installModeTitle": "更新就绪时",
+    "installModeDesc": "安装更新前，节点总会先正常关闭。",
+    "installOnQuit": "退出时安装",
+    "installAsk": "询问我"
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

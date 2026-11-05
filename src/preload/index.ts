@@ -85,6 +85,7 @@ interface UpdaterEvent {
   info?: { version: string };
   progress?: UpdaterProgress;
   error?: string;
+  shouldAskToInstall?: boolean;
 }
 
 const api = {

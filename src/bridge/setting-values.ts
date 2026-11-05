@@ -83,3 +83,12 @@ export const CloseAction = {
 } as const;
 
 export type CloseAction = (typeof CloseAction)[keyof typeof CloseAction];
+
+/** When a downloaded update is installed (Settings → General → Updates). */
+export const UpdateInstallMode = {
+  ON_QUIT: "on-quit",
+  ASK: "ask",
+} as const;
+
+export type UpdateInstallMode =
+  (typeof UpdateInstallMode)[keyof typeof UpdateInstallMode];

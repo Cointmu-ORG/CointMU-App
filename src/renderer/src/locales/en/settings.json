@@ -58,7 +58,14 @@
     "diagnosticsSaveTitle": "Save diagnostic bundle",
     "diagnosticsZip": "ZIP archive",
     "diagnosticsSaved": "Bundle saved.",
-    "diagnosticsFailed": "The bundle could not be saved."
+    "diagnosticsFailed": "The bundle could not be saved.",
+    "updates": "Updates",
+    "autoCheckTitle": "Check for updates automatically",
+    "autoCheckDesc": "Look for a new version when CointMU starts. You can always check in About.",
+    "installModeTitle": "When an update is ready",
+    "installModeDesc": "The node always shuts down cleanly before an update installs.",
+    "installOnQuit": "Install when I quit",
+    "installAsk": "Ask me"
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

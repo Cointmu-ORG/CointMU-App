@@ -29,6 +29,8 @@ export interface UpdaterState {
 }
 
 export interface Updater extends UpdaterState {
+  /** A downloaded update waits for the user's Restart now (install mode Ask). */
+  shouldAskToInstall: boolean;
   check: () => Promise<void>;
   download: () => Promise<void>;
   install: () => Promise<void>;
@@ -50,6 +52,7 @@ const INITIAL_STATE: UpdaterState = {
  */
 export function useUpdater(): Updater {
   const [state, setState] = useState<UpdaterState>(INITIAL_STATE);
+  const [shouldAskToInstall, setShouldAskToInstall] = useState(false);
 
   useEffect(() => {
     if (!window.api?.updater?.onStateChange) {
@@ -57,6 +60,9 @@ export function useUpdater(): Updater {
     }
 
     const unsubscribe = window.api.updater.onStateChange((event) => {
+      if (event.status === "downloaded") {
+        setShouldAskToInstall(event.shouldAskToInstall === true);
+      }
       setState((prev) => {
         switch (event.status) {
           case "checking":
@@ -114,5 +120,5 @@ export function useUpdater(): Updater {
   const download = useCallback((): Promise<void> => downloadUpdate(), []);
   const install = useCallback((): Promise<void> => installUpdate(), []);
 
-  return { ...state, check, download, install };
+  return { ...state, shouldAskToInstall, check, download, install };
 }

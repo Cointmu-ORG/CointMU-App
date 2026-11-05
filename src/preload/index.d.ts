@@ -43,6 +43,7 @@ interface UpdaterEvent {
   info?: UpdaterEventInfo;
   progress?: UpdaterProgress;
   error?: string;
+  shouldAskToInstall?: boolean;
 }
 
 interface CointmuAPI {

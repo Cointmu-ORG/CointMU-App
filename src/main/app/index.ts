@@ -135,7 +135,7 @@ app.whenReady().then(async () => {
   registerRendererRpcHandler(getRpcPort);
 
   const win = createWindow();
-  initUpdater(win);
+  initUpdater(win, store);
   miningController.setWindow(win);
   registerShellHandlers(setupTray(store, win, miningController));
   setQuitConfirmation(createQuitConfirmation(store, win, getRpcPort));

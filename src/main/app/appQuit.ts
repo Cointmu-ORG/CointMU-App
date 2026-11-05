@@ -15,6 +15,7 @@ let isQuitting = false;
 let isConfirming = false;
 let reason: QuitReason = QuitReason.USER;
 let confirmQuit: () => Promise<boolean> = () => Promise.resolve(true);
+let finishQuit: () => void = () => app.exit();
 
 /** @returns True once a quit has started; the window then closes for real. */
 export function isQuitInProgress(): boolean {
@@ -46,12 +47,20 @@ export function quitForSessionEnd(): void {
   app.quit();
 }
 
+/**
+ * @param finish - Ends the app once geth has stopped; the updater uses it
+ *   to install a waiting update instead of a plain exit.
+ */
+export function setQuitFinisher(finish: () => void): void {
+  finishQuit = finish;
+}
+
 function stopGethAndExit(): void {
   isQuitting = true;
   killGethProcess()
     .then(removeTemporaryIpcDir)
     .then(() => {
-      app.exit();
+      finishQuit();
     });
 }
 
