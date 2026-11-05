@@ -2,6 +2,8 @@ import { BrowserWindow, shell } from "electron";
 import { join } from "path";
 import { is } from "@electron-toolkit/utils";
 import { wasOpenedInBackground } from "./loginItem";
+import { isTrayShown } from "./tray";
+import { isQuitInProgress } from "./appQuit";
 
 const WINDOW_DEFAULT_WIDTH = 1280;
 const WINDOW_DEFAULT_HEIGHT = 800;
@@ -40,6 +42,14 @@ export function createWindow(): BrowserWindow {
   mainWindow.on("ready-to-show", () => {
     if (wasOpenedInBackground()) mainWindow.minimize();
     else mainWindow.show();
+  });
+
+  // Close hides to the tray while it is shown (Settings → General); a quit
+  // from anywhere still closes the window.
+  mainWindow.on("close", (event) => {
+    if (!isTrayShown() || isQuitInProgress()) return;
+    event.preventDefault();
+    mainWindow.hide();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

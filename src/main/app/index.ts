@@ -18,13 +18,9 @@ import { startSession } from "./session";
 import { createWindow } from "./window";
 import { syncLoginItemFromOs } from "./loginItem";
 import { createAppStore } from "../store/appStore";
-import {
-  prepareGethIpcEndpoint,
-  removeTemporaryIpcDir,
-} from "../geth/process/ipcEndpointLifecycle";
+import { prepareGethIpcEndpoint } from "../geth/process/ipcEndpointLifecycle";
 import {
   attachNodeRecovery,
-  killGethProcess,
   spawnGethProcess,
 } from "../geth/process/gethProcess";
 import {
@@ -49,12 +45,13 @@ import {
   registerNodeStatusHandlers,
 } from "../ipc/nodeIpc";
 import { registerExplorerHandlers } from "../ipc/explorerIpc";
+import { registerShellHandlers } from "../ipc/shellIpc";
+import { registerQuitHandler } from "./appQuit";
+import { setupTray } from "./traySetup";
 import {
   queryIndexStatus,
   queryMinerDistribution,
 } from "../explorerIndex/explorerIndexService";
-
-let isAppQuitting = false;
 
 // A second instance would spawn a second geth on the same datadir and fail on
 // the database lock, so it quits and hands focus to the running instance.
@@ -132,6 +129,7 @@ app.whenReady().then(async () => {
   const win = createWindow();
   initUpdater(win);
   miningController.setWindow(win);
+  registerShellHandlers(setupTray(store, win, miningController));
 
   const extSyncServer = startExtensionSyncServer(store, getRpcPort(), win);
 
@@ -146,22 +144,7 @@ app.whenReady().then(async () => {
   });
 });
 
-/**
- * Intercepts the quit sequence so the app does not terminate until the geth
- * child process has been given a chance to persist its chain state to disk.
- */
-app.on("before-quit", (e) => {
-  if (isAppQuitting) {
-    return;
-  }
-  e.preventDefault();
-  isAppQuitting = true;
-  killGethProcess()
-    .then(removeTemporaryIpcDir)
-    .then(() => {
-      app.exit();
-    });
-});
+registerQuitHandler();
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

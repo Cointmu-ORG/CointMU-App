@@ -291,3 +291,29 @@ export interface MinerDistributionResult {
   readonly isComplete: boolean;
   readonly status: ExplorerIndexStatus;
 }
+
+/**
+ * Localized strings the main process shows outside the renderer: the tray
+ * menu and its status lines. The renderer sends them on every language
+ * change; `{{name}}` placeholders are filled in main.
+ */
+export interface ShellText {
+  readonly trayOpen: string;
+  readonly trayStartMining: string;
+  readonly trayStopMining: string;
+  readonly trayQuit: string;
+  /** `{{percent}}` */
+  readonly traySyncing: string;
+  readonly traySynced: string;
+  readonly trayOffline: string;
+  readonly trayMining: string;
+  readonly trayNotMining: string;
+  /** `{{count}}` */
+  readonly trayPeers: string;
+}
+
+/** What the desktop shell supports on this OS and desktop environment. */
+export interface ShellCapabilities {
+  /** False on macOS (dock convention) and on Linux desktops without a tray host. */
+  readonly isTraySupported: boolean;
+}

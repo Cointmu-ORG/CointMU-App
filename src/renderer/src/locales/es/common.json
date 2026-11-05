@@ -71,5 +71,17 @@
     "WALLET_INCORRECT_PASSWORD": "Contraseña incorrecta.",
     "MINING_NO_REWARD_ADDRESS": "No hay una dirección de recompensa de minería configurada. Establece una en los ajustes de minería.",
     "decryptFailed": "No se pudo descifrar la billetera."
+  },
+  "shell": {
+    "trayOpen": "Abrir CointMU",
+    "trayStartMining": "Iniciar minería",
+    "trayStopMining": "Detener minería",
+    "trayQuit": "Salir de CointMU",
+    "traySyncing": "Sincronizando {{percent}}%",
+    "traySynced": "Sincronizado",
+    "trayOffline": "Nodo sin conexión",
+    "trayMining": "Minando",
+    "trayNotMining": "Sin minar",
+    "trayPeers": "Pares: {{count}}"
   }
 }

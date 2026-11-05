@@ -19,6 +19,7 @@ import { Sidebar, AppHeader } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "./lib/auto-lock.hook";
+import { useShellText } from "./lib/shell-text.hook";
 import { FirstRunNotice } from "@/features/error-reporting";
 
 const Miner = lazy(() =>
@@ -62,6 +63,7 @@ function App(): JSX.Element {
   const [settingsTab, setSettingsTab] = useState<string>("general");
   const updater = useUpdater();
   useMiningLogStream();
+  useShellText();
 
   useEffect(() => {
     void useNotificationStore.getState().hydrate();

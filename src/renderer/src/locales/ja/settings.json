@@ -7,7 +7,13 @@
     "backgroundTitle": "バックグラウンドで開く",
     "backgroundDesc": "ウィンドウなしでマイニングを実行できるように最小化して起動します",
     "display": "表示",
-    "title": "一般"
+    "title": "一般",
+    "window": "ウィンドウ",
+    "closeActionTitle": "閉じるボタン",
+    "closeActionDesc": "ウィンドウを閉じたときの動作",
+    "closeQuit": "終了",
+    "closeTray": "トレイに隠す",
+    "closeTrayHint": "CointMU はトレイで動作し続けます。終了するにはトレイメニューで「CointMU を終了」を選んでください。"
   },
   "appearance": {
     "subtitle": "CointMUの見た目をカスタマイズします",

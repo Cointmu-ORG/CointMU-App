@@ -69,5 +69,17 @@
     "WALLET_INCORRECT_PASSWORD": "Kata sandi salah.",
     "MINING_NO_REWARD_ADDRESS": "Alamat hadiah mining belum diatur. Atur di Pengaturan Mining.",
     "decryptFailed": "Dompet tidak dapat didekripsi."
+  },
+  "shell": {
+    "trayOpen": "Buka CointMU",
+    "trayStartMining": "Mulai mining",
+    "trayStopMining": "Hentikan mining",
+    "trayQuit": "Keluar dari CointMU",
+    "traySyncing": "Sinkronisasi {{percent}}%",
+    "traySynced": "Tersinkron",
+    "trayOffline": "Node offline",
+    "trayMining": "Sedang mining",
+    "trayNotMining": "Tidak mining",
+    "trayPeers": "Peer: {{count}}"
   }
 }

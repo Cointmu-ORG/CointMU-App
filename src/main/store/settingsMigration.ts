@@ -7,6 +7,7 @@ import {
   ThemeMode,
   toSettingCode,
 } from "../../bridge/setting-values";
+import { SETTING_RULES } from "./settingRules";
 
 type StoreData = Record<string, unknown>;
 
@@ -131,4 +132,29 @@ export function migrateSettingValues<T extends StoreData>(data: T): T | null {
   }
 
   return hasChanged ? (migrated as T) : null;
+}
+
+/**
+ * Sets every ruled setting (SETTING_RULES) that is missing or holds a value
+ * its rule rejects, such as a hand-edited config.json, to its default.
+ * Idempotent; runs after migrateSettingValues.
+ * @param data - The whole store content.
+ * @returns A filled copy, or null when nothing needed to change.
+ */
+export function applySettingRules<T extends StoreData>(data: T): T | null {
+  const filled: StoreData = structuredClone(data);
+  let hasChanged = false;
+  for (const [dottedKey, rule] of Object.entries(SETTING_RULES)) {
+    const parts = dottedKey.split(".");
+    const leafKey = parts.pop() ?? dottedKey;
+    let node = filled;
+    for (const part of parts) {
+      if (!asSection(node[part])) node[part] = {};
+      node = node[part] as StoreData;
+    }
+    if (leafKey in node && rule.isValid(node[leafKey])) continue;
+    node[leafKey] = structuredClone(rule.fallback);
+    hasChanged = true;
+  }
+  return hasChanged ? (filled as T) : null;
 }

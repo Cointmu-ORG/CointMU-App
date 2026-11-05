@@ -35,3 +35,8 @@ export const EXPLORER_CHANNELS = {
   GET_MINER_DISTRIBUTION: "explorer:get-miner-distribution",
   GET_INDEX_STATUS: "explorer:get-index-status",
 } as const;
+
+export const SHELL_CHANNELS = {
+  SET_TEXT: "shell:set-text",
+  GET_CAPABILITIES: "shell:get-capabilities",
+} as const;

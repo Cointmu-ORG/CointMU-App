@@ -30,6 +30,20 @@ export class MiningController {
     this.win = win;
   }
 
+  /** @returns Whether the user has mining switched on. */
+  public isEnabled(): boolean {
+    return this.store.get("mining.isMiningEnabled") === true;
+  }
+
+  /**
+   * Switches mining on or off, as the Mining page's toggle does.
+   * @param enabled - The new state.
+   * @throws MINING_NO_REWARD_ADDRESS when no reward address is set.
+   */
+  public async setEnabled(enabled: boolean): Promise<void> {
+    await this.toggleMining(enabled);
+  }
+
   /**
    * Toggles the mining state on or off. Dispatches miner_start or miner_stop.
    * The etherbase is sourced exclusively from the persisted mining reward address

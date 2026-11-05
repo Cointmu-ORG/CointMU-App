@@ -75,3 +75,11 @@ export function toSettingCode<T extends string>(
   const lower = value.toLowerCase();
   return codes.find((code) => code === lower) ?? fallback;
 }
+
+/** What the window's close button does (Settings → General). */
+export const CloseAction = {
+  QUIT: "quit",
+  TRAY: "tray",
+} as const;
+
+export type CloseAction = (typeof CloseAction)[keyof typeof CloseAction];

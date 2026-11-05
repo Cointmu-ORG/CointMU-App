@@ -69,5 +69,17 @@
     "WALLET_INCORRECT_PASSWORD": "パスワードが正しくありません。",
     "MINING_NO_REWARD_ADDRESS": "マイニングの報酬アドレスが設定されていません。マイニング設定で設定してください。",
     "decryptFailed": "ウォレットを復号できませんでした。"
+  },
+  "shell": {
+    "trayOpen": "CointMU を開く",
+    "trayStartMining": "マイニングを開始",
+    "trayStopMining": "マイニングを停止",
+    "trayQuit": "CointMU を終了",
+    "traySyncing": "同期中 {{percent}}%",
+    "traySynced": "同期済み",
+    "trayOffline": "ノードはオフライン",
+    "trayMining": "マイニング中",
+    "trayNotMining": "マイニング停止中",
+    "trayPeers": "ピア: {{count}}"
   }
 }

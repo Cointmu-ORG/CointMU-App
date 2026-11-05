@@ -72,5 +72,17 @@
     "WALLET_INCORRECT_PASSWORD": "Неверный пароль.",
     "MINING_NO_REWARD_ADDRESS": "Адрес вознаграждения за майнинг не задан. Укажите его в настройках майнинга.",
     "decryptFailed": "Не удалось расшифровать кошелёк."
+  },
+  "shell": {
+    "trayOpen": "Открыть CointMU",
+    "trayStartMining": "Начать майнинг",
+    "trayStopMining": "Остановить майнинг",
+    "trayQuit": "Выйти из CointMU",
+    "traySyncing": "Синхронизация {{percent}}%",
+    "traySynced": "Синхронизировано",
+    "trayOffline": "Узел не в сети",
+    "trayMining": "Майнинг идёт",
+    "trayNotMining": "Майнинг остановлен",
+    "trayPeers": "Пиры: {{count}}"
   }
 }

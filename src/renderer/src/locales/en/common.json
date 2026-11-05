@@ -70,5 +70,17 @@
     "WALLET_INCORRECT_PASSWORD": "Incorrect password.",
     "MINING_NO_REWARD_ADDRESS": "No mining reward address configured. Set one in Mining Settings.",
     "decryptFailed": "Could not decrypt the wallet."
+  },
+  "shell": {
+    "trayOpen": "Open CointMU",
+    "trayStartMining": "Start mining",
+    "trayStopMining": "Stop mining",
+    "trayQuit": "Quit CointMU",
+    "traySyncing": "Syncing {{percent}}%",
+    "traySynced": "Synced",
+    "trayOffline": "Node offline",
+    "trayMining": "Mining",
+    "trayNotMining": "Not mining",
+    "trayPeers": "Peers: {{count}}"
   }
 }

@@ -6,7 +6,7 @@ import {
   SyncMode,
   ThemeMode,
 } from "../../bridge/setting-values";
-import { migrateSettingValues } from "./settingsMigration";
+import { applySettingRules, migrateSettingValues } from "./settingsMigration";
 
 // TODO(types): replace with the typed electron-store instance (Store<Schema>).
 // Callers read and write dotted keys the typed API would reject today, so the
@@ -88,6 +88,10 @@ export async function createAppStore() {
   const migrated = migrateSettingValues(store.store);
   if (migrated) {
     store.store = migrated;
+  }
+  const filled = applySettingRules(store.store);
+  if (filled) {
+    store.store = filled;
   }
   return store;
 }

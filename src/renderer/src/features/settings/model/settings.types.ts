@@ -1,4 +1,5 @@
 import type {
+  CloseAction,
   DisplayCurrency,
   LogLevel,
   MiningIntensity,
@@ -15,6 +16,7 @@ export interface SettingsStore {
     pushNotifications: boolean;
     notificationSound: boolean;
     currency: DisplayCurrency;
+    closeAction: CloseAction;
   };
   appearance: {
     theme: string;

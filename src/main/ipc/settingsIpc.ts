@@ -5,6 +5,8 @@ import { isBootnodeSettingKey } from "../geth/bootnode/bootnodeSettings";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { applyLoginItem } from "../app/loginItem";
 import type { AppStore } from "../store/appStore";
+import { findInvalidSetting } from "../store/settingRules";
+import { applySettingRules } from "../store/settingsMigration";
 
 // Read when geth starts (spawnGethProcess); saving a new value restarts it.
 const GETH_SETTING_KEYS = [
@@ -46,9 +48,16 @@ export function registerSettingsHandlers(store: AppStore): void {
         `settings:set cannot write "${key}"; use the bootnode settings channel`,
       );
     }
+    const invalidKey = findInvalidSetting(key, value);
+    if (invalidKey) {
+      throw new TypeError(`settings:set rejected the value of "${invalidKey}"`);
+    }
     const gethSettingsBefore = readSettings(store, GETH_SETTING_KEYS);
     const loginItemBefore = readSettings(store, LOGIN_ITEM_SETTING_KEYS);
     store.set(key, value);
+    // A whole-section write (Reset to defaults) drops keys it does not list.
+    const filled = applySettingRules(store.store);
+    if (filled) store.store = filled;
     if (readSettings(store, GETH_SETTING_KEYS) !== gethSettingsBefore) {
       restartNodeByUser(store);
     }

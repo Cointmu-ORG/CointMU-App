@@ -11,6 +11,8 @@ import type {
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
+  ShellCapabilities,
+  ShellText,
   TelemetryState,
   WalletActivity,
 } from "../bridge/types";
@@ -146,6 +148,10 @@ interface CointmuAPI {
   pairing: {
     onRequest: (callback: () => void) => () => void;
     respond: (approved: boolean) => void;
+  };
+  shell: {
+    setText: (text: ShellText) => Promise<void>;
+    getCapabilities: () => Promise<ShellCapabilities>;
   };
   window: {
     minimize: () => void;

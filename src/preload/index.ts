@@ -7,6 +7,7 @@ import {
   EXPLORER_CHANNELS,
   NODE_CHANNELS,
   RPC_CHANNELS,
+  SHELL_CHANNELS,
   SYSTEM_CHANNELS,
 } from "../bridge/ipc-channels";
 import type {
@@ -23,6 +24,8 @@ import type {
   NodePeerHint,
   NodeRecoveryEvent,
   QueuedReport,
+  ShellCapabilities,
+  ShellText,
   TelemetryState,
   WalletActivity,
 } from "../bridge/types";
@@ -214,6 +217,12 @@ const api = {
     },
     respond: (approved: boolean) =>
       ipcRenderer.send("pairing:respond", approved),
+  },
+  shell: {
+    setText: (text: ShellText): Promise<void> =>
+      ipcRenderer.invoke(SHELL_CHANNELS.SET_TEXT, text),
+    getCapabilities: (): Promise<ShellCapabilities> =>
+      ipcRenderer.invoke(SHELL_CHANNELS.GET_CAPABILITIES),
   },
   window: {
     minimize: (): void => ipcRenderer.send("window-minimize"),

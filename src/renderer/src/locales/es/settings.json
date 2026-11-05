@@ -7,7 +7,13 @@
     "backgroundTitle": "Abrir en segundo plano",
     "backgroundDesc": "Comenzar minimizado para que la minería pueda ejecutarse sin ventana",
     "display": "Visualización",
-    "title": "General"
+    "title": "General",
+    "window": "Ventana",
+    "closeActionTitle": "Botón de cerrar",
+    "closeActionDesc": "Qué ocurre al cerrar la ventana",
+    "closeQuit": "Salir",
+    "closeTray": "Ocultar en la bandeja",
+    "closeTrayHint": "CointMU sigue funcionando en la bandeja. Elige Salir en el menú de la bandeja para cerrarlo."
   },
   "appearance": {
     "subtitle": "Personaliza cómo se ve CointMU",

@@ -7,7 +7,13 @@
     "backgroundTitle": "Open in background",
     "backgroundDesc": "Start minimized so mining can run without a window",
     "display": "Display",
-    "title": "General"
+    "title": "General",
+    "window": "Window",
+    "closeActionTitle": "Close button",
+    "closeActionDesc": "What happens when you close the window",
+    "closeQuit": "Quit",
+    "closeTray": "Hide to tray",
+    "closeTrayHint": "CointMU keeps running in the tray. Choose Quit in the tray menu to exit."
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

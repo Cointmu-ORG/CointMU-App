@@ -7,7 +7,13 @@
     "backgroundTitle": "在后台打开",
     "backgroundDesc": "以最小化状态启动，以便挖矿可以在没有窗口的情况下运行",
     "display": "显示",
-    "title": "常规"
+    "title": "常规",
+    "window": "窗口",
+    "closeActionTitle": "关闭按钮",
+    "closeActionDesc": "关闭窗口时的操作",
+    "closeQuit": "退出",
+    "closeTray": "隐藏到托盘",
+    "closeTrayHint": "CointMU 会在托盘中继续运行。在托盘菜单中选择退出即可关闭。"
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

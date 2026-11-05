@@ -70,5 +70,17 @@
     "WALLET_INCORRECT_PASSWORD": "Falsches Passwort.",
     "MINING_NO_REWARD_ADDRESS": "Keine Belohnungsadresse für das Mining festgelegt. Lege eine in den Mining-Einstellungen fest.",
     "decryptFailed": "Die Wallet konnte nicht entschlüsselt werden."
+  },
+  "shell": {
+    "trayOpen": "CointMU öffnen",
+    "trayStartMining": "Mining starten",
+    "trayStopMining": "Mining stoppen",
+    "trayQuit": "CointMU beenden",
+    "traySyncing": "Synchronisiere {{percent}} %",
+    "traySynced": "Synchronisiert",
+    "trayOffline": "Node offline",
+    "trayMining": "Mining läuft",
+    "trayNotMining": "Kein Mining",
+    "trayPeers": "Peers: {{count}}"
   }
 }

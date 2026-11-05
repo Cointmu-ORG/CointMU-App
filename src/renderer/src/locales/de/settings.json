@@ -7,7 +7,13 @@
     "backgroundTitle": "Im Hintergrund öffnen",
     "backgroundDesc": "Minimiert starten, damit Mining ohne Fenster laufen kann",
     "display": "Anzeige",
-    "title": "Allgemein"
+    "title": "Allgemein",
+    "window": "Fenster",
+    "closeActionTitle": "Schließen-Schaltfläche",
+    "closeActionDesc": "Was beim Schließen des Fensters passiert",
+    "closeQuit": "Beenden",
+    "closeTray": "In den Infobereich minimieren",
+    "closeTrayHint": "CointMU läuft im Infobereich weiter. Zum Beenden im Menü des Infobereichs „CointMU beenden“ wählen."
   },
   "appearance": {
     "subtitle": "Passen Sie an, wie CointMU aussieht",

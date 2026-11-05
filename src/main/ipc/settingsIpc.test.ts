@@ -39,7 +39,18 @@ function createDottedStore(data: Record<string, unknown>): {
     }, data);
     parent[last] = value;
   });
-  return { get, set, store: data };
+  return {
+    get,
+    set,
+    // electron-store replaces the whole content on assignment.
+    get store(): Record<string, unknown> {
+      return data;
+    },
+    set store(next: Record<string, unknown>) {
+      for (const key of Object.keys(data)) delete data[key];
+      Object.assign(data, next);
+    },
+  };
 }
 
 function registerSet(data: Record<string, unknown> = {}): {
@@ -75,6 +86,32 @@ describe("settings:set", () => {
       setHandler(null, { network: { bootnodes: ["x"] } }, undefined),
     ).toThrow(TypeError);
     expect(store.set).not.toHaveBeenCalled();
+  });
+
+  it("refuses a value a setting rule rejects, alone or in a section", () => {
+    const { setHandler, store } = registerSet();
+
+    expect(() => setHandler(null, "general.closeAction", "explode")).toThrow(
+      /general\.closeAction/,
+    );
+    expect(() =>
+      setHandler(null, "general", { closeAction: "explode" }),
+    ).toThrow(TypeError);
+    expect(store.set).not.toHaveBeenCalled();
+  });
+
+  it("restores ruled defaults a whole-section write left out", () => {
+    const data: Record<string, unknown> = {
+      general: { closeAction: "tray", currency: "usd" },
+    };
+    const { setHandler } = registerSet(data);
+
+    setHandler(null, "general", { currency: "cmu" });
+
+    expect(data.general).toMatchObject({
+      currency: "cmu",
+      closeAction: "quit",
+    });
   });
 
   it("still writes ordinary dotted keys", () => {
