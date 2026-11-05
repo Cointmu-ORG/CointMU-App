@@ -313,7 +313,10 @@
     "idleOnlyTitle": "Mining hanya saat idle",
     "idleOnlyDesc": "Jeda mining saat kamu memakai komputer, lalu lanjut setelah komputer idle beberapa saat.",
     "idleAfterTitle": "Idle setelah",
-    "minutes_other": "{{count}} mnt"
+    "minutes_other": "{{count}} mnt",
+    "resourceUse": "Pemakaian sumber daya",
+    "lowPriorityTitle": "Prioritas rendah",
+    "lowPriorityDesc": "Jalankan node dengan prioritas CPU di bawah normal agar aplikasi lain tetap responsif. Mematikannya bisa membuat node dimulai ulang."
   },
   "securitySettings": {
     "subtitle": "Kelola pengaturan keamanan dompet Anda",

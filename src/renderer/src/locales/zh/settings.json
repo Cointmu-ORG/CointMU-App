@@ -313,7 +313,10 @@
     "idleOnlyTitle": "仅在空闲时挖矿",
     "idleOnlyDesc": "使用电脑时暂停挖矿，电脑空闲一段时间后自动恢复。",
     "idleAfterTitle": "空闲时长",
-    "minutes_other": "{{count}} 分钟"
+    "minutes_other": "{{count}} 分钟",
+    "resourceUse": "资源占用",
+    "lowPriorityTitle": "低优先级",
+    "lowPriorityDesc": "以低于正常的 CPU 优先级运行节点，让其他应用保持流畅。关闭此项可能会重启节点。"
   },
   "securitySettings": {
     "subtitle": "管理你的钱包安全设置",

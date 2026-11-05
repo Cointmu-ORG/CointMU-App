@@ -313,7 +313,10 @@
     "idleOnlyTitle": "アイドル時のみマイニング",
     "idleOnlyDesc": "コンピューターを使っている間はマイニングを一時停止し、しばらく操作がなければ再開します。",
     "idleAfterTitle": "アイドルとみなすまで",
-    "minutes_other": "{{count}} 分"
+    "minutes_other": "{{count}} 分",
+    "resourceUse": "リソースの使用",
+    "lowPriorityTitle": "低優先度",
+    "lowPriorityDesc": "ノードを通常より低い CPU 優先度で実行し、ほかのアプリの動作を保ちます。オフにするとノードが再起動する場合があります。"
   },
   "securitySettings": {
     "subtitle": "ウォレットのセキュリティ設定を管理する",

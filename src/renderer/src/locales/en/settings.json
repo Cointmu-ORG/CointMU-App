@@ -316,7 +316,10 @@
     "idleOnlyDesc": "Pause mining while you use the computer and resume once it has been idle for a while.",
     "idleAfterTitle": "Idle after",
     "minutes_one": "{{count}} min",
-    "minutes_other": "{{count}} min"
+    "minutes_other": "{{count}} min",
+    "resourceUse": "Resource use",
+    "lowPriorityTitle": "Low priority",
+    "lowPriorityDesc": "Run the node at below-normal CPU priority so other apps stay responsive. Turning it off may restart the node."
   },
   "securitySettings": {
     "subtitle": "Manage security settings for your wallet",

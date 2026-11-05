@@ -16,6 +16,8 @@ import {
   setDataRoot,
 } from "../geth/process/networkConfig";
 import { storedDataRoot } from "../geth/process/chainDataMove";
+import { watchGethPriority } from "../geth/process/gethPrioritySetup";
+import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerChainDataHandlers } from "../ipc/chainDataIpc";
 import { CHAIN_DATA_ROOT_KEY } from "../store/settingRules";
 import { startSession } from "./session";
@@ -132,6 +134,7 @@ app.whenReady().then(async () => {
   }
 
   await prepareGethIpcEndpoint(store);
+  watchGethPriority(store, () => restartNodeByUser(store));
   await spawnGethProcess(store);
 
   const miningController = new MiningController(getRpcPort(), store);

@@ -322,7 +322,10 @@
     "minutes_one": "{{count}} мин",
     "minutes_few": "{{count}} мин",
     "minutes_many": "{{count}} мин",
-    "minutes_other": "{{count}} мин"
+    "minutes_other": "{{count}} мин",
+    "resourceUse": "Использование ресурсов",
+    "lowPriorityTitle": "Низкий приоритет",
+    "lowPriorityDesc": "Запускать узел с приоритетом процессора ниже обычного, чтобы другие приложения не тормозили. Отключение может перезапустить узел."
   },
   "securitySettings": {
     "subtitle": "Управление настройками безопасности вашего кошелька",

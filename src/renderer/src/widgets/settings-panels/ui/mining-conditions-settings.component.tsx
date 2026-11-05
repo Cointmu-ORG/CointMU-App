@@ -12,10 +12,38 @@ const IDLE_MINUTE_OPTIONS = [1, 2, 5, 10, 15] as const;
 const DEFAULT_IDLE_MINUTES = 2;
 
 /**
+ * Settings → Mining → Resource use: geth's CPU priority, applied to the
+ * running node without a restart.
+ * @returns The section.
+ */
+function ResourceUseSettings(): JSX.Element {
+  const { t } = useTranslation();
+  const [isLowPriority, setIsLowPriority] = useStoredSetting(
+    "mining.lowPriority",
+    false,
+  );
+  const title = t("settings:miningSettings.lowPriorityTitle");
+  return (
+    <SettingsGroup title={t("settings:miningSettings.resourceUse")}>
+      <SettingRow
+        title={title}
+        description={t("settings:miningSettings.lowPriorityDesc")}
+      >
+        <SettingSwitch
+          label={title}
+          checked={isLowPriority}
+          onChange={setIsLowPriority}
+        />
+      </SettingRow>
+    </SettingsGroup>
+  );
+}
+
+/**
  * Settings → Mining → When to mine: conditions the mining policy in main
  * applies to mining the user started. They pause and resume it; they never
- * start it on their own.
- * @returns The section.
+ * start it on their own. Followed by Resource use.
+ * @returns The sections.
  */
 export function MiningConditionsSettings(): JSX.Element {
   const { t } = useTranslation();
@@ -31,30 +59,33 @@ export function MiningConditionsSettings(): JSX.Element {
   const thresholdTitle = t("settings:miningSettings.idleAfterTitle");
 
   return (
-    <SettingsGroup title={t("settings:miningSettings.whenToMine")}>
-      <SettingRow
-        title={idleTitle}
-        description={t("settings:miningSettings.idleOnlyDesc")}
-      >
-        <SettingSwitch
-          label={idleTitle}
-          checked={isIdleOnly}
-          onChange={setIsIdleOnly}
-        />
-      </SettingRow>
-      {isIdleOnly && (
-        <SettingRow title={thresholdTitle}>
-          <SettingChoice
-            label={thresholdTitle}
-            value={idleMinutes}
-            options={IDLE_MINUTE_OPTIONS.map((minutes) => ({
-              value: minutes,
-              label: t("settings:miningSettings.minutes", { count: minutes }),
-            }))}
-            onChange={setIdleMinutes}
+    <>
+      <SettingsGroup title={t("settings:miningSettings.whenToMine")}>
+        <SettingRow
+          title={idleTitle}
+          description={t("settings:miningSettings.idleOnlyDesc")}
+        >
+          <SettingSwitch
+            label={idleTitle}
+            checked={isIdleOnly}
+            onChange={setIsIdleOnly}
           />
         </SettingRow>
-      )}
-    </SettingsGroup>
+        {isIdleOnly && (
+          <SettingRow title={thresholdTitle}>
+            <SettingChoice
+              label={thresholdTitle}
+              value={idleMinutes}
+              options={IDLE_MINUTE_OPTIONS.map((minutes) => ({
+                value: minutes,
+                label: t("settings:miningSettings.minutes", { count: minutes }),
+              }))}
+              onChange={setIdleMinutes}
+            />
+          </SettingRow>
+        )}
+      </SettingsGroup>
+      <ResourceUseSettings />
+    </>
   );
 }

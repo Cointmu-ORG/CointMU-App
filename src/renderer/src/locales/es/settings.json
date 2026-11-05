@@ -319,7 +319,10 @@
     "idleAfterTitle": "Inactivo tras",
     "minutes_one": "{{count}} min",
     "minutes_many": "{{count}} min",
-    "minutes_other": "{{count}} min"
+    "minutes_other": "{{count}} min",
+    "resourceUse": "Uso de recursos",
+    "lowPriorityTitle": "Prioridad baja",
+    "lowPriorityDesc": "Ejecuta el nodo con prioridad de CPU inferior a la normal para que las demás apps sigan respondiendo. Desactivarla puede reiniciar el nodo."
   },
   "securitySettings": {
     "subtitle": "Gestionar los ajustes de seguridad de tu billetera",

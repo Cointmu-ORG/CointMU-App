@@ -46,6 +46,7 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     isValid: isOneOf(Object.values(UpdateInstallMode)),
   },
   "mining.idleOnly": { fallback: false, isValid: isBoolean },
+  "mining.lowPriority": { fallback: false, isValid: isBoolean },
   "mining.idleThresholdMinutes": {
     fallback: 2,
     isValid: isIntegerIn(1, 60),
