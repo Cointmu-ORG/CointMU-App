@@ -1,6 +1,5 @@
 import { rmSync } from "node:fs";
 import { setTimeout as delay } from "node:timers/promises";
-import ms from "ms";
 import {
   ExplorerIndexPhase,
   type ExplorerIndexStatus,
@@ -16,11 +15,11 @@ export const BATCH_BLOCKS = 100;
 /** A reorg deeper than this, or a node head this far below the index, rebuilds the index. */
 export const MAX_REORG_DEPTH = 128;
 const REORG_CHUNK_BLOCKS = 32;
-const BUSY_PAUSE_MS = ms("100ms");
+const BUSY_PAUSE_MS = 100;
 // While geth imports blocks the index yields: one batch per second at most.
-const SYNCING_PAUSE_MS = ms("1s");
-const FOLLOW_INTERVAL_MS = ms("5s");
-const ERROR_BACKOFF_MS = ms("10s");
+const SYNCING_PAUSE_MS = 1_000;
+const FOLLOW_INTERVAL_MS = 5_000;
+const ERROR_BACKOFF_MS = 10_000;
 const PERCENT = 100;
 
 /** Whether a step did work (step again soon) or found nothing to do. */

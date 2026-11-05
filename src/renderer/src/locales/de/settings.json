@@ -82,7 +82,7 @@
     "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",
     "rpcNetwork": "RPC/Netzwerk",
     "httpRpcTitle": "JSON-RPC über HTTP aktivieren",
-    "httpRpcDesc": "Auf 127.0.0.1:8545 für dApp-Verbindungen lauschen",
+    "httpRpcDesc": "Auf 127.0.0.1:{{port}} für dApp-Verbindungen lauschen",
     "storage": "Speicher",
     "datadirTitle": "Datenverzeichnis",
     "datadirDesc": "Wo Ketten-Daten und Keystore gespeichert sind",

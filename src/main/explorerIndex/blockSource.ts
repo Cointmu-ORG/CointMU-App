@@ -1,7 +1,6 @@
-import ms from "ms";
 import type { IndexedBlock } from "./blockStore";
 
-const RPC_TIMEOUT_MS = ms("10s");
+const RPC_TIMEOUT_MS = 10_000;
 const HEX_RADIX = 16;
 const HASH_PATTERN = /^0x[0-9a-f]{64}$/;
 const ADDRESS_PATTERN = /^0x[0-9a-f]{40}$/;

@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { DEFAULT_CONCURRENCY } from "../config/mining.constants";
-import { type BlockData } from "@/entities/block";
 
 /**
  * Resolves a safe CPU core count from the browser environment, falling back to
@@ -16,32 +15,6 @@ export function getSafeConcurrency(): number {
   } catch {
     return DEFAULT_CONCURRENCY;
   }
-}
-
-/**
- * Builds a fixed-width window of share outcomes from the most recent blocks. Each
- * slot is true when the active wallet mined that block, false when another miner
- * did, and null when no block occupies the slot yet.
- * @param recentBlocks - The most recent blocks, oldest to newest.
- * @param windowSize - The number of slots in the share window.
- * @param activeWalletAddress - The address used to attribute self-mined blocks.
- * @returns An ordered array of share outcomes for rendering the share grid.
- */
-export function computeSharesData(
-  recentBlocks: BlockData[],
-  windowSize: number,
-  activeWalletAddress: string | null,
-): Array<boolean | null> {
-  return Array.from({ length: windowSize }).map((_, i) => {
-    const blockIndex = windowSize - 1 - i;
-    if (blockIndex < recentBlocks.length) {
-      return (
-        recentBlocks[blockIndex].miner.toLowerCase() ===
-        activeWalletAddress?.toLowerCase()
-      );
-    }
-    return null;
-  });
 }
 
 /**

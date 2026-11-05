@@ -7,7 +7,6 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { join } from "node:path";
-import ms from "ms";
 import {
   parseEnvelope,
   serializeEnvelope,
@@ -16,7 +15,7 @@ import {
 } from "@sentry/core";
 
 export const QUEUE_MAX_BYTES = 5 * 1024 * 1024;
-export const QUEUE_MAX_AGE_MS = ms("30d");
+export const QUEUE_MAX_AGE_MS = 2_592_000_000;
 const FILE_SUFFIX = ".envelope";
 /** `<order>_<createdMs>.envelope`: order sorts the queue, createdMs ages it. */
 const FILE_NAME_PATTERN = /^(\d+)_(\d+)\.envelope$/;

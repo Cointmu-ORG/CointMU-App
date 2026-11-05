@@ -82,7 +82,7 @@
     "subtitle": "API Pengembang, penyimpanan lokal, dan diagnostik",
     "rpcNetwork": "RPC/Jaringan",
     "httpRpcTitle": "Aktifkan JSON-RPC melalui HTTP",
-    "httpRpcDesc": "Dengarkan di 127.0.0.1:8545 untuk koneksi dApp",
+    "httpRpcDesc": "Dengarkan di 127.0.0.1:{{port}} untuk koneksi dApp",
     "storage": "Penyimpanan",
     "datadirTitle": "Datadir",
     "datadirDesc": "Tempat data chain dan keystore disimpan",

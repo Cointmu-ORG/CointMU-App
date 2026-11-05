@@ -1,4 +1,3 @@
-import ms from "ms";
 import { LogLevel } from "@bridge/setting-values";
 
 export const SECURITY_SETTINGS_KEY = "security";
@@ -7,7 +6,7 @@ export const AUTO_HIDE_SECONDS = 30;
 export const RESET_CONFIRM_WORD = "RESET";
 export const MINING_DEBOUNCE_DELAY_MS = 800;
 export const MAX_CORES = navigator.hardwareConcurrency || 8;
-export const UPTIME_REFRESH_MS = ms("1m");
+export const UPTIME_REFRESH_MS = 60_000;
 
 export const MAX_PEERS_OPTIONS = [10, 14, 25, 50];
 export const RECOMMENDED_MAX_PEERS = 14;

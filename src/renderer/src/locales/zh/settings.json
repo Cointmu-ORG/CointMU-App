@@ -82,7 +82,7 @@
     "subtitle": "开发人员 API、本地存储和诊断",
     "rpcNetwork": "RPC/网络",
     "httpRpcTitle": "启用通过 HTTP 的 JSON-RPC",
-    "httpRpcDesc": "监听 127.0.0.1:8545 以进行 dApp 连接",
+    "httpRpcDesc": "监听 127.0.0.1:{{port}} 以进行 dApp 连接",
     "storage": "存储",
     "datadirTitle": "数据目录",
     "datadirDesc": "链数据和密钥库的存储位置",

@@ -1,5 +1,4 @@
 import { setTimeout as delay } from "node:timers/promises";
-import ms from "ms";
 import {
   NodeBlockReason,
   NodeRecoveryStage,
@@ -17,12 +16,12 @@ import { quarantineChainData } from "./chaindataQuarantine";
 import { sanitizeLocalLine } from "../../diagnostics/localSanitizer";
 import { callGethRpc } from "../rpc/rpcUtils";
 
-const RESTART_BACKOFF_MS = [ms("3s"), ms("10s"), ms("30s")];
-const HEALTH_GRACE_MS = ms("15s");
-const RPC_HEALTH_TIMEOUT_MS = ms("5s");
+const RESTART_BACKOFF_MS = [3_000, 10_000, 30_000];
+const HEALTH_GRACE_MS = 15_000;
+const RPC_HEALTH_TIMEOUT_MS = 5_000;
 const MAX_RECOVERIES_PER_SESSION = 1;
 const UNKNOWN_FATAL_MAX_RESTARTS = 5;
-const UNKNOWN_FATAL_WINDOW_MS = ms("10m");
+const UNKNOWN_FATAL_WINDOW_MS = 600_000;
 const MAX_FAILURE_LINE_CHARS = 300;
 
 const RecoveryPhase = {
