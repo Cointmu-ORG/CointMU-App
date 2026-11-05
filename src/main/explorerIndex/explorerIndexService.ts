@@ -1,7 +1,6 @@
 import { app } from "electron";
 import { join } from "node:path";
 import { Worker } from "node:worker_threads";
-import ms from "ms";
 import type {
   ExplorerIndexStatus,
   MinerDistributionResult,
@@ -19,9 +18,9 @@ const INDEX_DIR_NAME = "explorer-index";
 // Built next to index.js as its own entry (electron.vite.config.ts).
 const WORKER_FILE_NAME = "indexWorker.js";
 // A VACUUM holds the worker for ~0.5 s per 300k blocks; queries wait for it.
-const REQUEST_TIMEOUT_MS = ms("5s");
+const REQUEST_TIMEOUT_MS = 5_000;
 // Stop never holds up quit or a geth restart longer than this.
-const STOP_TIMEOUT_MS = ms("2s");
+const STOP_TIMEOUT_MS = 2_000;
 const MS_PER_SECOND = 1000;
 
 type Reply = MinerDistributionResult | ExplorerIndexStatus | null;

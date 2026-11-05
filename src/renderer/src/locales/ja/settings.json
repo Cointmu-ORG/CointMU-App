@@ -82,7 +82,7 @@
     "subtitle": "開発者API、ローカルストレージ、および診断",
     "rpcNetwork": "RPC / ネットワーク",
     "httpRpcTitle": "HTTP経由のJSON-RPCを有効にする",
-    "httpRpcDesc": "dApp接続のために127.0.0.1:8545でリッスンします",
+    "httpRpcDesc": "dApp接続のために127.0.0.1:{{port}}でリッスンします",
     "storage": "ストレージ",
     "datadirTitle": "データディレクトリ",
     "datadirDesc": "チェーンデータとキーストアが保存される場所",

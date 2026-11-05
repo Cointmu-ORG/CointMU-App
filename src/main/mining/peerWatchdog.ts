@@ -1,13 +1,12 @@
 import { connect } from "node:net";
-import ms from "ms";
 import { NodePeerHint } from "../../bridge/types";
 import { parseEnode } from "../geth/bootnode/bootnode";
 
-export const PEER_POLL_INTERVAL_MS = ms("30s");
+export const PEER_POLL_INTERVAL_MS = 30_000;
 /** How long the node must run with zero peers before the bootnode is probed. */
-export const NO_PEERS_GRACE_MS = ms("3m");
+export const NO_PEERS_GRACE_MS = 180_000;
 /** Wait before each re-probe while peers stay at zero; the last value repeats. */
-export const PROBE_BACKOFF_MS = [ms("1m"), ms("2m"), ms("5m"), ms("10m")];
+export const PROBE_BACKOFF_MS = [60_000, 120_000, 300_000, 600_000];
 
 export interface PeerWatchdogDeps {
   readonly isGethRunning: () => boolean;

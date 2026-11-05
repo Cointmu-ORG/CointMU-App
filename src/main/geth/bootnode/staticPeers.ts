@@ -1,16 +1,15 @@
 import { lookup } from "node:dns/promises";
-import ms from "ms";
 import { formatEnode, parseEnode } from "./bootnode";
 import { getRpcPort } from "../process/ports";
 import { callGethRpcRaw } from "../rpc/rpcUtils";
 
 /** How often to ask a starting geth whether its IPC endpoint answers. */
-export const READY_POLL_MS = ms("2s");
+export const READY_POLL_MS = 2_000;
 /** Gives up on a geth that never answers; the next start tries again. */
 export const READY_MAX_ATTEMPTS = 60;
 /** Retry for nodes not registered yet, e.g. a hostname DNS cannot resolve. */
-export const STATIC_PEER_RETRY_MS = ms("30s");
-const ADMIN_TIMEOUT_MS = ms("5s");
+export const STATIC_PEER_RETRY_MS = 30_000;
+const ADMIN_TIMEOUT_MS = 5_000;
 
 // The enodes the user's list asks for, as configured.
 let desired: readonly string[] = [];

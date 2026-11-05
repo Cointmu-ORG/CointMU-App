@@ -1,4 +1,3 @@
-import ms from "ms";
 import type { BootnodeStatus } from "../../../bridge/types";
 import { parseEnode } from "./bootnode";
 import { probeTcpLatency } from "../../mining/peerWatchdog";
@@ -10,8 +9,8 @@ import { callGethRpcRaw } from "../rpc/rpcUtils";
 const PEER_NODE_ID = /^enode:\/\/([0-9a-f]{128})@/i;
 
 /** Short: an answering node replies in well under a second on campus. */
-export const NODE_PROBE_TIMEOUT_MS = ms("3s");
-const ADMIN_PEERS_TIMEOUT_MS = ms("5s");
+export const NODE_PROBE_TIMEOUT_MS = 3_000;
+const ADMIN_PEERS_TIMEOUT_MS = 5_000;
 
 export interface BootnodeProbeDeps {
   /** Resolves the TCP connect time, or null when the port did not answer. */

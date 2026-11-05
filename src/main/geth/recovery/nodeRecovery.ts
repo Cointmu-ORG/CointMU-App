@@ -1,5 +1,4 @@
 import { BrowserWindow } from "electron";
-import ms from "ms";
 import { GethRecovery } from "./gethRecovery";
 import {
   PeerWatchdog,
@@ -26,8 +25,8 @@ import { resolveDataDir } from "../process/networkConfig";
 import { getRpcPort } from "../process/ports";
 import type { AppStore } from "../../store/appStore";
 
-const PEER_COUNT_TIMEOUT_MS = ms("5s");
-const BOOTNODE_PROBE_TIMEOUT_MS = ms("3s");
+const PEER_COUNT_TIMEOUT_MS = 5_000;
+const BOOTNODE_PROBE_TIMEOUT_MS = 3_000;
 
 /**
  * Builds the recovery controller that owns geth restarts after a classified

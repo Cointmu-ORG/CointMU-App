@@ -32,5 +32,3 @@ export { NodeRecoveryBanner } from "./ui/node-recovery-banner.component";
 
 // API (Services)
 export * from "./api/mining.service";
-export { MiningCacheService } from "./api/mining-cache.service";
-export type { ActivityContribution } from "./api/activity.service";

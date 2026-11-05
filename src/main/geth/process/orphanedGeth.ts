@@ -3,21 +3,20 @@ import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
-import ms from "ms";
 import { interruptGethOnWindows } from "./gethSupervisor";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
-export const GETH_GRACEFUL_TIMEOUT_MS = ms("15s");
+export const GETH_GRACEFUL_TIMEOUT_MS = 15_000;
 /**
  * geth-supervisor.exe kills geth itself after the grace period; killing the
  * supervisor (which takes geth with it) waits this much longer, so its own
  * kill comes first.
  */
-export const SUPERVISOR_EXIT_MARGIN_MS = ms("5s");
+export const SUPERVISOR_EXIT_MARGIN_MS = 5_000;
 const SUPERVISOR_EXECUTABLE = "geth-supervisor.exe";
-const KILL_SETTLE_TIMEOUT_MS = ms("5s");
+const KILL_SETTLE_TIMEOUT_MS = 5_000;
 const EXIT_POLL_INTERVAL_MS = 250;
-const COMMAND_LINE_TIMEOUT_MS = ms("10s");
+const COMMAND_LINE_TIMEOUT_MS = 10_000;
 const PID_FILE_NAME = "geth.pid";
 // A path segment named geth or geth.exe. Searched only in the text before
 // --datadir, so installs under folders with spaces still match.

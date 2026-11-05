@@ -82,7 +82,7 @@
     "subtitle": "API разработчика, хранилище и диагностика",
     "rpcNetwork": "RPC/Сеть",
     "httpRpcTitle": "Включить JSON-RPC по HTTP",
-    "httpRpcDesc": "Слушать на 127.0.0.1:8545",
+    "httpRpcDesc": "Слушать на 127.0.0.1:{{port}}",
     "storage": "Хранилище",
     "datadirTitle": "Каталог данных",
     "datadirDesc": "Где хранятся данные цепи",

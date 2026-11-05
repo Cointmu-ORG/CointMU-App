@@ -82,7 +82,7 @@
     "subtitle": "Developer APIs, local storage, and diagnostics",
     "rpcNetwork": "RPC/Network",
     "httpRpcTitle": "Enable JSON-RPC over HTTP",
-    "httpRpcDesc": "Listen on 127.0.0.1:8545 for dApp connections",
+    "httpRpcDesc": "Listen on 127.0.0.1:{{port}} for dApp connections",
     "storage": "Storage",
     "datadirTitle": "Datadir",
     "datadirDesc": "Where chain data and keystore are stored",

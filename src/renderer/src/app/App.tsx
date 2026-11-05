@@ -1,7 +1,6 @@
 import { useNotificationStore } from "@/entities/notification";
 import type { DerivedAccount } from "@/entities/account";
 import { useState, useEffect, Suspense, lazy, type JSX } from "react";
-import ms from "ms";
 import { WalletPage as Wallet } from "@/pages/wallet";
 import { DashboardPage } from "@/pages/dashboard";
 import { AuthFlow } from "@/features/auth";
@@ -38,7 +37,7 @@ const NAV_ITEM_WALLET = "wallet";
 const NAV_ITEM_EXPLORER = "explorer";
 const NAV_ITEM_SETTINGS = "settings";
 const WALLET_LOAD_DELAY_MS = 300;
-const GLOBAL_POLL_INTERVAL_MS = ms("3s");
+const GLOBAL_POLL_INTERVAL_MS = 3_000;
 type ActiveView =
   | typeof NAV_ITEM_DASHBOARD
   | typeof NAV_ITEM_MINER

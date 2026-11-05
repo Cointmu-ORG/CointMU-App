@@ -2,7 +2,6 @@ import { existsSync } from "node:fs";
 import { readdir, rename, rm } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import ms from "ms";
 import {
   assertSafeRecoveryTarget,
   buildQuarantinePath,
@@ -10,7 +9,7 @@ import {
   resolveChainDataPath,
 } from "./recoveryPathGuard";
 
-const RENAME_RETRY_DELAYS_MS = [ms("250ms"), ms("500ms"), ms("1s"), ms("2s")];
+const RENAME_RETRY_DELAYS_MS = [250, 500, 1_000, 2_000];
 const RENAME_RETRYABLE_CODES = new Set(["EBUSY", "EPERM"]);
 
 /**

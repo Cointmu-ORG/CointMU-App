@@ -1,5 +1,4 @@
 import { app, session, type Session } from "electron";
-import ms from "ms";
 import {
   createTransport,
   makeElectronOfflineTransport,
@@ -18,7 +17,7 @@ import type { BoundedQueue } from "./boundedQueue";
 const TELEMETRY_PARTITION = "cointmu-telemetry";
 const CERT_VERIFY_ACCEPT = 0;
 const CERT_VERIFY_REJECT = -2;
-const REQUEST_TIMEOUT_MS = ms("15s");
+const REQUEST_TIMEOUT_MS = 15_000;
 const ENVELOPE_CONTENT_TYPE = "application/x-sentry-envelope";
 const HEADER_RETRY_AFTER = "retry-after";
 const HEADER_RATE_LIMITS = "x-sentry-rate-limits";

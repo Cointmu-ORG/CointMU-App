@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { useState, useEffect, useRef, useCallback } from "react";
-import ms from "ms";
 import {
   discoverUserNFTs,
   resolveNFTMetadata,
@@ -10,7 +9,7 @@ import {
   type NFTMetadata,
 } from "../api/nft.service";
 
-const POLL_INTERVAL_MS = ms("30s");
+const POLL_INTERVAL_MS = 30_000;
 
 interface NFTFetcherState {
   nfts: NFTMetadata[];
