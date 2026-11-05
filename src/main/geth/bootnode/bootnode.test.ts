@@ -3,12 +3,9 @@ import { BootnodeSource } from "../../../bridge/types";
 import {
   BootnodeConfigProblem,
   FALLBACK_BOOTNODE_ENODES,
-  MAX_BOOTNODES,
   formatEnode,
-  isBootnodeList,
   parseBootnodeList,
   parseEnode,
-  resolveBootnodeConfig,
   resolveBuildBootnodes,
 } from "./bootnode";
 
@@ -170,59 +167,6 @@ describe("resolveBuildBootnodes", () => {
       enodes: FALLBACK_BOOTNODE_ENODES,
       source: BootnodeSource.FALLBACK,
       problem: BootnodeConfigProblem.INVALID_BUILD_VALUE,
-    });
-  });
-});
-
-describe("isBootnodeList", () => {
-  it("accepts a list of valid enodes", () => {
-    expect(isBootnodeList([ENODE, SECOND_ENODE])).toBe(true);
-  });
-
-  it.each([
-    ["an empty list", []],
-    ["a string", ENODE],
-    ["a non-string entry", [ENODE, 1]],
-    ["an invalid enode", [ENODE, OFF_CURVE_ENODE]],
-    ["too many entries", Array(MAX_BOOTNODES + 1).fill(ENODE)],
-  ])("rejects %s", (_, value) => {
-    expect(isBootnodeList(value)).toBe(false);
-  });
-});
-
-describe("resolveBootnodeConfig", () => {
-  const BUILD_DEFAULTS = resolveBuildBootnodes(SECOND_ENODE);
-  const FALLBACK_DEFAULTS = resolveBuildBootnodes(undefined);
-
-  it("prefers the saved user list over the build value", () => {
-    expect(resolveBootnodeConfig([ENODE], BUILD_DEFAULTS)).toEqual({
-      enodes: [ENODE],
-      source: BootnodeSource.USER,
-      problem: null,
-    });
-  });
-
-  it("uses the build value when the user saved nothing", () => {
-    expect(resolveBootnodeConfig(undefined, BUILD_DEFAULTS)).toBe(
-      BUILD_DEFAULTS,
-    );
-  });
-
-  it("uses the fallback when neither the user nor the build sets bootnodes", () => {
-    expect(resolveBootnodeConfig([], FALLBACK_DEFAULTS)).toEqual({
-      enodes: FALLBACK_BOOTNODE_ENODES,
-      source: BootnodeSource.FALLBACK,
-      problem: null,
-    });
-  });
-
-  it.each([
-    ["an invalid enode", [OFF_CURVE_ENODE]],
-    ["a non-list value", ENODE],
-  ])("ignores and reports a saved value with %s", (_, userValue) => {
-    expect(resolveBootnodeConfig(userValue, BUILD_DEFAULTS)).toEqual({
-      ...BUILD_DEFAULTS,
-      problem: BootnodeConfigProblem.INVALID_USER_VALUE,
     });
   });
 });

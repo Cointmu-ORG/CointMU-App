@@ -184,39 +184,3 @@ export function resolveBuildBootnodes(
   if (enodes.length === 0) return fallbackConfig(null);
   return { enodes, source: BootnodeSource.BUILD, problem: null };
 }
-
-/**
- * @param value - A value read from the settings store.
- * @returns True for a non-empty list of at most MAX_BOOTNODES valid enodes.
- */
-export function isBootnodeList(value: unknown): value is readonly string[] {
-  return (
-    Array.isArray(value) &&
-    value.length > 0 &&
-    value.length <= MAX_BOOTNODES &&
-    value.every((enode) => typeof enode === "string" && parseEnode(enode))
-  );
-}
-
-/**
- * Applies the priority user setting > build value > fallback. The saved user
- * list is validated again here because the settings file can be edited
- * outside the app; an invalid one is ignored as a whole.
- * @param userValue - The saved custom list; empty or missing means "default".
- * @param defaults - The result of resolveBuildBootnodes.
- * @returns The enodes geth should dial and where they came from.
- */
-export function resolveBootnodeConfig(
-  userValue: unknown,
-  defaults: BootnodeConfig,
-): BootnodeConfig {
-  const isUnset =
-    userValue === undefined ||
-    userValue === null ||
-    (Array.isArray(userValue) && userValue.length === 0);
-  if (isUnset) return defaults;
-  if (isBootnodeList(userValue)) {
-    return { enodes: userValue, source: BootnodeSource.USER, problem: null };
-  }
-  return { ...defaults, problem: BootnodeConfigProblem.INVALID_USER_VALUE };
-}

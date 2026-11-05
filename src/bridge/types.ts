@@ -96,32 +96,69 @@ export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];
 
 /** Where the bootnodes geth dials come from, highest priority first. */
 export const BootnodeSource = {
-  /** Saved by the user in Settings → Network. */
+  /** The user added nodes or turned defaults off in Settings → Network. */
   USER: "user",
   /** MAIN_VITE_BOOTNODE_ENODE baked in at build time. */
   BUILD: "build",
-  /** The built-in campus bootnode. */
+  /** The built-in campus bootnodes. */
   FALLBACK: "fallback",
 } as const;
 
 export type BootnodeSource =
   (typeof BootnodeSource)[keyof typeof BootnodeSource];
 
+/** A node the user added in Settings → Network. */
+export interface CustomBootnode {
+  readonly enode: string;
+  /** Shown instead of "Node N"; "" when the user gave none. */
+  readonly label: string;
+}
+
+/** The stored node setting, and the payload of BOOTNODE_CHANNELS.SET. */
+export interface BootnodeSettings {
+  readonly custom: readonly CustomBootnode[];
+  /** Default enodes the user turned off. */
+  readonly disabled: readonly string[];
+}
+
+/** One row of the node list: a default or custom node. */
+export interface BootnodeEntry {
+  readonly enode: string;
+  readonly label: string;
+  /** Hostname or IP from the enode. */
+  readonly host: string;
+  readonly isDefault: boolean;
+  readonly isEnabled: boolean;
+}
+
 /** Payload of BOOTNODE_CHANNELS.GET, and of a successful SET or RESET. */
 export interface BootnodeState {
-  /** What the running node dials, or what the next start will dial. */
-  readonly activeEnodes: readonly string[];
+  /** Default nodes first, then the custom ones. */
+  readonly nodes: readonly BootnodeEntry[];
+  /** Where the default nodes come from, or USER when the list was changed. */
   readonly source: BootnodeSource;
-  /** The saved custom list; empty when the default is used. */
-  readonly customEnodes: readonly string[];
-  /** True when the saved setting is not in effect until the node restarts. */
+  /** True when a removed node stays a bootnode of the running node until it restarts. */
   readonly isRestartPending: boolean;
 }
 
+/** Payload of BOOTNODE_CHANNELS.PROBE: one entry per probed node. */
+export interface BootnodeStatus {
+  readonly enode: string;
+  /** TCP connect time to host:port, or null when it did not answer in time. */
+  readonly latencyMs: number | null;
+  /** Whether the local node is peered with it; null while the local node is stopped. */
+  readonly isPeer: boolean | null;
+  readonly checkedAtMs: number;
+}
+
 export const BootnodeSaveError = {
+  /** No node would stay enabled. */
   EMPTY: "EMPTY",
   TOO_MANY: "TOO_MANY",
   INVALID_ENODE: "INVALID_ENODE",
+  /** The node id is already in the list. */
+  DUPLICATE: "DUPLICATE",
+  INVALID_LABEL: "INVALID_LABEL",
 } as const;
 
 export type BootnodeSaveError =
@@ -133,14 +170,10 @@ export interface InvalidBootnodeEntry {
   readonly value: string;
 }
 
-/** Payload of BOOTNODE_CHANNELS.SET. A rejected list leaves the saved one in place. */
+/** Payload of BOOTNODE_CHANNELS.SET. A rejected setting leaves the saved one in place. */
 export type BootnodeSaveResult =
   | { readonly isSaved: true; readonly state: BootnodeState }
-  | {
-      readonly isSaved: false;
-      readonly error: BootnodeSaveError;
-      readonly invalid: readonly InvalidBootnodeEntry[];
-    };
+  | { readonly isSaved: false; readonly error: BootnodeSaveError };
 
 /**
  * Localized text for a native file dialog, sent by the renderer because main

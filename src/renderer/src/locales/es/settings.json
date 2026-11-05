@@ -161,34 +161,53 @@
     "connectedPeersDesc_one": "{{count}} nodo interactuando actualmente contigo",
     "connectedPeersDesc_many": "{{count}} nodos interactuando actualmente contigo",
     "connectedPeersDesc_other": "{{count}} nodos interactuando actualmente contigo",
-    "advanced": "Avanzado",
     "bootnodes": {
-      "title": "Bootnodes",
-      "desc": "Nodos que tu nodo contacta primero para encontrar pares en la red",
-      "active": "Bootnodes activos",
+      "title": "Nodos de CointMU",
+      "desc": "Tu nodo se conecta a cada nodo activado y vuelve a conectarse si se pierde la conexión, así cada uno respalda a los demás. Todos sirven también como bootnodes para encontrar más pares.",
+      "autoCheck": "Se comprueba cada {{seconds}} s mientras esta página está abierta.",
       "loading": "Cargando…",
-      "source": {
-        "user": "Personalizado",
-        "build": "Predeterminado (build)",
-        "fallback": "Predeterminado"
+      "nodeName": "Nodo {{number}}",
+      "default": "Predeterminado",
+      "custom": "Personalizado",
+      "checkAll": "Comprobar todos",
+      "check": "Comprobar conexión",
+      "checkNode": "Comprobar la conexión con {{name}}",
+      "checking": "Comprobando…",
+      "status": {
+        "reachable": "Accesible · {{ms}} ms",
+        "unreachable": "Inaccesible",
+        "unchecked": "Sin comprobar",
+        "disabled": "Desactivado"
       },
-      "restartPending": "Los bootnodes guardados se aplicarán la próxima vez que se reinicie el nodo.",
-      "warning": "Introduce solo enodes que te hayan dado los administradores de CointMU. Un bootnode de otra persona puede conectarte con pares falsos y mostrarte una vista falsa de la red.",
-      "customLabel": "Bootnodes personalizados",
-      "customHint": "Un enode por línea o separados por comas, hasta 10. Al guardar se reinicia el nodo.",
-      "reset": "Restablecer valores predeterminados",
-      "save": "Guardar y reiniciar",
+      "peer": {
+        "connected": "Conectado como par",
+        "notConnected": "No es un par",
+        "unknown": "Nodo detenido"
+      },
+      "lastChecked": "Comprobado a las {{time}}",
+      "remove": "Eliminar",
+      "removeNode": "Eliminar {{name}}",
+      "addTitle": "Añadir un nodo",
+      "labelField": "Etiqueta (opcional)",
+      "enodeField": "Enode",
+      "addHint": "Hasta 10 nodos en total. Un nodo nuevo se conecta al momento, sin reiniciar.",
+      "add": "Añadir nodo",
       "saving": "Guardando…",
-      "invalidEntry": "Entrada {{position}}: {{value}}",
-      "requestFailed": "No se pudieron actualizar los bootnodes. Se sigue usando la configuración anterior.",
+      "restartPending": "Un nodo que eliminaste o desactivaste sigue siendo bootnode hasta que el nodo se reinicie.",
+      "warning": "Introduce solo enodes que te hayan dado los administradores de CointMU. Un bootnode de otra persona puede conectarte con pares falsos y mostrarte una vista falsa de la red.",
+      "reset": "Restablecer valores predeterminados",
+      "requestFailed": "No se pudo actualizar la lista de nodos. Se sigue usando la configuración anterior.",
       "errors": {
-        "INVALID_ENODE": "Estas entradas no son enodes válidos (enode://<clave pública de 128 hex>@<host>:<puerto>). No se guardó nada.",
-        "EMPTY": "Introduce al menos un enode o restablece los valores predeterminados.",
-        "TOO_MANY": "Demasiados bootnodes. Introduce como máximo 10."
+        "INVALID_ENODE": "No es un enode válido (enode://<clave pública de 128 hex>@<host>:<puerto>).",
+        "EMPTY": "Deja al menos un nodo activado.",
+        "TOO_MANY": "Demasiados nodos. La lista admite como máximo 10.",
+        "DUPLICATE": "Este nodo ya está en la lista.",
+        "INVALID_LABEL": "Usa una etiqueta de una sola línea y como máximo 40 caracteres."
       },
       "notice": {
-        "saved": "Bootnodes guardados.",
-        "reset": "Bootnodes predeterminados restablecidos."
+        "added": "Nodo añadido. Tu nodo se está conectando a él.",
+        "saved": "Lista de nodos guardada.",
+        "reset": "Nodos predeterminados restablecidos."
       }
     }
   },

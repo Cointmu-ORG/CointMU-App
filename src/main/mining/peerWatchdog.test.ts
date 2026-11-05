@@ -8,6 +8,7 @@ import {
   PeerWatchdog,
   isAnyBootnodeReachable,
   isTcpReachable,
+  probeTcpLatency,
 } from "./peerWatchdog";
 
 const PROBE_TIMEOUT_MS = 500;
@@ -173,6 +174,40 @@ describe("isTcpReachable", () => {
     await expect(
       isTcpReachable("127.0.0.1", port, PROBE_TIMEOUT_MS),
     ).resolves.toBe(false);
+  });
+
+  it("times the connect to a fake local node in whole ms", async () => {
+    server = createServer((socket) => socket.destroy());
+    await new Promise<void>((resolve) =>
+      server?.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    const port = typeof address === "object" && address ? address.port : 0;
+
+    const latencyMs = await probeTcpLatency(
+      "127.0.0.1",
+      port,
+      PROBE_TIMEOUT_MS,
+    );
+
+    expect(Number.isInteger(latencyMs)).toBe(true);
+    expect(latencyMs).toBeGreaterThanOrEqual(0);
+    expect(latencyMs).toBeLessThan(PROBE_TIMEOUT_MS);
+  });
+
+  it("has no latency for a refused port", async () => {
+    server = createServer();
+    await new Promise<void>((resolve) =>
+      server?.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    const port = typeof address === "object" && address ? address.port : 0;
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    server = null;
+
+    await expect(
+      probeTcpLatency("127.0.0.1", port, PROBE_TIMEOUT_MS),
+    ).resolves.toBeNull();
   });
 });
 

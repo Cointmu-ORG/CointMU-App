@@ -10,6 +10,7 @@ export const BOOTNODE_CHANNELS = {
   GET: "bootnode:get",
   SET: "bootnode:set",
   RESET: "bootnode:reset",
+  PROBE: "bootnode:probe",
 } as const;
 
 export const RPC_CHANNELS = {

@@ -1,7 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { lookup } from "node:dns/promises";
+import { SigningKey, toBeHex } from "ethers";
 import { BootnodeSource } from "../../../bridge/types";
+import { FALLBACK_BOOTNODE_ENODES } from "./bootnode";
 import { BOOTNODES_SETTING_KEY } from "./bootnodeSettings";
+import { startStaticPeers, stopStaticPeers } from "./staticPeers";
 import {
   forgetRunningBootnodes,
   getActiveBootnodeConfig,
@@ -13,27 +16,39 @@ vi.mock("../../diagnostics/gethReporting", () => ({
   reportBootnodeConfigProblem: vi.fn(),
   reportBootnodeSource: vi.fn(),
 }));
-vi.mock("../rpc/rpcUtils", () => ({ callGethRpc: vi.fn() }));
+vi.mock("./staticPeers", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./staticPeers")>()),
+  startStaticPeers: vi.fn(),
+  stopStaticPeers: vi.fn(),
+}));
+vi.mock("../rpc/rpcUtils", () => ({ callGethRpcRaw: vi.fn() }));
 vi.mock("../process/ports", () => ({ getRpcPort: () => 8545 }));
 
-// The secp256k1 generator point G: the public key of private key 1.
-const NODE_ID =
-  "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798" +
-  "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8";
-const IP_ENODE = `enode://${NODE_ID}@10.0.0.5:30303`;
-const SECOND_IP_ENODE = `enode://${NODE_ID}@10.0.0.6:30303`;
-const HOST_ENODE = `enode://${NODE_ID}@boot.example:30303`;
+function nodeIdFor(seed: number): string {
+  return new SigningKey(toBeHex(seed, 32)).publicKey.slice(4);
+}
 
-function storeWith(saved: unknown): { get: (key: string) => unknown } {
+const IP_ENODE = `enode://${nodeIdFor(1)}@10.0.0.5:30303`;
+const SECOND_IP_ENODE = `enode://${nodeIdFor(2)}@10.0.0.6:30303`;
+const HOST_ENODE = `enode://${nodeIdFor(3)}@boot.example:30303`;
+
+function storeWith(custom: readonly string[]): {
+  get: (key: string) => unknown;
+} {
+  const saved = {
+    custom: custom.map((enode) => ({ enode, label: "" })),
+    disabled: [...FALLBACK_BOOTNODE_ENODES],
+  };
   return { get: (key) => (key === BOOTNODES_SETTING_KEY ? saved : undefined) };
 }
 
 describe("prepareBootnodeArgs", () => {
   afterEach(() => {
     forgetRunningBootnodes();
+    vi.clearAllMocks();
   });
 
-  it("passes every user bootnode to geth, comma-joined, and records them as active", async () => {
+  it("passes every node to geth, comma-joined, and queues them as static peers", async () => {
     const args = await prepareBootnodeArgs(
       storeWith([IP_ENODE, SECOND_IP_ENODE]),
     );
@@ -43,14 +58,22 @@ describe("prepareBootnodeArgs", () => {
       enodes: [IP_ENODE, SECOND_IP_ENODE],
       source: BootnodeSource.USER,
     });
+    expect(startStaticPeers).toHaveBeenCalledWith([IP_ENODE, SECOND_IP_ENODE]);
   });
 
-  it("leaves out a bootnode whose hostname does not resolve", async () => {
+  it("uses the three campus nodes when nothing is saved", async () => {
+    const args = await prepareBootnodeArgs({ get: () => undefined });
+
+    expect(args).toEqual(["--bootnodes", FALLBACK_BOOTNODE_ENODES.join(",")]);
+  });
+
+  it("leaves an unresolved hostname out of --bootnodes but still queues it", async () => {
     vi.mocked(lookup).mockRejectedValueOnce(new Error("ENOTFOUND"));
 
     const args = await prepareBootnodeArgs(storeWith([HOST_ENODE, IP_ENODE]));
 
     expect(args).toEqual(["--bootnodes", IP_ENODE]);
+    expect(startStaticPeers).toHaveBeenCalledWith([HOST_ENODE, IP_ENODE]);
   });
 
   it("starts without --bootnodes when none resolves", async () => {
@@ -63,11 +86,12 @@ describe("prepareBootnodeArgs", () => {
 });
 
 describe("forgetRunningBootnodes", () => {
-  it("clears the active config once geth stops", async () => {
+  it("clears the active config and the static peers once geth stops", async () => {
     await prepareBootnodeArgs(storeWith([IP_ENODE]));
 
     forgetRunningBootnodes();
 
     expect(getActiveBootnodeConfig()).toBeNull();
+    expect(stopStaticPeers).toHaveBeenCalled();
   });
 });

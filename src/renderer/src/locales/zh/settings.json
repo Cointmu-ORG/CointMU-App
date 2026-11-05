@@ -159,34 +159,53 @@
     "listenPortInvalid": "请输入 {{min}} 到 {{max}} 之间的端口。",
     "connectedPeersTitle": "已连接节点",
     "connectedPeersDesc_other": "当前有 {{count}} 个节点与您通信",
-    "advanced": "高级",
     "bootnodes": {
-      "title": "引导节点",
-      "desc": "你的节点在网络中寻找对等节点时首先连接的节点",
-      "active": "当前引导节点",
+      "title": "CointMU 节点",
+      "desc": "你的节点会连接所有已启用的节点，断开后自动重连，因此它们互为备份。每个节点也作为引导节点，用来发现更多对等节点。",
+      "autoCheck": "此页面打开期间每 {{seconds}} 秒检查一次。",
       "loading": "加载中…",
-      "source": {
-        "user": "自定义",
-        "build": "默认（构建）",
-        "fallback": "默认"
+      "nodeName": "节点 {{number}}",
+      "default": "默认",
+      "custom": "自定义",
+      "checkAll": "全部检查",
+      "check": "检查连接",
+      "checkNode": "检查与 {{name}} 的连接",
+      "checking": "正在检查…",
+      "status": {
+        "reachable": "可连接 · {{ms}} 毫秒",
+        "unreachable": "无法连接",
+        "unchecked": "未检查",
+        "disabled": "已关闭"
       },
-      "restartPending": "已保存的引导节点将在节点下次重启后生效。",
-      "warning": "请只填写 CointMU 管理员提供的 enode。来自其他人的引导节点可能会让你连接到虚假的对等节点，并显示错误的网络状态。",
-      "customLabel": "自定义引导节点",
-      "customHint": "每行一个 enode 或用逗号分隔，最多 10 个。保存后节点将重启。",
-      "reset": "恢复默认",
-      "save": "保存并重启",
+      "peer": {
+        "connected": "已作为对等节点连接",
+        "notConnected": "不是对等节点",
+        "unknown": "节点已停止"
+      },
+      "lastChecked": "检查于 {{time}}",
+      "remove": "移除",
+      "removeNode": "移除 {{name}}",
+      "addTitle": "添加节点",
+      "labelField": "标签（可选）",
+      "enodeField": "Enode",
+      "addHint": "最多共 10 个节点。新节点会立即连接，无需重启。",
+      "add": "添加节点",
       "saving": "正在保存…",
-      "invalidEntry": "第 {{position}} 项：{{value}}",
-      "requestFailed": "无法更新引导节点，仍在使用之前的设置。",
+      "restartPending": "你移除或关闭的节点在节点重启前仍是引导节点。",
+      "warning": "请只填写 CointMU 管理员提供的 enode。来自其他人的引导节点可能会让你连接到虚假的对等节点，并显示错误的网络状态。",
+      "reset": "恢复默认",
+      "requestFailed": "无法更新节点列表，仍在使用之前的设置。",
       "errors": {
-        "INVALID_ENODE": "这些条目不是有效的 enode（enode://<128 位十六进制公钥>@<主机>:<端口>）。未保存任何内容。",
-        "EMPTY": "请至少填写一个 enode，或恢复默认。",
-        "TOO_MANY": "引导节点过多，最多 10 个。"
+        "INVALID_ENODE": "不是有效的 enode（enode://<128 位十六进制公钥>@<主机>:<端口>）。",
+        "EMPTY": "请至少保留一个已启用的节点。",
+        "TOO_MANY": "节点过多，列表最多 10 个。",
+        "DUPLICATE": "该节点已在列表中。",
+        "INVALID_LABEL": "标签须为单行，最多 40 个字符。"
       },
       "notice": {
-        "saved": "引导节点已保存。",
-        "reset": "已恢复默认引导节点。"
+        "added": "节点已添加，你的节点正在连接它。",
+        "saved": "节点列表已保存。",
+        "reset": "已恢复默认节点。"
       }
     }
   },

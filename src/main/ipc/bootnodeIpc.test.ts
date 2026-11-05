@@ -1,29 +1,47 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ipcMain } from "electron";
+import { SigningKey, toBeHex } from "ethers";
 import { BOOTNODE_CHANNELS } from "../../bridge/ipc-channels";
 import { BootnodeSaveError, BootnodeSource } from "../../bridge/types";
-import { resolveBuildBootnodes } from "../geth/bootnode/bootnode";
-import { BOOTNODES_SETTING_KEY } from "../geth/bootnode/bootnodeSettings";
+import {
+  FALLBACK_BOOTNODE_ENODES,
+  resolveBuildBootnodes,
+} from "../geth/bootnode/bootnode";
+import {
+  BOOTNODES_SETTING_KEY,
+  EMPTY_BOOTNODE_SETTINGS,
+} from "../geth/bootnode/bootnodeSettings";
 import { getActiveBootnodeConfig } from "../geth/bootnode/bootnodeWatcher";
+import { syncStaticPeers } from "../geth/bootnode/staticPeers";
+import { probeBootnodes } from "../geth/bootnode/bootnodeStatus";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerBootnodeHandlers } from "./bootnodeIpc";
 
 vi.mock("electron", () => ({ ipcMain: { handle: vi.fn() } }));
 vi.mock("../geth/process/nodeRestart", () => ({ restartNodeByUser: vi.fn() }));
+vi.mock("../geth/bootnode/staticPeers", () => ({ syncStaticPeers: vi.fn() }));
+vi.mock("../geth/bootnode/bootnodeStatus", () => ({
+  LIVE_PROBE_DEPS: {},
+  probeBootnodes: vi.fn(async () => []),
+}));
 vi.mock("../geth/bootnode/bootnodeWatcher", async () => {
   const { resolveBuildBootnodes } = await import("../geth/bootnode/bootnode");
+  const { BOOTNODES_SETTING_KEY } =
+    await import("../geth/bootnode/bootnodeSettings");
+  const { resolveBootnodeConfig } =
+    await import("../geth/bootnode/bootnodeState");
+  const defaults = resolveBuildBootnodes(undefined);
   return {
-    DEFAULT_BOOTNODE_CONFIG: resolveBuildBootnodes(undefined),
-    getActiveBootnodeConfig: vi.fn(() => resolveBuildBootnodes(undefined)),
+    DEFAULT_BOOTNODE_CONFIG: defaults,
+    getActiveBootnodeConfig: vi.fn(),
+    getBootnodeConfig: (store: { get: (key: string) => unknown }) =>
+      resolveBootnodeConfig(store.get(BOOTNODES_SETTING_KEY), defaults),
   };
 });
 
-// The secp256k1 generator point G: the public key of private key 1.
-const NODE_ID =
-  "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798" +
-  "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8";
-const ENODE = `enode://${NODE_ID}@10.0.0.5:30303`;
-const SAVED_ENODE = `enode://${NODE_ID}@10.0.0.9:30303`;
+const DEFAULTS = FALLBACK_BOOTNODE_ENODES;
+const CUSTOM = `enode://${new SigningKey(toBeHex(1, 32)).publicKey.slice(4)}@10.0.0.5:30303`;
+const WITH_CUSTOM = { custom: [{ enode: CUSTOM, label: "Lab" }], disabled: [] };
 
 type Handler = (event: unknown, ...args: unknown[]) => unknown;
 
@@ -39,109 +57,151 @@ function createStore(initial: unknown): {
 }
 
 function registerWith(store: ReturnType<typeof createStore>): {
-  invoke: (channel: string, ...args: unknown[]) => unknown;
+  invoke: (channel: string, ...args: unknown[]) => Promise<unknown>;
 } {
   const handlers = new Map<string, Handler>();
   vi.mocked(ipcMain.handle).mockImplementation((channel, handler) => {
     handlers.set(channel, handler as Handler);
   });
   registerBootnodeHandlers(store);
+  store.set.mockClear();
   return {
-    invoke: (channel, ...args) => handlers.get(channel)?.(null, ...args),
+    invoke: async (channel, ...args) => handlers.get(channel)?.(null, ...args),
   };
 }
 
 describe("bootnode IPC", () => {
   beforeEach(() => {
-    vi.mocked(restartNodeByUser).mockReset().mockReturnValue(true);
+    vi.clearAllMocks();
+    vi.mocked(restartNodeByUser).mockReturnValue(true);
     vi.mocked(getActiveBootnodeConfig).mockReturnValue(
       resolveBuildBootnodes(undefined),
     );
   });
 
-  it("saves a valid list and restarts the node", () => {
-    const store = createStore([]);
+  it("migrates a #70 list when the handlers are registered", () => {
+    const store = createStore([CUSTOM]);
+
+    registerWith(store);
+
+    expect(store.get(BOOTNODES_SETTING_KEY)).toEqual({
+      custom: [{ enode: CUSTOM, label: "" }],
+      disabled: [],
+    });
+  });
+
+  it("adds a node as a static peer without restarting", async () => {
+    const store = createStore(EMPTY_BOOTNODE_SETTINGS);
     const { invoke } = registerWith(store);
 
-    const result = invoke(BOOTNODE_CHANNELS.SET, `${ENODE}\n${SAVED_ENODE}`);
+    const result = await invoke(BOOTNODE_CHANNELS.SET, WITH_CUSTOM);
 
-    expect(store.set).toHaveBeenCalledWith(BOOTNODES_SETTING_KEY, [
-      ENODE,
-      SAVED_ENODE,
-    ]);
-    expect(restartNodeByUser).toHaveBeenCalledWith(store);
-    expect(result).toEqual({
+    expect(store.set).toHaveBeenCalledWith(BOOTNODES_SETTING_KEY, WITH_CUSTOM);
+    expect(restartNodeByUser).not.toHaveBeenCalled();
+    expect(syncStaticPeers).toHaveBeenCalledWith([...DEFAULTS, CUSTOM]);
+    expect(result).toMatchObject({
       isSaved: true,
-      state: {
-        activeEnodes: [ENODE, SAVED_ENODE],
-        source: BootnodeSource.USER,
-        customEnodes: [ENODE, SAVED_ENODE],
-        isRestartPending: false,
-      },
+      state: { source: BootnodeSource.USER, isRestartPending: false },
     });
   });
 
-  it("rejects an invalid entry, keeps the saved list and does not restart", () => {
-    const store = createStore([SAVED_ENODE]);
+  it("restarts when a running bootnode is disabled", async () => {
+    const store = createStore(EMPTY_BOOTNODE_SETTINGS);
     const { invoke } = registerWith(store);
 
-    const result = invoke(BOOTNODE_CHANNELS.SET, `${ENODE}\nenode://bad`);
-
-    expect(result).toEqual({
-      isSaved: false,
-      error: BootnodeSaveError.INVALID_ENODE,
-      invalid: [{ position: 2, value: "enode://bad" }],
+    const result = await invoke(BOOTNODE_CHANNELS.SET, {
+      custom: [],
+      disabled: [DEFAULTS[1]],
     });
+
+    expect(restartNodeByUser).toHaveBeenCalledWith(store);
+    expect(syncStaticPeers).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      isSaved: true,
+      state: { isRestartPending: false },
+    });
+  });
+
+  it("removes the node live and reports pending when recovery skips the restart", async () => {
+    vi.mocked(restartNodeByUser).mockReturnValue(false);
+    const store = createStore(EMPTY_BOOTNODE_SETTINGS);
+    const { invoke } = registerWith(store);
+
+    const result = await invoke(BOOTNODE_CHANNELS.SET, {
+      custom: [],
+      disabled: [DEFAULTS[1]],
+    });
+
+    expect(syncStaticPeers).toHaveBeenCalledWith([DEFAULTS[0], DEFAULTS[2]]);
+    expect(result).toMatchObject({ state: { isRestartPending: true } });
+  });
+
+  it.each([
+    [
+      "a duplicate",
+      { custom: [{ enode: DEFAULTS[0], label: "" }], disabled: [] },
+      BootnodeSaveError.DUPLICATE,
+    ],
+    [
+      "a bad enode",
+      { custom: [{ enode: "enode://bad", label: "" }], disabled: [] },
+      BootnodeSaveError.INVALID_ENODE,
+    ],
+    ["the #70 text payload", CUSTOM, BootnodeSaveError.INVALID_ENODE],
+  ])("rejects %s and keeps the saved setting", async (_, payload, error) => {
+    const store = createStore(WITH_CUSTOM);
+    const { invoke } = registerWith(store);
+
+    const result = await invoke(BOOTNODE_CHANNELS.SET, payload);
+
+    expect(result).toEqual({ isSaved: false, error });
     expect(store.set).not.toHaveBeenCalled();
-    expect(store.get(BOOTNODES_SETTING_KEY)).toEqual([SAVED_ENODE]);
     expect(restartNodeByUser).not.toHaveBeenCalled();
   });
 
-  it("resets to the default bootnodes and restarts a node using custom ones", () => {
-    vi.mocked(getActiveBootnodeConfig).mockReturnValue({
-      enodes: [SAVED_ENODE],
-      source: BootnodeSource.USER,
-      problem: null,
-    });
-    const store = createStore([SAVED_ENODE]);
+  it("resets to the defaults without a restart when nothing running is removed", async () => {
+    const store = createStore(WITH_CUSTOM);
     const { invoke } = registerWith(store);
 
-    const state = invoke(BOOTNODE_CHANNELS.RESET);
+    const state = await invoke(BOOTNODE_CHANNELS.RESET);
 
-    expect(store.set).toHaveBeenCalledWith(BOOTNODES_SETTING_KEY, []);
-    expect(restartNodeByUser).toHaveBeenCalledOnce();
-    expect(state).toEqual({
-      activeEnodes: resolveBuildBootnodes(undefined).enodes,
-      source: BootnodeSource.FALLBACK,
-      customEnodes: [],
-      isRestartPending: false,
-    });
-  });
-
-  it("does not restart on reset when the node already uses the defaults", () => {
-    const store = createStore([]);
-    const { invoke } = registerWith(store);
-
-    const state = invoke(BOOTNODE_CHANNELS.RESET);
-
-    expect(store.set).toHaveBeenCalledWith(BOOTNODES_SETTING_KEY, []);
+    expect(store.set).toHaveBeenCalledWith(
+      BOOTNODES_SETTING_KEY,
+      EMPTY_BOOTNODE_SETTINGS,
+    );
     expect(restartNodeByUser).not.toHaveBeenCalled();
+    expect(syncStaticPeers).toHaveBeenCalledWith(DEFAULTS);
     expect(state).toMatchObject({
       source: BootnodeSource.FALLBACK,
       isRestartPending: false,
     });
   });
 
-  it("reports the change as pending when recovery skips the restart", () => {
-    vi.mocked(restartNodeByUser).mockReturnValue(false);
-    const store = createStore([]);
+  it("restarts on reset when the running node uses a custom bootnode", async () => {
+    vi.mocked(getActiveBootnodeConfig).mockReturnValue({
+      enodes: [...DEFAULTS, CUSTOM],
+      source: BootnodeSource.USER,
+      problem: null,
+    });
+    const store = createStore(WITH_CUSTOM);
     const { invoke } = registerWith(store);
 
-    const result = invoke(BOOTNODE_CHANNELS.SET, ENODE);
+    await invoke(BOOTNODE_CHANNELS.RESET);
 
-    expect(result).toMatchObject({
-      isSaved: true,
-      state: { source: BootnodeSource.FALLBACK, isRestartPending: true },
-    });
+    expect(restartNodeByUser).toHaveBeenCalledOnce();
+  });
+
+  it("probes only listed nodes", async () => {
+    const store = createStore(WITH_CUSTOM);
+    const { invoke } = registerWith(store);
+
+    await invoke(BOOTNODE_CHANNELS.PROBE);
+    await invoke(BOOTNODE_CHANNELS.PROBE, CUSTOM);
+    await invoke(BOOTNODE_CHANNELS.PROBE, "enode://x@10.0.0.1:22");
+
+    const targets = vi
+      .mocked(probeBootnodes)
+      .mock.calls.map(([enodes]) => enodes);
+    expect(targets).toEqual([[...DEFAULTS, CUSTOM], [CUSTOM], []]);
   });
 });

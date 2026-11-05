@@ -14,8 +14,8 @@ interface NetworkSettingsProps {
 }
 
 /**
- * Network settings pane: the active network (read-only), peer limit, listen
- * port and bootnodes. Discovery, sync mode and pruning are hidden until geth
+ * Network settings pane: the active network (read-only), the CointMU nodes,
+ * peer limit and listen port. Discovery, sync mode and pruning are hidden until geth
  * gets their flags (#104); their stored values are kept.
  * @param props The configuration state and the update callback.
  * @returns The Network Settings form component.
@@ -73,6 +73,8 @@ export function NetworkSettings({
           </div>
         </section>
 
+        <BootnodeSettings />
+
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings:networkSettings.peers")}
@@ -127,8 +129,6 @@ export function NetworkSettings({
             </div>
           </div>
         </section>
-
-        <BootnodeSettings />
       </div>
     </div>
   );

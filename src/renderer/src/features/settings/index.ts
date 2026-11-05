@@ -9,5 +9,6 @@ export * from "./api/network.service";
 export * from "./config/settings.constants";
 export { EXTERNAL_LINKS } from "./config/links.constant";
 export * from "./lib/bootnode-settings.hook";
+export * from "./lib/bootnode-status.hook";
 
 export type * from "./model/settings.types";

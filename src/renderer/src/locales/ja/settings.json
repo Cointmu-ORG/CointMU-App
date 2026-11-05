@@ -159,34 +159,53 @@
     "listenPortInvalid": "{{min}}〜{{max}}のポート番号を入力してください。",
     "connectedPeersTitle": "接続されたピア",
     "connectedPeersDesc_other": "{{count}} 個のノードが現在あなたと通信しています",
-    "advanced": "詳細設定",
     "bootnodes": {
-      "title": "ブートノード",
-      "desc": "ネットワーク上のピアを見つけるために、ノードが最初に接続するノード",
-      "active": "有効なブートノード",
+      "title": "CointMU ノード",
+      "desc": "有効なすべてのノードに接続し、切断されても再接続し続けるため、各ノードが互いのバックアップになります。各ノードはピアを探すためのブートノードとしても使われます。",
+      "autoCheck": "このページを開いている間、{{seconds}} 秒ごとに確認します。",
       "loading": "読み込み中…",
-      "source": {
-        "user": "カスタム",
-        "build": "デフォルト（ビルド）",
-        "fallback": "デフォルト"
+      "nodeName": "ノード {{number}}",
+      "default": "デフォルト",
+      "custom": "カスタム",
+      "checkAll": "すべて確認",
+      "check": "接続を確認",
+      "checkNode": "{{name}} への接続を確認",
+      "checking": "確認中…",
+      "status": {
+        "reachable": "接続可能 · {{ms}} ms",
+        "unreachable": "接続不可",
+        "unchecked": "未確認",
+        "disabled": "オフ"
       },
-      "restartPending": "保存したブートノードは、次回ノードを再起動したときに有効になります。",
-      "warning": "CointMU の管理者から受け取った enode のみを入力してください。それ以外のブートノードは偽のピアに接続させ、誤ったネットワーク状態を表示する可能性があります。",
-      "customLabel": "カスタムブートノード",
-      "customHint": "1 行に 1 つ、またはカンマ区切りで最大 10 件。保存するとノードが再起動します。",
-      "reset": "デフォルトに戻す",
-      "save": "保存して再起動",
+      "peer": {
+        "connected": "ピア接続中",
+        "notConnected": "ピアではありません",
+        "unknown": "ノード停止中"
+      },
+      "lastChecked": "{{time}} に確認",
+      "remove": "削除",
+      "removeNode": "{{name}} を削除",
+      "addTitle": "ノードを追加",
+      "labelField": "ラベル（任意）",
+      "enodeField": "Enode",
+      "addHint": "合計 10 ノードまで。新しいノードには再起動なしですぐ接続します。",
+      "add": "ノードを追加",
       "saving": "保存中…",
-      "invalidEntry": "{{position}} 件目: {{value}}",
-      "requestFailed": "ブートノードを更新できませんでした。以前の設定が引き続き使われます。",
+      "restartPending": "削除またはオフにしたノードは、ノードを再起動するまでブートノードとして残ります。",
+      "warning": "CointMU の管理者から受け取った enode のみを入力してください。それ以外のブートノードは偽のピアに接続させ、誤ったネットワーク状態を表示する可能性があります。",
+      "reset": "デフォルトに戻す",
+      "requestFailed": "ノード一覧を更新できませんでした。以前の設定が引き続き使われます。",
       "errors": {
-        "INVALID_ENODE": "これらは有効な enode ではありません（enode://<128 桁 16 進の公開鍵>@<ホスト>:<ポート>）。何も保存されていません。",
-        "EMPTY": "enode を 1 つ以上入力するか、デフォルトに戻してください。",
-        "TOO_MANY": "ブートノードが多すぎます。最大 10 件までです。"
+        "INVALID_ENODE": "有効な enode ではありません（enode://<128 桁 16 進の公開鍵>@<ホスト>:<ポート>）。",
+        "EMPTY": "少なくとも 1 つのノードをオンのままにしてください。",
+        "TOO_MANY": "ノードが多すぎます。最大 10 個までです。",
+        "DUPLICATE": "このノードはすでに一覧にあります。",
+        "INVALID_LABEL": "ラベルは 1 行・40 文字以内で入力してください。"
       },
       "notice": {
-        "saved": "ブートノードを保存しました。",
-        "reset": "デフォルトのブートノードに戻しました。"
+        "added": "ノードを追加しました。現在接続しています。",
+        "saved": "ノード一覧を保存しました。",
+        "reset": "デフォルトのノードに戻しました。"
       }
     }
   },

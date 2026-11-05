@@ -1,6 +1,8 @@
 import type {
   BootnodeSaveResult,
+  BootnodeSettings,
   BootnodeState,
+  BootnodeStatus,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -158,9 +160,11 @@ interface CointmuAPI {
   };
   bootnode: {
     get: () => Promise<BootnodeState>;
-    /** Validates every entry in main; a rejected list leaves the saved one in place. */
-    set: (text: string) => Promise<BootnodeSaveResult>;
+    /** Validates the whole setting in main; a rejected one leaves the saved one in place. */
+    set: (settings: BootnodeSettings) => Promise<BootnodeSaveResult>;
     reset: () => Promise<BootnodeState>;
+    /** Probes one listed node, or every listed node when enode is omitted. */
+    probe: (enode?: string) => Promise<BootnodeStatus[]>;
   };
   diagnostics: {
     openLogsFolder: () => Promise<void>;
