@@ -15,6 +15,13 @@ interface SettingRule {
 
 const isBoolean = (value: unknown): boolean => typeof value === "boolean";
 
+const isIntegerIn =
+  (min: number, max: number) =>
+  (value: unknown): boolean =>
+    Number.isInteger(value) &&
+    (value as number) >= min &&
+    (value as number) <= max;
+
 const isOneOf =
   (codes: readonly unknown[]) =>
   (value: unknown): boolean =>
@@ -37,6 +44,11 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
   "updates.installMode": {
     fallback: UpdateInstallMode.ON_QUIT,
     isValid: isOneOf(Object.values(UpdateInstallMode)),
+  },
+  "mining.idleOnly": { fallback: false, isValid: isBoolean },
+  "mining.idleThresholdMinutes": {
+    fallback: 2,
+    isValid: isIntegerIn(1, 60),
   },
   "appearance.zoomPercent": {
     fallback: 100,

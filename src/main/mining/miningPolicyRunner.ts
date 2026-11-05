@@ -1,5 +1,12 @@
 import { MiningPowerStatus } from "../../bridge/types";
-import { decideMining, type MiningConditions } from "./miningPolicy";
+import {
+  decideMining,
+  needsPeriodicCheck,
+  type MiningConditions,
+} from "./miningPolicy";
+
+// How often idle time is re-checked while a timed condition is on.
+export const POLICY_CHECK_INTERVAL_MS = 15_000;
 
 /** The policy's view of the node and the app; tests pass fakes. */
 export interface MiningPolicyDeps {
@@ -20,6 +27,7 @@ export class MiningPolicy {
   private status: MiningPowerStatus = MiningPowerStatus.STOPPED;
   private running: Promise<void> | null = null;
   private isRerunNeeded = false;
+  private timer: NodeJS.Timeout | null = null;
 
   constructor(private readonly deps: MiningPolicyDeps) {}
 
@@ -52,8 +60,24 @@ export class MiningPolicy {
     } while (this.isRerunNeeded);
   }
 
+  /** Runs the periodic check only while a timed condition needs it. */
+  private syncTimer(conditions: MiningConditions): void {
+    const isNeeded = needsPeriodicCheck(conditions);
+    if (isNeeded && !this.timer) {
+      this.timer = setInterval(
+        () => void this.evaluate(),
+        POLICY_CHECK_INTERVAL_MS,
+      );
+    } else if (!isNeeded && this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
   private async applyOnce(): Promise<void> {
-    const decision = decideMining(this.deps.readConditions());
+    const conditions = this.deps.readConditions();
+    this.syncTimer(conditions);
+    const decision = decideMining(conditions);
     if (decision !== MiningPowerStatus.STOPPED) {
       try {
         const isRunning = await this.deps.isMinerRunning();

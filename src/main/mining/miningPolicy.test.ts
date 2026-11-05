@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { decideMining, type MiningConditions } from "./miningPolicy";
-import { MiningPolicy } from "./miningPolicyRunner";
+import { MiningPolicy, POLICY_CHECK_INTERVAL_MS } from "./miningPolicyRunner";
 
 // No real mining anywhere in here: the miner is a fake (miner_* never runs).
 
@@ -8,6 +8,9 @@ const BASE: MiningConditions = {
   isEnabled: true,
   isOnBattery: false,
   pauseOnBattery: true,
+  idleOnly: false,
+  idleSeconds: 0,
+  idleThresholdSeconds: 120,
 };
 
 describe("decideMining", () => {
@@ -24,6 +27,22 @@ describe("decideMining", () => {
       "mining is off on battery",
       { isEnabled: false, isOnBattery: true },
       "STOPPED",
+    ],
+    [
+      "idle-only while the user is active",
+      { idleOnly: true, idleSeconds: 30 },
+      "PAUSED_USER_ACTIVE",
+    ],
+    [
+      "idle-only once idle long enough",
+      { idleOnly: true, idleSeconds: 120 },
+      "MINING",
+    ],
+    ["active without idle-only", { idleSeconds: 0 }, "MINING"],
+    [
+      "on battery and active: battery first",
+      { idleOnly: true, idleSeconds: 0, isOnBattery: true },
+      "PAUSED_BATTERY",
     ],
   ] as const)("decides %s", (_label, overrides, expected) => {
     expect(decideMining({ ...BASE, ...overrides })).toBe(expected);
@@ -115,5 +134,31 @@ describe("MiningPolicy", () => {
 
     await expect(policy.evaluate()).resolves.toBeUndefined();
     expect(policy.getStatus()).toBe("MINING");
+  });
+});
+
+describe("MiningPolicy timer", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("re-checks idle time only while idle-only mining is started", async () => {
+    vi.useFakeTimers();
+    const node = fakeNode({ ...BASE, idleOnly: true, idleSeconds: 10 });
+    const readConditions = vi.fn(() => node.conditions);
+    const policy = new MiningPolicy({ ...node, readConditions });
+
+    await policy.evaluate();
+    expect(node.startMiner).not.toHaveBeenCalled();
+
+    node.conditions = { ...node.conditions, idleSeconds: 600 };
+    await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS);
+    expect(node.startMiner).toHaveBeenCalledOnce();
+
+    node.conditions = { ...node.conditions, isEnabled: false };
+    await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS);
+    const callsWhenOff = readConditions.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(POLICY_CHECK_INTERVAL_MS * 4);
+    expect(readConditions.mock.calls.length).toBe(callsWhenOff);
   });
 });

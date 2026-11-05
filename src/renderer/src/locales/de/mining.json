@@ -25,7 +25,8 @@
     "statusMining": "Mining",
     "statusStopped": "Gestoppt",
     "preferences": "Einstellungen",
-    "pausedBattery": "Pausiert (Akku)"
+    "pausedBattery": "Pausiert (Akku)",
+    "pausedUserActive": "Pausiert: du bist aktiv"
   },
   "hero": {
     "rewardsToday": "Heutige Belohnungen",

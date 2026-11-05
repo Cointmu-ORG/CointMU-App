@@ -6,6 +6,8 @@ import type { MiningConditions } from "./miningPolicy";
 import { MiningPolicy } from "./miningPolicyRunner";
 
 const DEFAULT_THREADS = 4;
+const DEFAULT_IDLE_MINUTES = 2;
+const SECONDS_PER_MINUTE = 60;
 
 /**
  * @param store - The settings store.
@@ -17,10 +19,18 @@ function readConditions(
   store: AppStore,
   isStarted: () => boolean,
 ): MiningConditions {
+  const isEnabled = isStarted() && store.get("mining.isMiningEnabled") === true;
+  const idleOnly = store.get("mining.idleOnly") === true;
+  const idleMinutes =
+    Number(store.get("mining.idleThresholdMinutes")) || DEFAULT_IDLE_MINUTES;
   return {
-    isEnabled: isStarted() && store.get("mining.isMiningEnabled") === true,
+    isEnabled,
     isOnBattery: powerMonitor.isOnBatteryPower(),
     pauseOnBattery: store.get("mining.pauseOnBattery") !== false,
+    idleOnly,
+    // Asked of the OS only while it matters.
+    idleSeconds: isEnabled && idleOnly ? powerMonitor.getSystemIdleTime() : 0,
+    idleThresholdSeconds: idleMinutes * SECONDS_PER_MINUTE,
   };
 }
 

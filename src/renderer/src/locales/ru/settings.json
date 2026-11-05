@@ -314,7 +314,15 @@
     "rewardAddressDesc": "Куда отправлять награды (по умолчанию главный)",
     "customAddress": "Пользовательский адрес...",
     "selectWallet": "Выберите кошелек...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "Когда майнить",
+    "idleOnlyTitle": "Майнить только в простое",
+    "idleOnlyDesc": "Приостанавливать майнинг, пока вы пользуетесь компьютером, и продолжать, когда он какое-то время простаивает.",
+    "idleAfterTitle": "Простой после",
+    "minutes_one": "{{count}} мин",
+    "minutes_few": "{{count}} мин",
+    "minutes_many": "{{count}} мин",
+    "minutes_other": "{{count}} мин"
   },
   "securitySettings": {
     "subtitle": "Управление настройками безопасности вашего кошелька",

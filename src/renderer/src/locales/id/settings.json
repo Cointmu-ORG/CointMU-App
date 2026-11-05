@@ -308,7 +308,12 @@
     "rewardAddressDesc": "Ke mana hadiah coinbase dikirim (bawaannya adalah dompet utama)",
     "customAddress": "Alamat khusus...",
     "selectWallet": "Pilih dompet...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "Kapan mining",
+    "idleOnlyTitle": "Mining hanya saat idle",
+    "idleOnlyDesc": "Jeda mining saat kamu memakai komputer, lalu lanjut setelah komputer idle beberapa saat.",
+    "idleAfterTitle": "Idle setelah",
+    "minutes_other": "{{count}} mnt"
   },
   "securitySettings": {
     "subtitle": "Kelola pengaturan keamanan dompet Anda",

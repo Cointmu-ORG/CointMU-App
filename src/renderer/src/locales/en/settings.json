@@ -310,7 +310,13 @@
     "rewardAddressDesc": "Where coinbase rewards are sent (defaults to main wallet)",
     "customAddress": "Custom address...",
     "selectWallet": "Select a wallet...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "When to mine",
+    "idleOnlyTitle": "Mine only when idle",
+    "idleOnlyDesc": "Pause mining while you use the computer and resume once it has been idle for a while.",
+    "idleAfterTitle": "Idle after",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min"
   },
   "securitySettings": {
     "subtitle": "Manage security settings for your wallet",

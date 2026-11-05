@@ -308,7 +308,12 @@
     "rewardAddressDesc": "接收 Coinbase 奖励的地方（默认为主钱包）",
     "customAddress": "自定义地址...",
     "selectWallet": "选择一个钱包...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "挖矿时间",
+    "idleOnlyTitle": "仅在空闲时挖矿",
+    "idleOnlyDesc": "使用电脑时暂停挖矿，电脑空闲一段时间后自动恢复。",
+    "idleAfterTitle": "空闲时长",
+    "minutes_other": "{{count}} 分钟"
   },
   "securitySettings": {
     "subtitle": "管理你的钱包安全设置",

@@ -24,7 +24,8 @@
     "statusMining": "Menambang",
     "statusStopped": "Berhenti",
     "preferences": "Preferensi",
-    "pausedBattery": "Dijeda (baterai)"
+    "pausedBattery": "Dijeda (baterai)",
+    "pausedUserActive": "Dijeda: kamu sedang aktif"
   },
   "hero": {
     "rewardsToday": "Hadiah hari ini",

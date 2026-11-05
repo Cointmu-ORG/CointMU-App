@@ -312,7 +312,14 @@
     "rewardAddressDesc": "A dónde se envían las recompensas coinbase (por defecto billetera principal)",
     "customAddress": "Dirección personalizada...",
     "selectWallet": "Seleccionar billetera...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "Cuándo minar",
+    "idleOnlyTitle": "Minar solo en reposo",
+    "idleOnlyDesc": "Pausa la minería mientras usas el equipo y la reanuda cuando lleva un rato inactivo.",
+    "idleAfterTitle": "Inactivo tras",
+    "minutes_one": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "minutes_other": "{{count}} min"
   },
   "securitySettings": {
     "subtitle": "Gestionar los ajustes de seguridad de tu billetera",

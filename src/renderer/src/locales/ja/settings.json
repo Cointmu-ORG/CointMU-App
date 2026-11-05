@@ -308,7 +308,12 @@
     "rewardAddressDesc": "コインベースの報酬が送信される場所（デフォルトはメインウォレット）",
     "customAddress": "カスタムアドレス...",
     "selectWallet": "ウォレットを選択...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "マイニングするタイミング",
+    "idleOnlyTitle": "アイドル時のみマイニング",
+    "idleOnlyDesc": "コンピューターを使っている間はマイニングを一時停止し、しばらく操作がなければ再開します。",
+    "idleAfterTitle": "アイドルとみなすまで",
+    "minutes_other": "{{count}} 分"
   },
   "securitySettings": {
     "subtitle": "ウォレットのセキュリティ設定を管理する",

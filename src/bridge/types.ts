@@ -206,6 +206,7 @@ export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
 export const MiningPowerStatus = {
   MINING: "MINING",
   PAUSED_BATTERY: "PAUSED_BATTERY",
+  PAUSED_USER_ACTIVE: "PAUSED_USER_ACTIVE",
   STOPPED: "STOPPED",
 } as const;
 

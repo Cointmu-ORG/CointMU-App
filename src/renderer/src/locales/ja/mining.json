@@ -24,7 +24,8 @@
     "statusMining": "マイニング中",
     "statusStopped": "停止中",
     "preferences": "設定",
-    "pausedBattery": "一時停止中（バッテリー）"
+    "pausedBattery": "一時停止中（バッテリー）",
+    "pausedUserActive": "一時停止中：操作中"
   },
   "hero": {
     "rewardsToday": "今日の報酬",

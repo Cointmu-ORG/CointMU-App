@@ -310,7 +310,13 @@
     "rewardAddressDesc": "Wohin Coinbase-Belohnungen gesendet werden (Standard ist Haupt-Wallet)",
     "customAddress": "Benutzerdefinierte Adresse...",
     "selectWallet": "Wallet auswählen...",
-    "customAddressPlaceholder": "0x..."
+    "customAddressPlaceholder": "0x...",
+    "whenToMine": "Wann minen",
+    "idleOnlyTitle": "Nur im Leerlauf minen",
+    "idleOnlyDesc": "Pausiert das Mining, während du den Computer benutzt, und setzt es fort, wenn er eine Weile untätig war.",
+    "idleAfterTitle": "Leerlauf nach",
+    "minutes_one": "{{count}} Min.",
+    "minutes_other": "{{count}} Min."
   },
   "securitySettings": {
     "subtitle": "Verwalten Sie die Sicherheitseinstellungen für Ihr Wallet",

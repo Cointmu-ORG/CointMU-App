@@ -5,11 +5,14 @@ import { StatusPill } from "./status-pill.component";
 import { Settings } from "lucide-react";
 import { MiningPowerStatus } from "@bridge/types";
 
-type PausedStatus = typeof MiningPowerStatus.PAUSED_BATTERY;
+type PausedStatus =
+  | typeof MiningPowerStatus.PAUSED_BATTERY
+  | typeof MiningPowerStatus.PAUSED_USER_ACTIVE;
 
 /** Why switched-on mining is paused (mining policy in main), as label keys. */
 const PAUSED_LABEL_KEYS: Readonly<Record<PausedStatus, string>> = {
   [MiningPowerStatus.PAUSED_BATTERY]: "mining:header.pausedBattery",
+  [MiningPowerStatus.PAUSED_USER_ACTIVE]: "mining:header.pausedUserActive",
 };
 
 interface MiningHeaderProps {
