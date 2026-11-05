@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAppStore } from "@/shared/model";
+import {
+  getSessionPassword,
+  lockSession,
+  unlockSession,
+} from "@/entities/wallet";
 import { useAutoLock } from "./auto-lock.hook";
 
 // Runs the hook's effect once, the way React would on mount, and keeps its
@@ -109,17 +114,38 @@ describe("useAutoLock", () => {
     expect(onLock).toHaveBeenCalledTimes(1);
   });
 
-  it("pauses while mining and restarts when mining stops", () => {
+  it("locks after the idle time while the node is mining", () => {
+    useAppStore.setState({ isMining: true });
+    const onLock = vi.fn();
+    useMountedAutoLock(onLock);
+
+    vi.advanceTimersByTime(INACTIVITY_TIMEOUT_MS - ONE_MS);
+    expect(onLock).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(ONE_MS);
+    expect(onLock).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps mining running when the wallet locks", () => {
+    const mining = { toggle: vi.fn(), setThreads: vi.fn() };
+    vi.stubGlobal("window", { api: { mining } });
+    useAppStore.setState({ isMining: true });
+    unlockSession("cdp-test-pass-1");
+    useMountedAutoLock(lockSession);
+
+    vi.advanceTimersByTime(INACTIVITY_TIMEOUT_MS);
+
+    expect(getSessionPassword()).toBeNull();
+    expect(mining.toggle).not.toHaveBeenCalled();
+    expect(useAppStore.getState().isMining).toBe(true);
+  });
+
+  it("does not restart the idle time when mining starts or stops", () => {
     const onLock = vi.fn();
     useMountedAutoLock(onLock);
 
     vi.advanceTimersByTime(INACTIVITY_TIMEOUT_MS - ONE_MS);
     useAppStore.setState({ isMining: true });
-    vi.advanceTimersByTime(INACTIVITY_TIMEOUT_MS * 2);
-    expect(onLock).not.toHaveBeenCalled();
-
-    useAppStore.setState({ isMining: false });
-    vi.advanceTimersByTime(INACTIVITY_TIMEOUT_MS);
+    vi.advanceTimersByTime(ONE_MS);
     expect(onLock).toHaveBeenCalledTimes(1);
   });
 
