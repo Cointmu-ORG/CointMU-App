@@ -326,7 +326,6 @@
   "securitySettings": {
     "subtitle": "管理你的钱包安全设置",
     "autoLockTitle": "自动锁定钱包",
-    "autoLockDesc": "闲置 5 分钟后锁定密钥",
     "seedPhraseTitle": "恢复短语",
     "seedPhraseDesc": "用于恢复您的钱包的 12 词助记词",
     "reveal": "显示...",
@@ -342,7 +341,10 @@
     "resetWalletBtn": "重置...",
     "access": "访问",
     "backup": "备份",
-    "hardware": "硬件"
+    "hardware": "硬件",
+    "autoLockMinutesDesc": "无操作达到此时长后锁定钱包，之后需要重新输入密码。挖矿和节点会继续运行。",
+    "never": "从不",
+    "minutes_other": "{{count}} 分钟"
   },
   "privacy": {
     "title": "隐私与诊断",

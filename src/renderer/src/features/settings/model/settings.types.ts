@@ -43,7 +43,7 @@ export interface SettingsStore {
     poolAddress: string;
   };
   security: {
-    autoLock: boolean;
+    autoLockMinutes: number;
     requireBiometrics: boolean;
   };
   advanced: {

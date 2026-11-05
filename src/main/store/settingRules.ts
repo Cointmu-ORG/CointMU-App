@@ -2,6 +2,7 @@ import {
   CloseAction,
   UpdateInstallMode,
   ZOOM_PERCENT_OPTIONS,
+  AUTO_LOCK_MINUTE_OPTIONS,
 } from "../../bridge/setting-values";
 
 /** Where the chain data lives; "" is the default folder. Only the move writes it. */
@@ -59,6 +60,10 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
   "mining.idleThresholdMinutes": {
     fallback: 2,
     isValid: isIntegerIn(1, 60),
+  },
+  "security.autoLockMinutes": {
+    fallback: 15,
+    isValid: isOneOf(AUTO_LOCK_MINUTE_OPTIONS),
   },
   "appearance.zoomPercent": {
     fallback: 100,

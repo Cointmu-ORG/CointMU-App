@@ -134,6 +134,30 @@ export function migrateSettingValues<T extends StoreData>(data: T): T | null {
   return hasChanged ? (migrated as T) : null;
 }
 
+// Up to the settings batch, auto-lock was a switch with a fixed 5 minutes.
+const LEGACY_AUTO_LOCK_MINUTES = 5;
+
+/**
+ * Converts the old auto-lock switch to minutes, keeping what users had: on
+ * stays 5 minutes (new installs get 15), off becomes Never (0). Runs before
+ * applySettingRules, which would otherwise fill in the new default.
+ * Idempotent.
+ * @param data - The whole store content.
+ * @returns A converted copy, or null when nothing needed to change.
+ */
+export function migrateAutoLock<T extends StoreData>(data: T): T | null {
+  const security = asSection(data.security);
+  if (!security || !("autoLock" in security)) return null;
+  const migrated: StoreData = structuredClone(data);
+  const section = migrated.security as StoreData;
+  if (!("autoLockMinutes" in section)) {
+    section.autoLockMinutes =
+      section.autoLock === false ? 0 : LEGACY_AUTO_LOCK_MINUTES;
+  }
+  delete section.autoLock;
+  return migrated as T;
+}
+
 /**
  * Sets every ruled setting (SETTING_RULES) that is missing or holds a value
  * its rule rejects, such as a hand-edited config.json, to its default.

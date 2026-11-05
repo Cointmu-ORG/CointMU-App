@@ -329,7 +329,6 @@
   "securitySettings": {
     "subtitle": "Verwalten Sie die Sicherheitseinstellungen für Ihr Wallet",
     "autoLockTitle": "Wallet automatisch sperren",
-    "autoLockDesc": "Schlüssel nach 5 Minuten Inaktivität sperren",
     "seedPhraseTitle": "Wiederherstellungsphrase",
     "seedPhraseDesc": "12-Wörter-Seed zur Wiederherstellung Ihres Wallets",
     "reveal": "Anzeigen...",
@@ -345,7 +344,11 @@
     "resetWalletBtn": "Zurücksetzen...",
     "access": "Zugriff",
     "backup": "Sicherung",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "autoLockMinutesDesc": "Sperrt die Wallet nach dieser Zeit ohne Aktivität; danach brauchst du wieder dein Passwort. Mining und Node laufen weiter.",
+    "never": "Nie",
+    "minutes_one": "{{count}} Min.",
+    "minutes_other": "{{count}} Min."
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",

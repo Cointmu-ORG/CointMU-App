@@ -326,7 +326,6 @@
   "securitySettings": {
     "subtitle": "Kelola pengaturan keamanan dompet Anda",
     "autoLockTitle": "Kunci otomatis dompet",
-    "autoLockDesc": "Kunci kunci setelah 5 menit tidak aktif",
     "seedPhraseTitle": "Frasa pemulihan",
     "seedPhraseDesc": "12 kata seed yang digunakan untuk memulihkan dompet Anda",
     "reveal": "Tampilkan...",
@@ -342,7 +341,10 @@
     "resetWalletBtn": "Reset...",
     "access": "Akses",
     "backup": "Cadangan",
-    "hardware": "Perangkat Keras"
+    "hardware": "Perangkat Keras",
+    "autoLockMinutesDesc": "Kunci wallet setelah tidak ada aktivitas selama ini; setelahnya kamu perlu memasukkan password lagi. Mining dan node tetap berjalan.",
+    "never": "Tidak pernah",
+    "minutes_other": "{{count}} mnt"
   },
   "privacy": {
     "title": "Privasi & Diagnostik",

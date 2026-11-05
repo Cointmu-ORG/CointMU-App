@@ -107,3 +107,8 @@ export const MotionPreference = {
 
 export type MotionPreference =
   (typeof MotionPreference)[keyof typeof MotionPreference];
+
+/** Wallet auto-lock after this many idle minutes; 0 is Never. */
+export const AUTO_LOCK_MINUTE_OPTIONS = [0, 5, 15, 30, 60] as const;
+
+export type AutoLockMinutes = (typeof AUTO_LOCK_MINUTE_OPTIONS)[number];

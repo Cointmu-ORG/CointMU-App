@@ -332,7 +332,6 @@
   "securitySettings": {
     "subtitle": "Gestionar los ajustes de seguridad de tu billetera",
     "autoLockTitle": "Bloquear billetera automáticamente",
-    "autoLockDesc": "Bloquear claves después de 5 minutos de inactividad",
     "seedPhraseTitle": "Frase de recuperación",
     "seedPhraseDesc": "Semilla de 12 palabras usada para restaurar tu billetera",
     "reveal": "Revelar...",
@@ -348,7 +347,12 @@
     "resetWalletBtn": "Restablecer...",
     "access": "Acceso",
     "backup": "Copia de seguridad",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "autoLockMinutesDesc": "Bloquea la billetera tras este tiempo sin actividad; después necesitarás tu contraseña. La minería y el nodo siguen funcionando.",
+    "never": "Nunca",
+    "minutes_one": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "minutes_other": "{{count}} min"
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",

@@ -326,7 +326,6 @@
   "securitySettings": {
     "subtitle": "ウォレットのセキュリティ設定を管理する",
     "autoLockTitle": "ウォレットの自動ロック",
-    "autoLockDesc": "5分間非アクティブな状態が続くとキーをロックします",
     "seedPhraseTitle": "リカバリフレーズ",
     "seedPhraseDesc": "ウォレットの復元に使用される12単語のシード",
     "reveal": "表示...",
@@ -342,7 +341,10 @@
     "resetWalletBtn": "リセット...",
     "access": "アクセス",
     "backup": "バックアップ",
-    "hardware": "ハードウェア"
+    "hardware": "ハードウェア",
+    "autoLockMinutesDesc": "この時間操作がなければウォレットをロックし、再びパスワードが必要になります。マイニングとノードは動作し続けます。",
+    "never": "しない",
+    "minutes_other": "{{count}} 分"
   },
   "privacy": {
     "title": "プライバシーと診断",

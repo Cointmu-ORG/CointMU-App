@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { findInvalidSetting } from "./settingRules";
-import { applySettingRules } from "./settingsMigration";
+import { applySettingRules, migrateAutoLock } from "./settingsMigration";
 
 describe("findInvalidSetting", () => {
   it("accepts a valid leaf and rejects an invalid one", () => {
@@ -71,5 +71,39 @@ describe("mining condition rules", () => {
     expect(findInvalidSetting("mining", { schedule: { start: "25:00" } })).toBe(
       "mining.schedule.start",
     );
+  });
+});
+
+describe("migrateAutoLock", () => {
+  it.each([
+    [true, 5],
+    [false, 0],
+  ])("turns the old switch %j into %j minutes", (autoLock, minutes) => {
+    const migrated = migrateAutoLock({
+      security: { autoLock, requireBiometrics: false },
+    });
+
+    expect(migrated?.security).toEqual({
+      autoLockMinutes: minutes,
+      requireBiometrics: false,
+    });
+  });
+
+  it("keeps a stored choice, and is idempotent", () => {
+    const once = migrateAutoLock({
+      security: { autoLock: true, autoLockMinutes: 30 },
+    });
+
+    expect(once?.security).toEqual({ autoLockMinutes: 30 });
+    expect(migrateAutoLock(once ?? {})).toBeNull();
+  });
+
+  it("leaves new installs to the default of 15 minutes", () => {
+    const store = { security: { requireBiometrics: false } };
+
+    expect(migrateAutoLock(store)).toBeNull();
+    expect(applySettingRules(store)?.security).toMatchObject({
+      autoLockMinutes: 15,
+    });
   });
 });

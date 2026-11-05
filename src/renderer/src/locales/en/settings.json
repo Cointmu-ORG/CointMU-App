@@ -329,7 +329,6 @@
   "securitySettings": {
     "subtitle": "Manage security settings for your wallet",
     "autoLockTitle": "Auto-lock wallet",
-    "autoLockDesc": "Lock keys after 5 minutes of inactivity",
     "seedPhraseTitle": "Recovery phrase",
     "seedPhraseDesc": "12-word seed used to restore your wallet",
     "reveal": "Reveal...",
@@ -345,7 +344,11 @@
     "resetWalletBtn": "Reset...",
     "access": "Access",
     "backup": "Backup",
-    "hardware": "Hardware"
+    "hardware": "Hardware",
+    "autoLockMinutesDesc": "Lock the wallet after this long without activity; you then need your password again. Mining and the node keep running.",
+    "never": "Never",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",

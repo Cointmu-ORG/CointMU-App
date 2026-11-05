@@ -17,6 +17,7 @@ import {
 } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
+import { lockSession } from "@/entities/wallet";
 
 import { Sidebar, AppHeader, UpdateReadyBanner } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
@@ -135,11 +136,14 @@ function App(): JSX.Element {
   }, [activeWalletAddress, accountsKey]);
 
   /**
-   * Locks the wallet by clearing the decrypted session state in React.
-   * Does NOT delete the encrypted payload from the persistent electron-store.
-   * Also resets the transient AuthFlow UI state back to the initial screen.
+   * Locks the wallet: forgets the session password kept in memory and clears
+   * the decrypted session state in React, so the password is needed again.
+   * Does NOT delete the encrypted payload from the persistent electron-store,
+   * and mining and the node keep running. Also resets the transient AuthFlow
+   * UI state back to the initial screen.
    */
   const handleLogout = (): void => {
+    lockSession();
     useAuthStore.getState().reset();
     setActiveWalletAddress(null);
     setAccounts([]);

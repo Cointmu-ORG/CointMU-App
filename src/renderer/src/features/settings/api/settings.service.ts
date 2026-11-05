@@ -59,7 +59,7 @@ async function resetAllSettings(): Promise<void> {
       poolAddress: "",
     }),
     setSetting("security", {
-      autoLock: true,
+      autoLockMinutes: 15,
       requireBiometrics: false,
     }),
     setSetting("advanced", {
