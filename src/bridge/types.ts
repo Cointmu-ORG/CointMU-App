@@ -199,10 +199,14 @@ export const IpcErrorCode = {
 
 export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
 
-/** Payload of the `mining:status-changed` event. */
+/**
+ * Payload of the `mining:status-changed` event: what the mining policy
+ * decided for mining the user switched on, or STOPPED while it is off.
+ */
 export const MiningPowerStatus = {
   MINING: "MINING",
   PAUSED_BATTERY: "PAUSED_BATTERY",
+  STOPPED: "STOPPED",
 } as const;
 
 export type MiningPowerStatus =

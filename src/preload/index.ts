@@ -183,6 +183,8 @@ const api = {
     setPoolAddress: (address: string) =>
       ipcRenderer.invoke("mining:setPoolAddress", address),
     getStats: () => ipcRenderer.invoke("mining:getStats"),
+    getPowerStatus: (): Promise<string> =>
+      ipcRenderer.invoke("mining:getPowerStatus"),
     onDagProgress: (callback: (progress: number) => void) => {
       const handler = (_event: any, value: number): void => {
         callback(value);

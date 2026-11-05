@@ -1,38 +1,55 @@
-import { BrowserWindow, ipcMain, powerMonitor } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { callGethRpc } from "../geth/rpc/rpcUtils";
 import {
   scanWalletActivity,
   fetchNetworkInsights,
 } from "../wallet/activityScanner";
 import type { AppStore } from "../store/appStore";
-import { IpcErrorCode, MiningPowerStatus } from "../../bridge/types";
+import { IpcErrorCode, type MiningPowerStatus } from "../../bridge/types";
+import type { MiningPolicy } from "./miningPolicyRunner";
+import { createMiningPolicy } from "./miningPolicySetup";
 
 /**
  * Central controller for managing the underlying Geth mining process.
- * Handles RPC dispatch, power state transitions via powerMonitor, and syncing
- * with the global electron-store configuration.
+ * Handles RPC dispatch and the user's mining switch; whether switched-on
+ * mining runs right now (battery, idle, schedule) is the mining policy's call.
  */
 export class MiningController {
   private rpcPort: number;
   private store: AppStore;
   private win: BrowserWindow | null;
+  private policy: MiningPolicy;
+  // Started from the Mining page or the tray in this session; mining never
+  // starts on its own at launch (the stored flag is only the permission).
+  private isStarted = false;
 
   constructor(rpcPort: number, store: AppStore) {
     this.rpcPort = rpcPort;
     this.store = store;
     this.win = null;
 
-    this.setupPowerMonitor();
+    this.policy = createMiningPolicy(
+      rpcPort,
+      store,
+      () => this.isStarted,
+      (status) => this.publishStatus(status),
+    );
     this.setupIpcHandlers();
+  }
+
+  private publishStatus(status: MiningPowerStatus): void {
+    if (this.win && !this.win.isDestroyed()) {
+      this.win.webContents.send("mining:status-changed", status);
+    }
   }
 
   public setWindow(win: BrowserWindow): void {
     this.win = win;
   }
 
-  /** @returns Whether the user has mining switched on. */
+  /** @returns Whether the user has mining started (it may be paused). */
   public isEnabled(): boolean {
-    return this.store.get("mining.isMiningEnabled") === true;
+    return this.isStarted;
   }
 
   /**
@@ -45,28 +62,22 @@ export class MiningController {
   }
 
   /**
-   * Toggles the mining state on or off. Dispatches miner_start or miner_stop.
-   * The etherbase is sourced exclusively from the persisted mining reward address
-   * (mining.poolAddress) and never from the active wallet tab, so the address
-   * that receives block rewards is owned solely by Mining Settings.
+   * Switches mining on or off. On: the policy starts the miner (etherbase =
+   * the persisted reward address, mining.poolAddress, never the active
+   * wallet) unless a condition pauses it. Off: the miner stops at once.
    * @param {boolean} enabled - Target mining state.
    * @returns {Promise<void>}
+   * @throws MINING_NO_REWARD_ADDRESS when switching on without a reward
+   *   address; mining then stays off.
    */
   private async toggleMining(enabled: boolean): Promise<void> {
-    this.store.set("mining.isMiningEnabled", enabled);
-    if (enabled) {
-      const rewardAddress = this.store.get("mining.poolAddress");
-      if (!rewardAddress) {
-        throw new Error(IpcErrorCode.MINING_NO_REWARD_ADDRESS);
-      }
-
-      await callGethRpc(this.rpcPort, "miner_setEtherbase", [rewardAddress]);
-
-      const threads = this.store.get("mining.cpuThreads") || 4;
-      await callGethRpc(this.rpcPort, "miner_start", [Math.floor(threads)]);
-    } else {
-      await callGethRpc(this.rpcPort, "miner_stop");
+    if (enabled && !this.store.get("mining.poolAddress")) {
+      throw new Error(IpcErrorCode.MINING_NO_REWARD_ADDRESS);
     }
+    this.isStarted = enabled;
+    this.store.set("mining.isMiningEnabled", enabled);
+    if (!enabled) await callGethRpc(this.rpcPort, "miner_stop");
+    await this.policy.evaluate();
   }
 
   /**
@@ -96,38 +107,6 @@ export class MiningController {
     await callGethRpc(this.rpcPort, "miner_setEtherbase", [address]);
   }
 
-  private setupPowerMonitor(): void {
-    powerMonitor.on("on-battery", async () => {
-      const pauseOnBattery = this.store.get("mining.pauseOnBattery");
-      if (pauseOnBattery) {
-        console.log("[power] On battery - pausing miner");
-        await callGethRpc(this.rpcPort, "miner_stop");
-        if (this.win) {
-          this.win.webContents.send(
-            "mining:status-changed",
-            MiningPowerStatus.PAUSED_BATTERY,
-          );
-        }
-      }
-    });
-
-    powerMonitor.on("on-ac", async () => {
-      const isMiningEnabled = this.store.get("mining.isMiningEnabled");
-      const pauseOnBattery = this.store.get("mining.pauseOnBattery");
-      if (isMiningEnabled && pauseOnBattery) {
-        const threads = this.store.get("mining.cpuThreads") || 4;
-        console.log("[power] On AC - resuming miner with", threads, "threads");
-        await callGethRpc(this.rpcPort, "miner_start", [threads]);
-        if (this.win) {
-          this.win.webContents.send(
-            "mining:status-changed",
-            MiningPowerStatus.MINING,
-          );
-        }
-      }
-    });
-  }
-
   private setupIpcHandlers(): void {
     ipcMain.handle("mining:toggle", async (_, enabled: boolean) => {
       await this.toggleMining(enabled);
@@ -140,6 +119,8 @@ export class MiningController {
     ipcMain.handle("mining:setPoolAddress", async (_, address: string) => {
       await this.setPoolAddress(address);
     });
+
+    ipcMain.handle("mining:getPowerStatus", () => this.policy.getStatus());
 
     /**
      * Retrieves the current mining status, hashrate, block difficulty, and latest block height directly from the Geth node.

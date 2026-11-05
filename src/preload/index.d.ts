@@ -136,6 +136,7 @@ interface CointmuAPI {
       difficulty: number;
       blockNumber: number;
     }>;
+    getPowerStatus: () => Promise<string>;
     onDagProgress: (callback: (progress: number) => void) => () => void;
     onMiningStatusChanged: (callback: (status: string) => void) => () => void;
     onMiningLog: (
