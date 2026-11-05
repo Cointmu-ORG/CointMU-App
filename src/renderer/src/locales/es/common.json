@@ -95,5 +95,10 @@
     "readyBody": "La versión {{version}} ya está descargada. Reinicia para instalarla; primero el nodo se cierra de forma limpia.",
     "restartNow": "Reiniciar ahora",
     "later": "Más tarde"
+  },
+  "privacy": {
+    "hideAmounts": "Ocultar saldos",
+    "showAmounts": "Mostrar saldos",
+    "hiddenAmount": "Importe oculto"
   }
 }

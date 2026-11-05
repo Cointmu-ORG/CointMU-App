@@ -2,6 +2,7 @@ import { type DerivedAccount, AccountIcon } from "@/entities/account";
 import { type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, EyeOff } from "lucide-react";
+import { PrivateAmount } from "@/shared/ui";
 
 interface AccountSidebarProps {
   accounts: DerivedAccount[];
@@ -73,7 +74,9 @@ function AccountSidebar({
                         {acc.label}
                       </p>
                       <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2 group-hover:opacity-0 transition-opacity">
-                        {balances[acc.address] || "0.00"}
+                        <PrivateAmount>
+                          {balances[acc.address] || "0.00"}
+                        </PrivateAmount>
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-0.5">

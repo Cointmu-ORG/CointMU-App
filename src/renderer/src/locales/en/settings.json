@@ -87,7 +87,10 @@
     "densityDesc": "Vertical spacing in lists and tables",
     "animatedTransitionsTitle": "Animated transitions",
     "animatedTransitionsDesc": "Smooth page changes and motion",
-    "title": "Appearance"
+    "title": "Appearance",
+    "privacy": "Privacy",
+    "privacyModeTitle": "Privacy mode",
+    "privacyModeDesc": "Show •••• instead of balances and amounts, e.g. while sharing your screen. The eye button at the top does the same."
   },
   "notifications": {
     "subtitle": "Alerts, delivery channels, and event categories",

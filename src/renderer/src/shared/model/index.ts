@@ -4,3 +4,5 @@ export type {
   HistoryFilter,
   PendingTransaction,
 } from "./useAppStore";
+export { useDisplayPrefs } from "./display-prefs.store";
+export type { DisplayPrefsState } from "./display-prefs.store";

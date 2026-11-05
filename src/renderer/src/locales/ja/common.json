@@ -93,5 +93,10 @@
     "readyBody": "バージョン {{version}} をダウンロードしました。再起動するとインストールされます。ノードは先に正常に終了します。",
     "restartNow": "今すぐ再起動",
     "later": "後で"
+  },
+  "privacy": {
+    "hideAmounts": "残高を隠す",
+    "showAmounts": "残高を表示",
+    "hiddenAmount": "非表示の金額"
   }
 }

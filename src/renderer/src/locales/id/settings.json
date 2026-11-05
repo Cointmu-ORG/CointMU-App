@@ -87,7 +87,10 @@
     "densityDesc": "Jarak vertikal dalam daftar dan tabel",
     "animatedTransitionsTitle": "Transisi animasi",
     "animatedTransitionsDesc": "Perubahan halaman dan gerakan yang mulus",
-    "title": "Penampilan"
+    "title": "Penampilan",
+    "privacy": "Privasi",
+    "privacyModeTitle": "Mode privasi",
+    "privacyModeDesc": "Tampilkan •••• sebagai ganti saldo dan nominal, misalnya saat berbagi layar. Tombol mata di atas melakukan hal yang sama."
   },
   "notifications": {
     "subtitle": "Peringatan, saluran pengiriman, dan kategori acara",

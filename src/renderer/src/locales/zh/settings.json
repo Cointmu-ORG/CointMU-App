@@ -87,7 +87,10 @@
     "densityDesc": "列表和表格中的垂直间距",
     "animatedTransitionsTitle": "动画过渡",
     "animatedTransitionsDesc": "平滑的页面切换和运动",
-    "title": "外观"
+    "title": "外观",
+    "privacy": "隐私",
+    "privacyModeTitle": "隐私模式",
+    "privacyModeDesc": "以 •••• 代替余额和金额显示，例如在共享屏幕时。顶部的眼睛按钮作用相同。"
   },
   "notifications": {
     "subtitle": "警报、发送渠道和事件类别",

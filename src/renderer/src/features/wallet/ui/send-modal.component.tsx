@@ -26,7 +26,7 @@ import {
 } from "@/features/wallet";
 import { call, waitForTransactionReceipt } from "@/shared/api";
 import { Check, AlertCircle } from "lucide-react";
-import { CustomDropdown } from "@/shared/ui";
+import { CustomDropdown, PrivateAmount } from "@/shared/ui";
 import { TokenIcon } from "@/features/wallet";
 
 interface SendModalProps {
@@ -493,7 +493,8 @@ function SendModal({
               {t("wallet:modals.send.availableBalance")}
             </span>
             <span className="text-xs font-mono font-semibold text-slate-600 dark:text-gray-300">
-              {tokenBalance} {selectedToken?.symbol}
+              <PrivateAmount>{tokenBalance}</PrivateAmount>{" "}
+              {selectedToken?.symbol}
             </span>
           </div>
         </div>
@@ -575,7 +576,7 @@ function SendModal({
                   {t("wallet:modals.send.cmuGasBalance")}
                 </span>
                 <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
-                  {nativeBalance} CMU
+                  <PrivateAmount>{nativeBalance}</PrivateAmount> CMU
                 </span>
               </div>
             </>

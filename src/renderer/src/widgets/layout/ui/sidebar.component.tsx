@@ -16,6 +16,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { COINTMU_NETWORK } from "@bridge/network";
+import { PrivateAmount } from "@/shared/ui";
 
 interface SidebarProps {
   accounts: DerivedAccount[];
@@ -257,7 +258,7 @@ export function Sidebar({
                 {activeAccount?.label || "Wallet"}
               </p>
               <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2">
-                {balance}
+                <PrivateAmount>{balance}</PrivateAmount>
               </p>
             </div>
             <div className="flex items-center justify-between mt-0.5">

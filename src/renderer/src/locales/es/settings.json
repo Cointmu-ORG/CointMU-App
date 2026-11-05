@@ -87,7 +87,10 @@
     "densityDesc": "Espaciado vertical en listas y tablas",
     "animatedTransitionsTitle": "Transiciones animadas",
     "animatedTransitionsDesc": "Cambios de página y movimiento fluidos",
-    "title": "Apariencia"
+    "title": "Apariencia",
+    "privacy": "Privacidad",
+    "privacyModeTitle": "Modo privado",
+    "privacyModeDesc": "Muestra •••• en lugar de saldos e importes, por ejemplo al compartir la pantalla. El botón del ojo de arriba hace lo mismo."
   },
   "notifications": {
     "subtitle": "Alertas, canales de entrega y categorías de eventos",

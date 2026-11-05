@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Wallet, Copy, ArrowUp, ArrowDown, Activity } from "lucide-react";
+import { PrivateAmount } from "@/shared/ui";
 
 interface WalletOverviewCardProps {
   balance: string;
@@ -61,7 +62,9 @@ function WalletOverviewCard({
 
         <div className="mb-6">
           <div className="flex items-baseline gap-2.5">
-            <span className="text-4xl font-bold tracking-tight">{balance}</span>
+            <span className="text-4xl font-bold tracking-tight">
+              <PrivateAmount>{balance}</PrivateAmount>
+            </span>
             <span className="text-lg font-semibold text-white/70">CMU</span>
           </div>
           <p className="text-sm text-white/50 mt-1">

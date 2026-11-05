@@ -93,5 +93,10 @@
     "readyBody": "Versi {{version}} sudah diunduh. Mulai ulang untuk memasangnya; node dimatikan dengan bersih terlebih dahulu.",
     "restartNow": "Mulai ulang sekarang",
     "later": "Nanti"
+  },
+  "privacy": {
+    "hideAmounts": "Sembunyikan saldo",
+    "showAmounts": "Tampilkan saldo",
+    "hiddenAmount": "Jumlah disembunyikan"
   }
 }

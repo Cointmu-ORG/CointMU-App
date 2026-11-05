@@ -11,7 +11,7 @@ import { getAddressSummary } from "../api/explorer.service";
 import type { WalletActivity } from "@bridge/types";
 import { usePagination } from "@/shared/lib";
 import { formatAge } from "@/shared/lib";
-import { Sparkline, Pagination } from "@/shared/ui";
+import { Sparkline, Pagination, PrivateAmount } from "@/shared/ui";
 import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 
@@ -179,12 +179,13 @@ function AddressDetail({
                 {t("explorer:addressDetail.balance")}
               </span>
               <span className="text-lg font-bold text-slate-800 dark:text-gray-100">
-                {balance}{" "}
+                <PrivateAmount isPrivate={isOwned}>{balance}</PrivateAmount>{" "}
                 <span className="text-sm font-medium text-slate-400 dark:text-gray-400">
                   CMU
                 </span>
                 <span className="text-xs font-medium text-slate-400 dark:text-gray-400 ml-2">
-                  {"≈"} ${approxUsd}
+                  {"≈"} $
+                  <PrivateAmount isPrivate={isOwned}>{approxUsd}</PrivateAmount>
                 </span>
               </span>
             </div>
@@ -346,7 +347,10 @@ function AddressDetail({
                     </td>
                     <td className="px-2 py-2.5 text-right">
                       <span className="text-xs font-bold text-slate-800 dark:text-gray-100">
-                        {tx.amount} CMU
+                        <PrivateAmount isPrivate={isOwned}>
+                          {tx.amount}
+                        </PrivateAmount>{" "}
+                        CMU
                       </span>
                     </td>
                     <td className="px-2 py-2.5 text-right">

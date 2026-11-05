@@ -93,5 +93,10 @@
     "readyBody": "版本 {{version}} 已下载。重启即可安装；节点会先正常关闭。",
     "restartNow": "立即重启",
     "later": "稍后"
+  },
+  "privacy": {
+    "hideAmounts": "隐藏余额",
+    "showAmounts": "显示余额",
+    "hiddenAmount": "金额已隐藏"
   }
 }

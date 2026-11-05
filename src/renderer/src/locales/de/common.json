@@ -94,5 +94,10 @@
     "readyBody": "Version {{version}} ist heruntergeladen. Starte neu, um sie zu installieren; der Node wird vorher sauber heruntergefahren.",
     "restartNow": "Jetzt neu starten",
     "later": "Später"
+  },
+  "privacy": {
+    "hideAmounts": "Guthaben ausblenden",
+    "showAmounts": "Guthaben anzeigen",
+    "hiddenAmount": "Ausgeblendeter Betrag"
   }
 }

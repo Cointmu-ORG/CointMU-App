@@ -3,6 +3,7 @@ import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { DENSITY_LABEL_KEYS } from "@/shared/lib";
 import { LayoutDensity, ThemeMode } from "@bridge/setting-values";
+import { PrivacySettings } from "./privacy-settings.component";
 
 /**
  * Appearance settings pane containing theme (light/dark/auto),
@@ -182,6 +183,8 @@ export function AppearanceSettings(): JSX.Element {
             </div>
           </div>
         </section>
+
+        <PrivacySettings />
       </div>
     </div>
   );

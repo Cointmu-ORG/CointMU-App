@@ -94,5 +94,10 @@
     "readyBody": "Version {{version}} is downloaded. Restart to install it; the node shuts down cleanly first.",
     "restartNow": "Restart now",
     "later": "Later"
+  },
+  "privacy": {
+    "hideAmounts": "Hide balances",
+    "showAmounts": "Show balances",
+    "hiddenAmount": "Hidden amount"
   }
 }

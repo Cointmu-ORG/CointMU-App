@@ -6,7 +6,7 @@ import {
 import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
-import { ActivityItem, type ActivityData } from "@/shared/ui";
+import { ActivityItem, type ActivityData, PrivateAmount } from "@/shared/ui";
 import { ActivityKind, type WalletActivity } from "@bridge/types";
 import {
   TokenService,
@@ -325,7 +325,9 @@ function WalletTabs({
                     </td>
                     <td className="px-5 py-4 text-right">
                       <p className="text-sm font-semibold text-slate-700 dark:text-gray-200 font-mono">
-                        {tokenBalances[token.symbol] ?? "..."}
+                        <PrivateAmount>
+                          {tokenBalances[token.symbol] ?? "..."}
+                        </PrivateAmount>
                       </p>
                     </td>
                     <td className="px-5 py-4 text-right">

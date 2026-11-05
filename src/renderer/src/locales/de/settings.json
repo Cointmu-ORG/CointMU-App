@@ -87,7 +87,10 @@
     "densityDesc": "Vertikaler Abstand in Listen und Tabellen",
     "animatedTransitionsTitle": "Animierte Übergänge",
     "animatedTransitionsDesc": "Reibungslose Seitenwechsel und Bewegungen",
-    "title": "Erscheinungsbild"
+    "title": "Erscheinungsbild",
+    "privacy": "Privatsphäre",
+    "privacyModeTitle": "Privatsphäre-Modus",
+    "privacyModeDesc": "Zeigt •••• statt Guthaben und Beträgen, z. B. beim Teilen des Bildschirms. Die Augen-Schaltfläche oben macht dasselbe."
   },
   "notifications": {
     "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",

@@ -3,6 +3,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowUp, ArrowDown, Check, Copy } from "lucide-react";
+import { PrivateAmount } from "@/shared/ui";
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined;
@@ -71,7 +72,9 @@ function AccountHeroCard({
 
         <div className="mb-5">
           <div className="flex items-baseline gap-2.5">
-            <span className="text-4xl font-bold tracking-tight">{balance}</span>
+            <span className="text-4xl font-bold tracking-tight">
+              <PrivateAmount>{balance}</PrivateAmount>
+            </span>
             <span className="text-lg font-semibold text-white/60">CMU</span>
           </div>
           <p className="text-sm text-white/40 mt-1">
