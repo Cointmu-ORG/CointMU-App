@@ -194,6 +194,7 @@ interface CointmuAPI {
     acknowledgeNotice: () => Promise<TelemetryState>;
     listQueuedReports: () => Promise<QueuedReport[]>;
     clearQueuedReports: () => Promise<void>;
+    exportBundle: (dialogText: DialogText) => Promise<boolean>;
   };
   extension: {
     unlink: () => void;

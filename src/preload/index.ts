@@ -294,6 +294,8 @@ const api = {
       ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.LIST_QUEUED_REPORTS),
     clearQueuedReports: (): Promise<void> =>
       ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.CLEAR_QUEUED_REPORTS),
+    exportBundle: (dialogText: DialogText): Promise<boolean> =>
+      ipcRenderer.invoke(DIAGNOSTICS_CHANNELS.EXPORT_BUNDLE, dialogText),
   },
   extension: {
     unlink: () => {

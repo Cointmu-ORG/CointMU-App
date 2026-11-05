@@ -1,3 +1,5 @@
+import type { DialogText } from "@bridge/types";
+
 /**
  * Opens the folder holding main.log and geth.log in the OS file manager.
  * @returns A promise resolving once the folder was opened.
@@ -14,4 +16,16 @@ async function copyRecentLogs(): Promise<number> {
   return window.api.diagnostics.copyRecentLogs();
 }
 
-export { openLogsFolder, copyRecentLogs };
+/**
+ * Asks where to save, then writes the sanitized diagnostic bundle (logs,
+ * versions, non-secret settings) as a ZIP.
+ * @param dialogText - The save dialog text in the UI language.
+ * @returns True once saved, false when the dialog was cancelled.
+ */
+async function exportDiagnosticBundle(
+  dialogText: DialogText,
+): Promise<boolean> {
+  return window.api.diagnostics.exportBundle(dialogText);
+}
+
+export { openLogsFolder, copyRecentLogs, exportDiagnosticBundle };

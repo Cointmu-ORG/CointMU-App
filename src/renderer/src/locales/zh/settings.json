@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "副本校验不一致。节点继续使用当前文件夹，没有数据丢失。",
       "BUSY": "已有移动正在进行。",
       "UNKNOWN": "出现问题，链数据未移动。"
-    }
+    },
+    "troubleshooting": "故障排除",
+    "logsTitle": "日志",
+    "logsDesc": "本机上的应用和节点日志",
+    "logsOpen": "打开文件夹",
+    "diagnosticsTitle": "诊断包",
+    "diagnosticsDesc": "包含日志、版本和设置的 ZIP 文件，用于报告问题。绝不包含密钥、keystore 或助记词。",
+    "diagnosticsExport": "导出…",
+    "diagnosticsSaveTitle": "保存诊断包",
+    "diagnosticsZip": "ZIP 压缩包",
+    "diagnosticsSaved": "诊断包已保存。",
+    "diagnosticsFailed": "无法保存诊断包。"
   },
   "appearance": {
     "subtitle": "自定义 CointMU 外观",

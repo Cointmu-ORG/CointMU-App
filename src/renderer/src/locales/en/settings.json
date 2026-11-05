@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "The copy did not match. The node keeps using the current folder; nothing was lost.",
       "BUSY": "A move is already running.",
       "UNKNOWN": "Something went wrong. The chain data was not moved."
-    }
+    },
+    "troubleshooting": "Troubleshooting",
+    "logsTitle": "Logs",
+    "logsDesc": "App and node logs on this computer",
+    "logsOpen": "Open folder",
+    "diagnosticsTitle": "Diagnostic bundle",
+    "diagnosticsDesc": "A ZIP with the logs, versions and settings, for a bug report. Keys, keystores and the recovery phrase are never included.",
+    "diagnosticsExport": "Export…",
+    "diagnosticsSaveTitle": "Save diagnostic bundle",
+    "diagnosticsZip": "ZIP archive",
+    "diagnosticsSaved": "Bundle saved.",
+    "diagnosticsFailed": "The bundle could not be saved."
   },
   "appearance": {
     "subtitle": "Customize how CointMU looks",

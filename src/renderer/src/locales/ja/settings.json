@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "コピーが一致しませんでした。ノードは現在のフォルダーを使い続けます。データは失われていません。",
       "BUSY": "移動はすでに実行中です。",
       "UNKNOWN": "問題が発生しました。チェーンデータは移動されていません。"
-    }
+    },
+    "troubleshooting": "トラブルシューティング",
+    "logsTitle": "ログ",
+    "logsDesc": "このコンピューター上のアプリとノードのログ",
+    "logsOpen": "フォルダーを開く",
+    "diagnosticsTitle": "診断パッケージ",
+    "diagnosticsDesc": "不具合報告用に、ログ・バージョン・設定をまとめた ZIP です。鍵、キーストア、リカバリーフレーズは含まれません。",
+    "diagnosticsExport": "エクスポート…",
+    "diagnosticsSaveTitle": "診断パッケージを保存",
+    "diagnosticsZip": "ZIP アーカイブ",
+    "diagnosticsSaved": "パッケージを保存しました。",
+    "diagnosticsFailed": "パッケージを保存できませんでした。"
   },
   "appearance": {
     "subtitle": "CointMUの見た目をカスタマイズします",

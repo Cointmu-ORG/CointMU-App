@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "Salinan tidak cocok. Node tetap memakai folder saat ini; tidak ada data yang hilang.",
       "BUSY": "Pemindahan sedang berjalan.",
       "UNKNOWN": "Terjadi kesalahan. Data chain tidak dipindahkan."
-    }
+    },
+    "troubleshooting": "Pemecahan masalah",
+    "logsTitle": "Log",
+    "logsDesc": "Log aplikasi dan node di komputer ini",
+    "logsOpen": "Buka folder",
+    "diagnosticsTitle": "Paket diagnostik",
+    "diagnosticsDesc": "ZIP berisi log, versi, dan pengaturan untuk laporan bug. Kunci, keystore, dan frasa pemulihan tidak pernah disertakan.",
+    "diagnosticsExport": "Ekspor…",
+    "diagnosticsSaveTitle": "Simpan paket diagnostik",
+    "diagnosticsZip": "Arsip ZIP",
+    "diagnosticsSaved": "Paket tersimpan.",
+    "diagnosticsFailed": "Paket tidak bisa disimpan."
   },
   "appearance": {
     "subtitle": "Sesuaikan tampilan CointMU",

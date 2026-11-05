@@ -29,6 +29,7 @@ export const DIAGNOSTICS_CHANNELS = {
   ACKNOWLEDGE_NOTICE: "diagnostics:acknowledge-notice",
   LIST_QUEUED_REPORTS: "diagnostics:list-queued-reports",
   CLEAR_QUEUED_REPORTS: "diagnostics:clear-queued-reports",
+  EXPORT_BUNDLE: "diagnostics:export-bundle",
 } as const;
 
 export const EXPLORER_CHANNELS = {

@@ -4,6 +4,7 @@ import type { SettingsStore } from "@/features/settings";
 import { LanguageSwitcher } from "./language-switcher.component";
 import { WindowSettings } from "./window-settings.component";
 import { ChainDataSettings } from "./chain-data-settings.component";
+import { TroubleshootingSettings } from "./troubleshooting-settings.component";
 
 // Login items exist on Windows and macOS; only the Windows entry can carry
 // the argument that starts the app minimized (main/app/loginItem.ts).
@@ -105,6 +106,8 @@ export function GeneralSettings({
         />
 
         <ChainDataSettings />
+
+        <TroubleshootingSettings />
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">

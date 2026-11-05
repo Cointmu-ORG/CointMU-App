@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "La copia no coincide. El nodo sigue usando la carpeta actual; no se perdió nada.",
       "BUSY": "Ya hay un traslado en curso.",
       "UNKNOWN": "Algo salió mal. Los datos no se movieron."
-    }
+    },
+    "troubleshooting": "Solución de problemas",
+    "logsTitle": "Registros",
+    "logsDesc": "Registros de la aplicación y del nodo en este equipo",
+    "logsOpen": "Abrir carpeta",
+    "diagnosticsTitle": "Paquete de diagnóstico",
+    "diagnosticsDesc": "Un ZIP con los registros, versiones y ajustes para informar de un error. Nunca incluye claves, keystores ni la frase de recuperación.",
+    "diagnosticsExport": "Exportar…",
+    "diagnosticsSaveTitle": "Guardar paquete de diagnóstico",
+    "diagnosticsZip": "Archivo ZIP",
+    "diagnosticsSaved": "Paquete guardado.",
+    "diagnosticsFailed": "No se pudo guardar el paquete."
   },
   "appearance": {
     "subtitle": "Personaliza cómo se ve CointMU",

@@ -47,7 +47,18 @@
       "VERIFY_FAILED": "Die Kopie stimmt nicht überein. Der Node nutzt weiter den aktuellen Ordner; nichts ging verloren.",
       "BUSY": "Es läuft bereits ein Verschiebevorgang.",
       "UNKNOWN": "Etwas ist schiefgelaufen. Die Chain-Daten wurden nicht verschoben."
-    }
+    },
+    "troubleshooting": "Fehlerbehebung",
+    "logsTitle": "Protokolle",
+    "logsDesc": "App- und Node-Protokolle auf diesem Computer",
+    "logsOpen": "Ordner öffnen",
+    "diagnosticsTitle": "Diagnosepaket",
+    "diagnosticsDesc": "Ein ZIP mit Protokollen, Versionen und Einstellungen für einen Fehlerbericht. Schlüssel, Keystores und die Wiederherstellungsphrase sind nie enthalten.",
+    "diagnosticsExport": "Exportieren…",
+    "diagnosticsSaveTitle": "Diagnosepaket speichern",
+    "diagnosticsZip": "ZIP-Archiv",
+    "diagnosticsSaved": "Paket gespeichert.",
+    "diagnosticsFailed": "Das Paket konnte nicht gespeichert werden."
   },
   "appearance": {
     "subtitle": "Passen Sie an, wie CointMU aussieht",
