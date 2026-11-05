@@ -3,9 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 7
-SUBLEVEL = 4
-EXTRAVERSION = Obsidian
+PATCHLEVEL = 8
+SUBLEVEL = 0
+EXTRAVERSION = Orion
 
 help:
 	@echo "============================================="
