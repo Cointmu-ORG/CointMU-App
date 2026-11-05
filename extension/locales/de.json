@@ -101,7 +101,13 @@
       "resetBtn": "Wallet zurücksetzen",
       "resetConfirm": "Dadurch werden alle importierten Wallets aus diesem Browser entfernt. Zum erneuten Import benötigen Sie Ihre privaten Schlüssel. Fortfahren?",
       "lockBtn": "Wallet sperren",
-      "approvalLocked": "Ihre Wallet ist gesperrt. Geben Sie Ihr Passwort ein, um diese Anfrage zu genehmigen."
+      "approvalLocked": "Ihre Wallet ist gesperrt. Geben Sie Ihr Passwort ein, um diese Anfrage zu genehmigen.",
+      "migrateTitle": "Schützen Sie Ihre Schlüssel",
+      "migrateBody": "Diese Version verschlüsselt die in diesem Browser gespeicherten privaten Schlüssel. Legen Sie ein Wallet-Passwort mit mindestens 8 Zeichen fest, um fortzufahren. Es kann nicht wiederhergestellt werden: Wenn Sie es vergessen, setzen Sie die Wallet zurück und importieren Sie Ihre Schlüssel erneut.",
+      "migrateResumeHint": "Ein früherer Versuch, Ihre Schlüssel zu verschlüsseln, wurde unterbrochen. Geben Sie das damals gewählte Passwort ein.",
+      "migrateBtn": "Schlüssel verschlüsseln",
+      "migrateRestart": "Mit neuem Passwort neu beginnen",
+      "migrateRestartConfirm": "Dadurch wird der unterbrochene Versuch verworfen, sodass Sie ein neues Passwort wählen können. Ihre Schlüssel bleiben in diesem Browser, bis sie verschlüsselt sind. Fortfahren?"
     },
     "errors": {
       "desktopNotConnected": "CointMU Desktop ist nicht verbunden. Öffnen Sie die Desktop-App und versuchen Sie es erneut.",
@@ -116,7 +122,8 @@
       "weakPassword": "Verwenden Sie ein Passwort mit mindestens 8 Zeichen.",
       "passwordMismatch": "Die Passwörter stimmen nicht überein.",
       "vaultDamaged": "Die verschlüsselten Wallet-Daten konnten nicht gelesen werden. Setzen Sie die Wallet zurück und importieren Sie Ihre Schlüssel erneut.",
-      "walletLocked": "Die Wallet ist gesperrt. Entsperren Sie sie und versuchen Sie es erneut."
+      "walletLocked": "Die Wallet ist gesperrt. Entsperren Sie sie und versuchen Sie es erneut.",
+      "migrationRequired": "Legen Sie zuerst ein Wallet-Passwort fest, um die bereits gespeicherten Schlüssel zu schützen."
     }
   }
 }

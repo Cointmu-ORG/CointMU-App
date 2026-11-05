@@ -74,14 +74,22 @@ function send(mod, message, sender) {
 describe("runtime-router sender checks", () => {
   let stub;
   let mod;
+  let local;
+
+  /** As after migration: the stored list holds addresses only. */
+  const useMigratedWallets = () => {
+    local.wallets = [{ address: ADDRESS }];
+  };
 
   beforeEach(async () => {
     vi.resetModules();
-    stub = createChromeStub({
+    // Plain text as stored by 1.0.17, to prove replies never carry it.
+    local = {
       connectionMode: "standalone",
       activeStandaloneAddress: ADDRESS,
       wallets: [{ address: ADDRESS, privateKey: PRIVATE_KEY }],
-    });
+    };
+    stub = createChromeStub(local);
     vi.stubGlobal("chrome", stub.chrome);
     mod = await import("./runtime-router.js");
   });
@@ -98,6 +106,23 @@ describe("runtime-router sender checks", () => {
     );
     expect(state.wallets).toEqual([{ address: ADDRESS }]);
     expect(JSON.stringify(state)).not.toContain(PRIVATE_KEY.slice(2));
+    // The stored plain-text key still has to be migrated.
+    expect(state.needsMigration).toBe(true);
+  });
+
+  it("accepts MIGRATE_VAULT only from the toolbar popup", async () => {
+    const refused = await send(
+      mod,
+      { action: "MIGRATE_VAULT", password: "x" },
+      CONTENT_SCRIPT,
+    );
+    expect(refused.errorCode).toBe("FORBIDDEN_SENDER");
+    const weak = await send(
+      mod,
+      { action: "MIGRATE_VAULT", password: "x", confirmPassword: "x" },
+      TOOLBAR_POPUP,
+    );
+    expect(weak.errorCode).toBe("WEAK_PASSWORD");
   });
 
   it.each([
@@ -117,6 +142,7 @@ describe("runtime-router sender checks", () => {
   });
 
   it("lets an approval window use only the approval actions", async () => {
+    useMigratedWallets();
     send(mod, { id: 1, method: "eth_requestAccounts" }, CONTENT_SCRIPT);
     await vi.waitFor(() => expect(stub.openedWindows).toHaveLength(1));
     const [window] = stub.openedWindows;
@@ -161,6 +187,7 @@ describe("runtime-router sender checks", () => {
   });
 
   it("sends messages without an action down the dApp path", async () => {
+    useMigratedWallets();
     const reply = await send(
       mod,
       { id: 1, method: "eth_accounts" },

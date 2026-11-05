@@ -873,6 +873,10 @@ body {
   color: var(--text-secondary);
 }
 
+.mb-4 {
+  margin-bottom: 16px;
+}
+
 .form-error {
   margin-top: 8px;
   font-size: 12px;

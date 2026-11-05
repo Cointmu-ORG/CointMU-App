@@ -123,6 +123,69 @@
       </div>
     </div>
 
+    <!-- Migrate View (plain-text keys from an older version) -->
+    <div id="migrate-view" class="view hidden">
+      <div class="header">
+        <div class="brand">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
+            </svg>
+          </div>
+          <span class="brand-name">CointMU</span>
+        </div>
+      </div>
+      <div class="login-content">
+        <form id="migrate-form" class="form-card">
+          <h2 data-i18n="extension.vault.migrateTitle" class="login-title">
+            Protect Your Keys
+          </h2>
+          <p id="migrate-hint" class="form-hint mb-4"></p>
+          <div class="input-group">
+            <label
+              class="input-label"
+              for="migrate-password-input"
+              data-i18n="extension.vault.passwordLabel"
+              >Wallet password</label
+            >
+            <input
+              type="password"
+              id="migrate-password-input"
+              class="text-input"
+              autocomplete="new-password"
+            />
+          </div>
+          <div id="migrate-confirm-group" class="input-group">
+            <label
+              class="input-label"
+              for="migrate-confirm-input"
+              data-i18n="extension.vault.confirmLabel"
+              >Confirm password</label
+            >
+            <input
+              type="password"
+              id="migrate-confirm-input"
+              class="text-input"
+              autocomplete="new-password"
+            />
+          </div>
+          <p id="migrate-error" class="form-error hidden" role="alert"></p>
+          <button type="submit" id="migrate-btn" class="btn primary-btn mt-4">
+            <span data-i18n="extension.vault.migrateBtn">Encrypt Keys</span>
+          </button>
+          <button
+            type="button"
+            id="migrate-restart-btn"
+            class="btn text-btn hidden"
+          >
+            <span data-i18n="extension.vault.migrateRestart"
+              >Start Over With a New Password</span
+            >
+          </button>
+        </form>
+      </div>
+    </div>
+
     <!-- Add Wallet Selection View -->
     <div id="selection-view" class="view hidden">
       <div class="header">

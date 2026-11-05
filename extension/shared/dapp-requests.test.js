@@ -447,3 +447,46 @@ describe("dapp-requests (desktop)", () => {
     expect(stub.openedWindows).toHaveLength(0);
   });
 });
+
+describe("dapp-requests (plain-text keys awaiting migration)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  async function setup(connectionMode) {
+    vi.resetModules();
+    const stub = createChromeStub({
+      ...standaloneState(),
+      connectionMode,
+      connectedOrigins: [DAPP],
+      wallets: [{ address: signer.address, privateKey: signer.privateKey }],
+    });
+    vi.stubGlobal("chrome", stub.chrome);
+    return { stub, mod: await import("./dapp-requests.js") };
+  }
+
+  it.each([
+    ["eth_requestAccounts", []],
+    ["eth_accounts", []],
+    ["personal_sign", ["0x00", signer.address]],
+  ])(
+    "answers %s with a clear error, without a popup",
+    async (method, params) => {
+      const { stub, mod } = await setup("standalone");
+      const reply = await sendFromPage(mod, { id: 1, method, params });
+      expect(reply.error.code).toBe(ErrorCode.UNAUTHORIZED);
+      expect(reply.error.message).toMatch(/password/);
+      expect(stub.openedWindows).toHaveLength(0);
+    },
+  );
+
+  it("leaves desktop mode alone", async () => {
+    const { mod } = await setup("desktop");
+    const reply = await sendFromPage(mod, {
+      id: 1,
+      method: "personal_sign",
+      params: ["0x00", signer.address],
+    });
+    expect(reply.error.code).toBe(ErrorCode.UNSUPPORTED_METHOD);
+  });
+});

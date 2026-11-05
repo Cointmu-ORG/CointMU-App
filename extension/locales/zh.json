@@ -101,7 +101,13 @@
       "resetBtn": "重置钱包",
       "resetConfirm": "这将从此浏览器中删除所有已导入的钱包。重新导入需要你的私钥。是否继续？",
       "lockBtn": "锁定钱包",
-      "approvalLocked": "钱包已锁定。请输入密码以批准此请求。"
+      "approvalLocked": "钱包已锁定。请输入密码以批准此请求。",
+      "migrateTitle": "保护你的密钥",
+      "migrateBody": "此版本会加密存储在此浏览器中的私钥。请设置至少 8 个字符的钱包密码以继续。密码无法找回：如果忘记，请重置钱包并重新导入密钥。",
+      "migrateResumeHint": "之前加密密钥的操作被中断。请输入你当时设置的密码。",
+      "migrateBtn": "加密密钥",
+      "migrateRestart": "使用新密码重新开始",
+      "migrateRestartConfirm": "这将放弃被中断的操作，以便你设置新密码。在加密完成前，你的密钥会保留在此浏览器中。是否继续？"
     },
     "errors": {
       "desktopNotConnected": "CointMU Desktop 未连接。请打开桌面应用后重试。",
@@ -116,7 +122,8 @@
       "weakPassword": "请使用至少 8 个字符的密码。",
       "passwordMismatch": "两次输入的密码不一致。",
       "vaultDamaged": "无法读取加密的钱包数据。请重置钱包并重新导入密钥。",
-      "walletLocked": "钱包已锁定。请解锁后重试。"
+      "walletLocked": "钱包已锁定。请解锁后重试。",
+      "migrationRequired": "请先设置钱包密码，以保护已存储的密钥。"
     }
   }
 }

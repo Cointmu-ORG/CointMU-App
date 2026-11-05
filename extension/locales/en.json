@@ -101,7 +101,13 @@
       "resetBtn": "Reset Wallet",
       "resetConfirm": "This removes every imported wallet from this browser. You need your private keys to import them again. Continue?",
       "lockBtn": "Lock Wallet",
-      "approvalLocked": "Your wallet is locked. Enter your password to approve this request."
+      "approvalLocked": "Your wallet is locked. Enter your password to approve this request.",
+      "migrateTitle": "Protect Your Keys",
+      "migrateBody": "This version encrypts the private keys stored in this browser. Set a wallet password of at least 8 characters to continue. It cannot be recovered: if you forget it, reset the wallet and import your keys again.",
+      "migrateResumeHint": "An earlier attempt to encrypt your keys was interrupted. Enter the password you chose then.",
+      "migrateBtn": "Encrypt Keys",
+      "migrateRestart": "Start Over With a New Password",
+      "migrateRestartConfirm": "This discards the interrupted attempt so you can choose a new password. Your keys stay in this browser until they are encrypted. Continue?"
     },
     "errors": {
       "desktopNotConnected": "CointMU Desktop is not connected. Open the desktop app and try again.",
@@ -116,7 +122,8 @@
       "weakPassword": "Use a password of at least 8 characters.",
       "passwordMismatch": "The passwords do not match.",
       "vaultDamaged": "The encrypted wallet data could not be read. Reset the wallet and import your keys again.",
-      "walletLocked": "The wallet is locked. Unlock it and try again."
+      "walletLocked": "The wallet is locked. Unlock it and try again.",
+      "migrationRequired": "Set a wallet password first to protect the keys already stored."
     }
   }
 }

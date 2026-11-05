@@ -18,6 +18,7 @@ import { isSameAddress } from "./signing-request.js";
 import {
   getPrivateKey,
   getVaultStatus,
+  hasPlaintextKeys,
   importKey,
   removeKey,
   replyWhenSettled,
@@ -323,6 +324,7 @@ export function handleInternalMessage(message, sender, sendResponse) {
           activeNetworkId: res.activeNetworkId || "desktop_connection",
           bridgeNotice: res.bridgeNotice || null,
           ...(await getVaultStatus()),
+          needsMigration: hasPlaintextKeys(res.wallets),
         });
       });
     return true;

@@ -101,7 +101,13 @@
       "resetBtn": "Restablecer billetera",
       "resetConfirm": "Esto elimina todas las billeteras importadas de este navegador. Necesitarás tus claves privadas para importarlas de nuevo. ¿Continuar?",
       "lockBtn": "Bloquear billetera",
-      "approvalLocked": "Tu billetera está bloqueada. Introduce tu contraseña para aprobar esta solicitud."
+      "approvalLocked": "Tu billetera está bloqueada. Introduce tu contraseña para aprobar esta solicitud.",
+      "migrateTitle": "Protege tus claves",
+      "migrateBody": "Esta versión cifra las claves privadas guardadas en este navegador. Establece una contraseña de billetera de al menos 8 caracteres para continuar. No se puede recuperar: si la olvidas, restablece la billetera e importa tus claves de nuevo.",
+      "migrateResumeHint": "Se interrumpió un intento anterior de cifrar tus claves. Introduce la contraseña que elegiste entonces.",
+      "migrateBtn": "Cifrar claves",
+      "migrateRestart": "Empezar de nuevo con otra contraseña",
+      "migrateRestartConfirm": "Esto descarta el intento interrumpido para que puedas elegir una contraseña nueva. Tus claves permanecen en este navegador hasta que se cifren. ¿Continuar?"
     },
     "errors": {
       "desktopNotConnected": "CointMU Desktop no está conectado. Abre la aplicación de escritorio e inténtalo de nuevo.",
@@ -116,7 +122,8 @@
       "weakPassword": "Usa una contraseña de al menos 8 caracteres.",
       "passwordMismatch": "Las contraseñas no coinciden.",
       "vaultDamaged": "No se pudieron leer los datos cifrados de la billetera. Restablece la billetera e importa tus claves de nuevo.",
-      "walletLocked": "La billetera está bloqueada. Desbloquéala e inténtalo de nuevo."
+      "walletLocked": "La billetera está bloqueada. Desbloquéala e inténtalo de nuevo.",
+      "migrationRequired": "Primero establece una contraseña de billetera para proteger las claves ya guardadas."
     }
   }
 }

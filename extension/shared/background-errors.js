@@ -22,6 +22,7 @@ export const BackgroundErrorCode = Object.freeze({
   PASSWORD_MISMATCH: "PASSWORD_MISMATCH",
   VAULT_DAMAGED: "VAULT_DAMAGED",
   WALLET_LOCKED: "WALLET_LOCKED",
+  MIGRATION_REQUIRED: "MIGRATION_REQUIRED",
 });
 
 // Literal keys, so i18n:audit can match them against en.json.
@@ -41,6 +42,7 @@ const ERROR_KEYS = Object.freeze({
   PASSWORD_MISMATCH: "extension.errors.passwordMismatch",
   VAULT_DAMAGED: "extension.errors.vaultDamaged",
   WALLET_LOCKED: "extension.errors.walletLocked",
+  MIGRATION_REQUIRED: "extension.errors.migrationRequired",
 });
 
 /** A failure the background reports to the popup as a BackgroundErrorCode. */

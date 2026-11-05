@@ -9,6 +9,7 @@ import {
 } from "./dapp-requests.js";
 import { handleInternalMessage } from "./wallet.js";
 import { VAULT_HANDLERS } from "./wallet-vault.js";
+import { handleMigrateMessage } from "./vault-migration.js";
 
 /**
  * Routes chrome.runtime messages by sender. Messages without an `action` are
@@ -22,6 +23,12 @@ const APPROVAL_WINDOW_HANDLERS = Object.freeze({
   GET_PENDING_REQ: handlePendingRequestQuery,
   RESOLVE_REQ: handleApprovalResolution,
   UNLOCK: VAULT_HANDLERS.UNLOCK,
+});
+
+/** Vault actions for the toolbar popup; other actions go to wallet.js. */
+const POPUP_VAULT_HANDLERS = Object.freeze({
+  ...VAULT_HANDLERS,
+  MIGRATE_VAULT: handleMigrateMessage,
 });
 
 function ownHandler(handlers, action) {
@@ -38,7 +45,7 @@ function pickHandler(action, sender) {
     return ownHandler(APPROVAL_WINDOW_HANDLERS, action);
   }
   if (isFromPopupPage(sender)) {
-    return ownHandler(VAULT_HANDLERS, action) ?? handleInternalMessage;
+    return ownHandler(POPUP_VAULT_HANDLERS, action) ?? handleInternalMessage;
   }
   return null;
 }

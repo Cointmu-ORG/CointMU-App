@@ -26,7 +26,7 @@ import {
 } from "./site-permissions.js";
 import { socket } from "./socket.js";
 import { JSON_RPC_VERSION, pendingCallbacks, pendingKey } from "./wallet.js";
-import { getPrivateKey, isUnlocked } from "./wallet-vault.js";
+import { getPrivateKey, hasPlaintextKeys, isUnlocked } from "./wallet-vault.js";
 
 /**
  * Handles JSON-RPC requests from dApp pages (via the content script) and the
@@ -52,6 +52,8 @@ const DESKTOP_SIGNING_MESSAGE =
   "Signing is not supported in desktop mode yet. Switch the CointMU extension to standalone mode to sign.";
 const LOCKED_MESSAGE =
   "The CointMU wallet is locked. Unlock it in the extension and try again.";
+const MIGRATION_MESSAGE =
+  "The CointMU wallet needs a password before it can use this account. Open the CointMU extension to set one, then try again.";
 
 function readSender(sender) {
   const tabId = sender.tab?.id;
@@ -218,11 +220,29 @@ async function answerUnconnectedAccountLookup(request, sendResponse) {
   return true;
 }
 
+/**
+ * @returns {boolean} True for requests that need the standalone account,
+ * which waits until its plain-text keys are migrated into the vault.
+ */
+function needsAccount(method) {
+  return (
+    method === CONNECT_METHOD ||
+    ACCOUNT_LOOKUP_METHODS.includes(method) ||
+    isSigningMethod(method)
+  );
+}
+
 async function routeContentRequest(request, sendResponse) {
   const state = await chrome.storage.local.get(STATE_KEYS);
   const isStandalone = state.connectionMode === STANDALONE_MODE;
 
-  if (request.method === CONNECT_METHOD) {
+  if (
+    isStandalone &&
+    hasPlaintextKeys(state.wallets) &&
+    needsAccount(request.method)
+  ) {
+    replyError(sendResponse, ErrorCode.UNAUTHORIZED, MIGRATION_MESSAGE);
+  } else if (request.method === CONNECT_METHOD) {
     await handleConnect(request, state, sendResponse);
   } else if (await answerUnconnectedAccountLookup(request, sendResponse)) {
     return;

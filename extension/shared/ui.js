@@ -7,6 +7,7 @@ import {
   WALLET_LOCK_CHANGED,
   askPassword,
   bindLockButton,
+  bindMigrateForm,
   bindResetButton,
   bindUnlockForm,
   sendVaultAction,
@@ -30,6 +31,9 @@ export async function initPopup() {
   const approvalView = document.getElementById("approval-view");
   const addNetworkView = document.getElementById("add-network-view");
   const unlockView = document.getElementById("unlock-view");
+  const migrateView = document.getElementById("migrate-view");
+  const migrateConfirmGroup = document.getElementById("migrate-confirm-group");
+  const migrateRestartBtn = document.getElementById("migrate-restart-btn");
 
   const privKeyInput = document.getElementById("priv-key-input");
   const importPasswordInput = document.getElementById("import-password-input");
@@ -265,29 +269,48 @@ export async function initPopup() {
         "Choose a password of at least 8 characters. It protects your keys in this browser and cannot be recovered: if you forget it, reset the wallet and import your keys again.";
   };
 
-  const showUnlockView = () => {
-    for (const view of [
+  // An interrupted migration left a vault: its password is asked again.
+  const renderMigrateFields = () => {
+    migrateConfirmGroup.classList.toggle("hidden", hasVault);
+    migrateRestartBtn.classList.toggle("hidden", !hasVault);
+    document.getElementById("migrate-hint").textContent = hasVault
+      ? translations["extension.vault.migrateResumeHint"] ||
+        "An earlier attempt to encrypt your keys was interrupted. Enter the password you chose then."
+      : translations["extension.vault.migrateBody"] ||
+        "This version encrypts the private keys stored in this browser. Set a wallet password of at least 8 characters to continue. It cannot be recovered: if you forget it, reset the wallet and import your keys again.";
+  };
+
+  /** Shows one full-screen password view and hides every other view. */
+  const showOnlyView = (view, inputId) => {
+    for (const other of [
       loginView,
       selectionView,
       defaultView,
       addNetworkView,
       sendView,
+      unlockView,
+      migrateView,
     ]) {
-      view.classList.add("hidden");
+      other.classList.toggle("hidden", other !== view);
     }
-    unlockView.classList.remove("hidden");
-    document.getElementById("unlock-password-input").focus();
+    document.getElementById(inputId).focus();
   };
 
   const updateUI = async (res) => {
     hasVault = res.hasVault === true;
     renderImportPasswordFields();
     lockBtn.classList.toggle("hidden", !hasVault || res.isLocked);
+    if (res.needsMigration) {
+      renderMigrateFields();
+      showOnlyView(migrateView, "migrate-password-input");
+      return;
+    }
     if (res.connectionMode === "standalone" && hasVault && res.isLocked) {
-      showUnlockView();
+      showOnlyView(unlockView, "unlock-password-input");
       return;
     }
     unlockView.classList.add("hidden");
+    migrateView.classList.add("hidden");
     currentNetworkId = res.activeNetworkId || "desktop_connection";
 
     // Populate Custom Networks
@@ -639,12 +662,32 @@ export async function initPopup() {
   bindLockButton(lockBtn);
   bindResetButton(
     document.getElementById("reset-vault-btn"),
-    translations,
+    {
+      message:
+        translations["extension.vault.resetConfirm"] ||
+        "This removes every imported wallet from this browser. You need your private keys to import them again. Continue?",
+      title: translations["extension.vault.resetBtn"] || "Reset Wallet",
+    },
+    showConfirmModal,
+  );
+  bindResetButton(
+    migrateRestartBtn,
+    {
+      message:
+        translations["extension.vault.migrateRestartConfirm"] ||
+        "This discards the interrupted attempt so you can choose a new password. Your keys stay in this browser until they are encrypted. Continue?",
+      title:
+        translations["extension.vault.migrateRestart"] ||
+        "Start Over With a New Password",
+    },
     showConfirmModal,
   );
 
-  /** @returns {string | null} Why the import password fields are not usable. */
-  const importPasswordProblem = (password, confirmPassword) => {
+  /**
+   * @returns {string | null} Why the password fields are not usable: an
+   * existing vault needs its password; a new one needs 8+ characters, twice.
+   */
+  const passwordProblem = (password, confirmPassword) => {
     if (hasVault) {
       return password
         ? null
@@ -662,13 +705,24 @@ export async function initPopup() {
           "The passwords do not match.";
   };
 
+  bindMigrateForm({
+    form: document.getElementById("migrate-form"),
+    password: document.getElementById("migrate-password-input"),
+    confirm: document.getElementById("migrate-confirm-input"),
+    error: document.getElementById("migrate-error"),
+    button: document.getElementById("migrate-btn"),
+    translations,
+    check: passwordProblem,
+    onDone: refreshState,
+  });
+
   importBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const pk = privKeyInput.value.trim();
     if (!pk) return;
     const password = importPasswordInput.value;
     const confirmPassword = importConfirmInput.value;
-    const problem = importPasswordProblem(password, confirmPassword);
+    const problem = passwordProblem(password, confirmPassword);
     showFormError(importError, problem);
     if (problem) return;
 

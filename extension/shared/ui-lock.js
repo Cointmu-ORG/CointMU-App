@@ -106,22 +106,68 @@ export function bindLockButton(button) {
 }
 
 /**
- * Wires the reset button shown under the unlock form.
+ * Wires a button that resets the vault after a confirmation: under the unlock
+ * form (forgotten password) or the migrate form (restart an interrupted run).
  * @param {HTMLButtonElement} button
- * @param {Object<string, string>} translations
+ * @param {{ message: string, title: string }} prompt - Translated texts.
  * @param {(message: string, title?: string) => Promise<boolean>} confirm
  */
-export function bindResetButton(button, translations, confirm) {
+export function bindResetButton(button, prompt, confirm) {
   button.addEventListener("click", async () => {
-    const isConfirmed = await confirm(
-      t(
+    if (await confirm(prompt.message, prompt.title)) {
+      chrome.runtime.sendMessage({ action: "RESET_VAULT" });
+    }
+  });
+}
+
+/**
+ * Wires the form that encrypts the plain-text keys of an older version.
+ * @param {Object} options
+ * @param {HTMLFormElement} options.form
+ * @param {HTMLInputElement} options.password
+ * @param {HTMLInputElement} options.confirm
+ * @param {HTMLElement} options.error
+ * @param {HTMLButtonElement} options.button
+ * @param {Object<string, string>} options.translations
+ * @param {(password: string, confirmPassword: string) => string | null} options.check
+ * Returns why the fields are not usable, or null.
+ * @param {() => void} options.onDone
+ */
+export function bindMigrateForm({
+  form,
+  password,
+  confirm,
+  error,
+  button,
+  translations,
+  check,
+  onDone,
+}) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const problem = check(password.value, confirm.value);
+    showFormError(error, problem);
+    if (problem) return;
+    const res = await sendVaultAction({
+      message: {
+        action: "MIGRATE_VAULT",
+        password: password.value,
+        confirmPassword: confirm.value,
+      },
+      button,
+      busyText: t(
         translations,
-        "extension.vault.resetConfirm",
-        "This removes every imported wallet from this browser. You will need your private keys to import them again. Continue?",
+        "extension.vault.encrypting",
+        "Encrypting your keys...",
       ),
-      t(translations, "extension.vault.resetBtn", "Reset Wallet"),
-    );
-    if (isConfirmed) chrome.runtime.sendMessage({ action: "RESET_VAULT" });
+    });
+    if (res?.success) {
+      password.value = "";
+      confirm.value = "";
+      onDone();
+      return;
+    }
+    showFormError(error, describeBackgroundError(res, translations));
   });
 }
 

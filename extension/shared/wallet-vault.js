@@ -36,6 +36,26 @@ const STANDALONE_MODE = "standalone";
 export const WALLET_LOCK_CHANGED = "WALLET_LOCK_CHANGED";
 
 /**
+ * @param {unknown} wallets - storage.local.wallets.
+ * @returns {Array<{ address: string, privateKey: string }>} Entries that an
+ * older version stored with the private key in plain text.
+ */
+export function plaintextWallets(wallets) {
+  if (!Array.isArray(wallets)) return [];
+  return wallets
+    .filter((w) => typeof w?.privateKey === "string")
+    .map(({ address, privateKey }) => ({ address, privateKey }));
+}
+
+/**
+ * @param {unknown} wallets - storage.local.wallets.
+ * @returns {boolean} True until the plain-text keys are migrated into the vault.
+ */
+export function hasPlaintextKeys(wallets) {
+  return plaintextWallets(wallets).length > 0;
+}
+
+/**
  * @param {Array<{ address: string }>} keys
  * @returns {Array<{ address: string }>} The public wallet list.
  */
@@ -87,6 +107,11 @@ export function checkNewPassword(password, confirmPassword) {
  * @returns {Promise<void>}
  */
 export async function saveKeys(keys, password) {
+  // Writing the public list would drop plain-text keys not yet migrated.
+  const { wallets } = await chrome.storage.local.get([WALLETS_KEY]);
+  if (hasPlaintextKeys(wallets)) {
+    throw new BackgroundFailure(BackgroundErrorCode.MIGRATION_REQUIRED);
+  }
   const vault = await encryptVault(keys, password);
   await chrome.storage.local.set({
     [VAULT_KEY]: vault,
@@ -201,15 +226,21 @@ export async function lock() {
 
 /**
  * Forgets the vault and its wallets: the way back from a forgotten password
- * is to import the keys again.
+ * is to import the keys again. Plain-text keys still waiting for migration
+ * are kept, so an interrupted migration can start over with a new password.
  * @returns {Promise<void>}
  */
 export async function resetVault() {
   await closeSession();
+  const { wallets, activeStandaloneAddress } = await chrome.storage.local.get([
+    WALLETS_KEY,
+    "activeStandaloneAddress",
+  ]);
+  const pending = plaintextWallets(wallets);
   await chrome.storage.local.remove(VAULT_KEY);
   await chrome.storage.local.set({
-    [WALLETS_KEY]: [],
-    activeStandaloneAddress: null,
+    [WALLETS_KEY]: pending,
+    activeStandaloneAddress: pending.length ? activeStandaloneAddress : null,
   });
   await announceLockChange();
 }
