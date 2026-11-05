@@ -350,7 +350,11 @@
     "minutes_one": "{{count}} Min.",
     "minutes_other": "{{count}} Min.",
     "sendPasswordTitle": "Beim Senden nach Passwort fragen",
-    "sendPasswordDesc": "Für jede Transaktion das Wallet-Passwort eingeben. Es wird auf diesem Computer geprüft und nie gespeichert."
+    "sendPasswordDesc": "Für jede Transaktion das Wallet-Passwort eingeben. Es wird auf diesem Computer geprüft und nie gespeichert.",
+    "clipboardTitle": "Kopierte Adressen und Schlüssel löschen",
+    "clipboardDesc": "Eine kopierte Adresse, einen Schlüssel oder die Wiederherstellungsphrase nach dieser Zeit aus der Zwischenablage entfernen, außer du hast inzwischen etwas anderes kopiert.",
+    "seconds_one": "{{count}} s",
+    "seconds_other": "{{count}} s"
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",

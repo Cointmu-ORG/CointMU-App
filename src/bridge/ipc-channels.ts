@@ -50,3 +50,7 @@ export const CHAINDATA_CHANNELS = {
   DELETE_OLD: "chaindata:delete-old",
   PROGRESS: "chaindata:progress",
 } as const;
+
+export const CLIPBOARD_CHANNELS = {
+  COPY_SENSITIVE: "clipboard:copy-sensitive",
+} as const;

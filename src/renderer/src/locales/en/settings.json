@@ -350,7 +350,11 @@
     "minutes_one": "{{count}} min",
     "minutes_other": "{{count}} min",
     "sendPasswordTitle": "Ask for password to send",
-    "sendPasswordDesc": "Enter your wallet password for every transaction. It is checked on this computer and never stored."
+    "sendPasswordDesc": "Enter your wallet password for every transaction. It is checked on this computer and never stored.",
+    "clipboardTitle": "Clear copied addresses and keys",
+    "clipboardDesc": "Remove a copied address, key or recovery phrase from the clipboard after this long, unless you copied something else meanwhile.",
+    "seconds_one": "{{count}} s",
+    "seconds_other": "{{count}} s"
   },
   "privacy": {
     "title": "Privacy & Diagnostics",

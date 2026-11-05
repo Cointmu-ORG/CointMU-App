@@ -165,6 +165,9 @@ interface CointmuAPI {
       callback: (progress: ChainDataMoveProgress) => void,
     ) => () => void;
   };
+  clipboard: {
+    copySensitive: (text: string) => Promise<void>;
+  };
   shell: {
     setText: (text: ShellText) => Promise<void>;
     getCapabilities: () => Promise<ShellCapabilities>;

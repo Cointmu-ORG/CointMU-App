@@ -346,7 +346,10 @@
     "never": "Tidak pernah",
     "minutes_other": "{{count}} mnt",
     "sendPasswordTitle": "Minta password saat mengirim",
-    "sendPasswordDesc": "Masukkan password wallet untuk setiap transaksi. Dicek di komputer ini dan tidak pernah disimpan."
+    "sendPasswordDesc": "Masukkan password wallet untuk setiap transaksi. Dicek di komputer ini dan tidak pernah disimpan.",
+    "clipboardTitle": "Hapus alamat dan kunci yang disalin",
+    "clipboardDesc": "Hapus alamat, kunci, atau frasa pemulihan yang disalin dari clipboard setelah waktu ini, kecuali kamu sudah menyalin hal lain.",
+    "seconds_other": "{{count}} dtk"
   },
   "privacy": {
     "title": "Privasi & Diagnostik",

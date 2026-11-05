@@ -1,6 +1,9 @@
 import { SECURITY_SETTINGS_KEY } from "../config/settings.constants";
 import { create } from "zustand";
-import type { AutoLockMinutes } from "@bridge/setting-values";
+import type {
+  AutoLockMinutes,
+  ClipboardClearSeconds,
+} from "@bridge/setting-values";
 import { getSetting, setSetting } from "@/shared/api";
 
 export interface SecuritySettings {
@@ -8,6 +11,8 @@ export interface SecuritySettings {
   autoLockMinutes: AutoLockMinutes;
   /** Ask for the wallet password before every send. */
   confirmPasswordOnSend: boolean;
+  /** Clear a copied address or key after this many seconds; 0 is Never. */
+  clipboardClearSeconds: ClipboardClearSeconds;
   requireBiometrics: boolean;
 }
 
@@ -21,6 +26,7 @@ interface SecurityStore {
 const DEFAULT_SETTINGS: SecuritySettings = {
   autoLockMinutes: 15,
   confirmPasswordOnSend: true,
+  clipboardClearSeconds: 30,
   requireBiometrics: false,
 };
 

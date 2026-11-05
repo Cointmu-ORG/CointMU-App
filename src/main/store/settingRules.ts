@@ -3,6 +3,7 @@ import {
   UpdateInstallMode,
   ZOOM_PERCENT_OPTIONS,
   AUTO_LOCK_MINUTE_OPTIONS,
+  CLIPBOARD_CLEAR_SECOND_OPTIONS,
 } from "../../bridge/setting-values";
 
 /** Where the chain data lives; "" is the default folder. Only the move writes it. */
@@ -62,6 +63,10 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     isValid: isIntegerIn(1, 60),
   },
   "security.confirmPasswordOnSend": { fallback: true, isValid: isBoolean },
+  "security.clipboardClearSeconds": {
+    fallback: 30,
+    isValid: isOneOf(CLIPBOARD_CLEAR_SECOND_OPTIONS),
+  },
   "security.autoLockMinutes": {
     fallback: 15,
     isValid: isOneOf(AUTO_LOCK_MINUTE_OPTIONS),

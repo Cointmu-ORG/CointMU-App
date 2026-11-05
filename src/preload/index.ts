@@ -4,6 +4,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import {
   BOOTNODE_CHANNELS,
   CHAINDATA_CHANNELS,
+  CLIPBOARD_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   EXPLORER_CHANNELS,
   NODE_CHANNELS,
@@ -244,6 +245,10 @@ const api = {
       return () =>
         ipcRenderer.removeListener(CHAINDATA_CHANNELS.PROGRESS, handler);
     },
+  },
+  clipboard: {
+    copySensitive: (text: string): Promise<void> =>
+      ipcRenderer.invoke(CLIPBOARD_CHANNELS.COPY_SENSITIVE, text),
   },
   shell: {
     setText: (text: ShellText): Promise<void> =>

@@ -346,7 +346,10 @@
     "never": "从不",
     "minutes_other": "{{count}} 分钟",
     "sendPasswordTitle": "发送时要求输入密码",
-    "sendPasswordDesc": "每笔交易都需输入钱包密码。密码在本机校验，从不保存。"
+    "sendPasswordDesc": "每笔交易都需输入钱包密码。密码在本机校验，从不保存。",
+    "clipboardTitle": "清除已复制的地址和密钥",
+    "clipboardDesc": "复制地址、密钥或助记词后，经过此时长从剪贴板清除，除非你期间复制了其他内容。",
+    "seconds_other": "{{count}} 秒"
   },
   "privacy": {
     "title": "隐私与诊断",

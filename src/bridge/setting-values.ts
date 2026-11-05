@@ -112,3 +112,9 @@ export type MotionPreference =
 export const AUTO_LOCK_MINUTE_OPTIONS = [0, 5, 15, 30, 60] as const;
 
 export type AutoLockMinutes = (typeof AUTO_LOCK_MINUTE_OPTIONS)[number];
+
+/** Seconds after which a copied address or key leaves the clipboard; 0 is Never. */
+export const CLIPBOARD_CLEAR_SECOND_OPTIONS = [0, 15, 30, 60, 120] as const;
+
+export type ClipboardClearSeconds =
+  (typeof CLIPBOARD_CLEAR_SECOND_OPTIONS)[number];

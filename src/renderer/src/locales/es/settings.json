@@ -354,7 +354,12 @@
     "minutes_many": "{{count}} min",
     "minutes_other": "{{count}} min",
     "sendPasswordTitle": "Pedir contraseña al enviar",
-    "sendPasswordDesc": "Introduce la contraseña de la billetera en cada transacción. Se comprueba en este equipo y nunca se guarda."
+    "sendPasswordDesc": "Introduce la contraseña de la billetera en cada transacción. Se comprueba en este equipo y nunca se guarda.",
+    "clipboardTitle": "Borrar direcciones y claves copiadas",
+    "clipboardDesc": "Quita del portapapeles una dirección, clave o frase de recuperación copiada pasado este tiempo, salvo que hayas copiado otra cosa.",
+    "seconds_one": "{{count}} s",
+    "seconds_many": "{{count}} s",
+    "seconds_other": "{{count}} s"
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",

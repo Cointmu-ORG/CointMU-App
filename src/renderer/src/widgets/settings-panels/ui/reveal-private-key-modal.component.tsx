@@ -10,7 +10,7 @@ import {
   type JSX,
 } from "react";
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
-import { getSetting } from "@/shared/api";
+import { getSetting, copySensitive } from "@/shared/api";
 import { useAppStore } from "@/shared/model";
 
 interface RevealPrivateKeyModalProps {
@@ -147,7 +147,7 @@ export function RevealPrivateKeyModal({
 
   const handleCopy = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(privateKey);
+      await copySensitive(privateKey);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {

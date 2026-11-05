@@ -13,7 +13,9 @@ import {
 } from "./setting-controls.component";
 import {
   AUTO_LOCK_MINUTE_OPTIONS,
+  CLIPBOARD_CLEAR_SECOND_OPTIONS,
   type AutoLockMinutes,
+  type ClipboardClearSeconds,
 } from "@bridge/setting-values";
 
 // No device support yet (#106): the rows only announce it.
@@ -80,6 +82,27 @@ export function SecuritySettings(): JSX.Element {
                 checked={settings.confirmPasswordOnSend}
                 onChange={(confirmPasswordOnSend) =>
                   updateSettings({ confirmPasswordOnSend })
+                }
+              />
+            </SettingRow>
+            <SettingRow
+              title={t("settings:securitySettings.clipboardTitle")}
+              description={t("settings:securitySettings.clipboardDesc")}
+            >
+              <SettingChoice<ClipboardClearSeconds>
+                label={t("settings:securitySettings.clipboardTitle")}
+                value={settings.clipboardClearSeconds}
+                options={CLIPBOARD_CLEAR_SECOND_OPTIONS.map((seconds) => ({
+                  value: seconds,
+                  label:
+                    seconds === 0
+                      ? t("settings:securitySettings.never")
+                      : t("settings:securitySettings.seconds", {
+                          count: seconds,
+                        }),
+                }))}
+                onChange={(clipboardClearSeconds) =>
+                  updateSettings({ clipboardClearSeconds })
                 }
               />
             </SettingRow>
