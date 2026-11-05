@@ -1,4 +1,3 @@
-import ms from "ms";
 import { MiningIntensity } from "@bridge/setting-values";
 
 // Store
@@ -10,17 +9,17 @@ export const MAX_MINING_LOGS = 200;
 export const DEFAULT_CONCURRENCY = 8;
 
 // Hooks
-export const STATS_POLL_INTERVAL_MS = ms("2s");
+export const STATS_POLL_INTERVAL_MS = 2_000;
 export const HASHES_PER_MEGAHASH = 1_000_000;
 export const DAG_COMPLETE_PERCENT = 100;
 export const STATS_POLL_INTERVAL_SECONDS = STATS_POLL_INTERVAL_MS / 1000;
 export const ESTIMATED_HASHES_PER_THREAD = 500_000;
 export const FALLBACK_BASE_LOAD = 0.2;
 
-export const CONFIG_SYNC_INTERVAL_MS = ms("1s");
+export const CONFIG_SYNC_INTERVAL_MS = 1_000;
 
 // Node recovery banner
-export const RECOVERED_BANNER_VISIBLE_MS = ms("5s");
+export const RECOVERED_BANNER_VISIBLE_MS = 5_000;
 
 // Node sync progress
 export const SYNC_STABLE_POLLS = 3;
@@ -43,7 +42,7 @@ export const FOUND_BLOCKS_PAGE_SIZE = 8;
 export const BLOCK_REWARD_CMU = "2.00";
 
 export const SELF_BLOCK_REWARD = "+2.00";
-export const ACTIVITY_WINDOW_MS = ms("30d");
+export const ACTIVITY_WINDOW_MS = 2_592_000_000;
 export const ACTIVITY_WINDOW_DAYS = 30;
 export const SECONDS_TO_MS = 1000;
 

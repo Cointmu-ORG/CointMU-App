@@ -1,7 +1,6 @@
 import { BrowserWindow } from "electron";
 import { existsSync } from "fs";
 import { spawn, ChildProcess } from "child_process";
-import ms from "ms";
 import { isListenPort } from "../../../bridge/network";
 import {
   buildGethHttpArgs,
@@ -35,8 +34,8 @@ import {
   stopExplorerIndex,
 } from "../../explorerIndex/explorerIndexService";
 
-export const NODE_RESTART_DELAY_MS = ms("1s");
-const GETH_RESTART_DELAY_MS = ms("2s");
+export const NODE_RESTART_DELAY_MS = 1_000;
+const GETH_RESTART_DELAY_MS = 2_000;
 const DEFAULT_P2P_PORT = 30303;
 const LOCALHOST_ADDR = "127.0.0.1";
 

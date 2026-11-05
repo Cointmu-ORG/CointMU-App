@@ -1,5 +1,3 @@
-import ms from "ms";
-
 export const GethErrorKind = {
   PORT_IN_USE: "PORT_IN_USE",
   DB_LOCKED: "DB_LOCKED",
@@ -28,7 +26,7 @@ export interface GethLineClassification {
  * How long geth may keep running after an ERROR-level corruption line for that
  * line to still count as the cause of the exit.
  */
-export const CORRUPT_EXIT_WINDOW_MS = ms("10s");
+export const CORRUPT_EXIT_WINDOW_MS = 10_000;
 
 // Geth prints 'Fatal: ' for startup aborts and a level token glued to '[' for
 // log records: the bundled core-geth writes ERROR, some builds write EROR.

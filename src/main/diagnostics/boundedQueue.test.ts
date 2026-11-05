@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import ms from "ms";
 import { serializeEnvelope, type Envelope } from "@sentry/core";
 import { createBoundedQueue } from "./boundedQueue";
 
@@ -75,22 +74,22 @@ describe("createBoundedQueue", () => {
   });
 
   it("expires envelopes older than the max age", async () => {
-    const queue = createBoundedQueue({ dir, now, maxAgeMs: ms("30d") });
+    const queue = createBoundedQueue({ dir, now, maxAgeMs: 2_592_000_000 });
     await queue.push(makeEnvelope("old"));
-    clockMs += ms("29d");
+    clockMs += 2_505_600_000;
     await queue.push(makeEnvelope("recent"));
-    clockMs += ms("2d");
+    clockMs += 172_800_000;
 
     expect(eventId(await queue.shift())).toBe("recent");
   });
 
   it("keeps the original age of an envelope that is retried", async () => {
-    const queue = createBoundedQueue({ dir, now, maxAgeMs: ms("30d") });
+    const queue = createBoundedQueue({ dir, now, maxAgeMs: 2_592_000_000 });
     await queue.push(makeEnvelope("a"));
-    clockMs += ms("29d");
+    clockMs += 2_505_600_000;
     const retried = await queue.shift();
     await queue.unshift(retried as Envelope);
-    clockMs += ms("2d");
+    clockMs += 172_800_000;
 
     expect(await queue.shift()).toBeUndefined();
   });

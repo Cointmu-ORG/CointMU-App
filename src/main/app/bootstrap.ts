@@ -1,6 +1,6 @@
 import { app } from "electron";
+import { existsSync } from "node:fs";
 import { join } from "path";
-import { config } from "dotenv";
 import { initLogging } from "../diagnostics/logging";
 import { initErrorReporting } from "../diagnostics/errorReporting";
 
@@ -12,8 +12,10 @@ initLogging();
 initErrorReporting();
 
 // A packaged app ships no .env (electron-builder.yml excludes it); its runtime
-// overrides come from the process environment. dotenv would still print its
-// "injected env (0)" notice to stderr, which the log records as an error.
+// overrides come from the process environment. loadEnvFile keeps variables that
+// are already set, so CI's GETH_NETWORK_ID wins over .env; it throws on a
+// missing file, hence the guard.
 if (!app.isPackaged) {
-  config({ path: join(app.getAppPath(), ".env"), quiet: true });
+  const envFile = join(app.getAppPath(), ".env");
+  if (existsSync(envFile)) process.loadEnvFile(envFile);
 }

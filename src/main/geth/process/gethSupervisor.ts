@@ -2,10 +2,8 @@ import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { promisify } from "node:util";
-import ms from "ms";
-
 const SUPERVISOR = "geth-supervisor.exe";
-const INTERRUPT_TIMEOUT_MS = ms("5s");
+const INTERRUPT_TIMEOUT_MS = 5_000;
 
 const execFileAsync = promisify(execFile);
 

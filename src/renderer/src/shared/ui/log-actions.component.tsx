@@ -1,9 +1,8 @@
 import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import ms from "ms";
 import { copyRecentLogs, openLogsFolder } from "@/shared/api";
 
-const COPY_FEEDBACK_MS = ms("2s");
+const COPY_FEEDBACK_MS = 2_000;
 
 type CopyStatus = "idle" | "copied" | "failed";
 

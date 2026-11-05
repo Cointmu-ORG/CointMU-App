@@ -1,6 +1,4 @@
-import ms from "ms";
-
-const SESSION_DURATION_MS = ms("7d");
+const SESSION_DURATION_MS = 604_800_000;
 
 let sessionStartTimestamp: number = Date.now();
 
