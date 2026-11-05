@@ -348,7 +348,9 @@
     "autoLockMinutesDesc": "Sperrt die Wallet nach dieser Zeit ohne Aktivität; danach brauchst du wieder dein Passwort. Mining und Node laufen weiter.",
     "never": "Nie",
     "minutes_one": "{{count}} Min.",
-    "minutes_other": "{{count}} Min."
+    "minutes_other": "{{count}} Min.",
+    "sendPasswordTitle": "Beim Senden nach Passwort fragen",
+    "sendPasswordDesc": "Für jede Transaktion das Wallet-Passwort eingeben. Es wird auf diesem Computer geprüft und nie gespeichert."
   },
   "privacy": {
     "title": "Datenschutz & Diagnose",

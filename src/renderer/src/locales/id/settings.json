@@ -344,7 +344,9 @@
     "hardware": "Perangkat Keras",
     "autoLockMinutesDesc": "Kunci wallet setelah tidak ada aktivitas selama ini; setelahnya kamu perlu memasukkan password lagi. Mining dan node tetap berjalan.",
     "never": "Tidak pernah",
-    "minutes_other": "{{count}} mnt"
+    "minutes_other": "{{count}} mnt",
+    "sendPasswordTitle": "Minta password saat mengirim",
+    "sendPasswordDesc": "Masukkan password wallet untuk setiap transaksi. Dicek di komputer ini dan tidak pernah disimpan."
   },
   "privacy": {
     "title": "Privasi & Diagnostik",

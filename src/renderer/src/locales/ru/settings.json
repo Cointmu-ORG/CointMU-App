@@ -356,7 +356,9 @@
     "minutes_one": "{{count}} мин",
     "minutes_few": "{{count}} мин",
     "minutes_many": "{{count}} мин",
-    "minutes_other": "{{count}} мин"
+    "minutes_other": "{{count}} мин",
+    "sendPasswordTitle": "Запрашивать пароль при отправке",
+    "sendPasswordDesc": "Вводить пароль кошелька для каждой транзакции. Он проверяется на этом компьютере и никогда не сохраняется."
   },
   "privacy": {
     "title": "Конфиденциальность и диагностика",

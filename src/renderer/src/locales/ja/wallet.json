@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "トランザクションが確認されました",
       "notifConfirmedDesc": "{{asset}} を {{to}} に送信しました",
       "notifFailedTitle": "トランザクションが失敗しました",
-      "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした"
+      "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした",
+      "passwordLabel": "ウォレットのパスワード",
+      "passwordRequired": "送金するにはウォレットのパスワードを入力してください。"
     },
     "importKeystore": {
       "title": "キーストアをインポート",

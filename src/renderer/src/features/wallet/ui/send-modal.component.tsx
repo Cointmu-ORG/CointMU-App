@@ -24,7 +24,8 @@ import {
   requireSessionPassword,
   parseTransferError,
 } from "@/features/wallet";
-import { call, waitForTransactionReceipt } from "@/shared/api";
+import { call, getSetting, waitForTransactionReceipt } from "@/shared/api";
+import { SendPasswordInput } from "./send-password-input.component";
 import { Check, AlertCircle } from "lucide-react";
 import { CustomDropdown, PrivateAmount } from "@/shared/ui";
 import { TokenIcon } from "@/features/wallet";
@@ -113,6 +114,23 @@ function SendModal({
   const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats);
 
   const [tokens, setTokens] = useState<TokenInfo[]>([]);
+  // Settings → Security; on (the default) until the stored value says off.
+  const [isPasswordRequired, setIsPasswordRequired] = useState(true);
+  const [sendPassword, setSendPassword] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    getSetting<boolean | undefined>("security.confirmPasswordOnSend")
+      .then((stored) => {
+        if (isMounted) setIsPasswordRequired(stored !== false);
+      })
+      .catch((err: unknown) => {
+        console.error("Failed to read the send password setting", err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
   const [tokenBalance, setTokenBalance] = useState<string>("...");
   const [nativeBalance, setNativeBalance] = useState<string>("0");
@@ -301,11 +319,20 @@ function SendModal({
       return;
     }
 
+    if (isPasswordRequired && !sendPassword) {
+      setSendError(t("wallet:modals.send.passwordRequired"));
+      return;
+    }
+
     setSendError("");
     setSendLoading(true);
 
     try {
-      const password = requireSessionPassword();
+      // With the setting on, the typed password decrypts the key itself, so a
+      // wrong one fails here, locally, before anything is signed.
+      const password = isPasswordRequired
+        ? sendPassword
+        : requireSessionPassword();
       const wallet = await resolveWallet(activeAccount, password);
 
       const nonceHex = await call("eth_getTransactionCount", [
@@ -401,6 +428,7 @@ function SendModal({
     } catch (e) {
       setSendError(parseTransferError(e));
     } finally {
+      setSendPassword("");
       setSendLoading(false);
     }
   };
@@ -602,6 +630,14 @@ function SendModal({
               </>
             )}
         </div>
+
+        {isPasswordRequired && (
+          <SendPasswordInput
+            value={sendPassword}
+            isDisabled={sendLoading}
+            onChange={setSendPassword}
+          />
+        )}
 
         {sendError && (
           <div className="flex items-start gap-2 text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-2.5 rounded-xl border border-red-100 dark:border-red-900/50">

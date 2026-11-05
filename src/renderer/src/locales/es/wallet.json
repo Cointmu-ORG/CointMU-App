@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "Transacción confirmada",
       "notifConfirmedDesc": "Enviado {{asset}} a {{to}}",
       "notifFailedTitle": "Transacción fallida",
-      "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada"
+      "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada",
+      "passwordLabel": "Contraseña de la billetera",
+      "passwordRequired": "Introduce la contraseña de la billetera para enviar."
     },
     "importKeystore": {
       "title": "Importar almacén de claves",

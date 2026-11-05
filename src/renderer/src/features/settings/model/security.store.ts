@@ -6,6 +6,8 @@ import { getSetting, setSetting } from "@/shared/api";
 export interface SecuritySettings {
   /** Lock the wallet after this many idle minutes; 0 is Never. */
   autoLockMinutes: AutoLockMinutes;
+  /** Ask for the wallet password before every send. */
+  confirmPasswordOnSend: boolean;
   requireBiometrics: boolean;
 }
 
@@ -18,6 +20,7 @@ interface SecurityStore {
 
 const DEFAULT_SETTINGS: SecuritySettings = {
   autoLockMinutes: 15,
+  confirmPasswordOnSend: true,
   requireBiometrics: false,
 };
 

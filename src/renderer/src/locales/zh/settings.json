@@ -344,7 +344,9 @@
     "hardware": "硬件",
     "autoLockMinutesDesc": "无操作达到此时长后锁定钱包，之后需要重新输入密码。挖矿和节点会继续运行。",
     "never": "从不",
-    "minutes_other": "{{count}} 分钟"
+    "minutes_other": "{{count}} 分钟",
+    "sendPasswordTitle": "发送时要求输入密码",
+    "sendPasswordDesc": "每笔交易都需输入钱包密码。密码在本机校验，从不保存。"
   },
   "privacy": {
     "title": "隐私与诊断",

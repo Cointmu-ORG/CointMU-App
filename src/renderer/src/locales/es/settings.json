@@ -352,7 +352,9 @@
     "never": "Nunca",
     "minutes_one": "{{count}} min",
     "minutes_many": "{{count}} min",
-    "minutes_other": "{{count}} min"
+    "minutes_other": "{{count}} min",
+    "sendPasswordTitle": "Pedir contraseña al enviar",
+    "sendPasswordDesc": "Introduce la contraseña de la billetera en cada transacción. Se comprueba en este equipo y nunca se guarda."
   },
   "privacy": {
     "title": "Privacidad y diagnóstico",

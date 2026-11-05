@@ -6,7 +6,11 @@ import { RevealPrivateKeyModal } from "./reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "./recovery-phrase-modal.component";
 import { ExportKeystoreModal } from "./export-keystore-modal.component";
 import { ResetWalletModal } from "./reset-wallet-modal.component";
-import { SettingChoice, SettingRow } from "./setting-controls.component";
+import {
+  SettingChoice,
+  SettingRow,
+  SettingSwitch,
+} from "./setting-controls.component";
 import {
   AUTO_LOCK_MINUTE_OPTIONS,
   type AutoLockMinutes,
@@ -64,6 +68,18 @@ export function SecuritySettings(): JSX.Element {
                 }))}
                 onChange={(autoLockMinutes) =>
                   updateSettings({ autoLockMinutes })
+                }
+              />
+            </SettingRow>
+            <SettingRow
+              title={t("settings:securitySettings.sendPasswordTitle")}
+              description={t("settings:securitySettings.sendPasswordDesc")}
+            >
+              <SettingSwitch
+                label={t("settings:securitySettings.sendPasswordTitle")}
+                checked={settings.confirmPasswordOnSend}
+                onChange={(confirmPasswordOnSend) =>
+                  updateSettings({ confirmPasswordOnSend })
                 }
               />
             </SettingRow>

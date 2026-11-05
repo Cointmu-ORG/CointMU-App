@@ -61,6 +61,7 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     fallback: 2,
     isValid: isIntegerIn(1, 60),
   },
+  "security.confirmPasswordOnSend": { fallback: true, isValid: isBoolean },
   "security.autoLockMinutes": {
     fallback: 15,
     isValid: isOneOf(AUTO_LOCK_MINUTE_OPTIONS),

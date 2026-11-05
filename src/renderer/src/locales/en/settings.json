@@ -348,7 +348,9 @@
     "autoLockMinutesDesc": "Lock the wallet after this long without activity; you then need your password again. Mining and the node keep running.",
     "never": "Never",
     "minutes_one": "{{count}} min",
-    "minutes_other": "{{count}} min"
+    "minutes_other": "{{count}} min",
+    "sendPasswordTitle": "Ask for password to send",
+    "sendPasswordDesc": "Enter your wallet password for every transaction. It is checked on this computer and never stored."
   },
   "privacy": {
     "title": "Privacy & Diagnostics",

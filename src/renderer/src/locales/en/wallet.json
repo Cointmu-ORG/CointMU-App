@@ -94,7 +94,9 @@
       "notifConfirmedTitle": "Transaction confirmed",
       "notifConfirmedDesc": "Sent {{asset}} to {{to}}",
       "notifFailedTitle": "Transaction failed",
-      "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed"
+      "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed",
+      "passwordLabel": "Wallet password",
+      "passwordRequired": "Enter your wallet password to send."
     },
     "importKeystore": {
       "title": "Import keystore",

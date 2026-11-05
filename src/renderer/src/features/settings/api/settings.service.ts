@@ -60,6 +60,7 @@ async function resetAllSettings(): Promise<void> {
     }),
     setSetting("security", {
       autoLockMinutes: 15,
+      confirmPasswordOnSend: true,
       requireBiometrics: false,
     }),
     setSetting("advanced", {

@@ -344,7 +344,9 @@
     "hardware": "ハードウェア",
     "autoLockMinutesDesc": "この時間操作がなければウォレットをロックし、再びパスワードが必要になります。マイニングとノードは動作し続けます。",
     "never": "しない",
-    "minutes_other": "{{count}} 分"
+    "minutes_other": "{{count}} 分",
+    "sendPasswordTitle": "送金時にパスワードを確認",
+    "sendPasswordDesc": "取引ごとにウォレットのパスワードを入力します。このコンピューター上で確認され、保存されることはありません。"
   },
   "privacy": {
     "title": "プライバシーと診断",
