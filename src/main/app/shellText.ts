@@ -21,6 +21,10 @@ const DEFAULT_SHELL_TEXT: ShellText = {
   quitConfirmQuit: "Quit",
   quitConfirmCancel: "Cancel",
   quitConfirmNeverAsk: "Don't ask again",
+  autoStartTitle: "Mining starts in {{seconds}} seconds",
+  autoStartBody:
+    "Start mining at launch is on. Open CointMU to cancel it for this session.",
+  autoStartCancel: "Cancel",
 };
 
 let current: ShellText = DEFAULT_SHELL_TEXT;

@@ -112,5 +112,10 @@
   "notification": {
     "blockMinedTitle": "ブロックを採掘しました",
     "blockMinedMessage": "ブロック #{{number}} を封印しました"
+  },
+  "autoStart": {
+    "title": "{{seconds}} 秒後にマイニングを開始します",
+    "body": "「起動時にマイニングを開始」がオンです。マイニングは CPU、メモリ、バッテリーを使います。キャンセルはこのセッションにのみ適用されます。",
+    "cancel": "キャンセル"
   }
 }

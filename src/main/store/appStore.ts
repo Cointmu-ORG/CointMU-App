@@ -55,7 +55,6 @@ export async function createAppStore() {
       },
       mining: {
         isMiningEnabled: false,
-        startAtLaunch: false,
         cpuThreads: 4,
         intensity: MiningIntensity.BALANCED,
         pauseOnBattery: true,

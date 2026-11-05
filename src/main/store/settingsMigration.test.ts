@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { migrateSettingValues } from "./settingsMigration";
+import { applySettingRules, migrateSettingValues } from "./settingsMigration";
 
 // Stores written by released AppImages, run offline in an isolated profile.
 // 1.6.18: EUR, the U+FFFD network label, 25 peers, Full, Turbo, Custom pool
@@ -46,7 +46,40 @@ describe("migrateSettingValues", () => {
       ...migrated,
       network: before.network,
       appearance: before.appearance,
+      mining: before.mining,
     }).toEqual(before);
+  });
+
+  it("never carries a stored mining.startAtLaunch true over", () => {
+    const store = snapshot("1.7.1");
+    const mining: Record<string, unknown> = {
+      ...(store.mining as Record<string, unknown>),
+      startAtLaunch: true,
+    };
+    const before = { ...store, mining };
+
+    // The order createAppStore runs them in.
+    const migrated = migrateSettingValues(before) ?? before;
+    const filled = applySettingRules(migrated) ?? migrated;
+
+    expect(filled.mining).not.toHaveProperty("startAtLaunch");
+    expect(filled.mining).toMatchObject({
+      autoStartAtLaunch: false,
+      poolAddress: mining.poolAddress,
+      cpuThreads: mining.cpuThreads,
+    });
+    expect(migrateSettingValues(filled)).toBeNull();
+    expect(applySettingRules(filled)).toBeNull();
+  });
+
+  it("keeps an autoStartAtLaunch the user turned on", () => {
+    const store = { mining: { autoStartAtLaunch: true, startAtLaunch: true } };
+
+    const migrated = migrateSettingValues(store) ?? store;
+    const filled = applySettingRules(migrated) ?? migrated;
+
+    expect(filled.mining).toMatchObject({ autoStartAtLaunch: true });
+    expect(filled.mining).not.toHaveProperty("startAtLaunch");
   });
 
   it.each(["1.6.18", "1.7.1"])(

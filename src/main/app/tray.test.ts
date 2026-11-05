@@ -24,6 +24,9 @@ const TEXT: ShellText = {
   quitConfirmQuit: "Quit",
   quitConfirmCancel: "Cancel",
   quitConfirmNeverAsk: "Don't ask again",
+  autoStartTitle: "Mining in {{seconds}} s",
+  autoStartBody: "Open to cancel",
+  autoStartCancel: "Cancel",
 };
 
 describe("describeTrayStatus", () => {

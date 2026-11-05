@@ -54,6 +54,8 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     isValid: isOneOf(Object.values(UpdateInstallMode)),
   },
   "mining.idleOnly": { fallback: false, isValid: isBoolean },
+  // Replaces mining.startAtLaunch, which settingsMigration drops.
+  "mining.autoStartAtLaunch": { fallback: false, isValid: isBoolean },
   "mining.lowPriority": { fallback: false, isValid: isBoolean },
   "mining.schedule.enabled": { fallback: false, isValid: isBoolean },
   "mining.schedule.start": { fallback: "22:00", isValid: isTimeOfDay },

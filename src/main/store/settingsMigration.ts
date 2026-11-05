@@ -85,6 +85,10 @@ const RETIRED_KEYS: readonly (readonly [section: string, key: string])[] = [
   // Stored as true for everyone while no control existed. The renderer's
   // appearance.sidebarIconColors (off by default) replaces it.
   ["appearance", "showSidebarColors"],
+  // Never read while it had no control; a user who once saw it on could get
+  // mining at launch after the update. mining.autoStartAtLaunch (off by
+  // default, SETTING_RULES) replaces it.
+  ["mining", "startAtLaunch"],
 ];
 
 /**

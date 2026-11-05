@@ -12,6 +12,7 @@ import {
 import { getSetting } from "@/shared/api";
 import { useUpdater } from "@/shared/lib";
 import {
+  MiningAutoStartBanner,
   useBlockFoundNotifications,
   useMiningLogStream,
 } from "@/features/mining";
@@ -183,6 +184,7 @@ function App(): JSX.Element {
         </div>
         <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
         <FirstRunNotice />
+        <MiningAutoStartBanner />
       </Suspense>
     );
   }
@@ -194,6 +196,7 @@ function App(): JSX.Element {
         <PairingApprovalModal />
         <ToastViewport />
         <UpdateReadyBanner updater={updater} />
+        <MiningAutoStartBanner />
         <FirstRunNotice />
         <Sidebar
           accounts={accounts}

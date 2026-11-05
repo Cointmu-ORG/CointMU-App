@@ -88,7 +88,10 @@
     "quitConfirmDetail": "La minería y la sincronización se detienen hasta que vuelvas a abrir CointMU. Primero el nodo se cierra de forma limpia.",
     "quitConfirmQuit": "Salir",
     "quitConfirmCancel": "Cancelar",
-    "quitConfirmNeverAsk": "No volver a preguntar"
+    "quitConfirmNeverAsk": "No volver a preguntar",
+    "autoStartTitle": "La minería empieza en {{seconds}} segundos",
+    "autoStartBody": "«Minar al iniciar» está activado. Abre CointMU para cancelarlo en esta sesión.",
+    "autoStartCancel": "Cancelar"
   },
   "update": {
     "readyTitle": "Actualización lista",

@@ -86,7 +86,10 @@
     "quitConfirmDetail": "在你再次打开 CointMU 之前，挖矿和同步都会停止。节点会先正常关闭。",
     "quitConfirmQuit": "退出",
     "quitConfirmCancel": "取消",
-    "quitConfirmNeverAsk": "不再询问"
+    "quitConfirmNeverAsk": "不再询问",
+    "autoStartTitle": "{{seconds}} 秒后开始挖矿",
+    "autoStartBody": "已开启“启动时开始挖矿”。打开 CointMU 可在本次会话中取消。",
+    "autoStartCancel": "取消"
   },
   "update": {
     "readyTitle": "更新已就绪",

@@ -50,7 +50,7 @@ async function resetAllSettings(): Promise<void> {
     ),
     setSetting("mining", {
       isMiningEnabled: false,
-      startAtLaunch: false,
+      autoStartAtLaunch: false,
       cpuThreads: 4,
       intensity: MiningIntensity.BALANCED,
       pauseOnBattery: true,

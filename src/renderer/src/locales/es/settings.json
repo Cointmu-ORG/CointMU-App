@@ -329,7 +329,9 @@
     "scheduleDesc": "Pausa la minería fuera de este horario (hora local). El final puede ser después de medianoche.",
     "scheduleWindow": "Horario",
     "scheduleStart": "Hora de inicio",
-    "scheduleEnd": "Hora de fin"
+    "scheduleEnd": "Hora de fin",
+    "autoStartTitle": "Minar al iniciar",
+    "autoStartDesc": "Empieza a minar 30 segundos después de que el nodo tenga un par, esté sincronizado y haya una dirección de recompensa; hasta entonces puedes cancelarlo. La minería usa la CPU, unos 2 GB de memoria para el DAG y batería. «Pausar con batería», «Minar según un horario» y «Minar solo en reposo» se siguen aplicando."
   },
   "securitySettings": {
     "subtitle": "Gestionar los ajustes de seguridad de tu billetera",

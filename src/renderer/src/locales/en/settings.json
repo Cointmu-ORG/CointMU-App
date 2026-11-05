@@ -326,7 +326,9 @@
     "scheduleDesc": "Pause mining outside these hours (local time). The end may be after midnight.",
     "scheduleWindow": "Hours",
     "scheduleStart": "Start time",
-    "scheduleEnd": "End time"
+    "scheduleEnd": "End time",
+    "autoStartTitle": "Start mining at launch",
+    "autoStartDesc": "Starts mining 30 seconds after the node has a peer, is synced and a reward address is set; you can cancel it then. Mining uses your CPU, about 2 GB of memory for the DAG, and battery. Pause on battery, Mine on a schedule and Mine only when idle still apply."
   },
   "securitySettings": {
     "subtitle": "Manage security settings for your wallet",

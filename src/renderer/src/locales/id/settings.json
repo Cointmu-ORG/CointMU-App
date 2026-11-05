@@ -323,7 +323,9 @@
     "scheduleDesc": "Jeda mining di luar jam ini (waktu lokal). Jam selesai boleh melewati tengah malam.",
     "scheduleWindow": "Jam",
     "scheduleStart": "Jam mulai",
-    "scheduleEnd": "Jam selesai"
+    "scheduleEnd": "Jam selesai",
+    "autoStartTitle": "Mulai mining saat dibuka",
+    "autoStartDesc": "Mining dimulai 30 detik setelah node punya peer, sinkronisasi selesai, dan alamat reward sudah diatur; sebelum itu Anda bisa membatalkannya. Mining memakai CPU, sekitar 2 GB RAM untuk DAG, dan baterai. Jeda pada baterai, Mining sesuai jadwal, dan Mining hanya saat idle tetap berlaku."
   },
   "securitySettings": {
     "subtitle": "Kelola pengaturan keamanan dompet Anda",

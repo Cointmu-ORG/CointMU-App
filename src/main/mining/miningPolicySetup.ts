@@ -21,8 +21,9 @@ function minutesOfDay(time: unknown): number {
 
 /**
  * @param store - The settings store.
- * @param isStarted - The user started mining this session (Mining page or
- *   tray); the stored mining.isMiningEnabled is only the permission.
+ * @param isStarted - Mining was started this session (Mining page, tray or
+ *   Start mining at launch); the stored mining.isMiningEnabled is only the
+ *   permission.
  * @returns The conditions the policy decides on, read now.
  */
 function readConditions(

@@ -120,5 +120,10 @@
   "notification": {
     "blockMinedTitle": "Bloque minado",
     "blockMinedMessage": "Has sellado el bloque #{{number}}"
+  },
+  "autoStart": {
+    "title": "La minería empieza en {{seconds}} s",
+    "body": "«Minar al iniciar» está activado. La minería usa CPU, memoria y batería. Cancelar solo afecta a esta sesión.",
+    "cancel": "Cancelar"
   }
 }
