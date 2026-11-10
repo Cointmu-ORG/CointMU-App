@@ -10,7 +10,7 @@ updates:
       # installs a second copy with incompatible types and breaks typecheck.
       # Bump it by hand, to the version the new @sentry/electron pins, in the
       # PR that bumps @sentry/electron.
-      - dependency-name: '@sentry/core'
+      - dependency-name: "@sentry/core"
     groups:
       dev-dependencies:
         dependency-type: development
@@ -26,4 +26,4 @@ updates:
       # so they have to be bumped in the same PR.
       codeql-action:
         patterns:
-          - 'github/codeql-action/*'
+          - "github/codeql-action/*"
