@@ -15,3 +15,5 @@ resources/bin/win/geth-supervisor.exe
 .vscode/
 graphify-out/
 build-info.json
+.codegraph
+graphify-out
