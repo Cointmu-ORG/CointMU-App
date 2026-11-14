@@ -16,3 +16,4 @@ resources/bin/win/geth-supervisor.exe
 graphify-out/
 build-info.json
 .codegraph
+graphify-out
