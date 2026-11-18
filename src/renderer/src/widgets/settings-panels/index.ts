@@ -4,6 +4,7 @@ export { NetworkSettings } from "./ui/network-settings.component";
 export { MiningSettings } from "./ui/mining-settings.component";
 export { SecuritySettings } from "./ui/security-settings.component";
 export { ConnectedSitesSettings } from "./ui/connected-sites-settings.component";
+export { OtherConnectionsSettings } from "./ui/other-connections-settings.component";
 export { ExternalSourceSettings } from "./ui/external-source-settings.component";
 export { AdvancedSettings } from "./ui/advanced-settings.component";
 export { AboutSettings } from "./ui/about-settings.component";

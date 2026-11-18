@@ -5,6 +5,7 @@ import {
   MiningSettings,
   SecuritySettings,
   ConnectedSitesSettings,
+  OtherConnectionsSettings,
   ExternalSourceSettings,
   AdvancedSettings,
   AboutSettings,
@@ -29,6 +30,7 @@ import {
   Box,
   Bell,
   Globe,
+  Cable,
   Download,
   ShieldCheck,
 } from "lucide-react";
@@ -41,6 +43,7 @@ export type SettingsCategory =
   | "mining"
   | "security"
   | "connectedSites"
+  | "otherConnections"
   | "externalSources"
   | "advanced"
   | "privacy"
@@ -82,6 +85,11 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
       id: "connectedSites",
       label: "Connected Sites",
       icon: <Globe width={16} height={16} />,
+    },
+    {
+      id: "otherConnections",
+      label: "Other Connections",
+      icon: <Cable width={16} height={16} />,
     },
     {
       id: "externalSources",
@@ -243,6 +251,11 @@ function SettingsPage({
             )}
             {activeCategory === "security" && <SecuritySettings />}
             {activeCategory === "connectedSites" && <ConnectedSitesSettings />}
+            {activeCategory === "otherConnections" && (
+              <OtherConnectionsSettings
+                rewardAddress={settings.mining.poolAddress}
+              />
+            )}
             {activeCategory === "externalSources" && <ExternalSourceSettings />}
             {activeCategory === "advanced" && <AdvancedSettings />}
             {activeCategory === "privacy" && <ErrorReportingSettings />}
