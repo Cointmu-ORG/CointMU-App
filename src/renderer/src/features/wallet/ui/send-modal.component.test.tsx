@@ -35,16 +35,38 @@ vi.mock("@/shared/api", () => ({
   getSetting: wallet.getSetting,
   waitForTransactionReceipt: vi.fn(() => new Promise(() => undefined)),
 }));
-vi.mock("@/features/wallet", () => ({
-  TokenService: {
-    getTokens: () => [
-      { address: "native", symbol: "CMU", name: "CointMU", decimals: 18 },
+const TOKEN = {
+  address: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  symbol: "USD",
+  name: "Dollar",
+  decimals: 6,
+  balance: 5_000_000n,
+  isAutoDetected: true,
+};
+const assets = vi.hoisted(() => ({ nativeBalance: 0n }));
+
+vi.mock("../lib/wallet-assets.hook", () => ({
+  useWalletAssets: () => ({
+    assets: [
+      {
+        address: "native",
+        symbol: "CMU",
+        name: "CointMU",
+        decimals: 18,
+        balance: assets.nativeBalance,
+        isAutoDetected: false,
+      },
+      TOKEN,
     ],
-  },
+    scan: null,
+    isLoading: false,
+    refresh: vi.fn(),
+  }),
+}));
+vi.mock("@/features/wallet", () => ({
   TokenIcon: () => null,
-  getTokenBalance: vi.fn().mockResolvedValue("100"),
   estimateNativeTransferGas: vi.fn().mockResolvedValue(21000n),
-  estimateErc20TransferGas: vi.fn(),
+  estimateErc20TransferGas: vi.fn().mockResolvedValue(50000n),
   executeNativeTransfer: wallet.executeNativeTransfer,
   executeErc20Transfer: vi.fn(),
   resolveWallet: wallet.resolveWallet,
@@ -118,6 +140,7 @@ function click(button: HTMLButtonElement): void {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  assets.nativeBalance = 100n * 10n ** 18n;
   wallet.getSetting.mockResolvedValue(undefined);
   useWalletUiStore.getState().resetSendForm();
   useWalletUiStore.setState({ sendGasPrice: GAS_PRICE_HEX });
@@ -189,5 +212,26 @@ describe("SendModal two-step flow", () => {
 
     expect(dialog()).not.toBeNull();
     expect(container.querySelector('input[type="password"]')).toBeNull();
+  });
+
+  it("refuses a token send when CMU cannot pay the gas, though the token balance can", async () => {
+    assets.nativeBalance = 1n;
+    useWalletUiStore.setState({ sendSelectedTokenAddress: TOKEN.address });
+
+    await renderFilledForm();
+
+    expect(container.textContent).toContain(
+      "wallet:modals.send.errorInsufficientGas",
+    );
+    expect(buttonByText("wallet:modals.send.continueBtn").disabled).toBe(true);
+  });
+
+  it("fills Max with the whole token balance in the token's decimals", async () => {
+    useWalletUiStore.setState({ sendSelectedTokenAddress: TOKEN.address });
+    await renderFilledForm();
+
+    click(buttonByText("wallet:modals.send.maxBtn"));
+
+    expect(inputs()[1].value).toBe("5");
   });
 });

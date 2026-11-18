@@ -57,7 +57,8 @@
     "confirmations_one": "{{count}} подтверждение",
     "confirmations_few": "{{count}} подтверждения",
     "confirmations_many": "{{count}} подтверждений",
-    "confirmations_other": "{{count}} подтверждения"
+    "confirmations_other": "{{count}} подтверждения",
+    "sentToken": "Отправлено {{symbol}}"
   },
   "dialog": {
     "exportExtensionTitle": "Экспорт расширения для браузера",

@@ -168,3 +168,29 @@ export async function getTokenBalance(
     return "0.00";
   }
 }
+
+/**
+ * Reads a balance in the asset's smallest unit, without rounding.
+ * @param walletAddress - The owner wallet address.
+ * @param tokenAddress - An ERC-20 contract, or "native" for CMU.
+ * @returns The raw balance; 0 when the call fails.
+ */
+export async function getTokenBalanceRaw(
+  walletAddress: string,
+  tokenAddress: string,
+): Promise<bigint> {
+  try {
+    const provider = createNodeProvider();
+    if (tokenAddress === "native")
+      return await provider.getBalance(walletAddress);
+    const contract = new ethers.Contract(
+      tokenAddress,
+      STANDARD_ERC20_ABI,
+      provider,
+    );
+    return BigInt(await contract.balanceOf(walletAddress));
+  } catch (error) {
+    console.error(`Failed to fetch balance for ${tokenAddress}`, error);
+    return 0n;
+  }
+}

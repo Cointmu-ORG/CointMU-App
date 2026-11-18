@@ -53,6 +53,8 @@ import {
 } from "../ipc/nodeIpc";
 import { registerExplorerHandlers } from "../ipc/explorerIpc";
 import { registerShellHandlers } from "../ipc/shellIpc";
+import { registerTokenHandlers } from "../ipc/tokenIpc";
+import { startTokenScan, stopTokenScan } from "../tokens/tokenScanService";
 import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
 import { createQuitConfirmation } from "./quitConfirmation";
 import { setupTray } from "./traySetup";
@@ -112,6 +114,7 @@ app.whenReady().then(async () => {
     status: queryIndexStatus,
     rebuild: requestIndexRebuild,
   });
+  await registerTokenHandlers();
 
   await resolveGethPorts();
 
@@ -139,6 +142,8 @@ app.whenReady().then(async () => {
   watchGethPriority(store, () => restartNodeByUser(store));
   await spawnGethProcess(store);
 
+  void startTokenScan(store);
+
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
 
@@ -160,6 +165,7 @@ app.whenReady().then(async () => {
 
   app.on("before-quit", () => {
     extSyncServer.close();
+    stopTokenScan();
   });
 });
 

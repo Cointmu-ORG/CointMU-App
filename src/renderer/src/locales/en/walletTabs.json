@@ -12,12 +12,19 @@
     "token": "Token",
     "price": "Price",
     "balance": "Balance",
-    "value": "Value"
+    "value": "Value",
+    "actions": "Actions"
   },
   "nft": {
     "tokenId": "Token ID: {{id}}",
     "unknownCollection": "Unknown Collection",
     "fallbackName": "Token #{{id}}",
     "discoveryFailed": "NFT discovery failed"
+  },
+  "autoDetected": "Auto-detected",
+  "hideToken": "Hide {{symbol}}",
+  "tokenScan": {
+    "label": "Token scan progress",
+    "progress": "Looking for tokens sent to this account… {{percent}}% (block {{block}} of {{head}})"
   }
 }

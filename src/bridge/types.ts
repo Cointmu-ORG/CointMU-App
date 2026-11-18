@@ -262,6 +262,8 @@ export interface WalletActivity {
   readonly from?: string;
   /** Empty for a contract deployment; the miner for a mining reward. */
   readonly to: string;
+  /** Set for an ERC-20 transfer; amount is then in this token. */
+  readonly token?: { readonly address: string; readonly symbol: string };
 }
 
 /** Time window of the explorer miner distribution, counted back from now. */
@@ -401,3 +403,30 @@ export interface ChainDataMoveProgress {
   /** Copy progress 0-100 while copying. */
   readonly percent?: number;
 }
+
+/** An ERC-20 token found by the Transfer log scan, with a balance above zero. */
+export interface DetectedToken {
+  /** Lowercase contract address. */
+  readonly address: string;
+  /** Untrusted contract text, cleaned and length-capped; render as plain text. */
+  readonly name: string;
+  readonly symbol: string;
+  readonly decimals: number;
+  /** Raw balance in the token's smallest unit, as a decimal string. */
+  readonly balance: string;
+}
+
+/** Progress of one account's Transfer log scan. */
+export interface TokenScanProgress {
+  readonly scannedBlock: number;
+  readonly headBlock: number | null;
+  readonly isComplete: boolean;
+}
+
+export interface DetectedTokens {
+  readonly tokens: readonly DetectedToken[];
+  readonly scan: TokenScanProgress;
+}
+
+/** Custom logos by asset key: "native" or a lowercase contract address. */
+export type AssetLogos = Readonly<Record<string, string>>;

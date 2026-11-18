@@ -1,10 +1,19 @@
 import { ActivityKind, type WalletActivity } from "../../bridge/types";
+import { Interface, formatUnits } from "ethers";
 import { callGethRpc, toHex, safeParseHex } from "../geth/rpc/rpcUtils";
+import { TRANSFER_SELECTOR, type TokenMeta } from "../tokens/erc20Calls";
 
 const ACTIVITY_BLOCK_SCAN_DEPTH = 500;
 const MINING_BLOCK_REWARD = "2.00";
 const INSIGHTS_BLOCK_WINDOW = 12;
 const BLOCK_TIME_REFERENCE_DEPTH = 100;
+const TOKEN_AMOUNT_FRACTION_DIGITS = 4;
+const erc20Transfer = new Interface([
+  "function transfer(address to, uint256 amount) returns (bool)",
+]);
+
+/** Metadata of a token contract the token scan detected, if any. */
+export type TokenMetaLookup = (contract: string) => TokenMeta | undefined;
 
 /**
  * A summarized block record returned as part of the network insights payload.
@@ -60,22 +69,63 @@ function classifyKind(
 }
 
 /**
+ * Reads an ERC-20 transfer(to, amount) call to a detected token.
+ * @returns The recipient, display amount and token, or null for any other call.
+ */
+function decodeTokenTransfer(
+  tx: { to?: string | null; input?: string },
+  tokenMeta: TokenMetaLookup,
+): Pick<WalletActivity, "to" | "amount" | "token"> | null {
+  if (!tx.to || !tx.input?.startsWith(TRANSFER_SELECTOR)) return null;
+  const meta = tokenMeta(tx.to);
+  if (meta === undefined) return null;
+  try {
+    const [to, value] = erc20Transfer.decodeFunctionData("transfer", tx.input);
+    const [whole, fraction = ""] = formatUnits(value, meta.decimals).split(".");
+    const kept = fraction
+      .slice(0, TOKEN_AMOUNT_FRACTION_DIGITS)
+      .replace(/0+$/, "");
+    return {
+      to: String(to),
+      amount: kept ? `${whole}.${kept}` : whole,
+      token: { address: tx.to.toLowerCase(), symbol: meta.symbol },
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Classifies a raw RPC transaction into a WalletActivity based on its
  * direction and input data relative to the given set of owned addresses.
  * Returns null when neither the sender nor the recipient belongs to the owned set.
  * @param {any} tx - The raw RPC transaction object from eth_getBlockByNumber.
  * @param {Set<string>} targets - The lowercased set of owned wallet addresses.
  * @param {BlockContext} block - Timestamp, number and confirmations of the block.
+ * @param tokenMeta - Detected token metadata; an ERC-20 transfer to one is a token send.
  * @returns {WalletActivity | null} The classified activity, or null when not relevant.
  */
 function classifyTransaction(
   tx: any,
   targets: Set<string>,
   block: BlockContext,
+  tokenMeta: TokenMetaLookup,
 ): WalletActivity | null {
   const isFrom = Boolean(tx.from && targets.has(tx.from.toLowerCase()));
   const isTo = Boolean(tx.to && targets.has(tx.to.toLowerCase()));
   if (!isFrom && !isTo) return null;
+
+  const tokenTransfer = isFrom ? decodeTokenTransfer(tx, tokenMeta) : null;
+  if (tokenTransfer !== null) {
+    return {
+      id: tx.hash,
+      kind: ActivityKind.SEND,
+      ...block,
+      hash: tx.hash,
+      from: tx.from,
+      ...tokenTransfer,
+    };
+  }
 
   let amount = "0.00";
   if (tx.value) {
@@ -99,11 +149,13 @@ function classifyTransaction(
  * transaction and mining reward found. Results are sorted newest-first.
  * @param {number} rpcPort - The resolved RPC port of the running Geth node.
  * @param {string[]} addresses - The wallet addresses to scan activity for.
+ * @param tokenMeta - Detected token metadata, to show token sends by symbol.
  * @returns {Promise<WalletActivity[]>} The wallet activity items, newest first.
  */
 export async function scanWalletActivity(
   rpcPort: number,
   addresses: string[],
+  tokenMeta: TokenMetaLookup = () => undefined,
 ): Promise<WalletActivity[]> {
   try {
     if (!Array.isArray(addresses) || addresses.length === 0) return [];
@@ -142,7 +194,7 @@ export async function scanWalletActivity(
 
       if (block.transactions && Array.isArray(block.transactions)) {
         for (const tx of block.transactions) {
-          const item = classifyTransaction(tx, targets, context);
+          const item = classifyTransaction(tx, targets, context, tokenMeta);
           if (item) activities.push(item);
         }
       }

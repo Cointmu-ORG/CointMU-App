@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain } from "electron";
 import { callGethRpc } from "../geth/rpc/rpcUtils";
+import { detectedTokenMeta } from "../tokens/detectedTokens";
 import {
   scanWalletActivity,
   fetchNetworkInsights,
@@ -239,7 +240,7 @@ export class MiningController {
     );
 
     ipcMain.handle("wallet:getActivity", async (_, addresses: string[]) => {
-      return scanWalletActivity(this.rpcPort, addresses);
+      return scanWalletActivity(this.rpcPort, addresses, detectedTokenMeta);
     });
 
     /**

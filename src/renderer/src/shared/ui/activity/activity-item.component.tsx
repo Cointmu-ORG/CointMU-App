@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { type JSX, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActivityKind } from "@bridge/types";
 import { ContractIcon, MiningIcon, ReceiveIcon, SendIcon } from "../icons";
@@ -21,10 +21,14 @@ export interface ActivityData {
   from?: string;
   to?: string;
   pending?: boolean;
+  /** Set for a token transfer; the amount is then in this token, not CMU. */
+  token?: { address: string; symbol: string };
 }
 
 interface ActivityItemProps {
   activity: ActivityData;
+  /** Small logo of the asset moved, shown before its symbol. */
+  assetIcon?: ReactNode;
 }
 
 /**
@@ -33,7 +37,7 @@ interface ActivityItemProps {
  * @param props - Activity data representing the transaction.
  * @returns The rendered list item.
  */
-function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
+function ActivityItem({ activity, assetIcon }: ActivityItemProps): JSX.Element {
   const { t } = useTranslation();
 
   let Icon: JSX.Element;
@@ -99,8 +103,11 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
           className={`text-sm font-bold font-mono ${activity.pending ? "text-slate-400" : amountClass}`}
         >
           <PrivateAmount>{displayAmount}</PrivateAmount>{" "}
+          {assetIcon && (
+            <span className="inline-flex align-middle ml-0.5">{assetIcon}</span>
+          )}
           <span className="text-[10px] text-slate-400 font-sans ml-0.5">
-            CMU
+            {activity.token?.symbol || "CMU"}
           </span>
         </p>
         <p className="text-xs text-slate-400 mt-0.5">{activity.timestampStr}</p>

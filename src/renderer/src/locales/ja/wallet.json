@@ -56,7 +56,9 @@
       "confirmDeleteDust": "このアカウントには少額の残高があります。完全に削除して資金を失ってもよろしいですか？",
       "deleteTitle": "アカウントを削除",
       "cancel": "キャンセル",
-      "delete": "削除"
+      "delete": "削除",
+      "tokensTitle": "非表示のトークン",
+      "unhideToken": "{{symbol}} を再表示"
     },
     "receive": {
       "title": "CMUの受信",
@@ -106,7 +108,8 @@
       "total": "合計",
       "back": "戻る",
       "confirm": "確認して送信",
-      "sending": "送信中…"
+      "sending": "送信中…",
+      "contract": "トークンコントラクト"
     },
     "importKeystore": {
       "title": "キーストアをインポート",
@@ -127,6 +130,28 @@
       "detailsFailed": "トークンの詳細を取得できませんでした。このネットワーク上の有効な ERC-20 コントラクトか確認してください。",
       "addFailed": "トークンの追加中にエラーが発生しました。",
       "verifying": "確認中..."
+    },
+    "tokenDetail": {
+      "close": "閉じる",
+      "balance": "残高",
+      "contract": "コントラクトアドレス",
+      "spoofWarning": "トークンは誰でも作成でき、名前やシンボルは他のトークンを模倣できます。信頼する前にコントラクトアドレスを確認してください。",
+      "hide": "トークンを非表示",
+      "logo": {
+        "title": "ロゴ",
+        "hint": "PNG・JPEG・WebP、2 MB まで。128×128 の正方形に切り抜かれ、このデバイスにのみ保存されます。",
+        "upload": "ロゴをアップロード",
+        "save": "ロゴを保存",
+        "cancel": "キャンセル",
+        "reset": "デフォルトに戻す",
+        "preview": "新しいロゴのプレビュー",
+        "errors": {
+          "tooLarge": "ファイルが 2 MB を超えています。",
+          "unsupported": "PNG・JPEG・WebP 画像のみ使用できます(SVG は不可)。",
+          "unreadable": "この画像を読み込めませんでした。",
+          "saveFailed": "ロゴを保存できませんでした。もう一度お試しください。"
+        }
+      }
     }
   },
   "historyFilter": {

@@ -6,18 +6,20 @@ import {
 import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
-import { ActivityItem, type ActivityData, PrivateAmount } from "@/shared/ui";
+import { ActivityItem, type ActivityData } from "@/shared/ui";
 import { ActivityKind, type WalletActivity } from "@bridge/types";
 import {
-  TokenService,
-  getTokenBalance,
-  type TokenInfo,
+  ActivityCacheService,
+  AddTokenModal,
+  TokenDetailModal,
+  TokenIcon,
+  TokenList,
+  useHiddenTokensStore,
+  useWalletAssets,
+  type WalletAsset,
 } from "@/features/wallet";
-import { WalletCacheService } from "@/features/wallet";
-import { ActivityCacheService } from "@/features/wallet";
-import { SkeletonList, SkeletonTable, Pagination } from "@/shared/ui";
+import { SkeletonList, Pagination } from "@/shared/ui";
 import { formatDateTime } from "@/shared/lib";
-import { AddTokenModal, TokenIcon } from "@/features/wallet";
 import { NFTGrid } from "@/features/nft";
 import { Zap, Plus } from "lucide-react";
 import { useAppStore, type PendingTransaction } from "@/shared/model";
@@ -59,7 +61,9 @@ function mapPendingToActivity(
     id: tx.hash,
     kind: ActivityKind.SEND,
     type: "send",
-    title: t("common:activity.sentCmu"),
+    title: tx.token
+      ? t("common:activity.sentToken", { symbol: tx.token.symbol })
+      : t("common:activity.sentCmu"),
     subtitle: t("common:activity.to", { address: shortenAddress(tx.to) }),
     amount: tx.amount.toLocaleString("en-US", { maximumFractionDigits: 4 }),
     timestamp: tx.timestamp,
@@ -67,6 +71,7 @@ function mapPendingToActivity(
     hash: tx.hash,
     from: tx.from,
     to: tx.to,
+    token: tx.token,
     pending: true,
   };
 }
@@ -111,13 +116,12 @@ function WalletTabs({
   onTabChange,
 }: WalletTabsProps): JSX.Element {
   const [transactions, setTransactions] = useState<WalletActivity[]>([]);
-  const [knownTokens, setKnownTokens] = useState<TokenInfo[]>([]);
-  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
-    {},
-  );
-  const [tokensRefreshKey, setTokensRefreshKey] = useState(0);
   const [isFetchingActivity, setIsFetchingActivity] = useState(true);
-  const [isFetchingTokens, setIsFetchingTokens] = useState(true);
+  const [selectedAsset, setSelectedAsset] = useState<WalletAsset | null>(null);
+  const walletAssets = useWalletAssets(
+    activeTab === "tokens" ? activeWalletAddress : null,
+  );
+  const hideToken = useHiddenTokensStore((s) => s.hide);
   const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pendingTransactions = useAppStore((s) => s.pendingTransactions);
@@ -158,38 +162,14 @@ function WalletTabs({
       ActivityCacheService.setActivity(activeWalletAddress, filtered);
       setIsFetchingActivity(false);
     });
-  }, [activeWalletAddress]);
+    // A send leaving the pending list has been mined: refetch so it shows.
+  }, [activeWalletAddress, pendingTransactions.length]);
 
-  useEffect(() => {
-    if (activeTab === "tokens" && activeWalletAddress) {
-      const fetchTokens = async (): Promise<void> => {
-        const cached = WalletCacheService.getTokenBalances(activeWalletAddress);
-        if (cached) {
-          setTokenBalances(cached);
-          setIsFetchingTokens(false);
-        } else {
-          setIsFetchingTokens(true);
-        }
+  const handleTokenAdded = walletAssets.refresh;
 
-        const tokens = TokenService.getTokens();
-        setKnownTokens(tokens);
-        const balances: Record<string, string> = {};
-        for (const token of tokens) {
-          balances[token.symbol] = await getTokenBalance(
-            activeWalletAddress,
-            token.address,
-          );
-        }
-        setTokenBalances(balances);
-        WalletCacheService.setTokenBalances(activeWalletAddress, balances);
-        setIsFetchingTokens(false);
-      };
-      fetchTokens();
-    }
-  }, [activeTab, activeWalletAddress, tokensRefreshKey]);
-
-  const handleTokenAdded = (): void => {
-    setTokensRefreshKey((k) => k + 1);
+  const handleHide = (asset: WalletAsset): void => {
+    hideToken(asset);
+    setSelectedAsset(null);
   };
 
   return (
@@ -239,7 +219,17 @@ function WalletTabs({
               <SkeletonList itemCount={5} />
             ) : paginatedActivities.length > 0 ? (
               paginatedActivities.map((tx) => (
-                <ActivityItem key={tx.id} activity={tx} />
+                <ActivityItem
+                  key={tx.id}
+                  activity={tx}
+                  assetIcon={
+                    <TokenIcon
+                      address={tx.token?.address ?? "native"}
+                      symbol={tx.token?.symbol ?? "CMU"}
+                      size="xs"
+                    />
+                  }
+                />
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -271,76 +261,13 @@ function WalletTabs({
       )}
 
       {activeTab === "tokens" && (
-        <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-100 dark:border-gray-800">
-                <th className="text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  {t("walletTabs:table.token")}
-                </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  {t("walletTabs:table.price")}
-                </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  {t("walletTabs:table.balance")}
-                </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                  {t("walletTabs:table.value")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-gray-800">
-              {isFetchingTokens ? (
-                <tr>
-                  <td colSpan={4} className="p-0">
-                    <SkeletonTable columns={4} rowCount={3} />
-                  </td>
-                </tr>
-              ) : (
-                knownTokens.map((token) => (
-                  <tr
-                    key={token.symbol}
-                    className="hover:bg-slate-50/50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <TokenIcon
-                          address={token.address}
-                          symbol={token.symbol}
-                        />
-                        <div>
-                          <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                            {token.name}
-                          </p>
-                          <p className="text-xs font-semibold text-slate-400 dark:text-gray-400">
-                            {token.symbol}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-gray-200 font-mono">
-                        N/A
-                      </p>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-gray-200 font-mono">
-                        <PrivateAmount>
-                          {tokenBalances[token.symbol] ?? "..."}
-                        </PrivateAmount>
-                      </p>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-bold text-slate-800 dark:text-gray-100 font-mono">
-                        N/A
-                      </p>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <TokenList
+          assets={walletAssets.assets}
+          scan={walletAssets.scan}
+          isLoading={walletAssets.isLoading}
+          onSelect={setSelectedAsset}
+          onHide={handleHide}
+        />
       )}
 
       {activeTab === "nfts" && (
@@ -370,6 +297,14 @@ function WalletTabs({
             </div>
           )}
         </div>
+      )}
+
+      {selectedAsset && (
+        <TokenDetailModal
+          asset={selectedAsset}
+          onClose={() => setSelectedAsset(null)}
+          onHide={handleHide}
+        />
       )}
 
       {isAddTokenModalOpen && (

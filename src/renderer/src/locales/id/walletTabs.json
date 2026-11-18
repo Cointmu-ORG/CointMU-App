@@ -12,12 +12,19 @@
     "token": "Token",
     "price": "Harga",
     "balance": "Saldo",
-    "value": "Nilai"
+    "value": "Nilai",
+    "actions": "Aksi"
   },
   "nft": {
     "tokenId": "ID token: {{id}}",
     "unknownCollection": "Koleksi tidak dikenal",
     "fallbackName": "Token #{{id}}",
     "discoveryFailed": "Pencarian NFT gagal"
+  },
+  "autoDetected": "Terdeteksi otomatis",
+  "hideToken": "Sembunyikan {{symbol}}",
+  "tokenScan": {
+    "label": "Progres pemindaian token",
+    "progress": "Mencari token yang dikirim ke akun ini… {{percent}}% (blok {{block}} dari {{head}})"
   }
 }

@@ -12,12 +12,19 @@
     "token": "トークン",
     "price": "価格",
     "balance": "残高",
-    "value": "評価額"
+    "value": "評価額",
+    "actions": "操作"
   },
   "nft": {
     "tokenId": "トークン ID: {{id}}",
     "unknownCollection": "不明なコレクション",
     "fallbackName": "トークン #{{id}}",
     "discoveryFailed": "NFT の検出に失敗しました"
+  },
+  "autoDetected": "自動検出",
+  "hideToken": "{{symbol}} を非表示",
+  "tokenScan": {
+    "label": "トークンスキャンの進行状況",
+    "progress": "このアカウントに送られたトークンを検索中… {{percent}}%(ブロック {{block}} / {{head}})"
   }
 }

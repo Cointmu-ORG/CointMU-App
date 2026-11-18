@@ -94,6 +94,13 @@ function SendSummary({ summary }: { summary: SendSummaryData }): JSX.Element {
         <SummaryRow label={t("wallet:modals.sendConfirm.asset")}>
           {summary.symbol}
         </SummaryRow>
+        {!summary.isNative && (
+          <SummaryRow label={t("wallet:modals.sendConfirm.contract")}>
+            <span className="break-all font-normal">
+              {summary.tokenAddress}
+            </span>
+          </SummaryRow>
+        )}
         <SummaryRow label={t("wallet:modals.send.networkFee")}>
           {summary.feeCmu} CMU
         </SummaryRow>

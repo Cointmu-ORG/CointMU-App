@@ -56,7 +56,9 @@
       "confirmDeleteDust": "此帐户中有少量余额。您确定要永久删除它并失去这些资金吗？",
       "deleteTitle": "删除帐户",
       "cancel": "取消",
-      "delete": "删除"
+      "delete": "删除",
+      "tokensTitle": "已隐藏的代币",
+      "unhideToken": "重新显示 {{symbol}}"
     },
     "receive": {
       "title": "接收 CMU",
@@ -106,7 +108,8 @@
       "total": "总计",
       "back": "返回",
       "confirm": "确认并发送",
-      "sending": "正在发送…"
+      "sending": "正在发送…",
+      "contract": "代币合约"
     },
     "importKeystore": {
       "title": "导入密钥库",
@@ -127,6 +130,28 @@
       "detailsFailed": "无法获取代币详情。请确认它是此网络上有效的 ERC-20 合约。",
       "addFailed": "添加代币时出错。",
       "verifying": "正在验证..."
+    },
+    "tokenDetail": {
+      "close": "关闭",
+      "balance": "余额",
+      "contract": "合约地址",
+      "spoofWarning": "任何人都可以创建代币,其名称和符号可能模仿其他代币。信任之前请核对合约地址。",
+      "hide": "隐藏代币",
+      "logo": {
+        "title": "标志",
+        "hint": "PNG、JPEG 或 WebP,最大 2 MB。裁剪为 128×128 正方形,仅保存在本设备上。",
+        "upload": "上传标志",
+        "save": "保存标志",
+        "cancel": "取消",
+        "reset": "恢复默认",
+        "preview": "新标志预览",
+        "errors": {
+          "tooLarge": "文件超过 2 MB。",
+          "unsupported": "仅允许 PNG、JPEG 和 WebP 图片(不允许 SVG)。",
+          "unreadable": "无法读取此图片。",
+          "saveFailed": "无法保存标志,请重试。"
+        }
+      }
     }
   },
   "historyFilter": {

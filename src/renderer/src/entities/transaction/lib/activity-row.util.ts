@@ -71,7 +71,9 @@ export function toActivityRow(
     id: activity.id,
     kind: activity.kind,
     type: ACTIVITY_TYPES[activity.kind],
-    title: t(TITLE_KEYS[activity.kind]),
+    title: activity.token
+      ? t("common:activity.sentToken", { symbol: activity.token.symbol })
+      : t(TITLE_KEYS[activity.kind]),
     subtitle: describeActivity(activity, t),
     amount: activity.amount,
     timestamp: activity.timestamp,
@@ -80,5 +82,6 @@ export function toActivityRow(
     hash: activity.hash,
     from: activity.from,
     to: activity.to,
+    token: activity.token,
   };
 }

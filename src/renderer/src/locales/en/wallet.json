@@ -56,7 +56,9 @@
       "confirmDeleteDust": "This account has a small balance. Are you sure you want to permanently delete it and lose the funds?",
       "deleteTitle": "Delete Account",
       "cancel": "Cancel",
-      "delete": "Delete"
+      "delete": "Delete",
+      "tokensTitle": "Hidden tokens",
+      "unhideToken": "Show {{symbol}} again"
     },
     "receive": {
       "title": "Receive CMU",
@@ -106,7 +108,8 @@
       "total": "Total",
       "back": "Back",
       "confirm": "Confirm & Send",
-      "sending": "Sending…"
+      "sending": "Sending…",
+      "contract": "Token contract"
     },
     "importKeystore": {
       "title": "Import keystore",
@@ -127,6 +130,28 @@
       "detailsFailed": "Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.",
       "addFailed": "An error occurred while adding the token.",
       "verifying": "Verifying..."
+    },
+    "tokenDetail": {
+      "close": "Close",
+      "balance": "Balance",
+      "contract": "Contract address",
+      "spoofWarning": "Anyone can create a token, and its name and symbol can copy another token. Check the contract address before trusting it.",
+      "hide": "Hide token",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG or WebP, up to 2 MB. Cropped to a 128×128 square and stored only on this device.",
+        "upload": "Upload logo",
+        "save": "Save logo",
+        "cancel": "Cancel",
+        "reset": "Reset to default",
+        "preview": "New logo preview",
+        "errors": {
+          "tooLarge": "The file is larger than 2 MB.",
+          "unsupported": "Only PNG, JPEG and WebP images are allowed (SVG is not).",
+          "unreadable": "This image could not be read.",
+          "saveFailed": "The logo could not be saved. Try again."
+        }
+      }
     }
   },
   "historyFilter": {
