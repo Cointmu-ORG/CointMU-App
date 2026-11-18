@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { ASSET_LOGO_CHANNELS, TOKEN_CHANNELS } from "../../bridge/ipc-channels";
 import { AssetLogoStore } from "../tokens/assetLogos";
 import { getDetectedNfts, getDetectedTokens } from "../tokens/detectedTokens";
+import { isNftUri, loadNftMedia } from "../tokens/nftMedia";
 import { isAddress } from "../tokens/tokenScanService";
 
 /**
@@ -22,6 +23,12 @@ export async function registerTokenHandlers(): Promise<void> {
       );
     }
     return getDetectedNfts(account);
+  });
+  ipcMain.handle(TOKEN_CHANNELS.FETCH_NFT_MEDIA, (_, tokenUri: unknown) => {
+    if (!isNftUri(tokenUri)) {
+      throw new TypeError(`${TOKEN_CHANNELS.FETCH_NFT_MEDIA}: invalid URI`);
+    }
+    return loadNftMedia(tokenUri);
   });
 
   const { default: Store } = await import("electron-store");

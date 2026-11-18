@@ -27,6 +27,7 @@ import type {
   ChainDataTarget,
   DetectedNfts,
   DetectedTokens,
+  NftMedia,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -131,6 +132,8 @@ const api = {
       ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED, account),
     getDetectedNfts: (account: string): Promise<DetectedNfts> =>
       ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED_NFTS, account),
+    fetchNftMedia: (tokenUri: string): Promise<NftMedia> =>
+      ipcRenderer.invoke(TOKEN_CHANNELS.FETCH_NFT_MEDIA, tokenUri),
     onChanged: (callback: () => void): (() => void) => {
       const handler = (): void => callback();
       ipcRenderer.on(TOKEN_CHANNELS.CHANGED, handler);

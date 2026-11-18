@@ -437,6 +437,14 @@ export interface DetectedNft {
   readonly tokenId: string;
 }
 
+/** An NFT's metadata, fetched and checked in main. */
+export interface NftMedia {
+  readonly name: string;
+  readonly description: string;
+  /** A data: URL of a PNG, JPEG, GIF, WebP or SVG image, or "" when there is none. */
+  readonly image: string;
+}
+
 export interface DetectedNfts {
   readonly nfts: readonly DetectedNft[];
   readonly scan: TokenScanProgress;

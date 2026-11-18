@@ -13,8 +13,6 @@ const ERC1155_ABI_FRAGMENTS = [
   "function balanceOf(address account, uint256 id) view returns (uint256)",
 ];
 
-const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
-
 // Keys of the renderer scan that the main-process scanner replaced.
 const LEGACY_STORAGE_PREFIXES = ["cmu_nft_scan_block_", "cmu_nft_cache_"];
 
@@ -58,21 +56,8 @@ export interface NFTMetadata {
 }
 
 /**
- * Normalizes an IPFS, ar://, or plain HTTP URI into a resolvable HTTP URL.
- * @param {string} uri - The raw URI from the contract's tokenURI response.
- * @returns {string} A fully qualified HTTP URL.
- */
-function normalizeUri(uri: string): string {
-  if (!uri) return "";
-  if (uri.startsWith("ipfs://")) {
-    return uri.replace("ipfs://", IPFS_GATEWAY);
-  }
-  return uri;
-}
-
-/**
- * Fetches and parses JSON metadata for a single NFT token by calling tokenURI or
- * uri on the contract and resolving the returned URI to its HTTP equivalent.
+ * Reads tokenURI (or uri) from the contract and has main fetch the metadata
+ * and image, so the renderer never contacts the metadata host itself.
  * Falls back gracefully when the contract does not implement the expected method
  * or when the metadata endpoint is unreachable.
  * @param {string} contractAddress - The NFT contract address.
@@ -114,23 +99,18 @@ export async function resolveNFTMetadata(
     // tokenURI/uri call failed — return fallback
   }
 
-  const resolvedUri = normalizeUri(tokenUri);
-
   let name = i18next.t("walletTabs:nft.fallbackName", { id: tokenId });
   let description = "";
   let image = "";
 
-  if (resolvedUri) {
+  if (tokenUri) {
     try {
-      const response = await fetch(resolvedUri);
-      if (response.ok) {
-        const json = await response.json();
-        name = json.name || name;
-        description = json.description || "";
-        image = normalizeUri(json.image || "");
-      }
-    } catch {
-      // Metadata fetch failed — use fallbacks
+      const media = await window.api.tokens.fetchNftMedia(tokenUri);
+      name = media.name || name;
+      description = media.description;
+      image = media.image;
+    } catch (err) {
+      console.warn("[NFTService] Metadata not loaded", err);
     }
   }
 

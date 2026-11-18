@@ -1,6 +1,6 @@
 // Must stay the first import: see bootstrap.ts for why the evaluation order matters.
 import "./bootstrap";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, session } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerCryptoHandlers } from "../wallet/crypto";
 import { registerSystemHandlers } from "./system";
@@ -54,6 +54,7 @@ import {
 import { registerExplorerHandlers } from "../ipc/explorerIpc";
 import { registerShellHandlers } from "../ipc/shellIpc";
 import { registerTokenHandlers } from "../ipc/tokenIpc";
+import { applyContentSecurityPolicy } from "./contentSecurityPolicy";
 import { startTokenScan, stopTokenScan } from "../tokens/tokenScanService";
 import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
 import { createQuitConfirmation } from "./quitConfirmation";
@@ -147,6 +148,7 @@ app.whenReady().then(async () => {
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
 
+  applyContentSecurityPolicy(session.defaultSession, app.isPackaged);
   const win = createWindow();
   applyStoredZoom(store, win);
   initUpdater(win, store);
