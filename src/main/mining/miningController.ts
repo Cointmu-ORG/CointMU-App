@@ -16,6 +16,7 @@ import { createMiningPolicy } from "./miningPolicySetup";
 import type { MiningAutoStart } from "./miningAutoStart";
 import { createMiningAutoStart } from "./miningAutoStartSetup";
 import { showAutoStartNotice } from "./miningAutoStartNotice";
+import { resolveMinerThreads } from "./minerThreads";
 
 /**
  * Central controller for managing the underlying Geth mining process.
@@ -48,6 +49,12 @@ export class MiningController {
       isStarted: () => this.isStarted,
       start: () => this.applyMining(true),
       publish: (state) => this.publishAutoStart(state),
+    });
+    // Switching between the CPU miner and an external miner applies at once.
+    store.onDidChange("mining.externalMiner", () => {
+      this.restartMinerIfRunning().catch((err: unknown) => {
+        console.warn("[mining] Could not switch the miner mode:", err);
+      });
     });
     this.setupIpcHandlers();
   }
@@ -131,12 +138,24 @@ export class MiningController {
    */
   private async updateThreads(cores: number): Promise<void> {
     this.store.set("mining.cpuThreads", cores);
-    const actuallyMining = await callGethRpc(this.rpcPort, "eth_mining");
+    await this.restartMinerIfRunning();
+  }
 
-    if (actuallyMining === true || actuallyMining === "true") {
-      await callGethRpc(this.rpcPort, "miner_stop");
-      await callGethRpc(this.rpcPort, "miner_start", [Math.floor(cores)]);
-    }
+  /**
+   * Restarts a running miner with the stored thread count: none while an
+   * external miner is in use (mining.externalMiner). A stopped or paused
+   * miner is left alone; its next start reads the same settings.
+   */
+  private async restartMinerIfRunning(): Promise<void> {
+    const actuallyMining = await callGethRpc(this.rpcPort, "eth_mining");
+    if (actuallyMining !== true && actuallyMining !== "true") return;
+    await callGethRpc(this.rpcPort, "miner_stop");
+    await callGethRpc(this.rpcPort, "miner_start", [
+      resolveMinerThreads(
+        this.store.get("mining.externalMiner"),
+        this.store.get("mining.cpuThreads"),
+      ),
+    ]);
   }
 
   /**
