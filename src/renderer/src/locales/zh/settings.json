@@ -163,6 +163,27 @@
     "saving": "保存中...",
     "exportFailed": "无法保存扩展 ZIP。请尝试其他文件夹；如果仍然失败，请附上日志报告问题。"
   },
+  "otherConnections": {
+    "title": "其他连接",
+    "description": "除浏览器扩展外，本机上连接到您节点的程序。",
+    "fairnessWarning": "GPU 的挖矿速度远高于 CPU。单个 GPU 矿机就可能拿走大部分区块奖励，并提高所有 CPU 挖矿者的难度。请仅在已达成一致的情况下使用。",
+    "gpuMiner": "外部 GPU 矿机",
+    "externalTitle": "使用外部矿机",
+    "externalDesc": "内置 CPU 矿机保持关闭。请在挖矿页面开始挖矿，节点才会分发任务。CointMU 不会安装或运行矿机程序，需由您自行操作。",
+    "endpointTitle": "getWork 端点",
+    "endpointDesc": "仅可从本机访问。网络上的其他设备无法连接。",
+    "rewardTitle": "奖励地址",
+    "rewardMissing": "未设置。请在 设置 → 挖矿 中选择。",
+    "statusTitle": "状态",
+    "statusOff": "已关闭。正在使用内置 CPU 矿机。",
+    "statusIdle": "挖矿已停止。请在挖矿页面开始挖矿以分发任务。",
+    "statusWaiting": "正在分发任务。尚无外部矿机上报算力。",
+    "statusReporting": "外部矿机上报 {{hashrate}}",
+    "commandTitle": "示例命令 (ethminer)",
+    "commandDesc": "OpenCL 请添加 -G，CUDA 请添加 -U。任何支持通过 HTTP 使用 getWork 的矿机都以相同方式连接；仅支持 Stratum 的矿机无法连接。",
+    "copy": "复制",
+    "copied": "已复制"
+  },
   "advanced": {
     "subtitle": "开发人员 API、本地存储和诊断",
     "rpcNetwork": "RPC/网络",

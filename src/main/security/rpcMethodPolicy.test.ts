@@ -64,6 +64,23 @@ describe("isRendererRpcAllowed", () => {
   });
 });
 
+// An external getWork miner (issue #58) talks to the HTTP endpoint directly.
+describe("external getWork miner", () => {
+  it.each(["eth_getWork", "eth_submitWork", "eth_submitHashrate"])(
+    "%s is in a namespace the HTTP endpoint serves",
+    (method) => {
+      expect(isPublicReadMethod(method)).toBe(true);
+      expect(GETH_HTTP_API_NAMESPACES.split(",")).toContain(
+        method.split("_")[0],
+      );
+    },
+  );
+
+  it("needs no node-control namespace over HTTP", () => {
+    expect(GETH_HTTP_API_NAMESPACES).toBe("eth,net,web3");
+  });
+});
+
 describe("isPrivilegedNodeMethod", () => {
   it.each(["admin_addPeer", "miner_start"])("routes %s over IPC", (method) => {
     expect(isPrivilegedNodeMethod(method)).toBe(true);

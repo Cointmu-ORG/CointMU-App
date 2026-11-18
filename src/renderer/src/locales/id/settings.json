@@ -163,6 +163,27 @@
     "saving": "Menyimpan...",
     "exportFailed": "ZIP ekstensi tidak dapat disimpan. Coba folder lain; jika masih gagal, laporkan masalah beserta log-nya."
   },
+  "otherConnections": {
+    "title": "Koneksi Lain",
+    "description": "Program di komputer ini yang terhubung ke node Anda, selain ekstensi peramban.",
+    "fairnessWarning": "GPU menambang jauh lebih cepat daripada CPU. Satu penambang GPU dapat mengambil sebagian besar hadiah blok dan menaikkan tingkat kesulitan bagi semua yang menambang dengan CPU. Gunakan hanya jika hal itu sudah disepakati.",
+    "gpuMiner": "Penambang GPU eksternal",
+    "externalTitle": "Gunakan penambang eksternal",
+    "externalDesc": "Penambang CPU bawaan tetap mati. Mulai penambangan di halaman Mining agar node Anda membagikan pekerjaan. CointMU tidak memasang atau menjalankan program penambang; Anda sendiri yang melakukannya.",
+    "endpointTitle": "Endpoint getWork",
+    "endpointDesc": "Hanya dapat dijangkau dari komputer ini. Mesin lain di jaringan tidak dapat terhubung.",
+    "rewardTitle": "Alamat hadiah",
+    "rewardMissing": "Belum diatur. Pilih di Pengaturan → Mining.",
+    "statusTitle": "Status",
+    "statusOff": "Mati. Penambang CPU bawaan sedang digunakan.",
+    "statusIdle": "Penambangan berhenti. Mulai di halaman Mining untuk membagikan pekerjaan.",
+    "statusWaiting": "Membagikan pekerjaan. Belum ada penambang eksternal yang melaporkan hashrate.",
+    "statusReporting": "Penambang eksternal melaporkan {{hashrate}}",
+    "commandTitle": "Contoh perintah (ethminer)",
+    "commandDesc": "Tambahkan -G untuk OpenCL atau -U untuk CUDA. Penambang apa pun yang mendukung getWork lewat HTTP terhubung dengan cara yang sama; penambang yang hanya mendukung Stratum tidak bisa.",
+    "copy": "Salin",
+    "copied": "Tersalin"
+  },
   "advanced": {
     "subtitle": "API Pengembang, penyimpanan lokal, dan diagnostik",
     "rpcNetwork": "RPC/Jaringan",

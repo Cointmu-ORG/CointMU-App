@@ -4,8 +4,8 @@ import { callGethRpc } from "../geth/rpc/rpcUtils";
 import type { AppStore } from "../store/appStore";
 import type { MiningConditions } from "./miningPolicy";
 import { MiningPolicy } from "./miningPolicyRunner";
+import { resolveMinerThreads } from "./minerThreads";
 
-const DEFAULT_THREADS = 4;
 const DEFAULT_IDLE_MINUTES = 2;
 const SECONDS_PER_MINUTE = 60;
 const MINUTES_PER_HOUR = 60;
@@ -70,11 +70,14 @@ export function createMiningPolicy(
     isMinerRunning: async () =>
       (await callGethRpc(rpcPort, "eth_mining")) === true,
     startMiner: async () => {
-      const threads = Number(store.get("mining.cpuThreads")) || DEFAULT_THREADS;
+      const threads = resolveMinerThreads(
+        store.get("mining.externalMiner"),
+        store.get("mining.cpuThreads"),
+      );
       await callGethRpc(rpcPort, "miner_setEtherbase", [
         store.get("mining.poolAddress"),
       ]);
-      await callGethRpc(rpcPort, "miner_start", [Math.floor(threads)]);
+      await callGethRpc(rpcPort, "miner_start", [threads]);
     },
     stopMiner: async () => {
       await callGethRpc(rpcPort, "miner_stop");
