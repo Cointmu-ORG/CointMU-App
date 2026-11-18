@@ -1,6 +1,7 @@
 import { type ChangeEvent, type JSX, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertCircle, ImageUp, RotateCcw } from "lucide-react";
+import { localizeIpcError } from "@/shared/lib";
 import {
   LogoFileError,
   checkLogoFile,
@@ -10,9 +11,8 @@ import { useAssetLogoStore } from "../model/asset-logo.store";
 import { TokenIcon } from "./token-icon.component";
 
 const ACCEPTED_TYPES = "image/png,image/jpeg,image/webp";
-const SAVE_FAILED = "saveFailed";
-
-type EditorError = LogoFileError | typeof SAVE_FAILED;
+const ERROR_KEY_PREFIX = "wallet:modals.tokenDetail.logo.errors.";
+const SAVE_FAILED_KEY = `${ERROR_KEY_PREFIX}saveFailed`;
 
 interface AssetLogoEditorProps {
   /** "native" or a lowercase contract address. */
@@ -41,7 +41,8 @@ function AssetLogoEditor({
   const save = useAssetLogoStore((s) => s.save);
   const reset = useAssetLogoStore((s) => s.reset);
   const [preview, setPreview] = useState<string | null>(null);
-  const [error, setError] = useState<EditorError | null>(null);
+  // Already translated: file checks and main-process codes use different namespaces.
+  const [error, setError] = useState<string | null>(null);
   const [isBusy, setIsBusy] = useState(false);
 
   const handleFile = async (
@@ -54,13 +55,13 @@ function AssetLogoEditor({
     setPreview(null);
     const problem = await checkLogoFile(file);
     if (problem !== null) {
-      setError(problem);
+      setError(t(`${ERROR_KEY_PREFIX}${problem}`));
       return;
     }
     try {
       setPreview(await reencodeLogo(file));
     } catch {
-      setError(LogoFileError.UNREADABLE);
+      setError(t(`${ERROR_KEY_PREFIX}${LogoFileError.UNREADABLE}`));
     }
   };
 
@@ -70,8 +71,8 @@ function AssetLogoEditor({
     try {
       await action();
       setPreview(null);
-    } catch {
-      setError(SAVE_FAILED);
+    } catch (err) {
+      setError(localizeIpcError(err, SAVE_FAILED_KEY));
     } finally {
       setIsBusy(false);
     }
@@ -118,9 +119,7 @@ function AssetLogoEditor({
             height={14}
             className="flex-shrink-0 mt-0.5"
           />
-          <p className="text-xs font-medium leading-relaxed">
-            {t(`wallet:modals.tokenDetail.logo.errors.${error}`)}
-          </p>
+          <p className="text-xs font-medium leading-relaxed">{error}</p>
         </div>
       )}
 

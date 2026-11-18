@@ -2,6 +2,7 @@ import { Interface } from "ethers";
 import { describe, expect, it } from "vitest";
 import { TRANSFER_TOPIC, sanitizeTokenText } from "./erc20Calls";
 import {
+  FULL_REFRESH_INTERVAL_BLOCKS,
   LOG_BATCH_BLOCKS,
   MAX_TOKENS_PER_ACCOUNT,
   REORG_SAFE_DEPTH,
@@ -30,6 +31,7 @@ const topic = (address: string): string =>
 
 interface FakeLog extends RawLog {
   readonly block: number;
+  readonly from: string;
   readonly to: string;
 }
 
@@ -42,6 +44,7 @@ function fakeNode(head: number) {
     balances: new Map<string, bigint>(),
     reverting: new Set<string>(),
     logQueries: [] as Array<[string, number, number]>,
+    balanceCalls: [] as string[],
   };
   const hashOf = (n: number): string =>
     n === 0 ? GENESIS : (node.hashes.get(n) ?? `0xblock${n}`);
@@ -54,10 +57,15 @@ function fakeNode(head: number) {
         (log) => log.to === account && log.block >= from && log.block <= to,
       );
     },
+    transferLogsFrom: async (account, from, to) =>
+      node.logs.filter(
+        (log) => log.from === account && log.block >= from && log.block <= to,
+      ),
     call: async (to, data) => {
       if (node.reverting.has(to)) return null;
       const { name } = erc20.parseTransaction({ data })!;
       if (name === "balanceOf") {
+        node.balanceCalls.push(to);
         return erc20.encodeFunctionResult(name, [node.balances.get(to) ?? 0n]);
       }
       const values = { name: "Token", symbol: "TKN", decimals: 6 };
@@ -69,10 +77,16 @@ function fakeNode(head: number) {
   return { node, rpc };
 }
 
-const erc20Log = (contract: string, to: string, block: number): FakeLog => ({
+const erc20Log = (
+  contract: string,
+  to: string,
+  block: number,
+  from = OTHER,
+): FakeLog => ({
   address: contract,
-  topics: [TRANSFER_TOPIC, topic(OTHER), topic(to)],
+  topics: [TRANSFER_TOPIC, topic(from), topic(to)],
   block,
+  from,
   to,
 });
 const erc721Log = (contract: string, to: string, block: number): FakeLog => ({
@@ -215,6 +229,70 @@ describe("TokenScanner", () => {
     await runUntilIdle(scanner);
 
     expect(scanner.snapshot(ME).tokens).toHaveLength(MAX_TOKENS_PER_ACCOUNT);
+  });
+});
+
+describe("TokenScanner balance refresh", () => {
+  async function followingScanner() {
+    const { node, rpc } = fakeNode(10);
+    node.logs.push(erc20Log(TOKEN_A, ME, 3), erc20Log(TOKEN_B, ME, 4));
+    node.balances.set(TOKEN_A, 5n).set(TOKEN_B, 7n);
+    const state = emptyScanState();
+    const scanner = new TokenScanner(rpc, state);
+    scanner.setAccounts([ME]);
+    await runUntilIdle(scanner);
+    node.balanceCalls.length = 0;
+    return { node, rpc, state, scanner };
+  }
+
+  it("reads no balance on a new head without Transfer logs for the account", async () => {
+    const { node, scanner } = await followingScanner();
+
+    node.head = 11;
+    node.logs.push(erc20Log(TOKEN_A, OTHER, 11, TOKEN_B));
+    await runUntilIdle(scanner);
+
+    expect(node.balanceCalls).toEqual([]);
+  });
+
+  it("re-reads only the contracts in the new block's inbound and outbound logs", async () => {
+    const { node, scanner } = await followingScanner();
+
+    node.head = 12;
+    node.logs.push(erc20Log(TOKEN_B, OTHER, 12, ME));
+    node.balances.set(TOKEN_B, 2n);
+    await runUntilIdle(scanner);
+
+    expect(node.balanceCalls).toEqual([TOKEN_B]);
+    expect(scanner.snapshot(ME).tokens.map((t) => t.balance)).toEqual([
+      "5",
+      "2",
+    ]);
+  });
+
+  it(`reads every balance after ${FULL_REFRESH_INTERVAL_BLOCKS} blocks`, async () => {
+    const { node, scanner } = await followingScanner();
+
+    node.head = 10 + FULL_REFRESH_INTERVAL_BLOCKS - 1;
+    await runUntilIdle(scanner);
+    expect(node.balanceCalls).toEqual([]);
+    node.head += 1;
+    await runUntilIdle(scanner);
+
+    expect(node.balanceCalls.sort()).toEqual([TOKEN_A, TOKEN_B]);
+  });
+
+  it("reads every balance after a reorg and on restart", async () => {
+    const { node, rpc, state, scanner } = await followingScanner();
+
+    node.hashes.set(10, "0xreorged");
+    await runUntilIdle(scanner);
+    expect(node.balanceCalls.sort()).toEqual([TOKEN_A, TOKEN_B]);
+    node.balanceCalls.length = 0;
+    const restarted = new TokenScanner(rpc, state);
+    await runUntilIdle(restarted);
+
+    expect(node.balanceCalls.sort()).toEqual([TOKEN_A, TOKEN_B]);
   });
 });
 

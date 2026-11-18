@@ -69,6 +69,7 @@
     "WALLET_UNSUPPORTED_FORMAT": "Format dompet ini tidak didukung.",
     "WALLET_INCORRECT_PASSWORD": "Kata sandi salah.",
     "MINING_NO_REWARD_ADDRESS": "Alamat hadiah mining belum diatur. Atur di Pengaturan Mining.",
+    "ASSET_LOGO_LIMIT_REACHED": "Logo kustom bisa disimpan untuk maksimal 250 aset. Reset salah satu sebelum menambah yang baru.",
     "decryptFailed": "Dompet tidak dapat didekripsi."
   },
   "shell": {
