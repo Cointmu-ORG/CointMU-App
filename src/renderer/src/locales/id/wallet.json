@@ -79,8 +79,6 @@
       "couldNotEstimate": "Tidak dapat memperkirakan",
       "cmuGasBalance": "Saldo Gas CMU",
       "totalDeducted": "Total Dipotong",
-      "reviewSign": "Tinjau & Tanda Tangani",
-      "pendingConf": "Menunggu Konfirmasi...",
       "errorRecipientReq": "Alamat penerima diperlukan.",
       "errorInvalidAddress": "Format alamat penerima tidak valid.",
       "errorValidAmount": "Masukkan jumlah yang valid lebih dari nol.",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "Transaksi gagal",
       "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi",
       "passwordLabel": "Password wallet",
-      "passwordRequired": "Masukkan password wallet untuk mengirim."
+      "passwordRequired": "Masukkan password wallet untuk mengirim.",
+      "continueBtn": "Lanjut"
+    },
+    "sendConfirm": {
+      "title": "Konfirmasi pengiriman",
+      "subtitle": "Periksa semua detail. Transaksi tidak dapat dibatalkan setelah dikirim.",
+      "from": "Dari",
+      "to": "Ke",
+      "asset": "Aset",
+      "total": "Total",
+      "back": "Kembali",
+      "confirm": "Konfirmasi & Kirim",
+      "sending": "Mengirim…"
     },
     "importKeystore": {
       "title": "Impor keystore",

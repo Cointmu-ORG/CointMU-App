@@ -12,7 +12,6 @@ interface WalletUiStore {
   sendGasPrice: string;
   sendSelectedTokenAddress: string;
   sendLoading: boolean;
-  sendError: string;
   sendSuccess: string;
   addAccountType: AddAccountType;
   importInput: string;
@@ -24,7 +23,6 @@ interface WalletUiStore {
   setSendGasPrice: (value: string) => void;
   setSendSelectedTokenAddress: (value: string) => void;
   setSendLoading: (value: boolean) => void;
-  setSendError: (value: string) => void;
   setSendSuccess: (value: string) => void;
   setAddAccountType: (value: AddAccountType) => void;
   setImportInput: (value: string) => void;
@@ -47,7 +45,6 @@ export const useWalletUiStore = create<WalletUiStore>((set) => ({
   sendGasPrice: "0",
   sendSelectedTokenAddress: "native",
   sendLoading: false,
-  sendError: "",
   sendSuccess: "",
   addAccountType: "SELECT",
   importInput: "",
@@ -60,7 +57,6 @@ export const useWalletUiStore = create<WalletUiStore>((set) => ({
   setSendSelectedTokenAddress: (sendSelectedTokenAddress) =>
     set({ sendSelectedTokenAddress }),
   setSendLoading: (sendLoading) => set({ sendLoading }),
-  setSendError: (sendError) => set({ sendError }),
   setSendSuccess: (sendSuccess) => set({ sendSuccess }),
   setAddAccountType: (addAccountType) => set({ addAccountType }),
   setImportInput: (importInput) => set({ importInput }),
@@ -69,7 +65,6 @@ export const useWalletUiStore = create<WalletUiStore>((set) => ({
     set({
       sendTo: "",
       sendAmount: "",
-      sendError: "",
       sendSuccess: "",
       sendLoading: false,
       sendSelectedTokenAddress: "native",

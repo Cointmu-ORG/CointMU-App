@@ -79,8 +79,6 @@
       "couldNotEstimate": "Could not estimate",
       "cmuGasBalance": "CMU Gas Balance",
       "totalDeducted": "Total Deducted",
-      "reviewSign": "Review & Sign",
-      "pendingConf": "Pending Confirmation...",
       "errorRecipientReq": "Recipient address is required.",
       "errorInvalidAddress": "Invalid recipient address format.",
       "errorValidAmount": "Enter a valid amount greater than zero.",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "Transaction failed",
       "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed",
       "passwordLabel": "Wallet password",
-      "passwordRequired": "Enter your wallet password to send."
+      "passwordRequired": "Enter your wallet password to send.",
+      "continueBtn": "Continue"
+    },
+    "sendConfirm": {
+      "title": "Confirm send",
+      "subtitle": "Check every detail. Transactions can't be reversed once sent.",
+      "from": "From",
+      "to": "To",
+      "asset": "Asset",
+      "total": "Total",
+      "back": "Back",
+      "confirm": "Confirm & Send",
+      "sending": "Sending…"
     },
     "importKeystore": {
       "title": "Import keystore",

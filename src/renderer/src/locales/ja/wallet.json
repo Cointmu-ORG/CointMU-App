@@ -79,8 +79,6 @@
       "couldNotEstimate": "見積もりできませんでした",
       "cmuGasBalance": "CMUガス残高",
       "totalDeducted": "合計控除額",
-      "reviewSign": "確認と署名",
-      "pendingConf": "確認待ち...",
       "errorRecipientReq": "受取人のアドレスは必須です。",
       "errorInvalidAddress": "無効な受取人アドレスの形式です。",
       "errorValidAmount": "ゼロより大きい有効な金額を入力してください。",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "トランザクションが失敗しました",
       "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした",
       "passwordLabel": "ウォレットのパスワード",
-      "passwordRequired": "送金するにはウォレットのパスワードを入力してください。"
+      "passwordRequired": "送金するにはウォレットのパスワードを入力してください。",
+      "continueBtn": "次へ"
+    },
+    "sendConfirm": {
+      "title": "送金の確認",
+      "subtitle": "すべての内容を確認してください。送信後のトランザクションは取り消せません。",
+      "from": "送信元",
+      "to": "送信先",
+      "asset": "アセット",
+      "total": "合計",
+      "back": "戻る",
+      "confirm": "確認して送信",
+      "sending": "送信中…"
     },
     "importKeystore": {
       "title": "キーストアをインポート",

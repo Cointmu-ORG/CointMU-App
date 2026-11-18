@@ -79,8 +79,6 @@
       "couldNotEstimate": "No se pudo estimar",
       "cmuGasBalance": "Saldo de Gas CMU",
       "totalDeducted": "Total Deducido",
-      "reviewSign": "Revisar y Firmar",
-      "pendingConf": "Pendiente de Confirmación...",
       "errorRecipientReq": "La dirección del destinatario es obligatoria.",
       "errorInvalidAddress": "Formato de dirección de destinatario no válido.",
       "errorValidAmount": "Ingresa una cantidad válida mayor que cero.",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "Transacción fallida",
       "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada",
       "passwordLabel": "Contraseña de la billetera",
-      "passwordRequired": "Introduce la contraseña de la billetera para enviar."
+      "passwordRequired": "Introduce la contraseña de la billetera para enviar.",
+      "continueBtn": "Continuar"
+    },
+    "sendConfirm": {
+      "title": "Confirmar envío",
+      "subtitle": "Revisa todos los detalles. Una transacción enviada no se puede revertir.",
+      "from": "De",
+      "to": "Para",
+      "asset": "Activo",
+      "total": "Total",
+      "back": "Atrás",
+      "confirm": "Confirmar y enviar",
+      "sending": "Enviando…"
     },
     "importKeystore": {
       "title": "Importar almacén de claves",

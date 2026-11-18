@@ -79,8 +79,6 @@
       "couldNotEstimate": "无法估算",
       "cmuGasBalance": "CMU Gas 余额",
       "totalDeducted": "总扣除额",
-      "reviewSign": "审核并签名",
-      "pendingConf": "等待确认中...",
       "errorRecipientReq": "收款地址为必填项。",
       "errorInvalidAddress": "收款地址格式无效。",
       "errorValidAmount": "请输入大于零的有效金额。",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "交易失败",
       "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认",
       "passwordLabel": "钱包密码",
-      "passwordRequired": "请输入钱包密码后再发送。"
+      "passwordRequired": "请输入钱包密码后再发送。",
+      "continueBtn": "继续"
+    },
+    "sendConfirm": {
+      "title": "确认发送",
+      "subtitle": "请核对所有信息。交易发送后无法撤销。",
+      "from": "发送方",
+      "to": "接收方",
+      "asset": "资产",
+      "total": "总计",
+      "back": "返回",
+      "confirm": "确认并发送",
+      "sending": "正在发送…"
     },
     "importKeystore": {
       "title": "导入密钥库",
