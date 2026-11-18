@@ -54,7 +54,8 @@
     "from": "来自 {{address}}",
     "hash": "哈希 {{hash}}...",
     "fromMiningPool": "来自矿池 · 区块 #{{block}}",
-    "confirmations_other": "{{count}} 次确认"
+    "confirmations_other": "{{count}} 次确认",
+    "sentToken": "已发送 {{symbol}}"
   },
   "dialog": {
     "exportExtensionTitle": "导出伴侣浏览器扩展",

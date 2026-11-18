@@ -1,12 +1,12 @@
 import { BrowserWindow } from "electron";
 import { setTimeout as delay } from "node:timers/promises";
 import { TOKEN_CHANNELS } from "../../bridge/ipc-channels";
-import type { DetectedTokens } from "../../bridge/types";
 import { getNetworkId } from "../geth/process/networkConfig";
 import { getRpcPort } from "../geth/process/ports";
 import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 import type { AppStore } from "../store/appStore";
-import { TRANSFER_TOPIC, type TokenMeta } from "./erc20Calls";
+import { setActiveScanner } from "./detectedTokens";
+import { TRANSFER_TOPIC } from "./erc20Calls";
 import {
   ScanOutcome,
   TokenScanner,
@@ -107,7 +107,6 @@ function loadState(raw: unknown): TokenScanState {
   return { ...emptyScanState(), ...state } as TokenScanState;
 }
 
-let scanner: TokenScanner | null = null;
 const stopController = new AbortController();
 
 /**
@@ -126,7 +125,7 @@ export async function startTokenScan(store: AppStore): Promise<void> {
   store.onDidChange("accounts", (accounts: unknown) =>
     started.setAccounts(walletAddresses(accounts)),
   );
-  scanner = started;
+  setActiveScanner(started);
 
   let saved = JSON.stringify(state);
   while (!stopController.signal.aborted) {
@@ -157,22 +156,6 @@ export async function startTokenScan(store: AppStore): Promise<void> {
 /** Ends the scan loop (app quit). */
 export function stopTokenScan(): void {
   stopController.abort();
-}
-
-/** @returns The account's detected tokens with a balance, and its scan progress. */
-export function getDetectedTokens(account: string): DetectedTokens {
-  if (scanner === null) {
-    return {
-      tokens: [],
-      scan: { scannedBlock: 0, headBlock: null, isComplete: false },
-    };
-  }
-  return scanner.snapshot(account);
-}
-
-/** @returns Metadata of a contract the scan detected, for activity rows. */
-export function detectedTokenMeta(contract: string): TokenMeta | undefined {
-  return scanner?.tokenMeta(contract);
 }
 
 export { isAddress };

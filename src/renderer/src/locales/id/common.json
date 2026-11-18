@@ -54,7 +54,8 @@
     "from": "Dari {{address}}",
     "hash": "Hash {{hash}}...",
     "fromMiningPool": "Dari mining pool · blok #{{block}}",
-    "confirmations_other": "{{count}} konfirmasi"
+    "confirmations_other": "{{count}} konfirmasi",
+    "sentToken": "Mengirim {{symbol}}"
   },
   "dialog": {
     "exportExtensionTitle": "Ekspor Ekstensi Peramban Pendamping",

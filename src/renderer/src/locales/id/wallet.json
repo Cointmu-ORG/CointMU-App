@@ -108,7 +108,8 @@
       "total": "Total",
       "back": "Kembali",
       "confirm": "Konfirmasi & Kirim",
-      "sending": "Mengirim…"
+      "sending": "Mengirim…",
+      "contract": "Kontrak token"
     },
     "importKeystore": {
       "title": "Impor keystore",

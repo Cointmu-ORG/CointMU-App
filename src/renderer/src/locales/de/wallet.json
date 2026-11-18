@@ -108,7 +108,8 @@
       "total": "Gesamt",
       "back": "Zurück",
       "confirm": "Bestätigen & senden",
-      "sending": "Wird gesendet…"
+      "sending": "Wird gesendet…",
+      "contract": "Token-Vertrag"
     },
     "importKeystore": {
       "title": "Keystore importieren",

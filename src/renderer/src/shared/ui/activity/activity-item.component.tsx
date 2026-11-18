@@ -21,6 +21,8 @@ export interface ActivityData {
   from?: string;
   to?: string;
   pending?: boolean;
+  /** Set for a token transfer; the amount is then in this token, not CMU. */
+  token?: { address: string; symbol: string };
 }
 
 interface ActivityItemProps {
@@ -100,7 +102,7 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
         >
           <PrivateAmount>{displayAmount}</PrivateAmount>{" "}
           <span className="text-[10px] text-slate-400 font-sans ml-0.5">
-            CMU
+            {activity.token?.symbol || "CMU"}
           </span>
         </p>
         <p className="text-xs text-slate-400 mt-0.5">{activity.timestampStr}</p>

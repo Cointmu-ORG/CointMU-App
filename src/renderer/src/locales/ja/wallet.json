@@ -108,7 +108,8 @@
       "total": "合計",
       "back": "戻る",
       "confirm": "確認して送信",
-      "sending": "送信中…"
+      "sending": "送信中…",
+      "contract": "トークンコントラクト"
     },
     "importKeystore": {
       "title": "キーストアをインポート",

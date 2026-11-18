@@ -8,13 +8,24 @@ import {
 import { type JSX, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ethers } from "ethers";
+import { useWalletAssets } from "../lib/wallet-assets.hook";
+import {
+  assetLabel,
+  formatAssetAmount,
+  sendableAssets,
+} from "../lib/wallet-assets.util";
+import {
+  SendAmountError,
+  amountInputPattern,
+  maxSendAmount,
+  validateSendAmount,
+} from "../lib/send-amount.util";
+import {
+  NATIVE_ASSET_ADDRESS,
+  type WalletAsset,
+} from "../model/wallet-asset.types";
 import { useWalletUiStore } from "../model/wallet-ui.store";
 import { useAppStore, type PendingTransaction } from "@/shared/model";
-import {
-  TokenService,
-  getTokenBalance,
-  type TokenInfo,
-} from "@/features/wallet";
 import {
   resolveWallet,
   estimateNativeTransferGas,
@@ -41,6 +52,9 @@ interface SendModalProps {
   onDone: () => void;
 }
 
+/** Gas of a plain CMU transfer, before the buffer; used by Max until an estimate exists. */
+const NATIVE_TRANSFER_GAS = 21_000n;
+
 /** @internal */
 type EstimationStatus = "idle" | "estimating" | "ready" | "error";
 
@@ -62,20 +76,6 @@ function formatGasFee(gasLimit: bigint, gasPriceHex: string): string {
  */
 function applyGasBuffer(estimate: bigint): bigint {
   return (estimate * GAS_BUFFER_MULTIPLIER) / GAS_BUFFER_DIVISOR;
-}
-
-/**
- * Parses and validates a numeric input string for token amounts.
- * @param value - The raw string from the input element.
- * @returns True when the value is a valid non-negative number string.
- */
-function isValidAmountInput(value: string): boolean {
-  if (value === "" || value === ".") return true;
-  return (
-    /^\d*\.?\d*$/.test(value) &&
-    !isNaN(parseFloat(value)) &&
-    parseFloat(value) >= 0
-  );
 }
 
 /**
@@ -115,7 +115,7 @@ function SendModal({
   );
   const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats);
 
-  const [tokens, setTokens] = useState<TokenInfo[]>([]);
+  const { assets } = useWalletAssets(activeWalletAddress);
   // Settings → Security; on (the default) until the stored value says off.
   const [isPasswordRequired, setIsPasswordRequired] = useState(true);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -133,40 +133,22 @@ function SendModal({
       isMounted = false;
     };
   }, []);
-  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
-  const [tokenBalance, setTokenBalance] = useState<string>("...");
-  const [nativeBalance, setNativeBalance] = useState<string>("0");
   const [gasLimit, setGasLimit] = useState<bigint | null>(null);
   const [estimationStatus, setEstimationStatus] =
     useState<EstimationStatus>("idle");
 
-  const isNative = sendSelectedTokenAddress === "native";
+  const options = sendableAssets(assets);
+  const selectedToken: WalletAsset | null =
+    options.find((a) => a.address === sendSelectedTokenAddress) ??
+    options[0] ??
+    null;
+  const nativeBalance =
+    assets.find((a) => a.address === NATIVE_ASSET_ADDRESS)?.balance ?? 0n;
+  const isNative = selectedToken?.address === NATIVE_ASSET_ADDRESS;
+  const feeWei =
+    gasLimit && sendGasPrice ? gasLimit * BigInt(sendGasPrice) : null;
   const gasFeeFormatted =
     gasLimit && sendGasPrice ? formatGasFee(gasLimit, sendGasPrice) : null;
-
-  useEffect(() => {
-    const loaded = TokenService.getTokens();
-    setTokens(loaded);
-    const initial =
-      loaded.find((t) => t.address === sendSelectedTokenAddress) ?? loaded[0];
-    setSelectedToken(initial);
-  }, []);
-
-  useEffect(() => {
-    if (!activeWalletAddress || !selectedToken) return;
-
-    setTokenBalance("...");
-
-    getTokenBalance(activeWalletAddress, selectedToken.address).then((bal) => {
-      setTokenBalance(bal);
-    });
-
-    if (!isNative && activeWalletAddress) {
-      getTokenBalance(activeWalletAddress, "native").then((bal) => {
-        setNativeBalance(bal);
-      });
-    }
-  }, [selectedToken, activeWalletAddress, isNative]);
 
   const runEstimation = useCallback(async () => {
     if (!sendTo || !sendAmount || !activeWalletAddress || !selectedToken) {
@@ -181,8 +163,14 @@ function SendModal({
       return;
     }
 
-    const parsedAmount = parseFloat(sendAmount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+    if (
+      validateSendAmount({
+        asset: selectedToken,
+        amountText: sendAmount,
+        nativeBalance,
+        feeWei: 0n,
+      }) === SendAmountError.INVALID_AMOUNT
+    ) {
       setGasLimit(null);
       setEstimationStatus("idle");
       return;
@@ -215,15 +203,21 @@ function SendModal({
       setGasLimit(null);
       setEstimationStatus("error");
     }
-  }, [sendTo, sendAmount, activeWalletAddress, selectedToken, isNative]);
+  }, [
+    sendTo,
+    sendAmount,
+    activeWalletAddress,
+    selectedToken,
+    isNative,
+    nativeBalance,
+  ]);
 
   useEffect(() => {
     const timer = setTimeout(runEstimation, GAS_ESTIMATION_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   }, [runEstimation]);
 
-  const handleTokenSelect = (token: TokenInfo): void => {
-    setSelectedToken(token);
+  const handleTokenSelect = (token: WalletAsset): void => {
     setSendSelectedTokenAddress(token.address);
     setSendAmount("");
     setGasLimit(null);
@@ -231,84 +225,65 @@ function SendModal({
   };
 
   /**
-   * Handles the amount input change event.
-   * Restricts the input to a maximum of 5 decimal places and auto-corrects to balance minus 1 CMU reserve.
-   * @param value - The raw input string from the amount field.
+   * Accepts digits with at most the asset's decimals as fraction digits.
+   * @param value - The raw string from the amount field.
    */
   const handleAmountChange = (value: string): void => {
-    if (!/^\d*\.?\d{0,5}$/.test(value)) return;
-    if (!isValidAmountInput(value)) return;
-
-    if (tokenBalance !== "...") {
-      const parsedAmount = parseFloat(value);
-      const balanceNum = parseFloat(tokenBalance.replace(/,/g, ""));
-
-      if (
-        !isNaN(parsedAmount) &&
-        !isNaN(balanceNum) &&
-        parsedAmount > balanceNum
-      ) {
-        const safeMax = isNative ? Math.max(0, balanceNum - 1) : balanceNum;
-        const safeMaxTruncated = Math.floor(safeMax * 100000) / 100000;
-        setSendAmount(safeMaxTruncated.toString());
-        return;
-      }
-    }
-
+    if (!selectedToken) return;
+    if (!amountInputPattern(selectedToken.decimals).test(value)) return;
     setSendAmount(value);
   };
 
   /**
-   * Populates the amount input with the maximum available balance, reserving 1 CMU for native transfers.
+   * Fills in the whole balance: for CMU minus the fee the send reserves
+   * (gas limit × gas price), for a token all of it (the fee is paid in CMU).
    */
   const handleMaxAmount = (): void => {
-    if (tokenBalance === "...") return;
-    const balanceNum = parseFloat(tokenBalance.replace(/,/g, ""));
-    if (isNaN(balanceNum)) return;
-
-    const safeMax = isNative ? Math.max(0, balanceNum - 1) : balanceNum;
-    const safeMaxTruncated = Math.floor(safeMax * 100000) / 100000;
-    setSendAmount(safeMaxTruncated.toString());
+    if (!selectedToken || !sendGasPrice) return;
+    const reservedGas = isNative
+      ? (gasLimit ?? applyGasBuffer(NATIVE_TRANSFER_GAS))
+      : 0n;
+    const max = maxSendAmount(
+      selectedToken,
+      reservedGas * BigInt(sendGasPrice),
+    );
+    setSendAmount(
+      ethers.formatUnits(max, selectedToken.decimals).replace(/\.0$/, ""),
+    );
   };
 
   const validateBeforeSend = (): string | null => {
     if (!sendTo) return t("wallet:modals.send.errorRecipientReq");
     if (!ethers.isAddress(sendTo))
       return t("wallet:modals.send.errorInvalidAddress");
-    if (!sendAmount || parseFloat(sendAmount) <= 0)
+    if (!selectedToken) return t("wallet:modals.send.errorValidAmount");
+    const check = {
+      asset: selectedToken,
+      amountText: sendAmount,
+      nativeBalance,
+      feeWei: feeWei ?? 0n,
+    };
+    if (validateSendAmount(check) === SendAmountError.INVALID_AMOUNT)
       return t("wallet:modals.send.errorValidAmount");
-    if (!gasLimit || !sendGasPrice)
-      return t("wallet:modals.send.errorGasPending");
+    if (feeWei === null) return t("wallet:modals.send.errorGasPending");
 
-    const amountNum = parseFloat(sendAmount);
-    const balanceNum = parseFloat(tokenBalance.replace(/,/g, ""));
-
-    if (amountNum > balanceNum) {
-      return t("wallet:modals.send.errorInsufficientToken", {
-        symbol: selectedToken?.symbol ?? "",
-      });
-    }
-
-    const gasFeeEth = parseFloat(gasFeeFormatted ?? "0");
-
-    if (isNative) {
-      const totalRequired = amountNum + gasFeeEth;
-      if (totalRequired > balanceNum) {
+    switch (validateSendAmount(check)) {
+      case SendAmountError.INSUFFICIENT_TOKEN:
+        return t("wallet:modals.send.errorInsufficientToken", {
+          symbol: assetLabel(selectedToken),
+        });
+      case SendAmountError.INSUFFICIENT_TOTAL:
         return t("wallet:modals.send.errorInsufficientTotal", {
           amount: sendAmount,
           fee: gasFeeFormatted,
         });
-      }
-    } else {
-      const nativeBalanceNum = parseFloat(nativeBalance.replace(/,/g, ""));
-      if (gasFeeEth > nativeBalanceNum) {
+      case SendAmountError.INSUFFICIENT_GAS:
         return t("wallet:modals.send.errorInsufficientGas", {
           fee: gasFeeFormatted,
         });
-      }
+      default:
+        return null;
     }
-
-    return null;
   };
 
   const formError = validateBeforeSend();
@@ -401,7 +376,11 @@ function SendModal({
           hash: txHash,
           from: activeWalletAddress,
           to: sendTo,
-          amount: 0,
+          amount: parseFloat(sendAmount),
+          token: {
+            address: selectedToken.address,
+            symbol: assetLabel(selectedToken),
+          },
           timestamp: Date.now(),
           gas: parseFloat(gasFeeFormatted ?? "0"),
         };
@@ -414,9 +393,7 @@ function SendModal({
       void fetchGlobalStats(activeWalletAddress, addresses);
 
       const shortTo = `${sendTo.slice(0, 6)}...${sendTo.slice(-4)}`;
-      const assetLabel = isNative
-        ? `${sendAmount} CMU`
-        : `${sendAmount} ${selectedToken.symbol}`;
+      const sentLabel = `${sendAmount} ${assetLabel(selectedToken)}`;
 
       void waitForTransactionReceipt(txHash, { confirmations: 1 })
         .then(() => {
@@ -425,7 +402,7 @@ function SendModal({
             "transaction",
             t("wallet:modals.send.notifConfirmedTitle"),
             t("wallet:modals.send.notifConfirmedDesc", {
-              asset: assetLabel,
+              asset: sentLabel,
               to: shortTo,
             }),
             { hash: txHash },
@@ -438,7 +415,7 @@ function SendModal({
             "transaction",
             t("wallet:modals.send.notifFailedTitle"),
             t("wallet:modals.send.notifFailedDesc", {
-              asset: assetLabel,
+              asset: sentLabel,
               to: shortTo,
             }),
             { hash: txHash },
@@ -460,8 +437,8 @@ function SendModal({
           fromAddress: activeAccount.address,
           toAddress: sendTo,
           amount: sendAmount,
-          symbol: selectedToken?.symbol ?? "CMU",
-          tokenAddress: selectedToken?.address ?? "native",
+          symbol: selectedToken ? assetLabel(selectedToken) : "CMU",
+          tokenAddress: selectedToken?.address ?? NATIVE_ASSET_ADDRESS,
           feeCmu: gasFeeFormatted,
           isNative,
         }
@@ -516,24 +493,29 @@ function SendModal({
             {t("wallet:modals.send.assetLabel")}
           </label>
           <div className="relative">
-            <CustomDropdown<TokenInfo>
-              options={tokens}
+            <CustomDropdown<WalletAsset>
+              options={options}
               selected={selectedToken}
               onSelect={handleTokenSelect}
               disabled={sendLoading}
+              getSearchLabel={(option) => `${option.symbol} ${option.name}`}
               renderSelected={(selected) => (
                 <>
                   <TokenIcon
-                    address={selected?.address ?? "native"}
+                    address={selected?.address ?? NATIVE_ASSET_ADDRESS}
                     symbol={selected?.symbol ?? ""}
                     size="sm"
                   />
-                  <span>
-                    {selected?.name ?? t("wallet:modals.send.selectToken")}
+                  <span className="truncate">
+                    {selected
+                      ? assetLabel(selected)
+                      : t("wallet:modals.send.selectToken")}
                   </span>
-                  <span className="text-slate-400 dark:text-gray-400 font-normal">
-                    ({selected?.symbol})
-                  </span>
+                  {selected && (
+                    <span className="text-slate-400 dark:text-gray-400 font-normal truncate">
+                      {selected.name}
+                    </span>
+                  )}
                 </>
               )}
               renderOption={(option) => (
@@ -543,9 +525,11 @@ function SendModal({
                     symbol={option.symbol}
                     size="sm"
                   />
-                  <span>{option.name}</span>
-                  <span className="text-slate-400 dark:text-gray-400 font-normal ml-1">
-                    ({option.symbol})
+                  <span className="truncate">{assetLabel(option)}</span>
+                  <span className="ml-auto pl-3 font-mono text-xs text-slate-500 dark:text-gray-400 whitespace-nowrap">
+                    <PrivateAmount>
+                      {formatAssetAmount(option.balance, option.decimals)}
+                    </PrivateAmount>
                   </span>
                 </>
               )}
@@ -557,8 +541,15 @@ function SendModal({
               {t("wallet:modals.send.availableBalance")}
             </span>
             <span className="text-xs font-mono font-semibold text-slate-600 dark:text-gray-300">
-              <PrivateAmount>{tokenBalance}</PrivateAmount>{" "}
-              {selectedToken?.symbol}
+              <PrivateAmount>
+                {selectedToken
+                  ? formatAssetAmount(
+                      selectedToken.balance,
+                      selectedToken.decimals,
+                    )
+                  : "..."}
+              </PrivateAmount>{" "}
+              {selectedToken ? assetLabel(selectedToken) : ""}
             </span>
           </div>
         </div>
@@ -585,7 +576,7 @@ function SendModal({
             <button
               type="button"
               onClick={handleMaxAmount}
-              disabled={sendLoading || tokenBalance === "..."}
+              disabled={sendLoading || !selectedToken}
               className="text-xs font-bold text-accent hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {t("wallet:modals.send.maxBtn")}
@@ -602,7 +593,7 @@ function SendModal({
               className="w-full pl-4 pr-20 py-3 bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white dark:focus:bg-gray-900 dark:text-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <span className="absolute right-4 top-3.5 text-sm font-bold text-slate-400">
-              {selectedToken?.symbol ?? "CMU"}
+              {selectedToken ? assetLabel(selectedToken) : "CMU"}
             </span>
           </div>
         </div>
@@ -640,7 +631,10 @@ function SendModal({
                   {t("wallet:modals.send.cmuGasBalance")}
                 </span>
                 <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
-                  <PrivateAmount>{nativeBalance}</PrivateAmount> CMU
+                  <PrivateAmount>
+                    {formatAssetAmount(nativeBalance, 18)}
+                  </PrivateAmount>{" "}
+                  CMU
                 </span>
               </div>
             </>

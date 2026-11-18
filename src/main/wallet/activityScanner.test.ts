@@ -55,4 +55,38 @@ describe("scanWalletActivity", () => {
     });
     expect(items[4].to).toBe("");
   });
+
+  it("shows an ERC-20 transfer to a detected token as a send of that token", async () => {
+    const TOKEN = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const input =
+      "0xa9059cbb" +
+      OTHER.slice(2).padStart(64, "0") +
+      2_500_000n.toString(16).padStart(64, "0");
+    vi.mocked(callGethRpc).mockImplementation(async (_port, method, params) => {
+      if (method === "eth_blockNumber") return "0x2";
+      if ((params as unknown[])[0] !== "0x2") return null;
+      return {
+        ...BLOCK,
+        miner: OTHER,
+        transactions: [
+          { hash: "0xf", from: ME, to: TOKEN, value: "0x0", input },
+        ],
+      };
+    });
+
+    const items = await scanWalletActivity(8545, [ME], (contract) =>
+      contract === TOKEN
+        ? { name: "Dollar", symbol: "USD", decimals: 6 }
+        : undefined,
+    );
+
+    expect(items).toEqual([
+      expect.objectContaining({
+        kind: ActivityKind.SEND,
+        amount: "2.5",
+        to: expect.stringMatching(/^0x2222/i),
+        token: { address: TOKEN, symbol: "USD" },
+      }),
+    ]);
+  });
 });

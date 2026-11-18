@@ -108,7 +108,8 @@
       "total": "Total",
       "back": "Back",
       "confirm": "Confirm & Send",
-      "sending": "Sending…"
+      "sending": "Sending…",
+      "contract": "Token contract"
     },
     "importKeystore": {
       "title": "Import keystore",

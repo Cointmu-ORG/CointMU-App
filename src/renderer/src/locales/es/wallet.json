@@ -108,7 +108,8 @@
       "total": "Total",
       "back": "Atrás",
       "confirm": "Confirmar y enviar",
-      "sending": "Enviando…"
+      "sending": "Enviando…",
+      "contract": "Contrato del token"
     },
     "importKeystore": {
       "title": "Importar almacén de claves",

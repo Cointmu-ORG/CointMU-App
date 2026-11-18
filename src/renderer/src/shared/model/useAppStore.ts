@@ -21,6 +21,8 @@ interface PendingTransaction {
   from: string;
   to: string;
   amount: number;
+  /** Set for an ERC-20 send; amount is then in this token. */
+  token?: { address: string; symbol: string };
   timestamp: number;
   gas: number;
 }

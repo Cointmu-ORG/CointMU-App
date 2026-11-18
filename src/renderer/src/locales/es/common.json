@@ -56,7 +56,8 @@
     "fromMiningPool": "Del pool de minería · bloque #{{block}}",
     "confirmations_one": "{{count}} confirmación",
     "confirmations_many": "{{count}} confirmaciones",
-    "confirmations_other": "{{count}} confirmaciones"
+    "confirmations_other": "{{count}} confirmaciones",
+    "sentToken": "{{symbol}} enviado"
   },
   "dialog": {
     "exportExtensionTitle": "Exportar extensión de navegador complementaria",

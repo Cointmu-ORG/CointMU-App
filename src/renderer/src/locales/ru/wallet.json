@@ -108,7 +108,8 @@
       "total": "Итого",
       "back": "Назад",
       "confirm": "Подтвердить и отправить",
-      "sending": "Отправка…"
+      "sending": "Отправка…",
+      "contract": "Контракт токена"
     },
     "importKeystore": {
       "title": "Импорт keystore",

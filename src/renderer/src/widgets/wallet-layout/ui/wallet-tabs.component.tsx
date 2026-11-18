@@ -60,7 +60,9 @@ function mapPendingToActivity(
     id: tx.hash,
     kind: ActivityKind.SEND,
     type: "send",
-    title: t("common:activity.sentCmu"),
+    title: tx.token
+      ? t("common:activity.sentToken", { symbol: tx.token.symbol })
+      : t("common:activity.sentCmu"),
     subtitle: t("common:activity.to", { address: shortenAddress(tx.to) }),
     amount: tx.amount.toLocaleString("en-US", { maximumFractionDigits: 4 }),
     timestamp: tx.timestamp,
@@ -68,6 +70,7 @@ function mapPendingToActivity(
     hash: tx.hash,
     from: tx.from,
     to: tx.to,
+    token: tx.token,
     pending: true,
   };
 }
@@ -158,7 +161,8 @@ function WalletTabs({
       ActivityCacheService.setActivity(activeWalletAddress, filtered);
       setIsFetchingActivity(false);
     });
-  }, [activeWalletAddress]);
+    // A send leaving the pending list has been mined: refetch so it shows.
+  }, [activeWalletAddress, pendingTransactions.length]);
 
   const handleTokenAdded = walletAssets.refresh;
 

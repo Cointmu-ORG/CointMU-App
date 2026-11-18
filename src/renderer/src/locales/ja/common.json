@@ -54,7 +54,8 @@
     "from": "送信元 {{address}}",
     "hash": "ハッシュ {{hash}}...",
     "fromMiningPool": "マイニングプールから · ブロック #{{block}}",
-    "confirmations_other": "{{count}} 件の確認"
+    "confirmations_other": "{{count}} 件の確認",
+    "sentToken": "{{symbol}} を送信"
   },
   "dialog": {
     "exportExtensionTitle": "コンパニオンブラウザ拡張機能をエクスポート",

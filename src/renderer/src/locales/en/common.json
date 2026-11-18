@@ -55,7 +55,8 @@
     "hash": "Hash {{hash}}...",
     "fromMiningPool": "From mining pool · block #{{block}}",
     "confirmations_one": "{{count}} confirmation",
-    "confirmations_other": "{{count}} confirmations"
+    "confirmations_other": "{{count}} confirmations",
+    "sentToken": "Sent {{symbol}}"
   },
   "dialog": {
     "exportExtensionTitle": "Export Companion Browser Extension",
