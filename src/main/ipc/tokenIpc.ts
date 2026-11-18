@@ -1,11 +1,11 @@
 import { ipcMain } from "electron";
 import { ASSET_LOGO_CHANNELS, TOKEN_CHANNELS } from "../../bridge/ipc-channels";
 import { AssetLogoStore } from "../tokens/assetLogos";
-import { getDetectedTokens } from "../tokens/detectedTokens";
+import { getDetectedNfts, getDetectedTokens } from "../tokens/detectedTokens";
 import { isAddress } from "../tokens/tokenScanService";
 
 /**
- * Registers the detected-token query and the custom asset logo store.
+ * Registers the detected-token and detected-NFT queries and the custom asset logo store.
  * Every renderer payload is validated before use.
  */
 export async function registerTokenHandlers(): Promise<void> {
@@ -14,6 +14,14 @@ export async function registerTokenHandlers(): Promise<void> {
       throw new TypeError(`${TOKEN_CHANNELS.GET_DETECTED}: invalid account`);
     }
     return getDetectedTokens(account);
+  });
+  ipcMain.handle(TOKEN_CHANNELS.GET_DETECTED_NFTS, (_, account: unknown) => {
+    if (!isAddress(account)) {
+      throw new TypeError(
+        `${TOKEN_CHANNELS.GET_DETECTED_NFTS}: invalid account`,
+      );
+    }
+    return getDetectedNfts(account);
   });
 
   const { default: Store } = await import("electron-store");

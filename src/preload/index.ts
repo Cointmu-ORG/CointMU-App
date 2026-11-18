@@ -25,6 +25,7 @@ import type {
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
+  DetectedNfts,
   DetectedTokens,
   DialogText,
   ExplorerIndexStatus,
@@ -128,6 +129,8 @@ const api = {
   tokens: {
     getDetected: (account: string): Promise<DetectedTokens> =>
       ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED, account),
+    getDetectedNfts: (account: string): Promise<DetectedNfts> =>
+      ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED_NFTS, account),
     onChanged: (callback: () => void): (() => void) => {
       const handler = (): void => callback();
       ipcRenderer.on(TOKEN_CHANNELS.CHANGED, handler);

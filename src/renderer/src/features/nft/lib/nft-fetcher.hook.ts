@@ -1,178 +1,113 @@
 import i18next from "i18next";
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { DetectedNft } from "@bridge/types";
 import {
-  discoverUserNFTs,
-  resolveNFTMetadata,
   buildProvider,
-  readNFTCache,
-  writeNFTCache,
+  dropLegacyNftStorage,
+  getDetectedNfts,
+  onDetectedNftsChanged,
+  resolveNFTMetadata,
   type NFTMetadata,
 } from "../api/nft.service";
 
-const POLL_INTERVAL_MS = 30_000;
-
-interface NFTFetcherState {
+interface LoadedNfts {
+  /** The account these NFTs belong to; null before the first load. */
+  address: string | null;
   nfts: NFTMetadata[];
-  isFetching: boolean;
   error: string | null;
 }
 
-interface NFTFetcherResult extends NFTFetcherState {
+interface NFTFetcherResult {
+  nfts: NFTMetadata[];
+  isFetching: boolean;
+  error: string | null;
   refresh: () => void;
 }
 
+const keyOf = (nft: DetectedNft): string => `${nft.contract}:${nft.tokenId}`;
+
+dropLegacyNftStorage();
+
 /**
- * Runs an incremental NFT discovery scan for the given wallet address and merges
- * the result with the existing localStorage cache. Tokens received in the new
- * block range are appended; tokens that were transferred out in the same range
- * are removed. When the node reports no new blocks the existing cache is returned
- * unchanged, preventing the UI from going blank on a no-new-blocks poll.
- * @param {string} walletAddress - The wallet address to scan for owned NFTs.
- * @param {AbortSignal} signal - An abort signal that cancels the operation mid-flight.
- * @returns {Promise<NFTMetadata[]>} The fully merged and resolved NFT metadata array.
+ * Resolves metadata for the NFTs not in the cache yet and adds them to it.
+ * A token whose metadata cannot be resolved is left out and retried next time.
  */
-async function runDiscovery(
-  walletAddress: string,
-  signal: AbortSignal,
-): Promise<NFTMetadata[]> {
-  const existingCache = readNFTCache(walletAddress);
-
-  const scanResult = await discoverUserNFTs(walletAddress);
-
-  if (signal.aborted) return existingCache;
-
-  if (scanResult.earlyStopped) {
-    return existingCache;
-  }
-
-  const { newTokens, outboundKeys } = scanResult;
-
-  const existingFiltered = existingCache.filter((nft) => {
-    const key = `${nft.contractAddress.toLowerCase()}:${nft.tokenId}`;
-    return !outboundKeys.has(key);
-  });
-
-  const existingKeys = new Set(
-    existingFiltered.map(
-      (nft) => `${nft.contractAddress.toLowerCase()}:${nft.tokenId}`,
-    ),
-  );
-
-  const genuinelyNew = newTokens.filter((token) => {
-    const key = `${token.contractAddress.toLowerCase()}:${token.tokenId}`;
-    return !existingKeys.has(key);
-  });
-
-  if (genuinelyNew.length === 0) {
-    writeNFTCache(walletAddress, existingFiltered);
-    return existingFiltered;
-  }
-
-  if (signal.aborted) return existingFiltered;
-
+async function resolveMissing(
+  nfts: readonly DetectedNft[],
+  cache: Map<string, NFTMetadata>,
+): Promise<void> {
+  const missing = nfts.filter((nft) => !cache.has(keyOf(nft)));
+  if (missing.length === 0) return;
   const provider = await buildProvider();
-
-  if (signal.aborted) return existingFiltered;
-
   const settled = await Promise.allSettled(
-    genuinelyNew.map((token) =>
-      resolveNFTMetadata(
-        token.contractAddress,
-        token.tokenId,
-        token.standard,
-        provider,
-      ),
+    missing.map((nft) =>
+      resolveNFTMetadata(nft.contract, nft.tokenId, "ERC-721", provider),
     ),
   );
-
-  if (signal.aborted) return existingFiltered;
-
-  const resolvedNew: NFTMetadata[] = [];
-  for (const result of settled) {
-    if (result.status === "fulfilled") {
-      resolvedNew.push(result.value);
-    }
-  }
-
-  const merged = [...existingFiltered, ...resolvedNew];
-  writeNFTCache(walletAddress, merged);
-  return merged;
+  settled.forEach((result, i) => {
+    if (result.status === "fulfilled")
+      cache.set(keyOf(missing[i]), result.value);
+  });
 }
 
 /**
- * Custom hook that discovers and resolves NFT metadata for a given wallet address.
- * On mount it immediately seeds the UI from the localStorage cache so the grid
- * appears instantly after a page refresh. A background discovery run then
- * reconciles the cache with the chain. Subsequent background polls are triggered
- * every 30 seconds so the list stays up to date without a manual refresh.
- * A refresh function is exposed so the NFT tab can manually trigger a re-scan at any time.
- * @param {string | null} walletAddress - The currently active wallet address, or null when not connected.
- * @returns {NFTFetcherResult} The current fetching state and a function to trigger a manual refresh.
+ * The NFTs the main-process token scan confirmed the account owns, with their
+ * metadata. Reloads when the scan reports a change (new head or detection);
+ * metadata is resolved once per token and kept for the hook's lifetime.
+ * @param walletAddress - The active wallet address, or null when the tab is hidden.
+ * @returns The NFTs, loading and error state, and a manual refresh.
  */
 function useNFTFetcher(walletAddress: string | null): NFTFetcherResult {
-  const [state, setState] = useState<NFTFetcherState>(() => {
-    const cached = walletAddress ? readNFTCache(walletAddress) : [];
-    return { nfts: cached, isFetching: false, error: null };
+  const [loaded, setLoaded] = useState<LoadedNfts>({
+    address: null,
+    nfts: [],
+    error: null,
   });
-
-  const abortRef = useRef<AbortController | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const metadata = useRef(new Map<string, NFTMetadata>());
 
-  /**
-   * Increments the refresh key to cancel any in-flight scan and start a new one immediately.
-   * @returns {void}
-   */
   const refresh = useCallback((): void => {
     setRefreshKey((k) => k + 1);
   }, []);
 
   useEffect(() => {
-    if (!walletAddress) {
-      setState({ nfts: [], isFetching: false, error: null });
-      return;
-    }
-
-    const cached = readNFTCache(walletAddress);
-    setState({ nfts: cached, isFetching: true, error: null });
-
-    if (abortRef.current) {
-      abortRef.current.abort();
-    }
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    const run = async (silent: boolean): Promise<void> => {
-      if (!silent) {
-        setState((prev) => ({ ...prev, isFetching: true, error: null }));
-      }
+    if (!walletAddress) return;
+    let isActive = true;
+    const load = async (): Promise<void> => {
       try {
-        const resolved = await runDiscovery(walletAddress, controller.signal);
-        if (controller.signal.aborted) return;
-        setState({ nfts: resolved, isFetching: false, error: null });
+        const { nfts } = await getDetectedNfts(walletAddress);
+        await resolveMissing(nfts, metadata.current);
+        if (!isActive) return;
+        setLoaded({
+          address: walletAddress,
+          nfts: nfts.flatMap((nft) => metadata.current.get(keyOf(nft)) ?? []),
+          error: null,
+        });
       } catch (err) {
-        if (controller.signal.aborted) return;
-        const message =
-          err instanceof Error
-            ? err.message
-            : i18next.t("walletTabs:nft.discoveryFailed");
-        console.error("[useNFTFetcher]", message);
-        setState((prev) => ({ ...prev, isFetching: false, error: message }));
+        if (!isActive) return;
+        console.error("[useNFTFetcher]", err);
+        setLoaded((prev) => ({
+          ...prev,
+          address: walletAddress,
+          error: i18next.t("walletTabs:nft.discoveryFailed"),
+        }));
       }
     };
-
-    run(false);
-
-    const pollId = setInterval(() => {
-      run(true);
-    }, POLL_INTERVAL_MS);
-
+    void load();
+    const unsubscribe = onDetectedNftsChanged(() => void load());
     return () => {
-      controller.abort();
-      clearInterval(pollId);
+      isActive = false;
+      unsubscribe();
     };
   }, [walletAddress, refreshKey]);
 
-  return { ...state, refresh };
+  const isCurrent = walletAddress !== null && loaded.address === walletAddress;
+  return {
+    nfts: isCurrent ? loaded.nfts : [],
+    isFetching: walletAddress !== null && !isCurrent,
+    error: isCurrent ? loaded.error : null,
+    refresh,
+  };
 }
 
 export { useNFTFetcher };

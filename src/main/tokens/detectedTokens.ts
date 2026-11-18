@@ -1,4 +1,4 @@
-import type { DetectedTokens } from "../../bridge/types";
+import type { DetectedNfts, DetectedTokens } from "../../bridge/types";
 import type { TokenMeta } from "./erc20Calls";
 import type { TokenScanner } from "./tokenScanner";
 
@@ -20,6 +20,17 @@ export function getDetectedTokens(account: string): DetectedTokens {
     };
   }
   return scanner.snapshot(account);
+}
+
+/** @returns The account's owned ERC-721 tokens, and its scan progress. */
+export function getDetectedNfts(account: string): DetectedNfts {
+  if (scanner === null) {
+    return {
+      nfts: [],
+      scan: { scannedBlock: 0, headBlock: null, isComplete: false },
+    };
+  }
+  return scanner.nftSnapshot(account);
 }
 
 /** @returns Metadata of a contract the scan detected, for activity rows. */

@@ -429,5 +429,18 @@ export interface DetectedTokens {
   readonly scan: TokenScanProgress;
 }
 
+/** An ERC-721 token the account owns, found by the Transfer log scan. */
+export interface DetectedNft {
+  /** Lowercase contract address. */
+  readonly contract: string;
+  /** Decimal token id. */
+  readonly tokenId: string;
+}
+
+export interface DetectedNfts {
+  readonly nfts: readonly DetectedNft[];
+  readonly scan: TokenScanProgress;
+}
+
 /** Custom logos by asset key: "native" or a lowercase contract address. */
 export type AssetLogos = Readonly<Record<string, string>>;

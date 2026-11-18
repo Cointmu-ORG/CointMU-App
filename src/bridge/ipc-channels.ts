@@ -57,6 +57,7 @@ export const CLIPBOARD_CHANNELS = {
 
 export const TOKEN_CHANNELS = {
   GET_DETECTED: "tokens:get-detected",
+  GET_DETECTED_NFTS: "tokens:get-detected-nfts",
   CHANGED: "tokens:changed",
 } as const;
 
