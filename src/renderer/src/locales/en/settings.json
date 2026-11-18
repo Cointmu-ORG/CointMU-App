@@ -163,6 +163,27 @@
     "saving": "Saving...",
     "exportFailed": "Could not save the extension ZIP. Try another folder; if it keeps failing, report an issue with the logs."
   },
+  "otherConnections": {
+    "title": "Other Connections",
+    "description": "Programs on this computer that connect to your node, besides the browser extension.",
+    "fairnessWarning": "A GPU mines far faster than a CPU. A single GPU miner can take most block rewards and raises the difficulty for everyone mining on a CPU. Use one only where that is agreed.",
+    "gpuMiner": "External GPU miner",
+    "externalTitle": "Use an external miner",
+    "externalDesc": "The built-in CPU miner stays off. Start mining on the Mining page so your node hands out work. CointMU does not install or run the miner program; you do.",
+    "endpointTitle": "getWork endpoint",
+    "endpointDesc": "Reachable from this computer only. Other machines on the network cannot connect.",
+    "rewardTitle": "Reward address",
+    "rewardMissing": "Not set. Choose one in Settings → Mining.",
+    "statusTitle": "Status",
+    "statusOff": "Off. The built-in CPU miner is in use.",
+    "statusIdle": "Mining is stopped. Start it on the Mining page to hand out work.",
+    "statusWaiting": "Handing out work. No external miner is reporting a hashrate yet.",
+    "statusReporting": "External miner reporting {{hashrate}}",
+    "commandTitle": "Example command (ethminer)",
+    "commandDesc": "Add -G for OpenCL or -U for CUDA. Any miner that speaks getWork over HTTP connects the same way; a Stratum-only miner does not.",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
   "advanced": {
     "subtitle": "Developer APIs, local storage, and diagnostics",
     "rpcNetwork": "RPC/Network",

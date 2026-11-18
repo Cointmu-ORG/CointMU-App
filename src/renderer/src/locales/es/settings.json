@@ -163,6 +163,27 @@
     "saving": "Guardando...",
     "exportFailed": "No se pudo guardar el ZIP de la extensión. Prueba otra carpeta; si sigue fallando, informa del problema con los registros."
   },
+  "otherConnections": {
+    "title": "Otras conexiones",
+    "description": "Programas de este equipo que se conectan a su nodo, además de la extensión del navegador.",
+    "fairnessWarning": "Una GPU mina mucho más rápido que una CPU. Un solo minero con GPU puede llevarse la mayoría de las recompensas de bloque y aumenta la dificultad para todos los que minan con CPU. Úselo solo donde esté acordado.",
+    "gpuMiner": "Minero GPU externo",
+    "externalTitle": "Usar un minero externo",
+    "externalDesc": "El minero de CPU integrado permanece apagado. Inicie la minería en la página Minería para que su nodo reparta trabajo. CointMU no instala ni ejecuta el programa minero; lo hace usted.",
+    "endpointTitle": "Endpoint getWork",
+    "endpointDesc": "Accesible solo desde este equipo. Otras máquinas de la red no pueden conectarse.",
+    "rewardTitle": "Dirección de recompensa",
+    "rewardMissing": "Sin definir. Elija una en Configuración → Minería.",
+    "statusTitle": "Estado",
+    "statusOff": "Apagado. Se usa el minero de CPU integrado.",
+    "statusIdle": "La minería está detenida. Iníciela en la página Minería para repartir trabajo.",
+    "statusWaiting": "Repartiendo trabajo. Ningún minero externo informa aún de su hashrate.",
+    "statusReporting": "El minero externo informa {{hashrate}}",
+    "commandTitle": "Comando de ejemplo (ethminer)",
+    "commandDesc": "Añada -G para OpenCL o -U para CUDA. Cualquier minero compatible con getWork sobre HTTP se conecta igual; un minero solo Stratum no.",
+    "copy": "Copiar",
+    "copied": "Copiado"
+  },
   "advanced": {
     "subtitle": "APIs de desarrollo, almacenamiento local y diagnósticos",
     "rpcNetwork": "RPC/Red",

@@ -163,6 +163,27 @@
     "saving": "Speichern...",
     "exportFailed": "Das Erweiterungs-ZIP konnte nicht gespeichert werden. Versuche einen anderen Ordner; wenn es weiter fehlschlägt, melde ein Problem mit den Logs."
   },
+  "otherConnections": {
+    "title": "Weitere Verbindungen",
+    "description": "Programme auf diesem Computer, die sich neben der Browsererweiterung mit Ihrem Node verbinden.",
+    "fairnessWarning": "Eine GPU schürft weitaus schneller als eine CPU. Ein einzelner GPU-Miner kann die meisten Blockbelohnungen erhalten und erhöht die Schwierigkeit für alle, die mit der CPU schürfen. Verwenden Sie ihn nur, wenn das so vereinbart ist.",
+    "gpuMiner": "Externer GPU-Miner",
+    "externalTitle": "Externen Miner verwenden",
+    "externalDesc": "Der integrierte CPU-Miner bleibt aus. Starten Sie das Mining auf der Mining-Seite, damit Ihr Node Arbeit ausgibt. CointMU installiert und startet das Miner-Programm nicht; das tun Sie selbst.",
+    "endpointTitle": "getWork-Endpunkt",
+    "endpointDesc": "Nur von diesem Computer aus erreichbar. Andere Geräte im Netzwerk können sich nicht verbinden.",
+    "rewardTitle": "Belohnungsadresse",
+    "rewardMissing": "Nicht festgelegt. Wählen Sie eine unter Einstellungen → Mining.",
+    "statusTitle": "Status",
+    "statusOff": "Aus. Der integrierte CPU-Miner wird verwendet.",
+    "statusIdle": "Das Mining ist gestoppt. Starten Sie es auf der Mining-Seite, um Arbeit auszugeben.",
+    "statusWaiting": "Arbeit wird ausgegeben. Noch meldet kein externer Miner eine Hashrate.",
+    "statusReporting": "Externer Miner meldet {{hashrate}}",
+    "commandTitle": "Beispielbefehl (ethminer)",
+    "commandDesc": "Fügen Sie -G für OpenCL oder -U für CUDA hinzu. Jeder Miner, der getWork über HTTP unterstützt, verbindet sich auf dieselbe Weise; ein reiner Stratum-Miner nicht.",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
+  },
   "advanced": {
     "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",
     "rpcNetwork": "RPC/Netzwerk",

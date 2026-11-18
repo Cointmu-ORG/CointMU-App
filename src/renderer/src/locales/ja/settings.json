@@ -163,6 +163,27 @@
     "saving": "保存中...",
     "exportFailed": "拡張機能のZIPを保存できませんでした。別のフォルダーをお試しください。失敗が続く場合は、ログを添えて問題を報告してください。"
   },
+  "otherConnections": {
+    "title": "その他の接続",
+    "description": "ブラウザ拡張機能のほかに、このコンピューター上でノードに接続するプログラム。",
+    "fairnessWarning": "GPU は CPU よりはるかに高速にマイニングします。GPU マイナーが 1 台あるだけでブロック報酬の大半を獲得でき、CPU でマイニングする全員の難易度が上がります。合意がある場合にのみ使用してください。",
+    "gpuMiner": "外部 GPU マイナー",
+    "externalTitle": "外部マイナーを使用する",
+    "externalDesc": "内蔵 CPU マイナーはオフのままになります。マイニングページでマイニングを開始すると、ノードがワークを配布します。CointMU はマイナープログラムのインストールも実行も行いません。ご自身で行ってください。",
+    "endpointTitle": "getWork エンドポイント",
+    "endpointDesc": "このコンピューターからのみ接続できます。ネットワーク上の他のマシンからは接続できません。",
+    "rewardTitle": "報酬アドレス",
+    "rewardMissing": "未設定です。設定 → マイニングで選択してください。",
+    "statusTitle": "ステータス",
+    "statusOff": "オフ。内蔵 CPU マイナーを使用中です。",
+    "statusIdle": "マイニングは停止しています。マイニングページで開始するとワークを配布します。",
+    "statusWaiting": "ワークを配布中です。ハッシュレートを報告している外部マイナーはまだありません。",
+    "statusReporting": "外部マイナーが {{hashrate}} を報告中",
+    "commandTitle": "コマンド例 (ethminer)",
+    "commandDesc": "OpenCL の場合は -G、CUDA の場合は -U を追加します。HTTP 経由の getWork に対応するマイナーなら同じ方法で接続できます。Stratum 専用のマイナーは接続できません。",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
   "advanced": {
     "subtitle": "開発者API、ローカルストレージ、および診断",
     "rpcNetwork": "RPC / ネットワーク",
