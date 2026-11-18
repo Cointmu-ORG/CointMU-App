@@ -53,14 +53,14 @@
     "electron-store": "^12.0.0",
     "electron-updater": "^6.8.11",
     "ethers": "^6.17.0",
-    "i18next": "^27.0.1",
-    "lucide-react": "^1.70.0",
+    "i18next": "^27.1.0",
+    "lucide-react": "^1.71.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-i18next": "^18.0.0",
+    "react-i18next": "^18.0.1",
     "react-router-dom": "^7.18.5",
-    "ws": "^8.22.1",
+    "ws": "^8.22.2",
     "zustand": "^5.1.0"
   },
   "devDependencies": {
