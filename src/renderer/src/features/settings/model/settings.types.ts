@@ -35,6 +35,7 @@ export interface SettingsStore {
   mining: {
     isMiningEnabled: boolean;
     autoStartAtLaunch: boolean;
+    externalMiner: boolean;
     cpuThreads: number;
     intensity: MiningIntensity;
     pauseOnBattery: boolean;

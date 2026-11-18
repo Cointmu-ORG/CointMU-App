@@ -63,6 +63,8 @@ describe("mining condition rules", () => {
     ["mining.idleThresholdMinutes", 2, null],
     ["mining.idleThresholdMinutes", 0, "mining.idleThresholdMinutes"],
     ["mining.idleThresholdMinutes", 2.5, "mining.idleThresholdMinutes"],
+    ["mining.externalMiner", true, null],
+    ["mining.externalMiner", "true", "mining.externalMiner"],
   ])("%s = %j → %j", (key, value, invalid) => {
     expect(findInvalidSetting(key, value)).toBe(invalid);
   });
