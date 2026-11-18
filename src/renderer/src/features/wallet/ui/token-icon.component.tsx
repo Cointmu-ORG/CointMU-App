@@ -1,5 +1,8 @@
-import { type JSX } from "react";
+import { type JSX, useEffect } from "react";
+import { CMU_LOGO_URL } from "@/shared/brand";
 import { getTokenGradient, getTokenInitials } from "../lib/token-icon.util";
+import { useAssetLogoStore } from "../model/asset-logo.store";
+import { NATIVE_ASSET_ADDRESS } from "../model/wallet-asset.types";
 
 const SIZE_CLASSES = {
   xs: "w-4 h-4 text-[7px]",
@@ -15,11 +18,11 @@ interface TokenIconProps {
 }
 
 /**
- * Circular token avatar that displays deterministic gradient backgrounds and
- * accurate symbol initials. The gradient is derived from the contract address
+ * Circular token avatar. A logo the user uploaded wins; otherwise CMU shows
+ * the CointMU logo and other tokens a gradient with their symbol initials.
+ * The gradient is derived from the contract address
  * so every token gets a unique, consistent colour without requiring any stored
- * colour metadata. The native coin sentinel address produces a fixed premium
- * blue-to-purple Web3 gradient.
+ * colour metadata.
  * @param props - The contract address, token symbol, and optional size variant.
  * @returns The rendered circular token icon element.
  */
@@ -28,6 +31,25 @@ function TokenIcon({
   symbol,
   size = "md",
 }: TokenIconProps): JSX.Element {
+  const key =
+    address === NATIVE_ASSET_ADDRESS ? address : address.toLowerCase();
+  const customLogo = useAssetLogoStore((s) => s.logos[key]);
+  const ensureLoaded = useAssetLogoStore((s) => s.ensureLoaded);
+  useEffect(ensureLoaded, [ensureLoaded]);
+
+  const logo =
+    customLogo ?? (key === NATIVE_ASSET_ADDRESS ? CMU_LOGO_URL : undefined);
+  if (logo !== undefined) {
+    return (
+      <img
+        src={logo}
+        alt=""
+        draggable={false}
+        className={`${SIZE_CLASSES[size]} rounded-full object-cover flex-shrink-0`}
+      />
+    );
+  }
+
   const gradient = getTokenGradient(address);
   const initials = getTokenInitials(symbol);
 

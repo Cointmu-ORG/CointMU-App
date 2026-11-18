@@ -136,7 +136,22 @@
       "balance": "Guthaben",
       "contract": "Vertragsadresse",
       "spoofWarning": "Jeder kann einen Token erstellen, und Name und Symbol können einen anderen Token nachahmen. Prüfe die Vertragsadresse, bevor du ihm vertraust.",
-      "hide": "Token ausblenden"
+      "hide": "Token ausblenden",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG oder WebP, bis 2 MB. Wird auf ein Quadrat von 128×128 zugeschnitten und nur auf diesem Gerät gespeichert.",
+        "upload": "Logo hochladen",
+        "save": "Logo speichern",
+        "cancel": "Abbrechen",
+        "reset": "Auf Standard zurücksetzen",
+        "preview": "Vorschau des neuen Logos",
+        "errors": {
+          "tooLarge": "Die Datei ist größer als 2 MB.",
+          "unsupported": "Nur PNG-, JPEG- und WebP-Bilder sind erlaubt (kein SVG).",
+          "unreadable": "Dieses Bild konnte nicht gelesen werden.",
+          "saveFailed": "Das Logo konnte nicht gespeichert werden. Versuche es erneut."
+        }
+      }
     }
   },
   "historyFilter": {

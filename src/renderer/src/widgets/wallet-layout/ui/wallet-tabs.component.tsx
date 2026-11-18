@@ -12,6 +12,7 @@ import {
   ActivityCacheService,
   AddTokenModal,
   TokenDetailModal,
+  TokenIcon,
   TokenList,
   useHiddenTokensStore,
   useWalletAssets,
@@ -218,7 +219,17 @@ function WalletTabs({
               <SkeletonList itemCount={5} />
             ) : paginatedActivities.length > 0 ? (
               paginatedActivities.map((tx) => (
-                <ActivityItem key={tx.id} activity={tx} />
+                <ActivityItem
+                  key={tx.id}
+                  activity={tx}
+                  assetIcon={
+                    <TokenIcon
+                      address={tx.token?.address ?? "native"}
+                      symbol={tx.token?.symbol ?? "CMU"}
+                      size="xs"
+                    />
+                  }
+                />
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">

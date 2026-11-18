@@ -1,4 +1,4 @@
-import { type JSX, type ReactNode, useEffect } from "react";
+import { type JSX, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, EyeOff, X } from "lucide-react";
 import { PrivateAmount } from "@/shared/ui";
@@ -7,20 +7,19 @@ import {
   NATIVE_ASSET_ADDRESS,
   type WalletAsset,
 } from "../model/wallet-asset.types";
+import { AssetLogoEditor } from "./asset-logo-editor.component";
 import { TokenIcon } from "./token-icon.component";
 
 interface TokenDetailModalProps {
   asset: WalletAsset;
   onClose: () => void;
   onHide: (asset: WalletAsset) => void;
-  /** Extra controls under the details (the logo editor). */
-  children?: ReactNode;
 }
 
 /**
  * Details of one asset: name, symbol, contract and balance. Tokens carry a
  * light warning that anyone can deploy one and copy another's name, and can
- * be hidden from here. Contract text is rendered as plain text only.
+ * be hidden from here. Every asset, CMU included, can get a custom logo. Contract text is rendered as plain text only.
  * @param props - The asset and the modal actions.
  * @returns The modal.
  */
@@ -28,7 +27,6 @@ function TokenDetailModal({
   asset,
   onClose,
   onHide,
-  children,
 }: TokenDetailModalProps): JSX.Element {
   const { t } = useTranslation();
   const isNative = asset.address === NATIVE_ASSET_ADDRESS;
@@ -120,7 +118,7 @@ function TokenDetailModal({
             </div>
           )}
 
-          {children}
+          <AssetLogoEditor assetKey={asset.address} symbol={asset.symbol} />
 
           {!isNative && (
             <button

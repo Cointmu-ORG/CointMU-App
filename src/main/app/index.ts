@@ -114,7 +114,7 @@ app.whenReady().then(async () => {
     status: queryIndexStatus,
     rebuild: requestIndexRebuild,
   });
-  registerTokenHandlers();
+  await registerTokenHandlers();
 
   await resolveGethPorts();
 

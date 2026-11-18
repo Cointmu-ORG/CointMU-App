@@ -136,7 +136,22 @@
       "balance": "Saldo",
       "contract": "Dirección del contrato",
       "spoofWarning": "Cualquiera puede crear un token, y su nombre y símbolo pueden imitar a otro. Comprueba la dirección del contrato antes de confiar en él.",
-      "hide": "Ocultar token"
+      "hide": "Ocultar token",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG o WebP, hasta 2 MB. Se recorta a un cuadrado de 128×128 y solo se guarda en este dispositivo.",
+        "upload": "Subir logo",
+        "save": "Guardar logo",
+        "cancel": "Cancelar",
+        "reset": "Restablecer predeterminado",
+        "preview": "Vista previa del nuevo logo",
+        "errors": {
+          "tooLarge": "El archivo supera los 2 MB.",
+          "unsupported": "Solo se permiten imágenes PNG, JPEG y WebP (SVG no).",
+          "unreadable": "No se pudo leer esta imagen.",
+          "saveFailed": "No se pudo guardar el logo. Inténtalo de nuevo."
+        }
+      }
     }
   },
   "historyFilter": {

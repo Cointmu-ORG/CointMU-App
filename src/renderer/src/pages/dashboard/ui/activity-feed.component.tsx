@@ -4,6 +4,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityItem, type ActivityData } from "@/shared/ui";
 import { Pagination } from "@/shared/ui";
+import { TokenIcon } from "@/features/wallet";
 import { ChevronRight, Clock } from "lucide-react";
 import { downloadActivityCsv } from "@/shared/lib";
 import { type HistoryFilter } from "@/shared/model";
@@ -84,7 +85,17 @@ function ActivityFeed({
           <>
             <div className="divide-y divide-slate-100 dark:divide-gray-800 -mx-2">
               {pageItems.map((item) => (
-                <ActivityItem key={item.id} activity={item} />
+                <ActivityItem
+                  key={item.id}
+                  activity={item}
+                  assetIcon={
+                    <TokenIcon
+                      address={item.token?.address ?? "native"}
+                      symbol={item.token?.symbol ?? "CMU"}
+                      size="xs"
+                    />
+                  }
+                />
               ))}
             </div>
             <Pagination

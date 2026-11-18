@@ -2,6 +2,7 @@ import "@sentry/electron/preload";
 import "electron-log/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import {
+  ASSET_LOGO_CHANNELS,
   BOOTNODE_CHANNELS,
   CHAINDATA_CHANNELS,
   CLIPBOARD_CHANNELS,
@@ -15,6 +16,7 @@ import {
 } from "../bridge/ipc-channels";
 import type {
   AppInfo,
+  AssetLogos,
   BootnodeSaveResult,
   BootnodeSettings,
   BootnodeState,
@@ -114,6 +116,14 @@ const api = {
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_INDEX_STATUS),
     rebuildIndex: (): Promise<void> =>
       ipcRenderer.invoke(EXPLORER_CHANNELS.REBUILD_INDEX),
+  },
+  assetLogos: {
+    getAll: (): Promise<AssetLogos> =>
+      ipcRenderer.invoke(ASSET_LOGO_CHANNELS.GET_ALL),
+    set: (key: string, dataUrl: string): Promise<void> =>
+      ipcRenderer.invoke(ASSET_LOGO_CHANNELS.SET, key, dataUrl),
+    reset: (key: string): Promise<void> =>
+      ipcRenderer.invoke(ASSET_LOGO_CHANNELS.RESET, key),
   },
   tokens: {
     getDetected: (account: string): Promise<DetectedTokens> =>

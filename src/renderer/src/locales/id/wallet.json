@@ -136,7 +136,22 @@
       "balance": "Saldo",
       "contract": "Alamat kontrak",
       "spoofWarning": "Siapa saja bisa membuat token, dan nama serta simbolnya bisa meniru token lain. Periksa alamat kontrak sebelum memercayainya.",
-      "hide": "Sembunyikan token"
+      "hide": "Sembunyikan token",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG, atau WebP, maks. 2 MB. Dipotong menjadi persegi 128×128 dan hanya disimpan di perangkat ini.",
+        "upload": "Unggah logo",
+        "save": "Simpan logo",
+        "cancel": "Batal",
+        "reset": "Kembalikan ke default",
+        "preview": "Pratinjau logo baru",
+        "errors": {
+          "tooLarge": "Ukuran file lebih dari 2 MB.",
+          "unsupported": "Hanya gambar PNG, JPEG, dan WebP yang diizinkan (SVG tidak).",
+          "unreadable": "Gambar ini tidak dapat dibaca.",
+          "saveFailed": "Logo tidak dapat disimpan. Coba lagi."
+        }
+      }
     }
   },
   "historyFilter": {

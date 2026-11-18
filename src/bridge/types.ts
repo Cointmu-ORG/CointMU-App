@@ -427,3 +427,6 @@ export interface DetectedTokens {
   readonly tokens: readonly DetectedToken[];
   readonly scan: TokenScanProgress;
 }
+
+/** Custom logos by asset key: "native" or a lowercase contract address. */
+export type AssetLogos = Readonly<Record<string, string>>;

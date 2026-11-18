@@ -136,7 +136,22 @@
       "balance": "Balance",
       "contract": "Contract address",
       "spoofWarning": "Anyone can create a token, and its name and symbol can copy another token. Check the contract address before trusting it.",
-      "hide": "Hide token"
+      "hide": "Hide token",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG or WebP, up to 2 MB. Cropped to a 128×128 square and stored only on this device.",
+        "upload": "Upload logo",
+        "save": "Save logo",
+        "cancel": "Cancel",
+        "reset": "Reset to default",
+        "preview": "New logo preview",
+        "errors": {
+          "tooLarge": "The file is larger than 2 MB.",
+          "unsupported": "Only PNG, JPEG and WebP images are allowed (SVG is not).",
+          "unreadable": "This image could not be read.",
+          "saveFailed": "The logo could not be saved. Try again."
+        }
+      }
     }
   },
   "historyFilter": {
