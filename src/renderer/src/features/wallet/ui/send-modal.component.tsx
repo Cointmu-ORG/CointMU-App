@@ -25,7 +25,11 @@ import {
   parseTransferError,
 } from "@/features/wallet";
 import { call, getSetting, waitForTransactionReceipt } from "@/shared/api";
-import { SendPasswordInput } from "./send-password-input.component";
+import { SendConfirmModal } from "./send-confirm-modal.component";
+import type {
+  SendConfirmResult,
+  SendSummary,
+} from "../model/send-confirm.types";
 import { Check, AlertCircle } from "lucide-react";
 import { CustomDropdown, PrivateAmount } from "@/shared/ui";
 import { TokenIcon } from "@/features/wallet";
@@ -96,7 +100,6 @@ function SendModal({
     (s) => s.sendSelectedTokenAddress,
   );
   const sendLoading = useWalletUiStore((s) => s.sendLoading);
-  const sendError = useWalletUiStore((s) => s.sendError);
   const sendSuccess = useWalletUiStore((s) => s.sendSuccess);
   const setSendTo = useWalletUiStore((s) => s.setSendTo);
   const setSendAmount = useWalletUiStore((s) => s.setSendAmount);
@@ -104,7 +107,6 @@ function SendModal({
     (s) => s.setSendSelectedTokenAddress,
   );
   const setSendLoading = useWalletUiStore((s) => s.setSendLoading);
-  const setSendError = useWalletUiStore((s) => s.setSendError);
   const setSendSuccess = useWalletUiStore((s) => s.setSendSuccess);
   const resetSendForm = useWalletUiStore((s) => s.resetSendForm);
   const addPendingTransaction = useAppStore((s) => s.addPendingTransaction);
@@ -116,7 +118,7 @@ function SendModal({
   const [tokens, setTokens] = useState<TokenInfo[]>([]);
   // Settings → Security; on (the default) until the stored value says off.
   const [isPasswordRequired, setIsPasswordRequired] = useState(true);
-  const [sendPassword, setSendPassword] = useState("");
+  const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -309,32 +311,50 @@ function SendModal({
     return null;
   };
 
-  const handleSend = async (): Promise<void> => {
+  const formError = validateBeforeSend();
+  const canContinue =
+    formError === null && estimationStatus === "ready" && !sendLoading;
+  // Only explain a blocked "Continue" once there is something to judge.
+  const formHint =
+    sendTo && sendAmount && estimationStatus !== "estimating"
+      ? formError
+      : null;
+
+  const handleConfirm = async (
+    password: string,
+  ): Promise<SendConfirmResult> => {
     if (sendLoading || !activeAccount || !activeWalletAddress || !selectedToken)
-      return;
+      return {
+        isOk: false,
+        field: "general",
+        message: t("wallet:errors.unexpected"),
+      };
 
     const validationError = validateBeforeSend();
     if (validationError) {
-      setSendError(validationError);
-      return;
+      return { isOk: false, field: "general", message: validationError };
     }
 
-    if (isPasswordRequired && !sendPassword) {
-      setSendError(t("wallet:modals.send.passwordRequired"));
-      return;
-    }
-
-    setSendError("");
     setSendLoading(true);
 
+    let wallet: Awaited<ReturnType<typeof resolveWallet>>;
     try {
       // With the setting on, the typed password decrypts the key itself, so a
       // wrong one fails here, locally, before anything is signed.
-      const password = isPasswordRequired
-        ? sendPassword
-        : requireSessionPassword();
-      const wallet = await resolveWallet(activeAccount, password);
+      wallet = await resolveWallet(
+        activeAccount,
+        isPasswordRequired ? password : requireSessionPassword(),
+      );
+    } catch (e) {
+      setSendLoading(false);
+      return {
+        isOk: false,
+        field: isPasswordRequired ? "password" : "general",
+        message: parseTransferError(e),
+      };
+    }
 
+    try {
       const nonceHex = await call("eth_getTransactionCount", [
         activeWalletAddress,
         "latest",
@@ -425,13 +445,29 @@ function SendModal({
           );
           return fetchGlobalStats(activeWalletAddress, addresses);
         });
+      return { isOk: true };
     } catch (e) {
-      setSendError(parseTransferError(e));
+      return { isOk: false, field: "general", message: parseTransferError(e) };
     } finally {
-      setSendPassword("");
       setSendLoading(false);
     }
   };
+
+  const summary: SendSummary | null =
+    activeAccount && gasFeeFormatted
+      ? {
+          fromLabel: activeAccount.label,
+          fromAddress: activeAccount.address,
+          toAddress: sendTo,
+          amount: sendAmount,
+          symbol: selectedToken?.symbol ?? "CMU",
+          tokenAddress: selectedToken?.address ?? "native",
+          feeCmu: gasFeeFormatted,
+          isNative,
+        }
+      : null;
+
+  const handleBack = useCallback(() => setIsConfirming(false), []);
 
   const handleDone = (): void => {
     resetSendForm();
@@ -631,35 +667,34 @@ function SendModal({
             )}
         </div>
 
-        {isPasswordRequired && (
-          <SendPasswordInput
-            value={sendPassword}
-            isDisabled={sendLoading}
-            onChange={setSendPassword}
-          />
-        )}
-
-        {sendError && (
+        {formHint && (
           <div className="flex items-start gap-2 text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-2.5 rounded-xl border border-red-100 dark:border-red-900/50">
             <AlertCircle
               width={14}
               height={14}
               className="flex-shrink-0 mt-0.5"
             />
-            <p className="text-xs font-medium leading-relaxed">{sendError}</p>
+            <p className="text-xs font-medium leading-relaxed">{formHint}</p>
           </div>
         )}
 
         <button
-          onClick={handleSend}
-          disabled={sendLoading || estimationStatus === "estimating"}
+          onClick={() => setIsConfirming(true)}
+          disabled={!canContinue}
           className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-sm shadow-accent/20 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
         >
-          {sendLoading
-            ? t("wallet:modals.send.pendingConf")
-            : t("wallet:modals.send.reviewSign")}
+          {t("wallet:modals.send.continueBtn")}
         </button>
       </div>
+
+      {isConfirming && summary && (
+        <SendConfirmModal
+          summary={summary}
+          isPasswordRequired={isPasswordRequired}
+          onBack={handleBack}
+          onConfirm={handleConfirm}
+        />
+      )}
     </div>
   );
 }

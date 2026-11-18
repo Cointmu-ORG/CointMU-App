@@ -79,8 +79,6 @@
       "couldNotEstimate": "Не удалось оценить",
       "cmuGasBalance": "Баланс Gas CMU",
       "totalDeducted": "Итого списано",
-      "reviewSign": "Проверить и подписать",
-      "pendingConf": "Ожидание подтверждения...",
       "errorRecipientReq": "Адрес получателя обязателен.",
       "errorInvalidAddress": "Неверный формат адреса получателя.",
       "errorValidAmount": "Введите корректную сумму больше нуля.",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "Транзакция не удалась",
       "notifFailedDesc": "Перевод {{asset}} на {{to}} не удалось подтвердить",
       "passwordLabel": "Пароль кошелька",
-      "passwordRequired": "Введите пароль кошелька, чтобы отправить."
+      "passwordRequired": "Введите пароль кошелька, чтобы отправить.",
+      "continueBtn": "Далее"
+    },
+    "sendConfirm": {
+      "title": "Подтверждение отправки",
+      "subtitle": "Проверьте все данные. Отправленную транзакцию нельзя отменить.",
+      "from": "От",
+      "to": "Кому",
+      "asset": "Актив",
+      "total": "Итого",
+      "back": "Назад",
+      "confirm": "Подтвердить и отправить",
+      "sending": "Отправка…"
     },
     "importKeystore": {
       "title": "Импорт keystore",

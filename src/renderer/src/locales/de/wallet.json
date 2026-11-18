@@ -79,8 +79,6 @@
       "couldNotEstimate": "Schätzung nicht möglich",
       "cmuGasBalance": "CMU-Gas-Guthaben",
       "totalDeducted": "Gesamt abgezogen",
-      "reviewSign": "Prüfen und signieren",
-      "pendingConf": "Warte auf Bestätigung...",
       "errorRecipientReq": "Empfängeradresse ist erforderlich.",
       "errorInvalidAddress": "Ungültiges Format der Empfängeradresse.",
       "errorValidAmount": "Geben Sie einen gültigen Betrag größer als Null ein.",
@@ -96,7 +94,19 @@
       "notifFailedTitle": "Transaktion fehlgeschlagen",
       "notifFailedDesc": "Übertragung von {{asset}} an {{to}} konnte nicht bestätigt werden",
       "passwordLabel": "Wallet-Passwort",
-      "passwordRequired": "Gib dein Wallet-Passwort ein, um zu senden."
+      "passwordRequired": "Gib dein Wallet-Passwort ein, um zu senden.",
+      "continueBtn": "Weiter"
+    },
+    "sendConfirm": {
+      "title": "Senden bestätigen",
+      "subtitle": "Prüfe alle Angaben. Gesendete Transaktionen lassen sich nicht rückgängig machen.",
+      "from": "Von",
+      "to": "An",
+      "asset": "Asset",
+      "total": "Gesamt",
+      "back": "Zurück",
+      "confirm": "Bestätigen & senden",
+      "sending": "Wird gesendet…"
     },
     "importKeystore": {
       "title": "Keystore importieren",
