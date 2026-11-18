@@ -56,7 +56,9 @@
       "confirmDeleteDust": "Akun ini memiliki saldo kecil. Apakah Anda yakin ingin menghapusnya secara permanen dan kehilangan dana tersebut?",
       "deleteTitle": "Hapus Akun",
       "cancel": "Batal",
-      "delete": "Hapus"
+      "delete": "Hapus",
+      "tokensTitle": "Token tersembunyi",
+      "unhideToken": "Tampilkan lagi {{symbol}}"
     },
     "receive": {
       "title": "Terima CMU",
@@ -127,6 +129,13 @@
       "detailsFailed": "Gagal mengambil detail token. Pastikan ini kontrak ERC-20 yang valid di jaringan ini.",
       "addFailed": "Terjadi galat saat menambahkan token.",
       "verifying": "Memverifikasi..."
+    },
+    "tokenDetail": {
+      "close": "Tutup",
+      "balance": "Saldo",
+      "contract": "Alamat kontrak",
+      "spoofWarning": "Siapa saja bisa membuat token, dan nama serta simbolnya bisa meniru token lain. Periksa alamat kontrak sebelum memercayainya.",
+      "hide": "Sembunyikan token"
     }
   },
   "historyFilter": {

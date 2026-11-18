@@ -11,6 +11,7 @@ import {
   RPC_CHANNELS,
   SHELL_CHANNELS,
   SYSTEM_CHANNELS,
+  TOKEN_CHANNELS,
 } from "../bridge/ipc-channels";
 import type {
   AppInfo,
@@ -22,6 +23,7 @@ import type {
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
+  DetectedTokens,
   DialogText,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
@@ -112,6 +114,15 @@ const api = {
       ipcRenderer.invoke(EXPLORER_CHANNELS.GET_INDEX_STATUS),
     rebuildIndex: (): Promise<void> =>
       ipcRenderer.invoke(EXPLORER_CHANNELS.REBUILD_INDEX),
+  },
+  tokens: {
+    getDetected: (account: string): Promise<DetectedTokens> =>
+      ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED, account),
+    onChanged: (callback: () => void): (() => void) => {
+      const handler = (): void => callback();
+      ipcRenderer.on(TOKEN_CHANNELS.CHANGED, handler);
+      return () => ipcRenderer.removeListener(TOKEN_CHANNELS.CHANGED, handler);
+    },
   },
   network: {
     getInsights: () => ipcRenderer.invoke("network:getInsights"),

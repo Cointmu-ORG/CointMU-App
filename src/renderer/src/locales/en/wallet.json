@@ -56,7 +56,9 @@
       "confirmDeleteDust": "This account has a small balance. Are you sure you want to permanently delete it and lose the funds?",
       "deleteTitle": "Delete Account",
       "cancel": "Cancel",
-      "delete": "Delete"
+      "delete": "Delete",
+      "tokensTitle": "Hidden tokens",
+      "unhideToken": "Show {{symbol}} again"
     },
     "receive": {
       "title": "Receive CMU",
@@ -127,6 +129,13 @@
       "detailsFailed": "Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.",
       "addFailed": "An error occurred while adding the token.",
       "verifying": "Verifying..."
+    },
+    "tokenDetail": {
+      "close": "Close",
+      "balance": "Balance",
+      "contract": "Contract address",
+      "spoofWarning": "Anyone can create a token, and its name and symbol can copy another token. Check the contract address before trusting it.",
+      "hide": "Hide token"
     }
   },
   "historyFilter": {

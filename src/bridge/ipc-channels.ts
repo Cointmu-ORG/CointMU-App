@@ -54,3 +54,8 @@ export const CHAINDATA_CHANNELS = {
 export const CLIPBOARD_CHANNELS = {
   COPY_SENSITIVE: "clipboard:copy-sensitive",
 } as const;
+
+export const TOKEN_CHANNELS = {
+  GET_DETECTED: "tokens:get-detected",
+  CHANGED: "tokens:changed",
+} as const;

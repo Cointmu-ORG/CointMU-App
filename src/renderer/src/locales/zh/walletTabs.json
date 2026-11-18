@@ -12,12 +12,19 @@
     "token": "代币",
     "price": "价格",
     "balance": "余额",
-    "value": "价值"
+    "value": "价值",
+    "actions": "操作"
   },
   "nft": {
     "tokenId": "代币 ID：{{id}}",
     "unknownCollection": "未知合集",
     "fallbackName": "代币 #{{id}}",
     "discoveryFailed": "NFT 搜索失败"
+  },
+  "autoDetected": "自动检测",
+  "hideToken": "隐藏 {{symbol}}",
+  "tokenScan": {
+    "label": "代币扫描进度",
+    "progress": "正在查找发送到此账户的代币… {{percent}}%(区块 {{block}} / {{head}})"
   }
 }

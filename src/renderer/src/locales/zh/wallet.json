@@ -56,7 +56,9 @@
       "confirmDeleteDust": "此帐户中有少量余额。您确定要永久删除它并失去这些资金吗？",
       "deleteTitle": "删除帐户",
       "cancel": "取消",
-      "delete": "删除"
+      "delete": "删除",
+      "tokensTitle": "已隐藏的代币",
+      "unhideToken": "重新显示 {{symbol}}"
     },
     "receive": {
       "title": "接收 CMU",
@@ -127,6 +129,13 @@
       "detailsFailed": "无法获取代币详情。请确认它是此网络上有效的 ERC-20 合约。",
       "addFailed": "添加代币时出错。",
       "verifying": "正在验证..."
+    },
+    "tokenDetail": {
+      "close": "关闭",
+      "balance": "余额",
+      "contract": "合约地址",
+      "spoofWarning": "任何人都可以创建代币,其名称和符号可能模仿其他代币。信任之前请核对合约地址。",
+      "hide": "隐藏代币"
     }
   },
   "historyFilter": {

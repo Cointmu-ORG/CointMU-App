@@ -56,7 +56,9 @@
       "confirmDeleteDust": "Dieses Konto weist ein geringes Guthaben auf. Sind Sie sicher, dass Sie es dauerhaft löschen und das Guthaben verlieren möchten?",
       "deleteTitle": "Konto löschen",
       "cancel": "Abbrechen",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "tokensTitle": "Ausgeblendete Token",
+      "unhideToken": "{{symbol}} wieder anzeigen"
     },
     "receive": {
       "title": "CMU empfangen",
@@ -127,6 +129,13 @@
       "detailsFailed": "Token-Details konnten nicht abgerufen werden. Stelle sicher, dass es ein gültiger ERC-20-Contract in diesem Netzwerk ist.",
       "addFailed": "Beim Hinzufügen des Tokens ist ein Fehler aufgetreten.",
       "verifying": "Wird geprüft..."
+    },
+    "tokenDetail": {
+      "close": "Schließen",
+      "balance": "Guthaben",
+      "contract": "Vertragsadresse",
+      "spoofWarning": "Jeder kann einen Token erstellen, und Name und Symbol können einen anderen Token nachahmen. Prüfe die Vertragsadresse, bevor du ihm vertraust.",
+      "hide": "Token ausblenden"
     }
   },
   "historyFilter": {

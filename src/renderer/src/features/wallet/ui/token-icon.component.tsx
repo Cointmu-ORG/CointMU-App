@@ -1,10 +1,17 @@
 import { type JSX } from "react";
 import { getTokenGradient, getTokenInitials } from "../lib/token-icon.util";
 
+const SIZE_CLASSES = {
+  xs: "w-4 h-4 text-[7px]",
+  sm: "w-6 h-6 text-[9px]",
+  md: "w-8 h-8 text-[10px]",
+  lg: "w-12 h-12 text-sm",
+} as const;
+
 interface TokenIconProps {
   address: string;
   symbol: string;
-  size?: "sm" | "md";
+  size?: keyof typeof SIZE_CLASSES;
 }
 
 /**
@@ -24,13 +31,11 @@ function TokenIcon({
   const gradient = getTokenGradient(address);
   const initials = getTokenInitials(symbol);
 
-  const sizeClasses =
-    size === "sm" ? "w-6 h-6 text-[9px]" : "w-8 h-8 text-[10px]";
-
   return (
     <div
-      className={`${sizeClasses} rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0`}
+      className={`${SIZE_CLASSES[size]} rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0`}
       style={{ background: gradient }}
+      aria-hidden="true"
     >
       {initials}
     </div>

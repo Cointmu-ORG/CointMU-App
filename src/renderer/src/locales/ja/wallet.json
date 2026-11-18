@@ -56,7 +56,9 @@
       "confirmDeleteDust": "このアカウントには少額の残高があります。完全に削除して資金を失ってもよろしいですか？",
       "deleteTitle": "アカウントを削除",
       "cancel": "キャンセル",
-      "delete": "削除"
+      "delete": "削除",
+      "tokensTitle": "非表示のトークン",
+      "unhideToken": "{{symbol}} を再表示"
     },
     "receive": {
       "title": "CMUの受信",
@@ -127,6 +129,13 @@
       "detailsFailed": "トークンの詳細を取得できませんでした。このネットワーク上の有効な ERC-20 コントラクトか確認してください。",
       "addFailed": "トークンの追加中にエラーが発生しました。",
       "verifying": "確認中..."
+    },
+    "tokenDetail": {
+      "close": "閉じる",
+      "balance": "残高",
+      "contract": "コントラクトアドレス",
+      "spoofWarning": "トークンは誰でも作成でき、名前やシンボルは他のトークンを模倣できます。信頼する前にコントラクトアドレスを確認してください。",
+      "hide": "トークンを非表示"
     }
   },
   "historyFilter": {

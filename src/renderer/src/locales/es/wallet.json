@@ -56,7 +56,9 @@
       "confirmDeleteDust": "Esta cuenta tiene un saldo pequeño. ¿Está seguro de que desea eliminarla permanentemente y perder los fondos?",
       "deleteTitle": "Eliminar cuenta",
       "cancel": "Cancelar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "tokensTitle": "Tokens ocultos",
+      "unhideToken": "Volver a mostrar {{symbol}}"
     },
     "receive": {
       "title": "Recibir CMU",
@@ -127,6 +129,13 @@
       "detailsFailed": "No se pudieron obtener los detalles del token. Asegúrate de que sea un contrato ERC-20 válido en esta red.",
       "addFailed": "Se produjo un error al añadir el token.",
       "verifying": "Verificando..."
+    },
+    "tokenDetail": {
+      "close": "Cerrar",
+      "balance": "Saldo",
+      "contract": "Dirección del contrato",
+      "spoofWarning": "Cualquiera puede crear un token, y su nombre y símbolo pueden imitar a otro. Comprueba la dirección del contrato antes de confiar en él.",
+      "hide": "Ocultar token"
     }
   },
   "historyFilter": {

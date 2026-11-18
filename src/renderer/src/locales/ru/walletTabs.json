@@ -12,12 +12,19 @@
     "token": "Токен",
     "price": "Цена",
     "balance": "Баланс",
-    "value": "Стоимость"
+    "value": "Стоимость",
+    "actions": "Действия"
   },
   "nft": {
     "tokenId": "ID токена: {{id}}",
     "unknownCollection": "Неизвестная коллекция",
     "fallbackName": "Токен #{{id}}",
     "discoveryFailed": "Не удалось найти NFT"
+  },
+  "autoDetected": "Найден автоматически",
+  "hideToken": "Скрыть {{symbol}}",
+  "tokenScan": {
+    "label": "Ход поиска токенов",
+    "progress": "Поиск токенов, отправленных на этот аккаунт… {{percent}}% (блок {{block}} из {{head}})"
   }
 }

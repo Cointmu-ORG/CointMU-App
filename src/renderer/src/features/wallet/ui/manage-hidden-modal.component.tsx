@@ -2,6 +2,9 @@ import type { DerivedAccount } from "@/entities/account";
 import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Eye, Trash2 } from "lucide-react";
+import { useHiddenTokensStore } from "../model/hidden-tokens.store";
+import { assetLabel } from "../lib/wallet-assets.util";
+import { TokenIcon } from "./token-icon.component";
 
 interface ManageHiddenModalProps {
   accounts: DerivedAccount[];
@@ -23,6 +26,8 @@ function ManageHiddenModal({
   onDeleteAccount,
 }: ManageHiddenModalProps): JSX.Element {
   const hiddenAccounts = accounts.filter((a) => a.isHidden);
+  const hiddenTokens = useHiddenTokensStore((s) => s.hidden);
+  const unhideToken = useHiddenTokensStore((s) => s.unhide);
   const { t } = useTranslation();
 
   const [accountToDelete, setAccountToDelete] = useState<DerivedAccount | null>(
@@ -77,6 +82,45 @@ function ManageHiddenModal({
           ))
         )}
       </div>
+
+      {hiddenTokens.length > 0 && (
+        <div className="mt-6">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-400 mb-3">
+            {t("wallet:modals.manageHidden.tokensTitle")}
+          </h4>
+          <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+            {hiddenTokens.map((token) => (
+              <div
+                key={token.address}
+                className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800/50"
+              >
+                <TokenIcon address={token.address} symbol={token.symbol} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100 truncate">
+                    {token.name || assetLabel(token)}
+                  </p>
+                  <p className="text-xs font-mono text-slate-500 dark:text-gray-400 truncate">
+                    {token.address}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => unhideToken(token.address)}
+                  aria-label={t("wallet:modals.manageHidden.unhideToken", {
+                    symbol: assetLabel(token),
+                  })}
+                  title={t("wallet:modals.manageHidden.unhideToken", {
+                    symbol: assetLabel(token),
+                  })}
+                  className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600 text-slate-500 dark:text-gray-400 hover:text-accent hover:border-accent/30 hover:bg-accent/10 transition-all flex items-center justify-center shadow-sm"
+                >
+                  <Eye width={14} height={14} strokeWidth={2.5} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {accountToDelete && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">

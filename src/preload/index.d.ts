@@ -8,6 +8,7 @@ import type {
   ChainDataMoveResult,
   ChainDataTarget,
   DialogText,
+  DetectedTokens,
   ExplorerIndexStatus,
   JsonRpcEnvelope,
   MinerDistributionResult,
@@ -66,6 +67,12 @@ interface CointmuAPI {
     ) => Promise<MinerDistributionResult | null>;
     getIndexStatus: () => Promise<ExplorerIndexStatus | null>;
     rebuildIndex: () => Promise<void>;
+  };
+  tokens: {
+    /** ERC-20 tokens the account received (balance > 0) and the scan progress. */
+    getDetected: (account: string) => Promise<DetectedTokens>;
+    /** Fires after a scan step changed detections, balances or the head. @returns Unsubscribe. */
+    onChanged: (callback: () => void) => () => void;
   };
   network: {
     getInsights: () => Promise<{
