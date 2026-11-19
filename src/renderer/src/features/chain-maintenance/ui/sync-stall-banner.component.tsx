@@ -2,9 +2,13 @@ import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { SyncStallStep } from "@bridge/types";
 import { useSyncStall } from "../lib/sync-stall.hook";
+import { useChainResync } from "../lib/chain-resync.hook";
+import { ChainResyncDialogs } from "./chain-resync-dialogs.component";
 
 const TONE_PROGRESS =
   "bg-amber-50 text-amber-900 border-amber-200 dark:bg-amber-950/60 dark:text-amber-100 dark:border-amber-900";
+const ACTION_BUTTON =
+  "px-3 py-1 rounded-md border border-current font-medium hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current";
 const TONE_ATTENTION =
   "bg-red-50 text-red-800 border-red-200 dark:bg-red-950/60 dark:text-red-200 dark:border-red-900";
 
@@ -16,7 +20,9 @@ const TONE_ATTENTION =
 export function SyncStallBanner(): JSX.Element | null {
   const { t } = useTranslation(["mining"]);
   const step = useSyncStall();
-  if (!step) return null;
+  const resync = useChainResync();
+  // The dialogs outlive the banner: the stall clears once the resync starts.
+  if (!step) return <ChainResyncDialogs resync={resync} />;
 
   const needsUser = step === SyncStallStep.NEEDS_RESYNC;
   return (
@@ -33,6 +39,12 @@ export function SyncStallBanner(): JSX.Element | null {
         </p>
         <p className="opacity-90">{t(`mining:syncStall.step.${step}`)}</p>
       </div>
+      {needsUser && (
+        <button type="button" onClick={resync.open} className={ACTION_BUTTON}>
+          {t("mining:syncStall.resync")}
+        </button>
+      )}
+      <ChainResyncDialogs resync={resync} />
     </div>
   );
 }

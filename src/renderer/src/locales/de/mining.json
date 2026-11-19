@@ -129,6 +129,7 @@
       "reregister-peers": "Netzwerk-Peers werden neu registriert.",
       "restart-node": "Der Node wird neu gestartet.",
       "needs-resync": "Die automatische Wiederherstellung hat nicht geholfen. „Neu synchronisieren“ lädt die Chain erneut herunter; Wallets und Einstellungen bleiben erhalten."
-    }
+    },
+    "resync": "Neu synchronisieren"
   }
 }

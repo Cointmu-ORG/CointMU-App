@@ -65,6 +65,35 @@ async function removeOlderBackups(
 }
 
 /**
+ * Lists the quarantine backups of a datadir as absolute paths, each checked
+ * by the recovery guard. Missing folders list nothing.
+ * @param dataDir - The absolute geth data directory.
+ * @returns The backup paths.
+ */
+export async function listChainDataBackups(dataDir: string): Promise<string[]> {
+  const gethDir = dirname(resolveChainDataPath(dataDir));
+  if (!existsSync(gethDir)) return [];
+  return (await readdir(gethDir)).filter(isQuarantineName).map((name) => {
+    const target = join(gethDir, name);
+    assertSafeRecoveryTarget(dataDir, target);
+    return target;
+  });
+}
+
+/**
+ * Deletes every quarantine backup of a datadir. Paths come from
+ * listChainDataBackups only, never from the caller.
+ * @param dataDir - The absolute geth data directory.
+ * @throws When a removal fails, so the UI can report it.
+ */
+export async function removeChainDataBackups(dataDir: string): Promise<void> {
+  for (const target of await listChainDataBackups(dataDir)) {
+    await rm(target, { recursive: true, force: true });
+    console.warn(`[geth:recovery] Removed chaindata backup ${target}`);
+  }
+}
+
+/**
  * Moves the live chaindata aside as 'chaindata.corrupt-<timestamp>' and keeps
  * only that newest backup. The caller must have observed geth's exit first.
  * @param dataDir - The absolute geth data directory.

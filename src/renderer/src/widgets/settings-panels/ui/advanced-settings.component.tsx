@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { CustomDropdown } from "@/shared/ui";
 import { LOG_LEVEL_LABEL_KEYS } from "@/shared/lib";
 import { LogLevel } from "@bridge/setting-values";
+import { DataMaintenanceSettings } from "./data-maintenance-settings.component";
 
 /**
  * Formats a byte count into a compact human-readable size string.
@@ -178,6 +179,8 @@ export function AdvancedSettings(): JSX.Element {
             </div>
           </div>
         </section>
+
+        <DataMaintenanceSettings />
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-3">

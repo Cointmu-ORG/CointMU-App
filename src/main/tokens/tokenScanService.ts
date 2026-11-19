@@ -114,6 +114,27 @@ function loadState(raw: unknown): TokenScanState {
 }
 
 const stopController = new AbortController();
+let isPaused = false;
+
+/**
+ * Holds the scan loop while the chain data is replaced (resync); the loop
+ * keeps its state and continues once resumed.
+ * @param paused - True to hold, false to resume.
+ */
+export function setTokenScanPaused(paused: boolean): void {
+  isPaused = paused;
+}
+
+/** One scan step; @returns how long to wait before the next one. */
+async function runStep(scanner: TokenScanner): Promise<number> {
+  try {
+    const outcome = await scanner.step();
+    return outcome === ScanOutcome.BUSY ? BUSY_PAUSE_MS : FOLLOW_INTERVAL_MS;
+  } catch (err) {
+    console.warn("[tokens] Scan step failed:", (err as Error).message);
+    return ERROR_BACKOFF_MS;
+  }
+}
 
 /**
  * Starts the background ERC-20 detection for every wallet account of the
@@ -135,14 +156,7 @@ export async function startTokenScan(store: AppStore): Promise<void> {
 
   let saved = JSON.stringify(state);
   while (!stopController.signal.aborted) {
-    let pauseMs = ERROR_BACKOFF_MS;
-    try {
-      const outcome = await started.step();
-      pauseMs =
-        outcome === ScanOutcome.BUSY ? BUSY_PAUSE_MS : FOLLOW_INTERVAL_MS;
-    } catch (err) {
-      console.warn("[tokens] Scan step failed:", (err as Error).message);
-    }
+    const pauseMs = isPaused ? FOLLOW_INTERVAL_MS : await runStep(started);
     const current = JSON.stringify(state);
     if (current !== saved) {
       saved = current;

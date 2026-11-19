@@ -385,6 +385,30 @@ export type ChainDataMoveError =
   (typeof ChainDataMoveError)[keyof typeof ChainDataMoveError];
 
 /** Where the chain data lives and how big it is. */
+/** Why "Resync from scratch" did not run or finish. */
+export const ChainResyncError = {
+  /** A resync, a chain data move or a recovery already runs. */
+  BUSY: "BUSY",
+  /** Geth's exit was not observed; the chain data was left alone. */
+  NODE_STILL_RUNNING: "NODE_STILL_RUNNING",
+  FAILED: "FAILED",
+} as const;
+
+export type ChainResyncError =
+  (typeof ChainResyncError)[keyof typeof ChainResyncError];
+
+export type ChainResyncResult =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly error: ChainResyncError };
+
+/** Sizes shown before a resync and next to "Delete backup". */
+export interface ChainResyncInfo {
+  /** The chain data a resync removes and downloads again. */
+  readonly chainSizeBytes: number;
+  /** Quarantined chain data, or 0 when there is none. */
+  readonly backupSizeBytes: number;
+}
+
 export interface ChainDataInfo {
   readonly root: string;
   readonly sizeBytes: number;

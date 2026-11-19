@@ -133,6 +133,7 @@
       "reregister-peers": "Volviendo a registrar los peers de la red.",
       "restart-node": "Reiniciando el nodo.",
       "needs-resync": "La recuperación automática no funcionó. Resincronizar desde cero descarga la cadena de nuevo; tus billeteras y ajustes se conservan."
-    }
+    },
+    "resync": "Resincronizar desde cero"
   }
 }

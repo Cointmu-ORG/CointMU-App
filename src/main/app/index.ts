@@ -19,6 +19,7 @@ import { storedDataRoot } from "../geth/process/chainDataMove";
 import { watchGethPriority } from "../geth/process/gethPrioritySetup";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { registerChainDataHandlers } from "../ipc/chainDataIpc";
+import { registerChainResyncHandlers } from "../ipc/chainResyncIpc";
 import { registerClipboardHandlers } from "../ipc/clipboardIpc";
 import { CHAIN_DATA_ROOT_KEY } from "../store/settingRules";
 import { startSession } from "./session";
@@ -109,6 +110,7 @@ app.whenReady().then(async () => {
   registerBootnodeHandlers(store);
   registerWindowHandlers();
   registerChainDataHandlers(store);
+  registerChainResyncHandlers(store);
   registerClipboardHandlers(store);
   registerExplorerHandlers({
     minerDistribution: queryMinerDistribution,

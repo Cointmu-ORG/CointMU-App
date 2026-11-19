@@ -482,5 +482,35 @@
       "debug": "Debug"
     },
     "recommendedValue": "{{value}} (empfohlen)"
+  },
+  "maintenance": {
+    "title": "Datenpflege",
+    "close": "Schließen",
+    "removedTitle": "Wird gelöscht",
+    "keptTitle": "Bleibt erhalten",
+    "item": {
+      "chainData": "Lokale Chain-Daten ({{size}})",
+      "wallets": "Wallets und Schlüssel",
+      "settings": "Einstellungen",
+      "tokens": "Tokens, ausgeblendete Tokens und eigene Logos"
+    },
+    "resyncTitle": "Neu synchronisieren",
+    "resyncDesc": "Löscht die lokalen Chain-Daten und lädt sie ab Block 0 neu herunter. Hilft, wenn die Synchronisierung hängen bleibt.",
+    "resyncButton": "Neu synchronisieren…",
+    "resyncConfirmTitle": "Chain neu synchronisieren?",
+    "resyncConfirmBody": "Die lokalen Chain-Daten (etwa {{size}}) werden entfernt und erneut aus dem Netzwerk geladen. Das kann einige Stunden dauern.",
+    "resyncConfirm": "Neu synchronisieren",
+    "resyncBackupNote": "Die alten Chain-Daten bleiben als Sicherung erhalten und werden automatisch gelöscht, sobald die neue Chain denselben Block erreicht.",
+    "resyncRunning": "Node wird gestoppt, alte Chain-Daten werden beiseitegelegt…",
+    "resyncDone": "Der Node wurde ab dem Genesis-Block neu gestartet und lädt die Chain herunter.",
+    "resyncError": {
+      "BUSY": "Der Node führt gerade eine Wiederherstellung oder einen Datenumzug aus. Bitte danach erneut versuchen.",
+      "NODE_STILL_RUNNING": "Der Node wurde nicht beendet, daher wurde nichts gelöscht. Bitte erneut versuchen.",
+      "FAILED": "Die Neusynchronisierung ist fehlgeschlagen. Dein Wallet wurde nicht verändert; Details stehen in den Logs."
+    },
+    "backupTitle": "Sicherung der Chain-Daten",
+    "backupDesc": "Alte Chain-Daten nach einer Neusynchronisierung oder Reparatur ({{size}}).",
+    "backupDelete": "Sicherung löschen ({{size}})",
+    "backupFailed": "Die Sicherung konnte nicht gelöscht werden."
   }
 }

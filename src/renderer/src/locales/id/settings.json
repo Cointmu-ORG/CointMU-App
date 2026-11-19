@@ -477,5 +477,35 @@
       "debug": "Debug"
     },
     "recommendedValue": "{{value}} (disarankan)"
+  },
+  "maintenance": {
+    "title": "Pemeliharaan data",
+    "close": "Tutup",
+    "removedTitle": "Dihapus",
+    "keptTitle": "Tidak terpengaruh",
+    "item": {
+      "chainData": "Data chain lokal ({{size}})",
+      "wallets": "Wallet dan kunci",
+      "settings": "Pengaturan",
+      "tokens": "Token, token tersembunyi, dan logo kustom"
+    },
+    "resyncTitle": "Sinkron ulang dari awal",
+    "resyncDesc": "Menghapus data chain lokal dan mengunduhnya lagi dari blok 0. Gunakan saat sinkronisasi terus macet.",
+    "resyncButton": "Sinkron ulang…",
+    "resyncConfirmTitle": "Sinkron ulang chain dari awal?",
+    "resyncConfirmBody": "Data chain lokal (sekitar {{size}}) dihapus dan diunduh ulang dari jaringan. Ini bisa memakan beberapa jam.",
+    "resyncConfirm": "Sinkron ulang",
+    "resyncBackupNote": "Data chain lama disimpan sebagai cadangan dan dihapus otomatis setelah chain baru mencapai blok yang sama.",
+    "resyncRunning": "Menghentikan node dan menyisihkan data chain lama…",
+    "resyncDone": "Node dimulai ulang dari blok genesis dan sedang mengunduh chain.",
+    "resyncError": {
+      "BUSY": "Node sedang menjalankan pemulihan atau pemindahan data. Coba lagi setelah selesai.",
+      "NODE_STILL_RUNNING": "Node tidak berhenti, jadi tidak ada yang dihapus. Coba lagi.",
+      "FAILED": "Sinkron ulang gagal. Wallet Anda tidak berubah; lihat log untuk detailnya."
+    },
+    "backupTitle": "Cadangan data chain",
+    "backupDesc": "Data chain lama yang disimpan setelah sinkron ulang atau perbaikan ({{size}}).",
+    "backupDelete": "Hapus cadangan ({{size}})",
+    "backupFailed": "Cadangan tidak dapat dihapus."
   }
 }

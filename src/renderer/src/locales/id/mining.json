@@ -125,6 +125,7 @@
       "reregister-peers": "Mendaftarkan ulang peer jaringan.",
       "restart-node": "Memulai ulang node.",
       "needs-resync": "Pemulihan otomatis tidak berhasil. Sinkron ulang dari awal mengunduh ulang chain; wallet dan pengaturan tetap ada."
-    }
+    },
+    "resync": "Sinkron ulang dari awal"
   }
 }

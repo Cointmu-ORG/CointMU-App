@@ -5,6 +5,8 @@ import type {
   BootnodeState,
   BootnodeStatus,
   ChainDataInfo,
+  ChainResyncInfo,
+  ChainResyncResult,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -191,6 +193,9 @@ interface CointmuAPI {
     pickTarget: (dialogText: DialogText) => Promise<ChainDataTarget | null>;
     move: (target: string) => Promise<ChainDataMoveResult>;
     deleteOld: () => Promise<void>;
+    getResyncInfo: () => Promise<ChainResyncInfo>;
+    resync: () => Promise<ChainResyncResult>;
+    deleteBackup: () => Promise<void>;
     onProgress: (
       callback: (progress: ChainDataMoveProgress) => void,
     ) => () => void;

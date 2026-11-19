@@ -22,6 +22,8 @@ import type {
   BootnodeState,
   BootnodeStatus,
   ChainDataInfo,
+  ChainResyncInfo,
+  ChainResyncResult,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -287,6 +289,12 @@ const api = {
       ipcRenderer.invoke(CHAINDATA_CHANNELS.MOVE, target),
     deleteOld: (): Promise<void> =>
       ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_OLD),
+    getResyncInfo: (): Promise<ChainResyncInfo> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.GET_RESYNC_INFO),
+    resync: (): Promise<ChainResyncResult> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.RESYNC),
+    deleteBackup: (): Promise<void> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_BACKUP),
     onProgress: (callback: (progress: ChainDataMoveProgress) => void) => {
       const handler = (_: unknown, progress: ChainDataMoveProgress): void =>
         callback(progress);

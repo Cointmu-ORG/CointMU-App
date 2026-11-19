@@ -51,6 +51,9 @@ export const CHAINDATA_CHANNELS = {
   MOVE: "chaindata:move",
   DELETE_OLD: "chaindata:delete-old",
   PROGRESS: "chaindata:progress",
+  GET_RESYNC_INFO: "chaindata:get-resync-info",
+  RESYNC: "chaindata:resync",
+  DELETE_BACKUP: "chaindata:delete-backup",
 } as const;
 
 export const CLIPBOARD_CHANNELS = {

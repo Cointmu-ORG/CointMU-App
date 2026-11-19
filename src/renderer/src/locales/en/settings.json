@@ -482,5 +482,35 @@
       "debug": "Debug"
     },
     "recommendedValue": "{{value}} (recommended)"
+  },
+  "maintenance": {
+    "title": "Data maintenance",
+    "close": "Close",
+    "removedTitle": "Deleted",
+    "keptTitle": "Not affected",
+    "item": {
+      "chainData": "Local chain data ({{size}})",
+      "wallets": "Wallets and keys",
+      "settings": "Settings",
+      "tokens": "Tokens, hidden tokens and custom logos"
+    },
+    "resyncTitle": "Resync from scratch",
+    "resyncDesc": "Deletes the local chain data and downloads it again from block 0. Use it when sync stays stuck.",
+    "resyncButton": "Resync…",
+    "resyncConfirmTitle": "Resync the chain from scratch?",
+    "resyncConfirmBody": "The local chain data (about {{size}}) is removed and downloaded again from the network. This can take a few hours.",
+    "resyncConfirm": "Resync",
+    "resyncBackupNote": "The old chain data is kept as a backup and removed automatically once the new chain reaches the same block.",
+    "resyncRunning": "Stopping the node and setting the old chain data aside…",
+    "resyncDone": "The node restarted from the genesis block and is downloading the chain.",
+    "resyncError": {
+      "BUSY": "The node is busy with a recovery or a data move. Try again when it finishes.",
+      "NODE_STILL_RUNNING": "The node did not stop, so nothing was deleted. Try again.",
+      "FAILED": "The resync failed. Nothing in your wallet was changed; see the logs for details."
+    },
+    "backupTitle": "Chain data backup",
+    "backupDesc": "Old chain data kept after a resync or a repair ({{size}}).",
+    "backupDelete": "Delete backup ({{size}})",
+    "backupFailed": "Could not delete the backup."
   }
 }

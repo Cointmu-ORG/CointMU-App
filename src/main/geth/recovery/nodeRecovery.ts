@@ -29,6 +29,7 @@ import { readSyncProgress } from "../rpc/syncProgress";
 import { reregisterStaticPeers } from "../bootnode/staticPeers";
 import { restartNodeByUser } from "../process/nodeRestart";
 import { isChainDataMoveInProgress } from "../process/chainDataMove";
+import { isResyncInProgress } from "../process/chainResync";
 
 const PEER_COUNT_TIMEOUT_MS = 5_000;
 const BOOTNODE_PROBE_TIMEOUT_MS = 3_000;
@@ -84,7 +85,9 @@ function createSyncStallWatchdog(
   return new SyncStallWatchdog({
     isGethRunning,
     isLifecycleBusy: () =>
-      recovery.isRestartSuppressed() || isChainDataMoveInProgress(),
+      recovery.isRestartSuppressed() ||
+      isChainDataMoveInProgress() ||
+      isResyncInProgress(),
     readProgress: () => readSyncProgress(getRpcPort()),
     reregisterPeers: reregisterStaticPeers,
     restartNode: () => {

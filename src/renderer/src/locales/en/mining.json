@@ -129,6 +129,7 @@
       "reregister-peers": "Re-registering the network peers.",
       "restart-node": "Restarting the node.",
       "needs-resync": "Automatic recovery did not help. Resync from scratch downloads the chain again; your wallets and settings stay."
-    }
+    },
+    "resync": "Resync from scratch"
   }
 }
