@@ -110,3 +110,28 @@ export function assertSafeRecoveryTarget(
     );
   }
 }
+
+// geth's ethash dataset files: full-R<revision>-<seed>, plus its temp files.
+const DAG_FILE_PATTERN = /^full-R\d+-[0-9a-f]{16}(?:\.\d+)?$/;
+
+/**
+ * Guards every delete of a mining DAG file: the target must sit directly in
+ * the DAG folder main resolved and be named like an ethash dataset.
+ * @param dagDir - The absolute DAG folder.
+ * @param target - The file about to be removed.
+ * @throws {RecoveryPathError} When the target is anything else.
+ */
+export function assertSafeDagFile(dagDir: string, target: string): void {
+  const resolvedTarget = resolve(target);
+  if (
+    relative(resolve(dagDir), dirname(resolvedTarget)) !== "" ||
+    !DAG_FILE_PATTERN.test(basename(resolvedTarget))
+  ) {
+    throw new RecoveryPathError("Not a mining DAG file", resolvedTarget);
+  }
+}
+
+/** @returns True for a bare file name geth uses for a DAG. */
+export function isDagFileName(name: string): boolean {
+  return DAG_FILE_PATTERN.test(name);
+}

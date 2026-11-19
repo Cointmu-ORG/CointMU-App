@@ -1,10 +1,14 @@
 import type { WalletActivity } from "@bridge/types";
+import { onLocalCachesCleared } from "@/shared/lib";
 
 const activityCache = new Map<string, WalletActivity[]>();
 const activityPollingIntervals = new Map<
   string,
   ReturnType<typeof setInterval>
 >();
+
+// Settings → Clear cache; polling refills it on its next tick.
+onLocalCachesCleared(() => activityCache.clear());
 
 /**
  * A module-scoped in-memory cache service for activity data.

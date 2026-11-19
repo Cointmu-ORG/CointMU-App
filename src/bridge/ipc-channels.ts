@@ -4,6 +4,8 @@ export const NODE_CHANNELS = {
   GET_RECOVERY_STATE: "node:get-recovery-state",
   PEER_HINT: "node:peer-hint",
   GET_PEER_HINT: "node:get-peer-hint",
+  SYNC_STALL: "node:sync-stall",
+  GET_SYNC_STALL: "node:get-sync-stall",
 } as const;
 
 export const BOOTNODE_CHANNELS = {
@@ -49,6 +51,9 @@ export const CHAINDATA_CHANNELS = {
   MOVE: "chaindata:move",
   DELETE_OLD: "chaindata:delete-old",
   PROGRESS: "chaindata:progress",
+  GET_RESYNC_INFO: "chaindata:get-resync-info",
+  RESYNC: "chaindata:resync",
+  DELETE_BACKUP: "chaindata:delete-backup",
 } as const;
 
 export const CLIPBOARD_CHANNELS = {
@@ -66,4 +71,10 @@ export const ASSET_LOGO_CHANNELS = {
   GET_ALL: "asset-logos:get-all",
   SET: "asset-logos:set",
   RESET: "asset-logos:reset",
+} as const;
+
+export const MAINTENANCE_CHANNELS = {
+  CLEAR_CACHE: "maintenance:clear-cache",
+  GET_DAG_INFO: "maintenance:get-dag-info",
+  DELETE_DAG: "maintenance:delete-dag",
 } as const;

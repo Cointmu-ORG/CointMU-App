@@ -477,5 +477,57 @@
       "debug": "Debug"
     },
     "recommendedValue": "{{value}} (disarankan)"
+  },
+  "maintenance": {
+    "title": "Pemeliharaan data",
+    "close": "Tutup",
+    "removedTitle": "Dihapus",
+    "keptTitle": "Tidak terpengaruh",
+    "item": {
+      "chainData": "Data chain lokal ({{size}})",
+      "wallets": "Wallet dan kunci",
+      "settings": "Pengaturan",
+      "tokens": "Token, token tersembunyi, dan logo kustom",
+      "explorerIndex": "Indeks blok explorer",
+      "tokenScan": "Token terdeteksi dan hasil pindai NFT",
+      "nftMedia": "Gambar NFT dan cache web aplikasi",
+      "activity": "Cache aktivitas terbaru",
+      "logos": "Logo kustom dan token tersembunyi",
+      "chain": "Data chain"
+    },
+    "resyncTitle": "Sinkron ulang dari awal",
+    "resyncDesc": "Menghapus data chain lokal dan mengunduhnya lagi dari blok 0. Gunakan saat sinkronisasi terus macet.",
+    "resyncButton": "Sinkron ulang…",
+    "resyncConfirmTitle": "Sinkron ulang chain dari awal?",
+    "resyncConfirmBody": "Data chain lokal (sekitar {{size}}) dihapus dan diunduh ulang dari jaringan. Ini bisa memakan beberapa jam.",
+    "resyncConfirm": "Sinkron ulang",
+    "resyncBackupNote": "Data chain lama disimpan sebagai cadangan dan dihapus otomatis setelah chain baru mencapai blok yang sama.",
+    "resyncRunning": "Menghentikan node dan menyisihkan data chain lama…",
+    "resyncDone": "Node dimulai ulang dari blok genesis dan sedang mengunduh chain.",
+    "resyncError": {
+      "BUSY": "Node sedang menjalankan pemulihan atau pemindahan data. Coba lagi setelah selesai.",
+      "NODE_STILL_RUNNING": "Node tidak berhenti, jadi tidak ada yang dihapus. Coba lagi.",
+      "FAILED": "Sinkron ulang gagal. Wallet Anda tidak berubah; lihat log untuk detailnya."
+    },
+    "backupTitle": "Cadangan data chain",
+    "backupDesc": "Data chain lama yang disimpan setelah sinkron ulang atau perbaikan ({{size}}).",
+    "backupDelete": "Hapus cadangan ({{size}})",
+    "backupFailed": "Cadangan tidak dapat dihapus.",
+    "cacheTitle": "Bersihkan cache",
+    "cacheDesc": "Menghapus data yang dibangun ulang aplikasi dari node. Gunakan saat explorer, token, atau NFT tampak salah.",
+    "cacheButton": "Bersihkan cache…",
+    "cacheConfirmTitle": "Bersihkan cache?",
+    "cacheConfirm": "Bersihkan cache",
+    "cacheRebuildNote": "Semua yang dihapus dibangun ulang otomatis dari node; explorer dan daftar token mungkin belum lengkap untuk sementara.",
+    "cacheDone": "Cache dibersihkan dan sedang dibangun ulang.",
+    "cacheFailed": "Cache tidak dapat dibersihkan.",
+    "dagTitle": "DAG mining",
+    "dagDesc": "Data yang dibuat geth untuk mining ({{size}}).",
+    "dagMining": "Hentikan mining untuk menghapusnya.",
+    "dagButton": "Hapus DAG…",
+    "dagConfirmTitle": "Hapus DAG mining?",
+    "dagConfirmBody": "File DAG sebesar {{size}} dihapus. Geth membuatnya lagi saat mining dimulai berikutnya, yang memakan beberapa menit.",
+    "dagConfirm": "Hapus DAG",
+    "dagFailed": "DAG tidak dapat dihapus."
   }
 }

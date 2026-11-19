@@ -8,3 +8,4 @@ export * from "./setting-labels.util";
 export * from "./pagination.hook";
 export * from "./timer.hook";
 export * from "./updater.hook";
+export * from "./local-cache.util";

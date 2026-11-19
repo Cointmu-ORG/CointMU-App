@@ -94,6 +94,18 @@ export const NodePeerHint = {
 /** Payload of NODE_CHANNELS.PEER_HINT (null clears it); a code the renderer localizes. */
 export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];
 
+/** The step the sync stall watchdog is on; payload of NODE_CHANNELS.SYNC_STALL. */
+export const SyncStallStep = {
+  /** Head stood still with peers ahead: static/trusted peers re-registered. */
+  REREGISTER_PEERS: "reregister-peers",
+  /** Still stalled: geth is restarted cleanly. */
+  RESTART_NODE: "restart-node",
+  /** Still stalled after the restart: the user may resync from genesis. */
+  NEEDS_RESYNC: "needs-resync",
+} as const;
+
+export type SyncStallStep = (typeof SyncStallStep)[keyof typeof SyncStallStep];
+
 /** Where the bootnodes geth dials come from, highest priority first. */
 export const BootnodeSource = {
   /** The user added nodes or turned defaults off in Settings → Network. */
@@ -373,6 +385,37 @@ export type ChainDataMoveError =
   (typeof ChainDataMoveError)[keyof typeof ChainDataMoveError];
 
 /** Where the chain data lives and how big it is. */
+/** Why "Resync from scratch" did not run or finish. */
+export const ChainResyncError = {
+  /** A resync, a chain data move or a recovery already runs. */
+  BUSY: "BUSY",
+  /** Geth's exit was not observed; the chain data was left alone. */
+  NODE_STILL_RUNNING: "NODE_STILL_RUNNING",
+  FAILED: "FAILED",
+} as const;
+
+export type ChainResyncError =
+  (typeof ChainResyncError)[keyof typeof ChainResyncError];
+
+export type ChainResyncResult =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly error: ChainResyncError };
+
+/** Sizes shown before a resync and next to "Delete backup". */
+export interface ChainResyncInfo {
+  /** The chain data a resync removes and downloads again. */
+  readonly chainSizeBytes: number;
+  /** Quarantined chain data, or 0 when there is none. */
+  readonly backupSizeBytes: number;
+}
+
+/** The mining DAG shown next to "Delete mining DAG". */
+export interface DagInfo {
+  readonly sizeBytes: number;
+  /** Deleting is refused while geth mines. */
+  readonly isMining: boolean;
+}
+
 export interface ChainDataInfo {
   readonly root: string;
   readonly sizeBytes: number;

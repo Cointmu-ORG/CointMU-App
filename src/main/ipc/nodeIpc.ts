@@ -5,7 +5,7 @@ import { getNetworkId } from "../geth/process/networkConfig";
 import { getNodeRecovery, isGethRunning } from "../geth/process/gethProcess";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { isSessionValid } from "../app/session";
-import { peerWatchdog } from "../geth/recovery/nodeRecovery";
+import { getSyncStallStep, peerWatchdog } from "../geth/recovery/nodeRecovery";
 import type { AppStore } from "../store/appStore";
 
 /**
@@ -22,6 +22,7 @@ export function registerNodeStatusHandlers(): void {
     networkId: getNetworkId(),
   }));
   ipcMain.handle(NODE_CHANNELS.GET_PEER_HINT, () => peerWatchdog.getHint());
+  ipcMain.handle(NODE_CHANNELS.GET_SYNC_STALL, () => getSyncStallStep());
 }
 
 /**

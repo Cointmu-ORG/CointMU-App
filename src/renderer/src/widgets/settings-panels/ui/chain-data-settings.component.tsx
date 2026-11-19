@@ -7,10 +7,7 @@ import {
   SettingRow,
   SettingsGroup,
 } from "./setting-controls.component";
-import {
-  DIALOG_BUTTON_CLASS,
-  SettingsDialog,
-} from "./settings-dialog.component";
+import { DIALOG_BUTTON_CLASS, SettingsDialog } from "@/shared/ui";
 
 /**
  * The confirm, progress and "delete the old copy?" dialogs of a move.

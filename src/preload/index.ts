@@ -5,6 +5,7 @@ import {
   ASSET_LOGO_CHANNELS,
   BOOTNODE_CHANNELS,
   CHAINDATA_CHANNELS,
+  MAINTENANCE_CHANNELS,
   CLIPBOARD_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   EXPLORER_CHANNELS,
@@ -22,6 +23,9 @@ import type {
   BootnodeState,
   BootnodeStatus,
   ChainDataInfo,
+  ChainResyncInfo,
+  ChainResyncResult,
+  DagInfo,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -35,6 +39,7 @@ import type {
   MinerRange,
   MiningAutoStartState,
   NodePeerHint,
+  SyncStallStep,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -286,6 +291,12 @@ const api = {
       ipcRenderer.invoke(CHAINDATA_CHANNELS.MOVE, target),
     deleteOld: (): Promise<void> =>
       ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_OLD),
+    getResyncInfo: (): Promise<ChainResyncInfo> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.GET_RESYNC_INFO),
+    resync: (): Promise<ChainResyncResult> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.RESYNC),
+    deleteBackup: (): Promise<void> =>
+      ipcRenderer.invoke(CHAINDATA_CHANNELS.DELETE_BACKUP),
     onProgress: (callback: (progress: ChainDataMoveProgress) => void) => {
       const handler = (_: unknown, progress: ChainDataMoveProgress): void =>
         callback(progress);
@@ -326,6 +337,23 @@ const api = {
     },
     getPeerHint: (): Promise<NodePeerHint | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_PEER_HINT),
+    onSyncStall: (callback: (step: SyncStallStep | null) => void) => {
+      const handler = (_: unknown, step: SyncStallStep | null): void =>
+        callback(step);
+      ipcRenderer.on(NODE_CHANNELS.SYNC_STALL, handler);
+      return () =>
+        ipcRenderer.removeListener(NODE_CHANNELS.SYNC_STALL, handler);
+    },
+    getSyncStall: (): Promise<SyncStallStep | null> =>
+      ipcRenderer.invoke(NODE_CHANNELS.GET_SYNC_STALL),
+  },
+  maintenance: {
+    clearCache: (): Promise<void> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.CLEAR_CACHE),
+    getDagInfo: (): Promise<DagInfo> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.GET_DAG_INFO),
+    deleteDag: (): Promise<void> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.DELETE_DAG),
   },
   bootnode: {
     get: (): Promise<BootnodeState> =>

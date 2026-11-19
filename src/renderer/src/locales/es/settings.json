@@ -487,5 +487,57 @@
       "debug": "Depuración"
     },
     "recommendedValue": "{{value}} (recomendado)"
+  },
+  "maintenance": {
+    "title": "Mantenimiento de datos",
+    "close": "Cerrar",
+    "removedTitle": "Se elimina",
+    "keptTitle": "No se ve afectado",
+    "item": {
+      "chainData": "Datos locales de la cadena ({{size}})",
+      "wallets": "Billeteras y claves",
+      "settings": "Ajustes",
+      "tokens": "Tokens, tokens ocultos y logotipos personalizados",
+      "explorerIndex": "Índice de bloques del explorador",
+      "tokenScan": "Tokens detectados y resultados del escaneo de NFT",
+      "nftMedia": "Imágenes de NFT y la caché web de la app",
+      "activity": "Caché de actividad reciente",
+      "logos": "Logotipos personalizados y tokens ocultos",
+      "chain": "Datos de la cadena"
+    },
+    "resyncTitle": "Resincronizar desde cero",
+    "resyncDesc": "Elimina los datos locales de la cadena y los descarga de nuevo desde el bloque 0. Úsalo si la sincronización sigue detenida.",
+    "resyncButton": "Resincronizar…",
+    "resyncConfirmTitle": "¿Resincronizar la cadena desde cero?",
+    "resyncConfirmBody": "Los datos locales de la cadena (unos {{size}}) se eliminan y se descargan de nuevo de la red. Puede tardar unas horas.",
+    "resyncConfirm": "Resincronizar",
+    "resyncBackupNote": "Los datos antiguos se guardan como copia de seguridad y se eliminan automáticamente cuando la nueva cadena alcanza el mismo bloque.",
+    "resyncRunning": "Deteniendo el nodo y apartando los datos antiguos…",
+    "resyncDone": "El nodo se reinició desde el bloque génesis y está descargando la cadena.",
+    "resyncError": {
+      "BUSY": "El nodo está ocupado con una recuperación o un traslado de datos. Inténtalo cuando termine.",
+      "NODE_STILL_RUNNING": "El nodo no se detuvo, así que no se eliminó nada. Inténtalo de nuevo.",
+      "FAILED": "La resincronización falló. Tu billetera no cambió; revisa los registros."
+    },
+    "backupTitle": "Copia de seguridad de la cadena",
+    "backupDesc": "Datos antiguos guardados tras una resincronización o reparación ({{size}}).",
+    "backupDelete": "Eliminar copia ({{size}})",
+    "backupFailed": "No se pudo eliminar la copia.",
+    "cacheTitle": "Borrar caché",
+    "cacheDesc": "Elimina datos que la app reconstruye desde el nodo. Úsalo si el explorador, los tokens o los NFT se ven mal.",
+    "cacheButton": "Borrar caché…",
+    "cacheConfirmTitle": "¿Borrar la caché?",
+    "cacheConfirm": "Borrar caché",
+    "cacheRebuildNote": "Todo lo eliminado se reconstruye automáticamente desde el nodo; el explorador y las listas de tokens pueden estar incompletos un rato.",
+    "cacheDone": "Caché borrada. Se está reconstruyendo.",
+    "cacheFailed": "No se pudo borrar la caché.",
+    "dagTitle": "DAG de minería",
+    "dagDesc": "Datos que geth genera para minar ({{size}}).",
+    "dagMining": "Detén la minería para eliminarlo.",
+    "dagButton": "Eliminar DAG…",
+    "dagConfirmTitle": "¿Eliminar el DAG de minería?",
+    "dagConfirmBody": "Se eliminan {{size}} de archivos DAG. Geth los genera de nuevo la próxima vez que empieces a minar, lo que tarda unos minutos.",
+    "dagConfirm": "Eliminar DAG",
+    "dagFailed": "No se pudo eliminar el DAG."
   }
 }

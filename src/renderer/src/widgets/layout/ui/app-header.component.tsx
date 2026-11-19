@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import { NodeRecoveryBanner } from "@/features/mining";
+import { SyncStallBanner } from "@/features/chain-maintenance";
 import { CustomTitleBar } from "./custom-title-bar.component";
 
 /**
@@ -12,6 +13,7 @@ export function AppHeader(): JSX.Element {
     <>
       <CustomTitleBar />
       <NodeRecoveryBanner />
+      <SyncStallBanner />
     </>
   );
 }

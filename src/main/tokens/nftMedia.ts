@@ -51,6 +51,12 @@ export class NftMediaError extends Error {
 const cache = new Map<string, NftMedia>();
 let cachedChars = 0;
 
+/** Drops the cached NFT media (Settings → Clear cache); it refills on demand. */
+export function clearNftMediaCache(): void {
+  cache.clear();
+  cachedChars = 0;
+}
+
 function remember(uri: string, media: NftMedia): NftMedia {
   cache.set(uri, media);
   cachedChars += media.image.length;

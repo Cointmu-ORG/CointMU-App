@@ -1,10 +1,7 @@
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingButton, SettingRow } from "./setting-controls.component";
-import {
-  DIALOG_BUTTON_CLASS,
-  SettingsDialog,
-} from "./settings-dialog.component";
+import { DIALOG_BUTTON_CLASS, SettingsDialog } from "@/shared/ui";
 
 type ResetStatus = "idle" | "confirm" | "done" | "failed";
 

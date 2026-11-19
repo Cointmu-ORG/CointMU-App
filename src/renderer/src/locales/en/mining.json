@@ -121,5 +121,15 @@
     "title": "Mining starts in {{seconds}} s",
     "body": "Start mining at launch is on. Mining uses CPU, memory and battery. Cancel skips it for this session only.",
     "cancel": "Cancel"
+  },
+  "syncStall": {
+    "recovering": "Sync stalled, trying to recover…",
+    "title": "Sync stalled",
+    "step": {
+      "reregister-peers": "Re-registering the network peers.",
+      "restart-node": "Restarting the node.",
+      "needs-resync": "Automatic recovery did not help. Resync from scratch downloads the chain again; your wallets and settings stay."
+    },
+    "resync": "Resync from scratch"
   }
 }

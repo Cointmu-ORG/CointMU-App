@@ -117,5 +117,15 @@
     "title": "{{seconds}} 秒后开始挖矿",
     "body": "已开启“启动时开始挖矿”。挖矿会占用 CPU、内存和电池。取消仅对本次会话有效。",
     "cancel": "取消"
+  },
+  "syncStall": {
+    "recovering": "同步停滞，正在尝试恢复…",
+    "title": "同步停滞",
+    "step": {
+      "reregister-peers": "正在重新注册网络节点。",
+      "restart-node": "正在重启节点。",
+      "needs-resync": "自动恢复未能解决问题。“从头重新同步”会重新下载区块链；钱包和设置会保留。"
+    },
+    "resync": "从头重新同步"
   }
 }

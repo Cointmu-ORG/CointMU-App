@@ -5,6 +5,9 @@ import type {
   BootnodeState,
   BootnodeStatus,
   ChainDataInfo,
+  ChainResyncInfo,
+  ChainResyncResult,
+  DagInfo,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -18,6 +21,7 @@ import type {
   MinerRange,
   MiningAutoStartState,
   NodePeerHint,
+  SyncStallStep,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -190,6 +194,9 @@ interface CointmuAPI {
     pickTarget: (dialogText: DialogText) => Promise<ChainDataTarget | null>;
     move: (target: string) => Promise<ChainDataMoveResult>;
     deleteOld: () => Promise<void>;
+    getResyncInfo: () => Promise<ChainResyncInfo>;
+    resync: () => Promise<ChainResyncResult>;
+    deleteBackup: () => Promise<void>;
     onProgress: (
       callback: (progress: ChainDataMoveProgress) => void,
     ) => () => void;
@@ -211,6 +218,13 @@ interface CointmuAPI {
     retry: () => Promise<void>;
     onPeerHint: (callback: (hint: NodePeerHint | null) => void) => () => void;
     getPeerHint: () => Promise<NodePeerHint | null>;
+    onSyncStall: (callback: (step: SyncStallStep | null) => void) => () => void;
+    getSyncStall: () => Promise<SyncStallStep | null>;
+  };
+  maintenance: {
+    clearCache: () => Promise<void>;
+    getDagInfo: () => Promise<DagInfo>;
+    deleteDag: () => Promise<void>;
   };
   bootnode: {
     get: () => Promise<BootnodeState>;

@@ -482,5 +482,57 @@
       "debug": "Debug"
     },
     "recommendedValue": "{{value}} (empfohlen)"
+  },
+  "maintenance": {
+    "title": "Datenpflege",
+    "close": "Schließen",
+    "removedTitle": "Wird gelöscht",
+    "keptTitle": "Bleibt erhalten",
+    "item": {
+      "chainData": "Lokale Chain-Daten ({{size}})",
+      "wallets": "Wallets und Schlüssel",
+      "settings": "Einstellungen",
+      "tokens": "Tokens, ausgeblendete Tokens und eigene Logos",
+      "explorerIndex": "Blockindex des Explorers",
+      "tokenScan": "Erkannte Tokens und NFT-Scan-Ergebnisse",
+      "nftMedia": "NFT-Bilder und der Web-Cache der App",
+      "activity": "Cache der letzten Aktivitäten",
+      "logos": "Eigene Logos und ausgeblendete Tokens",
+      "chain": "Chain-Daten"
+    },
+    "resyncTitle": "Neu synchronisieren",
+    "resyncDesc": "Löscht die lokalen Chain-Daten und lädt sie ab Block 0 neu herunter. Hilft, wenn die Synchronisierung hängen bleibt.",
+    "resyncButton": "Neu synchronisieren…",
+    "resyncConfirmTitle": "Chain neu synchronisieren?",
+    "resyncConfirmBody": "Die lokalen Chain-Daten (etwa {{size}}) werden entfernt und erneut aus dem Netzwerk geladen. Das kann einige Stunden dauern.",
+    "resyncConfirm": "Neu synchronisieren",
+    "resyncBackupNote": "Die alten Chain-Daten bleiben als Sicherung erhalten und werden automatisch gelöscht, sobald die neue Chain denselben Block erreicht.",
+    "resyncRunning": "Node wird gestoppt, alte Chain-Daten werden beiseitegelegt…",
+    "resyncDone": "Der Node wurde ab dem Genesis-Block neu gestartet und lädt die Chain herunter.",
+    "resyncError": {
+      "BUSY": "Der Node führt gerade eine Wiederherstellung oder einen Datenumzug aus. Bitte danach erneut versuchen.",
+      "NODE_STILL_RUNNING": "Der Node wurde nicht beendet, daher wurde nichts gelöscht. Bitte erneut versuchen.",
+      "FAILED": "Die Neusynchronisierung ist fehlgeschlagen. Dein Wallet wurde nicht verändert; Details stehen in den Logs."
+    },
+    "backupTitle": "Sicherung der Chain-Daten",
+    "backupDesc": "Alte Chain-Daten nach einer Neusynchronisierung oder Reparatur ({{size}}).",
+    "backupDelete": "Sicherung löschen ({{size}})",
+    "backupFailed": "Die Sicherung konnte nicht gelöscht werden.",
+    "cacheTitle": "Cache leeren",
+    "cacheDesc": "Entfernt Daten, die die App vom Node neu aufbaut. Hilft, wenn Explorer, Tokens oder NFTs falsch aussehen.",
+    "cacheButton": "Cache leeren…",
+    "cacheConfirmTitle": "Cache leeren?",
+    "cacheConfirm": "Cache leeren",
+    "cacheRebuildNote": "Alles Entfernte wird automatisch vom Node neu aufgebaut; Explorer und Token-Listen können eine Weile unvollständig sein.",
+    "cacheDone": "Cache geleert. Er wird neu aufgebaut.",
+    "cacheFailed": "Der Cache konnte nicht geleert werden.",
+    "dagTitle": "Mining-DAG",
+    "dagDesc": "Daten, die geth fürs Mining erzeugt ({{size}}).",
+    "dagMining": "Beende das Mining, um sie zu löschen.",
+    "dagButton": "DAG löschen…",
+    "dagConfirmTitle": "Mining-DAG löschen?",
+    "dagConfirmBody": "{{size}} an DAG-Dateien werden gelöscht. Geth erzeugt sie beim nächsten Mining-Start neu, was einige Minuten dauert.",
+    "dagConfirm": "DAG löschen",
+    "dagFailed": "Der DAG konnte nicht gelöscht werden."
   }
 }

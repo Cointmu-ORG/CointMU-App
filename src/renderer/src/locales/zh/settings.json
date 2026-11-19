@@ -477,5 +477,57 @@
       "debug": "调试"
     },
     "recommendedValue": "{{value}}（推荐）"
+  },
+  "maintenance": {
+    "title": "数据维护",
+    "close": "关闭",
+    "removedTitle": "将被删除",
+    "keptTitle": "不受影响",
+    "item": {
+      "chainData": "本地区块链数据（{{size}}）",
+      "wallets": "钱包和密钥",
+      "settings": "设置",
+      "tokens": "代币、隐藏的代币和自定义图标",
+      "explorerIndex": "浏览器区块索引",
+      "tokenScan": "检测到的代币和 NFT 扫描结果",
+      "nftMedia": "NFT 图片和应用的网页缓存",
+      "activity": "最近活动缓存",
+      "logos": "自定义图标和隐藏的代币",
+      "chain": "区块链数据"
+    },
+    "resyncTitle": "从头重新同步",
+    "resyncDesc": "删除本地区块链数据，并从区块 0 重新下载。同步一直卡住时使用。",
+    "resyncButton": "重新同步…",
+    "resyncConfirmTitle": "从头重新同步区块链？",
+    "resyncConfirmBody": "本地区块链数据（约 {{size}}）将被删除并从网络重新下载，可能需要几个小时。",
+    "resyncConfirm": "重新同步",
+    "resyncBackupNote": "旧的区块链数据会作为备份保留，新链到达相同区块后自动删除。",
+    "resyncRunning": "正在停止节点并移开旧的区块链数据…",
+    "resyncDone": "节点已从创世区块重新启动，正在下载区块链。",
+    "resyncError": {
+      "BUSY": "节点正在恢复或迁移数据，请在完成后重试。",
+      "NODE_STILL_RUNNING": "节点未停止，因此没有删除任何内容。请重试。",
+      "FAILED": "重新同步失败。钱包未受影响，详情请查看日志。"
+    },
+    "backupTitle": "区块链数据备份",
+    "backupDesc": "重新同步或修复后保留的旧区块链数据（{{size}}）。",
+    "backupDelete": "删除备份（{{size}}）",
+    "backupFailed": "无法删除备份。",
+    "cacheTitle": "清除缓存",
+    "cacheDesc": "删除应用可从节点重建的数据。浏览器、代币或 NFT 显示异常时使用。",
+    "cacheButton": "清除缓存…",
+    "cacheConfirmTitle": "清除缓存？",
+    "cacheConfirm": "清除缓存",
+    "cacheRebuildNote": "删除的内容会自动从节点重建；浏览器和代币列表可能暂时不完整。",
+    "cacheDone": "缓存已清除，正在重建。",
+    "cacheFailed": "无法清除缓存。",
+    "dagTitle": "挖矿 DAG",
+    "dagDesc": "geth 为挖矿生成的数据（{{size}}）。",
+    "dagMining": "停止挖矿后才能删除。",
+    "dagButton": "删除 DAG…",
+    "dagConfirmTitle": "删除挖矿 DAG？",
+    "dagConfirmBody": "将删除 {{size}} 的 DAG 文件。下次开始挖矿时 geth 会重新生成，需要几分钟。",
+    "dagConfirm": "删除 DAG",
+    "dagFailed": "无法删除 DAG。"
   }
 }
