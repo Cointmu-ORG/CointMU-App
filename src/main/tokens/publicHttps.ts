@@ -1,7 +1,8 @@
 import { lookup as dnsLookup } from "node:dns/promises";
 import { request as httpsRequest } from "node:https";
 import type { IncomingMessage, RequestOptions } from "node:http";
-import { BlockList, isIP } from "node:net";
+import { isIP } from "node:net";
+import { isBlockedAddress } from "./addressPolicy";
 
 /**
  * GET over https to public hosts only. Every hop (the first URL and each
@@ -20,40 +21,6 @@ const HTTP_REDIRECT_MAX = 399;
 /** Why a URL was not fetched. */
 export class PublicFetchError extends Error {
   override readonly name = "PublicFetchError";
-}
-
-// BlockList also matches IPv4-mapped IPv6 (::ffff:7f00:1) against the IPv4
-// rules, so no separate ::ffff:0:0/96 entry (it would block every IPv4).
-const blocked = new BlockList();
-for (const [network, prefix] of [
-  ["0.0.0.0", 8], // unspecified / "this network"
-  ["10.0.0.0", 8],
-  ["100.64.0.0", 10], // CGNAT
-  ["127.0.0.0", 8],
-  ["169.254.0.0", 16],
-  ["172.16.0.0", 12],
-  ["192.168.0.0", 16],
-  ["224.0.0.0", 4], // multicast
-  ["240.0.0.0", 4], // reserved and broadcast
-] as const) {
-  blocked.addSubnet(network, prefix, "ipv4");
-}
-for (const [network, prefix] of [
-  ["::", 128], // unspecified
-  ["::1", 128],
-  ["fe80::", 10],
-  ["fc00::", 7], // ULA
-  ["ff00::", 8], // multicast
-] as const) {
-  blocked.addSubnet(network, prefix, "ipv6");
-}
-
-/** @returns True for an address a public fetch must not reach. */
-export function isBlockedAddress(address: string): boolean {
-  const lower = address.toLowerCase();
-  const family = isIP(lower);
-  if (family === 0) return true;
-  return blocked.check(lower, family === 4 ? "ipv4" : "ipv6");
 }
 
 export interface ResolvedAddress {

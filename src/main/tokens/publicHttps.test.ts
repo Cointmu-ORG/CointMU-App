@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fakeTransport } from "./publicHttps.fixtures";
-import {
-  PublicFetchError,
-  fetchPublicHttps,
-  isBlockedAddress,
-} from "./publicHttps";
+import { isBlockedAddress, nat64Ipv4 } from "./addressPolicy";
+import { PublicFetchError, fetchPublicHttps } from "./publicHttps";
 
 const PUBLIC_IP = "93.184.216.34";
 const MAX = 1024;
@@ -29,17 +26,37 @@ describe("isBlockedAddress", () => {
     "ff02::1",
     "::ffff:127.0.0.1",
     "::ffff:7f00:1",
+    "64:ff9b::7f00:1",
+    "64:ff9b::127.0.0.1",
+    "64:ff9b::a9fe:a9fe",
+    "64:ff9b::c0a8:101",
+    "64:ff9b:1:7f00:0:100::",
+    "64:ff9b:1:a00:0:500::",
     "not-an-ip",
   ])("blocks %s", (address) => {
     expect(isBlockedAddress(address)).toBe(true);
   });
 
-  it.each(["8.8.8.8", "172.32.0.1", "100.128.0.1", "2606:4700::1111"])(
-    "allows public %s",
-    (address) => {
-      expect(isBlockedAddress(address)).toBe(false);
-    },
-  );
+  it.each([
+    "8.8.8.8",
+    "172.32.0.1",
+    "100.128.0.1",
+    "2606:4700::1111",
+    "64:ff9b::808:808",
+    "64:ff9b::8.8.8.8",
+    "64:ff9b:1:808:8:800::",
+  ])("allows public %s", (address) => {
+    expect(isBlockedAddress(address)).toBe(false);
+  });
+});
+
+describe("nat64Ipv4", () => {
+  it("reads the IPv4 address embedded in both NAT64 prefixes", () => {
+    expect(nat64Ipv4("64:ff9b::7f00:1")).toBe("127.0.0.1");
+    expect(nat64Ipv4("64:ff9b::10.0.0.5")).toBe("10.0.0.5");
+    expect(nat64Ipv4("64:ff9b:1:c0a8:1:200::")).toBe("192.168.1.2");
+    expect(nat64Ipv4("2606:4700::1111")).toBeNull();
+  });
 });
 
 describe("fetchPublicHttps", () => {
@@ -66,6 +83,18 @@ describe("fetchPublicHttps", () => {
       expect(resolved).toEqual([]);
     },
   );
+
+  it("refuses a hostname whose NAT64 (DNS64) address embeds a private IPv4", async () => {
+    const { transport, connected } = fakeTransport(
+      { "nat.example": ["64:ff9b::a00:7"] },
+      {},
+    );
+
+    await expect(
+      fetchPublicHttps(url("https://nat.example/a"), MAX, transport),
+    ).rejects.toThrow("non-public address 64:ff9b::a00:7");
+    expect(connected).toEqual([]);
+  });
 
   it("refuses a hostname when any resolved address is private", async () => {
     const { transport, connected } = fakeTransport(
