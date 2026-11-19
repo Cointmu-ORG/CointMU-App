@@ -1,5 +1,6 @@
 import type { DetectedNft, NftMedia } from "../../bridge/types";
 import type { EthCall } from "./erc20Calls";
+import { readErc1155Uri } from "./erc1155";
 import { readTokenUri } from "./nftOwnership";
 
 const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
@@ -43,8 +44,8 @@ export function parseNftMediaRequest(
 }
 
 /**
- * Reads tokenURI on-chain and loads its media, only for an NFT the scan
- * detected for that account.
+ * Reads tokenURI (ERC-721), else uri(id) (ERC-1155), on-chain and loads its
+ * media, only for an NFT the scan detected for that account.
  * @throws {TypeError} When the pair is not a detected NFT of the account.
  */
 export async function loadDetectedNftMedia(
@@ -58,10 +59,9 @@ export async function loadDetectedNftMedia(
         nft.contract === request.contract && nft.tokenId === request.tokenId,
     );
   if (!isDetected) throw new TypeError("nft media: not a detected NFT");
-  const tokenUri = await readTokenUri(
-    deps.call,
-    request.contract,
-    request.tokenId,
-  );
+  const { contract, tokenId } = request;
+  const tokenUri =
+    (await readTokenUri(deps.call, contract, tokenId)) ||
+    (await readErc1155Uri(deps.call, contract, tokenId));
   return tokenUri === "" ? EMPTY_MEDIA : deps.load(tokenUri);
 }

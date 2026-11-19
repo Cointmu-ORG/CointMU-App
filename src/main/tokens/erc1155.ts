@@ -3,11 +3,16 @@ import type { EthCall } from "./erc20Calls";
 import type { NftOwnership } from "./nftOwnership";
 
 const KEY_SEPARATOR = ":";
+/** ERC-1155 metadata URIs carry the id as lowercase hex, zero-padded to 64 chars. */
+const ID_PLACEHOLDER = /\{id\}/g;
+const ID_HEX_CHARS = 64;
+const HEX_RADIX = 16;
 
 const erc1155 = new Interface([
   "event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)",
   "event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values)",
   "function balanceOf(address account, uint256 id) view returns (uint256)",
+  "function uri(uint256 id) view returns (string)",
 ]);
 
 /** keccak256 of the TransferSingle and TransferBatch event signatures. */
@@ -87,4 +92,30 @@ export async function readErc1155Ownership(
     }),
   );
   return Object.fromEntries(keys.map((key, i) => [key, held[i]]));
+}
+
+/**
+ * @param call - The eth_call function.
+ * @param contract - The ERC-1155 contract.
+ * @param tokenId - Decimal token id.
+ * @returns uri(id) with "{id}" replaced by the 64-char lowercase hex id, or "" when the call reverts or is not a string.
+ */
+export async function readErc1155Uri(
+  call: EthCall,
+  contract: string,
+  tokenId: string,
+): Promise<string> {
+  const result = await call(
+    contract,
+    erc1155.encodeFunctionData("uri", [tokenId]),
+  );
+  if (result === null || result === "0x") return "";
+  let template: string;
+  try {
+    template = String(erc1155.decodeFunctionResult("uri", result)[0]);
+  } catch {
+    return "";
+  }
+  const hexId = BigInt(tokenId).toString(HEX_RADIX).padStart(ID_HEX_CHARS, "0");
+  return template.replace(ID_PLACEHOLDER, hexId);
 }
