@@ -1,7 +1,8 @@
 import { Interface } from "ethers";
 import { describe, expect, it } from "vitest";
 import { TRANSFER_TOPIC, sanitizeTokenText } from "./erc20Calls";
-import { MAX_NFTS_PER_ACCOUNT } from "./nftOwnership";
+import { TRANSFER_BATCH_TOPIC, TRANSFER_SINGLE_TOPIC } from "./erc1155";
+import { MAX_NFTS_PER_ACCOUNT, MAX_NFTS_PER_CONTRACT } from "./nftOwnership";
 import {
   FULL_REFRESH_INTERVAL_BLOCKS,
   LOG_BATCH_BLOCKS,
@@ -19,6 +20,7 @@ const OTHER = "0x2222222222222222222222222222222222222222";
 const TOKEN_A = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const TOKEN_B = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 const NFT = "0xcccccccccccccccccccccccccccccccccccccccc";
+const MULTI = "0xdddddddddddddddddddddddddddddddddddddddd";
 const GENESIS = "0xgenesis";
 
 const erc20 = new Interface([
@@ -28,6 +30,15 @@ const erc20 = new Interface([
   "function balanceOf(address) view returns (uint256)",
   "function ownerOf(uint256) view returns (address)",
 ]);
+const erc1155 = new Interface([
+  "event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)",
+  "event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values)",
+  "function balanceOf(address, uint256) view returns (uint256)",
+]);
+const ERC1155_BALANCE_OF = erc1155.getFunction("balanceOf")?.selector ?? "";
+const isErc1155Log = (log: RawLog): boolean =>
+  log.topics[0] === TRANSFER_SINGLE_TOPIC ||
+  log.topics[0] === TRANSFER_BATCH_TOPIC;
 const topic = (address: string): string =>
   "0x" + address.slice(2).padStart(64, "0");
 
@@ -50,7 +61,12 @@ function fakeNode(head: number) {
     /** NFT owners by "contract:tokenId". */
     owners: new Map<string, string>(),
     ownerCalls: [] as string[],
+    /** ERC-1155 balances by "contract:tokenId". */
+    multiBalances: new Map<string, bigint>(),
+    multiBalanceCalls: [] as string[],
   };
+  const inRange = (log: FakeLog, from: number, to: number): boolean =>
+    log.block >= from && log.block <= to;
   const hashOf = (n: number): string =>
     n === 0 ? GENESIS : (node.hashes.get(n) ?? `0xblock${n}`);
   const rpc: TokenScanRpc = {
@@ -59,15 +75,35 @@ function fakeNode(head: number) {
     transferLogsTo: async (account, from, to) => {
       node.logQueries.push([account, from, to]);
       return node.logs.filter(
-        (log) => log.to === account && log.block >= from && log.block <= to,
+        (log) =>
+          !isErc1155Log(log) && log.to === account && inRange(log, from, to),
       );
     },
     transferLogsFrom: async (account, from, to) =>
       node.logs.filter(
-        (log) => log.from === account && log.block >= from && log.block <= to,
+        (log) =>
+          !isErc1155Log(log) && log.from === account && inRange(log, from, to),
+      ),
+    erc1155LogsTo: async (account, from, to) =>
+      node.logs.filter(
+        (log) =>
+          isErc1155Log(log) && log.to === account && inRange(log, from, to),
+      ),
+    erc1155LogsFrom: async (account, from, to) =>
+      node.logs.filter(
+        (log) =>
+          isErc1155Log(log) && log.from === account && inRange(log, from, to),
       ),
     call: async (to, data) => {
       if (node.reverting.has(to)) return null;
+      if (data.startsWith(ERC1155_BALANCE_OF)) {
+        const [, id] = erc1155.decodeFunctionData("balanceOf", data);
+        const key = `${to}:${id}`;
+        node.multiBalanceCalls.push(key);
+        return erc1155.encodeFunctionResult("balanceOf", [
+          node.multiBalances.get(key) ?? 0n,
+        ]);
+      }
       const { name, args } = erc20.parseTransaction({ data })!;
       if (name === "ownerOf") {
         const key = `${to}:${args[0]}`;
@@ -117,6 +153,20 @@ const erc721Log = (
     topic("0x" + tokenId.toString(16)),
   ],
 });
+
+function multiLog(
+  event: "TransferSingle" | "TransferBatch",
+  values: readonly unknown[],
+  { to = ME, from = OTHER, block = 3 } = {},
+): FakeLog {
+  const { topics, data } = erc1155.encodeEventLog(event, [
+    OTHER,
+    from,
+    to,
+    ...values,
+  ]);
+  return { address: MULTI, topics, data, block, from, to };
+}
 
 async function runUntilIdle(scanner: TokenScanner): Promise<void> {
   while ((await scanner.step()) === ScanOutcome.BUSY);
@@ -385,9 +435,34 @@ describe("TokenScanner NFTs", () => {
     expect(restarted.nftSnapshot(ME).nfts).toHaveLength(1);
   });
 
-  it(`keeps at most ${MAX_NFTS_PER_ACCOUNT} NFTs, replacing ones no longer owned`, async () => {
+  it(`keeps at most ${MAX_NFTS_PER_ACCOUNT} NFTs and never drops owned ones for a new contract`, async () => {
     const { node, rpc } = fakeNode(10);
+    const contractOf = (id: number): string =>
+      "0x" +
+      Math.floor(id / MAX_NFTS_PER_CONTRACT)
+        .toString(16)
+        .padStart(40, "0");
     for (let id = 0; id < MAX_NFTS_PER_ACCOUNT + 5; id++) {
+      node.logs.push(erc721Log(contractOf(id), ME, 1, OTHER, id));
+      node.owners.set(`${contractOf(id)}:${id}`, ME);
+    }
+    const scanner = new TokenScanner(rpc, emptyScanState());
+    scanner.setAccounts([ME]);
+    await runUntilIdle(scanner);
+    const owned = scanner.nftSnapshot(ME).nfts;
+
+    node.head = 11;
+    node.logs.push(erc721Log(NFT, ME, 11));
+    node.owners.set(`${NFT}:1`, ME);
+    await runUntilIdle(scanner);
+
+    expect(owned).toHaveLength(MAX_NFTS_PER_ACCOUNT);
+    expect(scanner.nftSnapshot(ME).nfts).toEqual(owned);
+  });
+
+  it(`keeps at most ${MAX_NFTS_PER_CONTRACT} NFTs of one contract`, async () => {
+    const { node, rpc } = fakeNode(10);
+    for (let id = 0; id < MAX_NFTS_PER_CONTRACT + 5; id++) {
       node.logs.push(erc721Log(NFT, ME, 1, OTHER, id));
       node.owners.set(`${NFT}:${id}`, ME);
     }
@@ -396,12 +471,126 @@ describe("TokenScanner NFTs", () => {
 
     await runUntilIdle(scanner);
 
-    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_ACCOUNT);
+    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_CONTRACT);
   });
 });
 
 describe("sanitizeTokenText", () => {
   it("drops control and bidi characters and caps the length", () => {
     expect(sanitizeTokenText(" U‮SDT\u0000<b>x</b> ", 8)).toBe("USDT<b>x");
+  });
+});
+
+describe("TokenScanner ERC-1155", () => {
+  async function scannerHolding(...logs: FakeLog[]) {
+    const { node, rpc } = fakeNode(10);
+    node.logs.push(...logs);
+    node.multiBalances.set(`${MULTI}:7`, 3n);
+    const state = emptyScanState();
+    const scanner = new TokenScanner(rpc, state);
+    scanner.setAccounts([ME]);
+    await runUntilIdle(scanner);
+    node.multiBalanceCalls.length = 0;
+    return { node, rpc, state, scanner };
+  }
+
+  it("records a TransferSingle to the account once balanceOf confirms it", async () => {
+    const { scanner } = await scannerHolding(
+      multiLog("TransferSingle", [7n, 3n]),
+    );
+
+    expect(scanner.nftSnapshot(ME).nfts).toEqual([
+      { contract: MULTI, tokenId: "7" },
+    ]);
+    expect(scanner.snapshot(ME).tokens).toEqual([]);
+  });
+
+  it("decodes every id of a TransferBatch and keeps only the held ones", async () => {
+    const { scanner } = await scannerHolding(
+      multiLog("TransferBatch", [
+        [7n, 8n],
+        [3n, 1n],
+      ]),
+    );
+
+    expect(scanner.nftSnapshot(ME).nfts).toEqual([
+      { contract: MULTI, tokenId: "7" },
+    ]);
+  });
+
+  it("drops a token sent away to a zero balance, checking only that id", async () => {
+    const { node, scanner } = await scannerHolding(
+      multiLog("TransferSingle", [7n, 3n]),
+    );
+
+    node.head = 11;
+    node.logs.push(
+      multiLog("TransferBatch", [[7n], [3n]], {
+        from: ME,
+        to: OTHER,
+        block: 11,
+      }),
+    );
+    node.multiBalances.set(`${MULTI}:7`, 0n);
+    await runUntilIdle(scanner);
+
+    expect(node.multiBalanceCalls).toEqual([`${MULTI}:7`]);
+    expect(scanner.nftSnapshot(ME).nfts).toEqual([]);
+  });
+
+  it("re-reads held balances on a full refresh, not with ownerOf", async () => {
+    const { node, scanner } = await scannerHolding(
+      multiLog("TransferSingle", [7n, 3n]),
+    );
+
+    node.head = 10 + FULL_REFRESH_INTERVAL_BLOCKS;
+    await runUntilIdle(scanner);
+
+    expect(node.multiBalanceCalls).toEqual([`${MULTI}:7`]);
+    expect(node.ownerCalls).toEqual([]);
+  });
+
+  it("rescans from genesis when the saved state predates ERC-1155 tracking", async () => {
+    const { node, rpc, state } = await scannerHolding(
+      multiLog("TransferSingle", [7n, 3n]),
+    );
+    delete state.accounts[ME].erc1155;
+    node.logQueries.length = 0;
+
+    const restarted = new TokenScanner(rpc, state);
+    await runUntilIdle(restarted);
+
+    expect(node.logQueries).toEqual([[ME, 0, 10]]);
+    expect(restarted.nftSnapshot(ME).nfts).toHaveLength(1);
+  });
+
+  it("tracks a real NFT received after a huge held TransferBatch", async () => {
+    const spamIds = Array.from({ length: MAX_NFTS_PER_ACCOUNT + 100 }, (_, i) =>
+      BigInt(i),
+    );
+    const { node, scanner } = await scannerHolding(
+      multiLog("TransferBatch", [spamIds, spamIds.map(() => 1n)]),
+    );
+    for (const id of spamIds) node.multiBalances.set(`${MULTI}:${id}`, 1n);
+    node.head = 10 + FULL_REFRESH_INTERVAL_BLOCKS;
+    await runUntilIdle(scanner);
+    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_CONTRACT);
+
+    node.head += 1;
+    node.logs.push(erc721Log(NFT, ME, node.head));
+    node.owners.set(`${NFT}:1`, ME);
+    await runUntilIdle(scanner);
+
+    expect(scanner.nftSnapshot(ME).nfts).toContainEqual({
+      contract: NFT,
+      tokenId: "1",
+    });
+  });
+
+  it("skips a log whose data does not decode", async () => {
+    const broken = { ...multiLog("TransferSingle", [7n, 3n]), data: "0x01" };
+    const { scanner } = await scannerHolding(broken);
+
+    expect(scanner.nftSnapshot(ME).nfts).toEqual([]);
   });
 });
