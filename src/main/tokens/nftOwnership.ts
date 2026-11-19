@@ -11,6 +11,7 @@ const KEY_SEPARATOR = ":";
 
 const erc721 = new Interface([
   "function ownerOf(uint256 tokenId) view returns (address)",
+  "function tokenURI(uint256 tokenId) view returns (string)",
 ]);
 
 /** NFTs seen in Transfer logs, by "contract:tokenId" (decimal), and whether the account owns each. */
@@ -95,4 +96,27 @@ export function ownedNfts(nfts: NftOwnership): DetectedNft[] {
       const [contract, tokenId] = key.split(KEY_SEPARATOR);
       return { contract, tokenId };
     });
+}
+
+/**
+ * @param call - The eth_call function.
+ * @param contract - The ERC-721 contract.
+ * @param tokenId - Decimal token id.
+ * @returns The token's tokenURI, or "" when the call reverts or is not a string.
+ */
+export async function readTokenUri(
+  call: EthCall,
+  contract: string,
+  tokenId: string,
+): Promise<string> {
+  const result = await call(
+    contract,
+    erc721.encodeFunctionData("tokenURI", [tokenId]),
+  );
+  if (result === null || result === "0x") return "";
+  try {
+    return String(erc721.decodeFunctionResult("tokenURI", result)[0]);
+  } catch {
+    return "";
+  }
 }

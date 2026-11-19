@@ -132,8 +132,17 @@ const api = {
       ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED, account),
     getDetectedNfts: (account: string): Promise<DetectedNfts> =>
       ipcRenderer.invoke(TOKEN_CHANNELS.GET_DETECTED_NFTS, account),
-    fetchNftMedia: (tokenUri: string): Promise<NftMedia> =>
-      ipcRenderer.invoke(TOKEN_CHANNELS.FETCH_NFT_MEDIA, tokenUri),
+    fetchNftMedia: (
+      account: string,
+      contract: string,
+      tokenId: string,
+    ): Promise<NftMedia> =>
+      ipcRenderer.invoke(
+        TOKEN_CHANNELS.FETCH_NFT_MEDIA,
+        account,
+        contract,
+        tokenId,
+      ),
     onChanged: (callback: () => void): (() => void) => {
       const handler = (): void => callback();
       ipcRenderer.on(TOKEN_CHANNELS.CHANGED, handler);

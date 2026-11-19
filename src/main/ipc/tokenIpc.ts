@@ -2,8 +2,12 @@ import { ipcMain } from "electron";
 import { ASSET_LOGO_CHANNELS, TOKEN_CHANNELS } from "../../bridge/ipc-channels";
 import { AssetLogoStore } from "../tokens/assetLogos";
 import { getDetectedNfts, getDetectedTokens } from "../tokens/detectedTokens";
-import { isNftUri, loadNftMedia } from "../tokens/nftMedia";
-import { isAddress } from "../tokens/tokenScanService";
+import { loadNftMedia } from "../tokens/nftMedia";
+import {
+  loadDetectedNftMedia,
+  parseNftMediaRequest,
+} from "../tokens/nftMediaRequest";
+import { isAddress, nodeEthCall } from "../tokens/tokenScanService";
 
 /**
  * Registers the detected-token and detected-NFT queries and the custom asset logo store.
@@ -24,12 +28,16 @@ export async function registerTokenHandlers(): Promise<void> {
     }
     return getDetectedNfts(account);
   });
-  ipcMain.handle(TOKEN_CHANNELS.FETCH_NFT_MEDIA, (_, tokenUri: unknown) => {
-    if (!isNftUri(tokenUri)) {
-      throw new TypeError(`${TOKEN_CHANNELS.FETCH_NFT_MEDIA}: invalid URI`);
-    }
-    return loadNftMedia(tokenUri);
-  });
+  // The renderer names a detected NFT, never a URL; main reads tokenURI.
+  ipcMain.handle(
+    TOKEN_CHANNELS.FETCH_NFT_MEDIA,
+    (_, account: unknown, contract: unknown, tokenId: unknown) =>
+      loadDetectedNftMedia(parseNftMediaRequest(account, contract, tokenId), {
+        detectedNfts: (owner) => getDetectedNfts(owner).nfts,
+        call: nodeEthCall,
+        load: (tokenUri) => loadNftMedia(tokenUri),
+      }),
+  );
 
   const { default: Store } = await import("electron-store");
   const logos = new AssetLogoStore(new Store({ name: "asset-logos" }));

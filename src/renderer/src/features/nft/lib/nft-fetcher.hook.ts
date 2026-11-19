@@ -33,6 +33,7 @@ dropLegacyNftStorage();
  * A token whose metadata cannot be resolved is left out and retried next time.
  */
 async function resolveMissing(
+  account: string,
   nfts: readonly DetectedNft[],
   cache: Map<string, NFTMetadata>,
 ): Promise<void> {
@@ -41,7 +42,7 @@ async function resolveMissing(
   const provider = await buildProvider();
   const settled = await Promise.allSettled(
     missing.map((nft) =>
-      resolveNFTMetadata(nft.contract, nft.tokenId, "ERC-721", provider),
+      resolveNFTMetadata(account, nft.contract, nft.tokenId, provider),
     ),
   );
   settled.forEach((result, i) => {
@@ -76,7 +77,7 @@ function useNFTFetcher(walletAddress: string | null): NFTFetcherResult {
     const load = async (): Promise<void> => {
       try {
         const { nfts } = await getDetectedNfts(walletAddress);
-        await resolveMissing(nfts, metadata.current);
+        await resolveMissing(walletAddress, nfts, metadata.current);
         if (!isActive) return;
         setLoaded({
           address: walletAddress,

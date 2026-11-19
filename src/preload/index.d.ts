@@ -82,7 +82,11 @@ interface CointmuAPI {
     /** ERC-20 tokens the account received (balance > 0) and the scan progress. */
     getDetected: (account: string) => Promise<DetectedTokens>;
     getDetectedNfts: (account: string) => Promise<DetectedNfts>;
-    fetchNftMedia: (tokenUri: string) => Promise<NftMedia>;
+    fetchNftMedia: (
+      account: string,
+      contract: string,
+      tokenId: string,
+    ) => Promise<NftMedia>;
     /** Fires after a scan step changed detections, balances or the head. @returns Unsubscribe. */
     onChanged: (callback: () => void) => () => void;
   };

@@ -6,7 +6,7 @@ import { getRpcPort } from "../geth/process/ports";
 import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 import type { AppStore } from "../store/appStore";
 import { setActiveScanner } from "./detectedTokens";
-import { TRANSFER_TOPIC } from "./erc20Calls";
+import { TRANSFER_TOPIC, type EthCall } from "./erc20Calls";
 import {
   ScanOutcome,
   TokenScanner,
@@ -163,5 +163,8 @@ export async function startTokenScan(store: AppStore): Promise<void> {
 export function stopTokenScan(): void {
   stopController.abort();
 }
+
+/** eth_call against the local node; null on a revert or node error. */
+export const nodeEthCall: EthCall = nodeRpc.call;
 
 export { isAddress };

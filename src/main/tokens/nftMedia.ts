@@ -1,24 +1,18 @@
 import type { NftMedia } from "../../bridge/types";
 import { sanitizeTokenText } from "./erc20Calls";
+import { fetchPublicHttps, nodeTransport, type Transport } from "./publicHttps";
 
 // NFT metadata and images are fetched here, not in the renderer, so the CSP
-// keeps img-src to 'self' data: blob: and no page can reach arbitrary hosts.
-// shortcut: hosts are not checked against private IP ranges (https only,
-// as the renderer did before); add a DNS-resolving guard if that matters.
+// keeps img-src to 'self' data: blob:. Network hops go through
+// fetchPublicHttps, which refuses non-public addresses (SSRF guard).
 
 export const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
-export const FETCH_TIMEOUT_MS = 10_000;
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 export const MAX_METADATA_BYTES = 256 * 1024;
 /** Total data URL characters kept in memory; the oldest entries go first. */
 export const MAX_CACHE_CHARS = 32 * 1024 * 1024;
-/** On-chain tokenURIs are base64 data: URIs, so allow the metadata cap plus encoding. */
-export const MAX_URI_CHARS = MAX_METADATA_BYTES * 2;
-const MAX_REDIRECTS = 3;
 const MAX_NAME_CHARS = 100;
 const MAX_DESCRIPTION_CHARS = 1_000;
-const HTTP_REDIRECT_MIN = 300;
-const HTTP_REDIRECT_MAX = 399;
 
 const ImageType = {
   PNG: "image/png",
@@ -80,47 +74,6 @@ export function toHttpsUrl(uri: string): URL {
   return url;
 }
 
-/** GET over https with a timeout, following only https redirects. */
-async function fetchHttps(url: URL): Promise<Response> {
-  let current = url;
-  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
-    const response = await fetch(current, {
-      redirect: "manual",
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
-    const isRedirect =
-      response.status >= HTTP_REDIRECT_MIN &&
-      response.status <= HTTP_REDIRECT_MAX;
-    if (!isRedirect) {
-      if (!response.ok) throw new NftMediaError(`HTTP ${response.status}`);
-      return response;
-    }
-    current = toHttpsUrl(
-      new URL(response.headers.get("location") ?? "", current).href,
-    );
-  }
-  throw new NftMediaError("too many redirects");
-}
-
-/** Reads the body, stopping as soon as it passes maxBytes. */
-async function readCapped(
-  response: Response,
-  maxBytes: number,
-): Promise<Uint8Array> {
-  if (Number(response.headers.get("content-length") ?? 0) > maxBytes) {
-    throw new NftMediaError("too large");
-  }
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  if (response.body === null) return new Uint8Array();
-  for await (const chunk of response.body) {
-    total += chunk.byteLength;
-    if (total > maxBytes) throw new NftMediaError("too large");
-    chunks.push(chunk);
-  }
-  return Buffer.concat(chunks);
-}
-
 /** Splits a data: URI into its media type and decoded bytes. */
 function decodeDataUri(uri: string): { type: string; bytes: Uint8Array } {
   const match = /^data:([^;,]*)((?:;[^;,]*)*),(.*)$/s.exec(uri);
@@ -135,6 +88,7 @@ function decodeDataUri(uri: string): { type: string; bytes: Uint8Array } {
 async function loadBytes(
   uri: string,
   maxBytes: number,
+  transport: Transport,
 ): Promise<{ type: string; bytes: Uint8Array }> {
   if (uri.startsWith("data:")) {
     const decoded = decodeDataUri(uri);
@@ -143,20 +97,18 @@ async function loadBytes(
     }
     return decoded;
   }
-  const response = await fetchHttps(toHttpsUrl(uri));
-  const type = (response.headers.get("content-type") ?? "")
-    .split(";")[0]
-    .trim()
-    .toLowerCase();
-  return { type, bytes: await readCapped(response, maxBytes) };
+  return fetchPublicHttps(toHttpsUrl(uri), maxBytes, transport);
 }
 
 /**
  * @param uri - An image URI from NFT metadata (https, ipfs or data:).
  * @returns The image as a data URL, or "" when it is not an allowed image.
  */
-export async function loadNftImage(uri: string): Promise<string> {
-  const { type, bytes } = await loadBytes(uri, MAX_IMAGE_BYTES);
+export async function loadNftImage(
+  uri: string,
+  transport: Transport = nodeTransport,
+): Promise<string> {
+  const { type, bytes } = await loadBytes(uri, MAX_IMAGE_BYTES, transport);
   const imageType = (type === "image/jpg" ? ImageType.JPEG : type) as ImageType;
   if (!(imageType in MAGIC) || !MAGIC[imageType](bytes)) {
     throw new NftMediaError(`not an allowed image (${type})`);
@@ -171,12 +123,16 @@ const textField = (value: unknown, maxChars: number): string =>
  * Loads an NFT's metadata JSON and its image. Each step that fails leaves
  * its fields empty instead of failing the whole token.
  * @param tokenUri - The tokenURI the contract returned.
+ * @param transport - DNS and https; the real ones unless testing.
  * @returns Cleaned name and description, and the image as a data URL.
  */
-export async function loadNftMedia(tokenUri: string): Promise<NftMedia> {
+export async function loadNftMedia(
+  tokenUri: string,
+  transport: Transport = nodeTransport,
+): Promise<NftMedia> {
   const hit = cache.get(tokenUri);
   if (hit !== undefined) return hit;
-  const { bytes } = await loadBytes(tokenUri, MAX_METADATA_BYTES);
+  const { bytes } = await loadBytes(tokenUri, MAX_METADATA_BYTES, transport);
   const json: unknown = JSON.parse(new TextDecoder().decode(bytes));
   const fields = (typeof json === "object" && json !== null ? json : {}) as {
     name?: unknown;
@@ -186,7 +142,7 @@ export async function loadNftMedia(tokenUri: string): Promise<NftMedia> {
   let image = "";
   if (typeof fields.image === "string" && fields.image !== "") {
     try {
-      image = await loadNftImage(fields.image);
+      image = await loadNftImage(fields.image, transport);
     } catch (err) {
       console.warn("[nft] Image not loaded:", (err as Error).message);
     }
@@ -197,9 +153,3 @@ export async function loadNftMedia(tokenUri: string): Promise<NftMedia> {
     image,
   });
 }
-
-/** @returns True for a string URI the media loader may be asked for. */
-export const isNftUri = (value: unknown): value is string =>
-  typeof value === "string" &&
-  value.length > 0 &&
-  value.length <= MAX_URI_CHARS;

@@ -2,16 +2,7 @@ import i18next from "i18next";
 import type { DetectedNfts } from "@bridge/types";
 import { createNodeProvider } from "@/shared/api";
 
-const ERC721_ABI_FRAGMENTS = [
-  "function tokenURI(uint256 tokenId) view returns (string)",
-  "function name() view returns (string)",
-  "function ownerOf(uint256 tokenId) view returns (address)",
-];
-
-const ERC1155_ABI_FRAGMENTS = [
-  "function uri(uint256 tokenId) view returns (string)",
-  "function balanceOf(address account, uint256 id) view returns (uint256)",
-];
+const ERC721_NAME_ABI = ["function name() view returns (string)"];
 
 // Keys of the renderer scan that the main-process scanner replaced.
 const LEGACY_STORAGE_PREFIXES = ["cmu_nft_scan_block_", "cmu_nft_cache_"];
@@ -56,62 +47,49 @@ export interface NFTMetadata {
 }
 
 /**
- * Reads tokenURI (or uri) from the contract and has main fetch the metadata
- * and image, so the renderer never contacts the metadata host itself.
- * Falls back gracefully when the contract does not implement the expected method
- * or when the metadata endpoint is unreachable.
- * @param {string} contractAddress - The NFT contract address.
- * @param {string} tokenId - The decimal token ID string.
- * @param {'ERC-721' | 'ERC-1155'} standard - The token standard.
- * @param {import('ethers').JsonRpcApiProvider} provider - The ethers provider instance.
- * @returns {Promise<NFTMetadata>} The resolved metadata, with fallback values for missing fields.
+ * Resolves an NFT's display data. Main reads tokenURI on-chain and fetches
+ * the metadata and image for a detected NFT of the account, so the renderer
+ * never passes a URL or contacts a metadata host. Missing parts fall back.
+ * @param account - The wallet account that owns the NFT.
+ * @param contractAddress - The ERC-721 contract.
+ * @param tokenId - The decimal token id.
+ * @param provider - Reads the collection name.
+ * @returns The metadata, with fallback values for missing fields.
  */
 export async function resolveNFTMetadata(
+  account: string,
   contractAddress: string,
   tokenId: string,
-  standard: "ERC-721" | "ERC-1155",
   provider: import("ethers").JsonRpcApiProvider,
 ): Promise<NFTMetadata> {
   const { ethers } = await import("ethers");
-
-  const abi =
-    standard === "ERC-721" ? ERC721_ABI_FRAGMENTS : ERC1155_ABI_FRAGMENTS;
-  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721_NAME_ABI,
+    provider,
+  );
 
   let collectionName = i18next.t("walletTabs:nft.unknownCollection");
-  let tokenUri = "";
-
   try {
-    if (standard === "ERC-721") {
-      collectionName = await contract.name();
-    }
+    collectionName = await contract.name();
   } catch {
     // name() is optional
-  }
-
-  try {
-    const bigTokenId = BigInt(tokenId);
-    tokenUri =
-      standard === "ERC-721"
-        ? await contract.tokenURI(bigTokenId)
-        : await contract.uri(bigTokenId);
-  } catch {
-    // tokenURI/uri call failed — return fallback
   }
 
   let name = i18next.t("walletTabs:nft.fallbackName", { id: tokenId });
   let description = "";
   let image = "";
-
-  if (tokenUri) {
-    try {
-      const media = await window.api.tokens.fetchNftMedia(tokenUri);
-      name = media.name || name;
-      description = media.description;
-      image = media.image;
-    } catch (err) {
-      console.warn("[NFTService] Metadata not loaded", err);
-    }
+  try {
+    const media = await window.api.tokens.fetchNftMedia(
+      account,
+      contractAddress,
+      tokenId,
+    );
+    name = media.name || name;
+    description = media.description;
+    image = media.image;
+  } catch (err) {
+    console.warn("[NFTService] Metadata not loaded", err);
   }
 
   return {
@@ -120,7 +98,7 @@ export async function resolveNFTMetadata(
     name,
     description,
     image,
-    standard,
+    standard: "ERC-721",
     collectionName,
   };
 }
