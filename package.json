@@ -1,8 +1,8 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.9.1",
-  "codename": "Eagle",
+  "version": "1.9.2",
+  "codename": "Helix",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
   "author": "CointMU",
