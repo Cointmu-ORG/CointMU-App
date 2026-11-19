@@ -492,7 +492,13 @@
       "chainData": "Lokale Chain-Daten ({{size}})",
       "wallets": "Wallets und Schlüssel",
       "settings": "Einstellungen",
-      "tokens": "Tokens, ausgeblendete Tokens und eigene Logos"
+      "tokens": "Tokens, ausgeblendete Tokens und eigene Logos",
+      "explorerIndex": "Blockindex des Explorers",
+      "tokenScan": "Erkannte Tokens und NFT-Scan-Ergebnisse",
+      "nftMedia": "NFT-Bilder und der Web-Cache der App",
+      "activity": "Cache der letzten Aktivitäten",
+      "logos": "Eigene Logos und ausgeblendete Tokens",
+      "chain": "Chain-Daten"
     },
     "resyncTitle": "Neu synchronisieren",
     "resyncDesc": "Löscht die lokalen Chain-Daten und lädt sie ab Block 0 neu herunter. Hilft, wenn die Synchronisierung hängen bleibt.",
@@ -511,6 +517,22 @@
     "backupTitle": "Sicherung der Chain-Daten",
     "backupDesc": "Alte Chain-Daten nach einer Neusynchronisierung oder Reparatur ({{size}}).",
     "backupDelete": "Sicherung löschen ({{size}})",
-    "backupFailed": "Die Sicherung konnte nicht gelöscht werden."
+    "backupFailed": "Die Sicherung konnte nicht gelöscht werden.",
+    "cacheTitle": "Cache leeren",
+    "cacheDesc": "Entfernt Daten, die die App vom Node neu aufbaut. Hilft, wenn Explorer, Tokens oder NFTs falsch aussehen.",
+    "cacheButton": "Cache leeren…",
+    "cacheConfirmTitle": "Cache leeren?",
+    "cacheConfirm": "Cache leeren",
+    "cacheRebuildNote": "Alles Entfernte wird automatisch vom Node neu aufgebaut; Explorer und Token-Listen können eine Weile unvollständig sein.",
+    "cacheDone": "Cache geleert. Er wird neu aufgebaut.",
+    "cacheFailed": "Der Cache konnte nicht geleert werden.",
+    "dagTitle": "Mining-DAG",
+    "dagDesc": "Daten, die geth fürs Mining erzeugt ({{size}}).",
+    "dagMining": "Beende das Mining, um sie zu löschen.",
+    "dagButton": "DAG löschen…",
+    "dagConfirmTitle": "Mining-DAG löschen?",
+    "dagConfirmBody": "{{size}} an DAG-Dateien werden gelöscht. Geth erzeugt sie beim nächsten Mining-Start neu, was einige Minuten dauert.",
+    "dagConfirm": "DAG löschen",
+    "dagFailed": "Der DAG konnte nicht gelöscht werden."
   }
 }

@@ -409,6 +409,13 @@ export interface ChainResyncInfo {
   readonly backupSizeBytes: number;
 }
 
+/** The mining DAG shown next to "Delete mining DAG". */
+export interface DagInfo {
+  readonly sizeBytes: number;
+  /** Deleting is refused while geth mines. */
+  readonly isMining: boolean;
+}
+
 export interface ChainDataInfo {
   readonly root: string;
   readonly sizeBytes: number;

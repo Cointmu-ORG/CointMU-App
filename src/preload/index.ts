@@ -5,6 +5,7 @@ import {
   ASSET_LOGO_CHANNELS,
   BOOTNODE_CHANNELS,
   CHAINDATA_CHANNELS,
+  MAINTENANCE_CHANNELS,
   CLIPBOARD_CHANNELS,
   DIAGNOSTICS_CHANNELS,
   EXPLORER_CHANNELS,
@@ -24,6 +25,7 @@ import type {
   ChainDataInfo,
   ChainResyncInfo,
   ChainResyncResult,
+  DagInfo,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -344,6 +346,14 @@ const api = {
     },
     getSyncStall: (): Promise<SyncStallStep | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_SYNC_STALL),
+  },
+  maintenance: {
+    clearCache: (): Promise<void> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.CLEAR_CACHE),
+    getDagInfo: (): Promise<DagInfo> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.GET_DAG_INFO),
+    deleteDag: (): Promise<void> =>
+      ipcRenderer.invoke(MAINTENANCE_CHANNELS.DELETE_DAG),
   },
   bootnode: {
     get: (): Promise<BootnodeState> =>

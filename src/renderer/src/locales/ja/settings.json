@@ -487,7 +487,13 @@
       "chainData": "ローカルのチェーンデータ（{{size}}）",
       "wallets": "ウォレットと鍵",
       "settings": "設定",
-      "tokens": "トークン、非表示のトークン、カスタムロゴ"
+      "tokens": "トークン、非表示のトークン、カスタムロゴ",
+      "explorerIndex": "エクスプローラーのブロックインデックス",
+      "tokenScan": "検出したトークンとNFTのスキャン結果",
+      "nftMedia": "NFT画像とアプリのWebキャッシュ",
+      "activity": "最近のアクティビティのキャッシュ",
+      "logos": "カスタムロゴと非表示のトークン",
+      "chain": "チェーンデータ"
     },
     "resyncTitle": "最初から再同期",
     "resyncDesc": "ローカルのチェーンデータを削除し、ブロック0から再ダウンロードします。同期が止まったままのときに使います。",
@@ -506,6 +512,22 @@
     "backupTitle": "チェーンデータのバックアップ",
     "backupDesc": "再同期または修復後に残った古いチェーンデータ（{{size}}）。",
     "backupDelete": "バックアップを削除（{{size}}）",
-    "backupFailed": "バックアップを削除できませんでした。"
+    "backupFailed": "バックアップを削除できませんでした。",
+    "cacheTitle": "キャッシュを消去",
+    "cacheDesc": "アプリがノードから再構築するデータを削除します。エクスプローラー、トークン、NFTの表示がおかしいときに使います。",
+    "cacheButton": "キャッシュを消去…",
+    "cacheConfirmTitle": "キャッシュを消去しますか？",
+    "cacheConfirm": "キャッシュを消去",
+    "cacheRebuildNote": "削除したものはすべてノードから自動で再構築されます。しばらくはエクスプローラーやトークン一覧が不完全な場合があります。",
+    "cacheDone": "キャッシュを消去しました。再構築中です。",
+    "cacheFailed": "キャッシュを消去できませんでした。",
+    "dagTitle": "マイニングDAG",
+    "dagDesc": "geth がマイニング用に生成するデータ（{{size}}）。",
+    "dagMining": "削除するにはマイニングを停止してください。",
+    "dagButton": "DAGを削除…",
+    "dagConfirmTitle": "マイニングDAGを削除しますか？",
+    "dagConfirmBody": "{{size}} のDAGファイルを削除します。次にマイニングを開始すると geth が再生成します（数分かかります）。",
+    "dagConfirm": "DAGを削除",
+    "dagFailed": "DAGを削除できませんでした。"
   }
 }

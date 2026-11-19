@@ -492,7 +492,13 @@
       "chainData": "Local chain data ({{size}})",
       "wallets": "Wallets and keys",
       "settings": "Settings",
-      "tokens": "Tokens, hidden tokens and custom logos"
+      "tokens": "Tokens, hidden tokens and custom logos",
+      "explorerIndex": "Explorer block index",
+      "tokenScan": "Detected tokens and NFT scan results",
+      "nftMedia": "NFT images and the app's web cache",
+      "activity": "Recent activity cache",
+      "logos": "Custom logos and hidden tokens",
+      "chain": "Chain data"
     },
     "resyncTitle": "Resync from scratch",
     "resyncDesc": "Deletes the local chain data and downloads it again from block 0. Use it when sync stays stuck.",
@@ -511,6 +517,22 @@
     "backupTitle": "Chain data backup",
     "backupDesc": "Old chain data kept after a resync or a repair ({{size}}).",
     "backupDelete": "Delete backup ({{size}})",
-    "backupFailed": "Could not delete the backup."
+    "backupFailed": "Could not delete the backup.",
+    "cacheTitle": "Clear cache",
+    "cacheDesc": "Removes data the app rebuilds from the node. Use it when the explorer, tokens or NFTs look wrong.",
+    "cacheButton": "Clear cache…",
+    "cacheConfirmTitle": "Clear the cache?",
+    "cacheConfirm": "Clear cache",
+    "cacheRebuildNote": "Everything removed is rebuilt automatically from the node; the explorer and token lists may be incomplete for a while.",
+    "cacheDone": "Cache cleared. It is being rebuilt.",
+    "cacheFailed": "Could not clear the cache.",
+    "dagTitle": "Mining DAG",
+    "dagDesc": "Data geth generates for mining ({{size}}).",
+    "dagMining": "Stop mining to delete it.",
+    "dagButton": "Delete DAG…",
+    "dagConfirmTitle": "Delete the mining DAG?",
+    "dagConfirmBody": "{{size}} of DAG files are deleted. Geth generates them again the next time you start mining, which takes a few minutes.",
+    "dagConfirm": "Delete DAG",
+    "dagFailed": "Could not delete the DAG."
   }
 }

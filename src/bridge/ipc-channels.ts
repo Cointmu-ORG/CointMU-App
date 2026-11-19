@@ -72,3 +72,9 @@ export const ASSET_LOGO_CHANNELS = {
   SET: "asset-logos:set",
   RESET: "asset-logos:reset",
 } as const;
+
+export const MAINTENANCE_CHANNELS = {
+  CLEAR_CACHE: "maintenance:clear-cache",
+  GET_DAG_INFO: "maintenance:get-dag-info",
+  DELETE_DAG: "maintenance:delete-dag",
+} as const;

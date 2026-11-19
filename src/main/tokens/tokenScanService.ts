@@ -115,6 +115,16 @@ function loadState(raw: unknown): TokenScanState {
 
 const stopController = new AbortController();
 let isPaused = false;
+let activeState: TokenScanState | null = null;
+
+/**
+ * Forgets what the scan found (Settings → Clear cache): the next step sees
+ * no genesis and scans every account from block 0 again. Custom logos and
+ * hidden tokens live elsewhere and stay.
+ */
+export function resetTokenScan(): void {
+  if (activeState) activeState.genesisHash = null;
+}
 
 /**
  * Holds the scan loop while the chain data is replaced (resync); the loop
@@ -147,6 +157,7 @@ export async function startTokenScan(store: AppStore): Promise<void> {
   const { default: Store } = await import("electron-store");
   const scanStore = new Store({ name: `token-scan-${getNetworkId()}` });
   const state = loadState(scanStore.get(STATE_KEY));
+  activeState = state;
   const started = new TokenScanner(nodeRpc, state);
   started.setAccounts(walletAddresses(store.get("accounts")));
   store.onDidChange("accounts", (accounts: unknown) =>

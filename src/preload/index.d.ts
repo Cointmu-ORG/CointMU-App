@@ -7,6 +7,7 @@ import type {
   ChainDataInfo,
   ChainResyncInfo,
   ChainResyncResult,
+  DagInfo,
   ChainDataMoveProgress,
   ChainDataMoveResult,
   ChainDataTarget,
@@ -219,6 +220,11 @@ interface CointmuAPI {
     getPeerHint: () => Promise<NodePeerHint | null>;
     onSyncStall: (callback: (step: SyncStallStep | null) => void) => () => void;
     getSyncStall: () => Promise<SyncStallStep | null>;
+  };
+  maintenance: {
+    clearCache: () => Promise<void>;
+    getDagInfo: () => Promise<DagInfo>;
+    deleteDag: () => Promise<void>;
   };
   bootnode: {
     get: () => Promise<BootnodeState>;

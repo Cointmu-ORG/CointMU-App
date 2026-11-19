@@ -497,7 +497,13 @@
       "chainData": "Datos locales de la cadena ({{size}})",
       "wallets": "Billeteras y claves",
       "settings": "Ajustes",
-      "tokens": "Tokens, tokens ocultos y logotipos personalizados"
+      "tokens": "Tokens, tokens ocultos y logotipos personalizados",
+      "explorerIndex": "Índice de bloques del explorador",
+      "tokenScan": "Tokens detectados y resultados del escaneo de NFT",
+      "nftMedia": "Imágenes de NFT y la caché web de la app",
+      "activity": "Caché de actividad reciente",
+      "logos": "Logotipos personalizados y tokens ocultos",
+      "chain": "Datos de la cadena"
     },
     "resyncTitle": "Resincronizar desde cero",
     "resyncDesc": "Elimina los datos locales de la cadena y los descarga de nuevo desde el bloque 0. Úsalo si la sincronización sigue detenida.",
@@ -516,6 +522,22 @@
     "backupTitle": "Copia de seguridad de la cadena",
     "backupDesc": "Datos antiguos guardados tras una resincronización o reparación ({{size}}).",
     "backupDelete": "Eliminar copia ({{size}})",
-    "backupFailed": "No se pudo eliminar la copia."
+    "backupFailed": "No se pudo eliminar la copia.",
+    "cacheTitle": "Borrar caché",
+    "cacheDesc": "Elimina datos que la app reconstruye desde el nodo. Úsalo si el explorador, los tokens o los NFT se ven mal.",
+    "cacheButton": "Borrar caché…",
+    "cacheConfirmTitle": "¿Borrar la caché?",
+    "cacheConfirm": "Borrar caché",
+    "cacheRebuildNote": "Todo lo eliminado se reconstruye automáticamente desde el nodo; el explorador y las listas de tokens pueden estar incompletos un rato.",
+    "cacheDone": "Caché borrada. Se está reconstruyendo.",
+    "cacheFailed": "No se pudo borrar la caché.",
+    "dagTitle": "DAG de minería",
+    "dagDesc": "Datos que geth genera para minar ({{size}}).",
+    "dagMining": "Detén la minería para eliminarlo.",
+    "dagButton": "Eliminar DAG…",
+    "dagConfirmTitle": "¿Eliminar el DAG de minería?",
+    "dagConfirmBody": "Se eliminan {{size}} de archivos DAG. Geth los genera de nuevo la próxima vez que empieces a minar, lo que tarda unos minutos.",
+    "dagConfirm": "Eliminar DAG",
+    "dagFailed": "No se pudo eliminar el DAG."
   }
 }

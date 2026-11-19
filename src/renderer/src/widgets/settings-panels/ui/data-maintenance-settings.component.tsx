@@ -10,10 +10,13 @@ import {
   SettingRow,
   SettingsGroup,
 } from "./setting-controls.component";
+import { ClearCacheRow } from "./clear-cache-row.component";
+import { MiningDagRow } from "./mining-dag-row.component";
 
 /**
- * Settings → Advanced → Data maintenance: resync the chain from genesis and
- * delete the backup the resync (or a recovery) left behind.
+ * Settings → Advanced → Data maintenance: resync the chain from genesis,
+ * delete the backup a resync (or a recovery) left behind, clear the caches
+ * and delete the mining DAG.
  * @returns The section.
  */
 export function DataMaintenanceSettings(): JSX.Element {
@@ -64,6 +67,8 @@ export function DataMaintenanceSettings(): JSX.Element {
           </SettingButton>
         </SettingRow>
       )}
+      <ClearCacheRow />
+      <MiningDagRow />
       <ChainResyncDialogs resync={resync} />
     </SettingsGroup>
   );

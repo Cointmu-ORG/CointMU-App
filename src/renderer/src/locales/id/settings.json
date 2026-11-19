@@ -487,7 +487,13 @@
       "chainData": "Data chain lokal ({{size}})",
       "wallets": "Wallet dan kunci",
       "settings": "Pengaturan",
-      "tokens": "Token, token tersembunyi, dan logo kustom"
+      "tokens": "Token, token tersembunyi, dan logo kustom",
+      "explorerIndex": "Indeks blok explorer",
+      "tokenScan": "Token terdeteksi dan hasil pindai NFT",
+      "nftMedia": "Gambar NFT dan cache web aplikasi",
+      "activity": "Cache aktivitas terbaru",
+      "logos": "Logo kustom dan token tersembunyi",
+      "chain": "Data chain"
     },
     "resyncTitle": "Sinkron ulang dari awal",
     "resyncDesc": "Menghapus data chain lokal dan mengunduhnya lagi dari blok 0. Gunakan saat sinkronisasi terus macet.",
@@ -506,6 +512,22 @@
     "backupTitle": "Cadangan data chain",
     "backupDesc": "Data chain lama yang disimpan setelah sinkron ulang atau perbaikan ({{size}}).",
     "backupDelete": "Hapus cadangan ({{size}})",
-    "backupFailed": "Cadangan tidak dapat dihapus."
+    "backupFailed": "Cadangan tidak dapat dihapus.",
+    "cacheTitle": "Bersihkan cache",
+    "cacheDesc": "Menghapus data yang dibangun ulang aplikasi dari node. Gunakan saat explorer, token, atau NFT tampak salah.",
+    "cacheButton": "Bersihkan cache…",
+    "cacheConfirmTitle": "Bersihkan cache?",
+    "cacheConfirm": "Bersihkan cache",
+    "cacheRebuildNote": "Semua yang dihapus dibangun ulang otomatis dari node; explorer dan daftar token mungkin belum lengkap untuk sementara.",
+    "cacheDone": "Cache dibersihkan dan sedang dibangun ulang.",
+    "cacheFailed": "Cache tidak dapat dibersihkan.",
+    "dagTitle": "DAG mining",
+    "dagDesc": "Data yang dibuat geth untuk mining ({{size}}).",
+    "dagMining": "Hentikan mining untuk menghapusnya.",
+    "dagButton": "Hapus DAG…",
+    "dagConfirmTitle": "Hapus DAG mining?",
+    "dagConfirmBody": "File DAG sebesar {{size}} dihapus. Geth membuatnya lagi saat mining dimulai berikutnya, yang memakan beberapa menit.",
+    "dagConfirm": "Hapus DAG",
+    "dagFailed": "DAG tidak dapat dihapus."
   }
 }
