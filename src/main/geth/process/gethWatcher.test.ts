@@ -27,6 +27,10 @@ import {
 const EXTRA_SHELL = process.env.GETH_WATCHER_SHELL;
 const SHORT_GRACE_MS = 300;
 const LONG_GRACE_MS = 15_000;
+const SHORT_READY_WAIT_MS = 1000;
+const LONG_READY_WAIT_MS = 300_000;
+// Past the sh watcher's 1 s poll, so an early SIGINT would land before it.
+const READY_DELAY_MS = 2000;
 // Past the sh watcher's 1 s poll, so a wrong reaction has time to happen.
 const STILL_RUNNING_CHECK_MS = 1500;
 const TEST_TIMEOUT_MS = 15_000;
@@ -79,26 +83,56 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
   // The watcher with startGethWatcher's stdio, given raw arguments.
   function startWatcher(
     geth: ChildProcess,
-    gethPid: string,
-    graceMs: string,
+    [gethPid, graceMs, readyWaitMs = String(LONG_READY_WAIT_MS)]: string[],
     stdin: StdioEntry = "pipe",
   ): ChildProcess {
     const { file, args, env } = command();
     const layout = watcherStdio(geth);
     if (!Array.isArray(layout)) throw new Error("expected a stdio array");
     const stdio: StdioEntry[] = [stdin, ...layout.slice(1)];
-    return track(spawn(file, [...args, gethPid, graceMs], { env, stdio }));
+    return track(
+      spawn(file, [...args, gethPid, graceMs, readyWaitMs], { env, stdio }),
+    );
   }
 
-  function watch(geth: ChildProcess, graceMs = LONG_GRACE_MS): ChildProcess {
-    return startWatcher(geth, String(geth.pid), String(graceMs));
+  function watch(
+    geth: ChildProcess,
+    graceMs = LONG_GRACE_MS,
+    readyWaitMs = LONG_READY_WAIT_MS,
+  ): ChildProcess {
+    return startWatcher(geth, [
+      String(geth.pid),
+      String(graceMs),
+      String(readyWaitMs),
+    ]);
   }
 
-  async function startFakeGeth(ignoreSigint = false): Promise<ChildProcess> {
+  // The main process reports geth ready (reportGethReady), then goes away.
+  function endReadyMain(watcher: ChildProcess): void {
+    watcher.stdin?.end("\n");
+  }
+
+  // The main process goes away before geth was ready: from now on only the
+  // watcher reads geth's output.
+  function endMainBeforeReady(geth: ChildProcess, watcher: ChildProcess): void {
+    geth.stdout?.destroy();
+    geth.stderr?.destroy();
+    watcher.stdin?.destroy();
+  }
+
+  async function startFakeGeth(
+    ignoreSigint = false,
+    readyDelay = "0",
+  ): Promise<ChildProcess> {
     const child = track(
       spawn(
         process.execPath,
-        [join(dir, "fake-geth.js"), marker, ignoreSigint ? "1" : "0"],
+        [
+          join(dir, "fake-geth.js"),
+          marker,
+          ignoreSigint ? "1" : "0",
+          readyDelay,
+        ],
         { stdio: ["ignore", "pipe", "pipe"], windowsHide: true },
       ),
     );
@@ -134,11 +168,40 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
       const watcher = watch(geth);
       const watcherExit = exitOf(watcher);
 
-      watcher.stdin?.destroy();
+      endReadyMain(watcher);
 
       await gethExit;
       expectCleanStop();
       expect((await watcherExit).code).toBe(0);
+    },
+    TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "waits for a geth still starting before it sends SIGINT",
+    async () => {
+      const geth = await startFakeGeth(false, String(READY_DELAY_MS));
+      const gethExit = exitOf(geth);
+      const watcher = watch(geth);
+
+      endMainBeforeReady(geth, watcher);
+
+      expect(await gethExit).toEqual({ code: 0, signal: null });
+      expectCleanStop();
+    },
+    TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "sends SIGINT to a geth that never gets ready after the ready wait",
+    async () => {
+      const geth = await startFakeGeth(false, "never");
+      const gethExit = exitOf(geth);
+      const watcher = watch(geth, LONG_GRACE_MS, SHORT_READY_WAIT_MS);
+
+      endMainBeforeReady(geth, watcher);
+
+      expect((await gethExit).signal).toBe("SIGINT");
     },
     TEST_TIMEOUT_MS,
   );
@@ -155,6 +218,7 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
             join(dir, "fake-geth.js"),
             marker,
             String(LONG_GRACE_MS),
+            String(LONG_READY_WAIT_MS),
           ],
           { stdio: ["ignore", "pipe", "ignore"] },
         ),
@@ -179,7 +243,7 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
       const gethExit = exitOf(geth);
       const watcher = watch(geth, SHORT_GRACE_MS);
 
-      watcher.stdin?.destroy();
+      endReadyMain(watcher);
 
       expect((await gethExit).signal).toBe("SIGKILL");
     },
@@ -243,8 +307,7 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
       );
       const watcher = startWatcher(
         geth,
-        String(geth.pid),
-        String(LONG_GRACE_MS),
+        [String(geth.pid), String(LONG_GRACE_MS)],
         holder.stdout,
       );
       // Only the watcher reads the holder's output from here on.
@@ -261,14 +324,21 @@ describe.skipIf(isWindows).each(VARIANTS)("$name", ({ command }) => {
 
   it("refuses an invalid geth PID", async () => {
     const geth = await startFakeGeth();
-    const watcher = startWatcher(geth, "0", "1");
+    const watcher = startWatcher(geth, ["0", "1"]);
 
     expect((await exitOf(watcher)).code).toBe(2);
   });
 
   it("refuses an invalid grace period", async () => {
     const geth = await startFakeGeth();
-    const watcher = startWatcher(geth, String(geth.pid), "soon");
+    const watcher = startWatcher(geth, [String(geth.pid), "soon"]);
+
+    expect((await exitOf(watcher)).code).toBe(2);
+  });
+
+  it("refuses an invalid ready wait", async () => {
+    const geth = await startFakeGeth();
+    const watcher = startWatcher(geth, [String(geth.pid), "1", "soon"]);
 
     expect((await exitOf(watcher)).code).toBe(2);
   });

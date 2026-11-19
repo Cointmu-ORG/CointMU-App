@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { interruptGethOnWindows } from "./gethSupervisor";
+import { GETH_READY_MARGIN_MS, GETH_READY_WAIT_MS } from "./gethReadiness";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
 export const GETH_GRACEFUL_TIMEOUT_MS = 15_000;
@@ -122,7 +123,8 @@ export function isSupervisorCommandLine(commandLine: string): boolean {
  * isOwnGethCommandLine: the supervisor's command line holds geth's).
  * - signal: geth outside Windows, SIGINT.
  * - await-supervisor: geth-supervisor.exe. Its stdin closed when the app that
- *   started it went away, so it is already stopping geth; wait for it.
+ *   started it went away, so it is already stopping geth; wait for it, also
+ *   while it waits for a geth still starting (gethReadiness.ts).
  * - interrupt: a geth.exe without a supervisor (written by an older version):
  *   `geth-supervisor.exe interrupt`.
  */
@@ -275,7 +277,10 @@ export async function stopOrphanedGeth(
     const isStopping = await beginOrphanStop(pid, method, supervisor);
     const waitMs =
       method === "await-supervisor"
-        ? gracefulTimeoutMs + SUPERVISOR_EXIT_MARGIN_MS
+        ? GETH_READY_WAIT_MS +
+          GETH_READY_MARGIN_MS +
+          gracefulTimeoutMs +
+          SUPERVISOR_EXIT_MARGIN_MS
         : gracefulTimeoutMs;
     if (!isStopping || !(await waitForExit(pid, waitMs))) {
       console.warn(`[geth:orphan] geth ${pid} is still running; killing it`);

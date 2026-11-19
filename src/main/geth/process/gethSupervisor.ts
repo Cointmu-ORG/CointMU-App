@@ -27,6 +27,8 @@ export interface GethLaunchOptions {
   gethArgs: string[];
   platform: NodeJS.Platform;
   graceMs: number;
+  /** How long the supervisor waits for a geth still starting; see gethReadiness.ts. */
+  readyWaitMs: number;
   hasFile?: (path: string) => boolean;
 }
 
@@ -36,17 +38,18 @@ export interface GethLaunchOptions {
  * non-detached child in a job that Windows terminates with this process, so
  * geth itself would die uncleanly with it. The detached supervisor survives,
  * and when its stdin closes (geth stopped here, or this process gone) it
- * interrupts geth, kills it after graceMs, and exits with geth's code. geth
- * gets the supervisor's stdout and stderr, so its output arrives as before.
+ * interrupts geth once geth can take it (up to readyWaitMs), kills it after
+ * graceMs, and exits with geth's code. geth's output reaches this process
+ * through the supervisor, which reads geth's stderr for that.
  * Elsewhere, or without the supervisor (a dev build without Go), it is geth.
  * @param options - geth's executable and arguments, the platform, the grace
- *   period and a file check (for tests).
+ *   period, the ready wait and a file check (for tests).
  * @returns The command to spawn.
  */
 export function gethLaunchCommand(
   options: GethLaunchOptions,
 ): GethLaunchCommand {
-  const { binaryPath, gethArgs, platform, graceMs } = options;
+  const { binaryPath, gethArgs, platform, graceMs, readyWaitMs } = options;
   const hasFile = options.hasFile ?? existsSync;
   const supervisor = supervisorFor(binaryPath);
   if (platform !== "win32" || !hasFile(supervisor)) {
@@ -54,7 +57,16 @@ export function gethLaunchCommand(
   }
   return {
     file: supervisor,
-    args: ["run", "--grace-ms", String(graceMs), "--", binaryPath, ...gethArgs],
+    args: [
+      "run",
+      "--grace-ms",
+      String(graceMs),
+      "--ready-wait-ms",
+      String(readyWaitMs),
+      "--",
+      binaryPath,
+      ...gethArgs,
+    ],
     isSupervised: true,
   };
 }
