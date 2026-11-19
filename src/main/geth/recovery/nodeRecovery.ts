@@ -6,7 +6,7 @@ import {
   isTcpReachable,
 } from "../../mining/peerWatchdog";
 import { NODE_CHANNELS } from "../../../bridge/ipc-channels";
-import { NodeRecoveryStage } from "../../../bridge/types";
+import { NodeRecoveryStage, type SyncStallStep } from "../../../bridge/types";
 import { requestIndexRebuild } from "../../explorerIndex/explorerIndexService";
 import {
   reportPeerHint,
@@ -24,6 +24,11 @@ import { initGethIfNeeded } from "../process/gethInit";
 import { resolveDataDir } from "../process/networkConfig";
 import { getRpcPort } from "../process/ports";
 import type { AppStore } from "../../store/appStore";
+import { SyncStallWatchdog } from "./syncStallWatchdog";
+import { readSyncProgress } from "../rpc/syncProgress";
+import { reregisterStaticPeers } from "../bootnode/staticPeers";
+import { restartNodeByUser } from "../process/nodeRestart";
+import { isChainDataMoveInProgress } from "../process/chainDataMove";
 
 const PEER_COUNT_TIMEOUT_MS = 5_000;
 const BOOTNODE_PROBE_TIMEOUT_MS = 3_000;
@@ -37,7 +42,7 @@ const BOOTNODE_PROBE_TIMEOUT_MS = 3_000;
  */
 export function createNodeRecovery(store: AppStore): GethRecovery {
   peerWatchdog.start();
-  return new GethRecovery({
+  const recovery = new GethRecovery({
     spawnGeth: () => spawnGethProcess(store),
     stopGeth: killGethProcess,
     hasGethExited,
@@ -52,6 +57,42 @@ export function createNodeRecovery(store: AppStore): GethRecovery {
       }
       BrowserWindow.getAllWindows().forEach((win) => {
         win.webContents.send(NODE_CHANNELS.RECOVERY, event);
+      });
+    },
+  });
+  syncStallWatchdog = createSyncStallWatchdog(store, recovery);
+  syncStallWatchdog.start();
+  return recovery;
+}
+
+let syncStallWatchdog: SyncStallWatchdog | null = null;
+
+/** @returns The sync stall step under way, or null. */
+export function getSyncStallStep(): SyncStallStep | null {
+  return syncStallWatchdog?.getStep() ?? null;
+}
+
+/**
+ * The stall watchdog acts only while recovery is idle and no move runs, and
+ * restarts through restartNodeByUser, so GethRecovery stays the single owner
+ * of failure restarts and the peer watchdog (zero peers) never overlaps.
+ */
+function createSyncStallWatchdog(
+  store: AppStore,
+  recovery: GethRecovery,
+): SyncStallWatchdog {
+  return new SyncStallWatchdog({
+    isGethRunning,
+    isLifecycleBusy: () =>
+      recovery.isRestartSuppressed() || isChainDataMoveInProgress(),
+    readProgress: () => readSyncProgress(getRpcPort()),
+    reregisterPeers: reregisterStaticPeers,
+    restartNode: () => {
+      restartNodeByUser(store);
+    },
+    broadcast: (step) => {
+      BrowserWindow.getAllWindows().forEach((win) => {
+        win.webContents.send(NODE_CHANNELS.SYNC_STALL, step);
       });
     },
   });

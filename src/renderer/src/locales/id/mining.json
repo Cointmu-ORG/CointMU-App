@@ -117,5 +117,14 @@
     "title": "Mining akan dimulai dalam {{seconds}} detik",
     "body": "Mulai mining saat dibuka sedang aktif. Mining memakai CPU, RAM, dan baterai. Batalkan hanya berlaku untuk sesi ini.",
     "cancel": "Batalkan"
+  },
+  "syncStall": {
+    "recovering": "Sinkronisasi macet, mencoba memulihkan…",
+    "title": "Sinkronisasi macet",
+    "step": {
+      "reregister-peers": "Mendaftarkan ulang peer jaringan.",
+      "restart-node": "Memulai ulang node.",
+      "needs-resync": "Pemulihan otomatis tidak berhasil. Sinkron ulang dari awal mengunduh ulang chain; wallet dan pengaturan tetap ada."
+    }
   }
 }

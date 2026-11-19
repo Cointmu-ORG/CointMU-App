@@ -94,6 +94,18 @@ export const NodePeerHint = {
 /** Payload of NODE_CHANNELS.PEER_HINT (null clears it); a code the renderer localizes. */
 export type NodePeerHint = (typeof NodePeerHint)[keyof typeof NodePeerHint];
 
+/** The step the sync stall watchdog is on; payload of NODE_CHANNELS.SYNC_STALL. */
+export const SyncStallStep = {
+  /** Head stood still with peers ahead: static/trusted peers re-registered. */
+  REREGISTER_PEERS: "reregister-peers",
+  /** Still stalled: geth is restarted cleanly. */
+  RESTART_NODE: "restart-node",
+  /** Still stalled after the restart: the user may resync from genesis. */
+  NEEDS_RESYNC: "needs-resync",
+} as const;
+
+export type SyncStallStep = (typeof SyncStallStep)[keyof typeof SyncStallStep];
+
 /** Where the bootnodes geth dials come from, highest priority first. */
 export const BootnodeSource = {
   /** The user added nodes or turned defaults off in Settings → Network. */

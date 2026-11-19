@@ -125,5 +125,14 @@
     "title": "La minería empieza en {{seconds}} s",
     "body": "«Minar al iniciar» está activado. La minería usa CPU, memoria y batería. Cancelar solo afecta a esta sesión.",
     "cancel": "Cancelar"
+  },
+  "syncStall": {
+    "recovering": "Sincronización detenida, intentando recuperar…",
+    "title": "Sincronización detenida",
+    "step": {
+      "reregister-peers": "Volviendo a registrar los peers de la red.",
+      "restart-node": "Reiniciando el nodo.",
+      "needs-resync": "La recuperación automática no funcionó. Resincronizar desde cero descarga la cadena de nuevo; tus billeteras y ajustes se conservan."
+    }
   }
 }

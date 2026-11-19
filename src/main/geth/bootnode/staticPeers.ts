@@ -162,3 +162,17 @@ export async function syncStaticPeers(
   if (!isReady) return;
   await tick();
 }
+
+/**
+ * Drops and re-adds every registered static/trusted peer so geth dials them
+ * afresh; the sync stall watchdog's first step. A no-op before geth answers.
+ */
+export async function reregisterStaticPeers(): Promise<void> {
+  if (!isReady) return;
+  const run = generation;
+  for (const [enode, dialed] of registered) {
+    if (run !== generation) return;
+    await removeStaticPeer(enode, dialed);
+  }
+  await tick();
+}

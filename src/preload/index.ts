@@ -35,6 +35,7 @@ import type {
   MinerRange,
   MiningAutoStartState,
   NodePeerHint,
+  SyncStallStep,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -326,6 +327,15 @@ const api = {
     },
     getPeerHint: (): Promise<NodePeerHint | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_PEER_HINT),
+    onSyncStall: (callback: (step: SyncStallStep | null) => void) => {
+      const handler = (_: unknown, step: SyncStallStep | null): void =>
+        callback(step);
+      ipcRenderer.on(NODE_CHANNELS.SYNC_STALL, handler);
+      return () =>
+        ipcRenderer.removeListener(NODE_CHANNELS.SYNC_STALL, handler);
+    },
+    getSyncStall: (): Promise<SyncStallStep | null> =>
+      ipcRenderer.invoke(NODE_CHANNELS.GET_SYNC_STALL),
   },
   bootnode: {
     get: (): Promise<BootnodeState> =>

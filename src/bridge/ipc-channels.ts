@@ -4,6 +4,8 @@ export const NODE_CHANNELS = {
   GET_RECOVERY_STATE: "node:get-recovery-state",
   PEER_HINT: "node:peer-hint",
   GET_PEER_HINT: "node:get-peer-hint",
+  SYNC_STALL: "node:sync-stall",
+  GET_SYNC_STALL: "node:get-sync-stall",
 } as const;
 
 export const BOOTNODE_CHANNELS = {

@@ -18,6 +18,7 @@ import type {
   MinerRange,
   MiningAutoStartState,
   NodePeerHint,
+  SyncStallStep,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -211,6 +212,8 @@ interface CointmuAPI {
     retry: () => Promise<void>;
     onPeerHint: (callback: (hint: NodePeerHint | null) => void) => () => void;
     getPeerHint: () => Promise<NodePeerHint | null>;
+    onSyncStall: (callback: (step: SyncStallStep | null) => void) => () => void;
+    getSyncStall: () => Promise<SyncStallStep | null>;
   };
   bootnode: {
     get: () => Promise<BootnodeState>;
