@@ -29,3 +29,7 @@ export * from "./ui.constants";
 export * from "./activity";
 export * from "./icons";
 export { PrivateAmount } from "./private-amount.component";
+export {
+  SettingsDialog,
+  DIALOG_BUTTON_CLASS,
+} from "./settings-dialog.component";
