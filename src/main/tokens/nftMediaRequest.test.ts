@@ -12,7 +12,9 @@ const NFT = "0xcccccccccccccccccccccccccccccccccccccccc";
 const URI = "ipfs://Qm1/meta.json";
 const erc721 = new Interface([
   "function tokenURI(uint256) view returns (string)",
+  "function uri(uint256) view returns (string)",
 ]);
+const URI_SELECTOR = erc721.getFunction("uri")?.selector ?? "";
 const MEDIA = { name: "N", description: "", image: "" };
 
 function deps(owned: readonly DetectedNft[]) {
@@ -58,5 +60,39 @@ describe("loadDetectedNftMedia", () => {
 
     expect(await loadDetectedNftMedia(request, value)).toBe(MEDIA);
     expect(load).toHaveBeenCalledWith(URI);
+  });
+});
+
+describe("loadDetectedNftMedia for ERC-1155", () => {
+  it("falls back to uri(id) and fills {id} with the 64-char lowercase hex id", async () => {
+    const { value, load } = deps([{ contract: NFT, tokenId: "255" }]);
+    const template = "https://example.com/{id}.json";
+    const call = vi.fn(async (_to: string, data: string) =>
+      data.startsWith(URI_SELECTOR)
+        ? erc721.encodeFunctionResult("uri", [template])
+        : null,
+    );
+
+    await loadDetectedNftMedia(parseNftMediaRequest(ACCOUNT, NFT, "255"), {
+      ...value,
+      call,
+    });
+
+    expect(load).toHaveBeenCalledWith(
+      `https://example.com/${"ff".padStart(64, "0")}.json`,
+    );
+  });
+
+  it("returns empty media when neither tokenURI nor uri answers", async () => {
+    const { value, load } = deps([{ contract: NFT, tokenId: "1" }]);
+    const request = parseNftMediaRequest(ACCOUNT, NFT, "1");
+
+    const media = await loadDetectedNftMedia(request, {
+      ...value,
+      call: async () => null,
+    });
+
+    expect(media).toEqual({ name: "", description: "", image: "" });
+    expect(load).not.toHaveBeenCalled();
   });
 });

@@ -10,6 +10,7 @@ import {
   type EthCall,
   type TokenMeta,
 } from "./erc20Calls";
+import { erc1155Keys, readErc1155Ownership } from "./erc1155";
 import {
   erc721Keys,
   ownedNfts,
@@ -39,6 +40,8 @@ export type ScanOutcome = (typeof ScanOutcome)[keyof typeof ScanOutcome];
 export interface RawLog {
   readonly address: string;
   readonly topics: readonly string[];
+  /** Non-indexed event fields; ERC-1155 ids and values live here. */
+  readonly data?: string;
 }
 
 /** What the scanner reads from the node; every method rejects on a node error. */
@@ -54,6 +57,10 @@ export interface TokenScanRpc {
     from: number,
     to: number,
   ): Promise<RawLog[]>;
+  /** ERC-1155 TransferSingle/TransferBatch logs whose recipient (topic3) is the account. */
+  erc1155LogsTo(account: string, from: number, to: number): Promise<RawLog[]>;
+  /** ERC-1155 TransferSingle/TransferBatch logs whose sender (topic2) is the account. */
+  erc1155LogsFrom(account: string, from: number, to: number): Promise<RawLog[]>;
   call: EthCall;
 }
 
@@ -70,6 +77,8 @@ export interface AccountScan {
   touched?: string[];
   /** ERC-721 tokens seen in Transfer logs; absent in state saved before NFT tracking. */
   nfts?: NftOwnership;
+  /** Keys in nfts that are ERC-1155; absent in state saved before ERC-1155 tracking. */
+  erc1155?: string[];
   /** NFT keys with a Transfer to or from the account since ownership was last read. */
   touchedNfts?: string[];
 }
@@ -96,6 +105,7 @@ const newAccountScan = (): AccountScan => ({
   balancesAt: NOT_STARTED,
   touched: [],
   nfts: {},
+  erc1155: [],
   touchedNfts: [],
 });
 
@@ -110,7 +120,7 @@ export function erc20Contracts(logs: readonly RawLog[]): string[] {
 }
 
 /**
- * Finds the ERC-20 tokens and ERC-721 NFTs each wallet account has ever received by scanning
+ * Finds the ERC-20 tokens and ERC-721/ERC-1155 NFTs each wallet account has ever received by scanning
  * Transfer logs to it, from genesis in LOG_BATCH_BLOCKS batches and then
  * following new blocks. Progress lives in the state, so a restart resumes.
  * A reorg or chain reset moves cursors back REORG_SAFE_DEPTH blocks below the
@@ -130,10 +140,11 @@ export class TokenScanner {
     // Balances may have moved while the app was closed.
     for (const scan of Object.values(state.accounts)) {
       scan.balancesAt = NOT_STARTED;
-      // State from before NFT tracking: rescan from genesis to find them.
-      if (scan.nfts === undefined) {
+      // State from before NFT or ERC-1155 tracking: rescan from genesis to find them.
+      if (scan.nfts === undefined || scan.erc1155 === undefined) {
         scan.cursor = NOT_STARTED;
-        scan.nfts = {};
+        scan.nfts ??= {};
+        scan.erc1155 = [];
       }
     }
   }
@@ -187,7 +198,7 @@ export class TokenScanner {
 
   /**
    * @param account - A wallet account.
-   * @returns The ERC-721 tokens it owns, as last confirmed by ownerOf, and its scan progress.
+   * @returns The ERC-721 and ERC-1155 tokens it holds, as last confirmed by ownerOf or balanceOf, and its scan progress.
    */
   nftSnapshot(account: string): DetectedNfts {
     const scan = this.state.accounts[account.toLowerCase()];
@@ -253,7 +264,12 @@ export class TokenScanner {
     const logs = await this.rpc.transferLogsTo(account, from, to);
     const inbound = erc20Contracts(logs);
     const nfts = (scan.nfts ??= {});
-    const inboundNfts = trackNfts(nfts, erc721Keys(logs));
+    const inbound1155 = trackNfts(
+      nfts,
+      erc1155Keys(await this.rpc.erc1155LogsTo(account, from, to)),
+    );
+    scan.erc1155 = [...new Set([...(scan.erc1155 ?? []), ...inbound1155])];
+    const inboundNfts = [...trackNfts(nfts, erc721Keys(logs)), ...inbound1155];
     for (const contract of inbound) {
       if (scan.contracts.length >= MAX_TOKENS_PER_ACCOUNT) break;
       if (!scan.contracts.includes(contract)) scan.contracts.push(contract);
@@ -268,7 +284,11 @@ export class TokenScanner {
         ...outbound,
       ]);
       scan.touched = [...touched].filter((c) => scan.contracts.includes(c));
-      const outboundNfts = erc721Keys(outLogs).filter((key) => key in nfts);
+      const out1155 = await this.rpc.erc1155LogsFrom(account, from, to);
+      const outboundNfts = [
+        ...erc721Keys(outLogs),
+        ...erc1155Keys(out1155),
+      ].filter((key) => key in nfts);
       scan.touchedNfts = [
         ...new Set([
           ...(scan.touchedNfts ?? []),
@@ -318,14 +338,23 @@ export class TokenScanner {
     scan.touched = [];
     const nfts = scan.nfts ?? {};
     const nftKeys = isFull ? Object.keys(nfts) : (scan.touchedNfts ?? []);
-    scan.nfts = {
-      ...nfts,
-      ...(await readNftOwnership(
+    // trackNfts may have dropped ERC-1155 keys to make room.
+    const multi = new Set((scan.erc1155 ?? []).filter((key) => key in nfts));
+    scan.erc1155 = [...multi];
+    const tracked = nftKeys.filter((key) => key in nfts);
+    const [owned721, held1155] = await Promise.all([
+      readNftOwnership(
         this.rpc.call,
         account,
-        nftKeys.filter((key) => key in nfts),
-      )),
-    };
+        tracked.filter((key) => !multi.has(key)),
+      ),
+      readErc1155Ownership(
+        this.rpc.call,
+        account,
+        tracked.filter((key) => multi.has(key)),
+      ),
+    ]);
+    scan.nfts = { ...nfts, ...owned721, ...held1155 };
     scan.touchedNfts = [];
     if (isFull) scan.balancesAt = head;
   }
