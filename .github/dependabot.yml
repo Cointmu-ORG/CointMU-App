@@ -11,11 +11,13 @@ updates:
       # Bump it by hand, to the version the new @sentry/electron pins, in the
       # PR that bumps @sentry/electron.
       - dependency-name: "@sentry/core"
+    # One PR for all npm bumps instead of one per dependency.
     groups:
-      dev-dependencies:
-        dependency-type: development
-      production-dependencies:
-        dependency-type: production
+      npm-dependencies:
+        patterns: ["*"]
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
 
   - package-ecosystem: github-actions
     directory: /
@@ -24,6 +26,6 @@ updates:
     groups:
       # CodeQL refuses to run when init and analyze are on different versions,
       # so they have to be bumped in the same PR.
-      codeql-action:
-        patterns:
-          - "github/codeql-action/*"
+      # One PR for all actions, which also keeps them together.
+      actions:
+        patterns: ["*"]
