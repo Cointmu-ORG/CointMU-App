@@ -7,6 +7,7 @@ import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 import type { AppStore } from "../store/appStore";
 import { setActiveScanner } from "./detectedTokens";
 import { TRANSFER_TOPIC, type EthCall } from "./erc20Calls";
+import { TRANSFER_BATCH_TOPIC, TRANSFER_SINGLE_TOPIC } from "./erc1155";
 import {
   ScanOutcome,
   TokenScanner,
@@ -25,6 +26,8 @@ const HEX_RADIX = 16;
 const ADDRESS_HEX_CHARS = 40;
 const TOPIC_HEX_CHARS = 64;
 const STATE_KEY = "state";
+// A nested array ORs topic0 across both ERC-1155 transfer events.
+const ERC1155_TRANSFER_TOPICS = [TRANSFER_SINGLE_TOPIC, TRANSFER_BATCH_TOPIC];
 
 /** The node answered with an error or something unusable. */
 class TokenRpcError extends Error {
@@ -49,7 +52,7 @@ const toTopic = (address: string): string =>
   "0x" + address.slice(2).toLowerCase().padStart(TOPIC_HEX_CHARS, "0");
 
 async function transferLogs(
-  topics: Array<string | null>,
+  topics: Array<string | string[] | null>,
   from: number,
   to: number,
 ): Promise<RawLog[]> {
@@ -82,6 +85,14 @@ const nodeRpc: TokenScanRpc = {
     transferLogs([TRANSFER_TOPIC, null, toTopic(account)], from, to),
   transferLogsFrom: (account, from, to) =>
     transferLogs([TRANSFER_TOPIC, toTopic(account)], from, to),
+  erc1155LogsTo: (account, from, to) =>
+    transferLogs(
+      [ERC1155_TRANSFER_TOPICS, null, null, toTopic(account)],
+      from,
+      to,
+    ),
+  erc1155LogsFrom: (account, from, to) =>
+    transferLogs([ERC1155_TRANSFER_TOPICS, null, toTopic(account)], from, to),
   async call(to, data) {
     const envelope = await callGethRpcRaw(
       getRpcPort(),
