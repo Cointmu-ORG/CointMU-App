@@ -1,4 +1,4 @@
-import type { AssetLogos } from "../../bridge/types";
+import { IpcErrorCode, type AssetLogos } from "../../bridge/types";
 
 export const NATIVE_ASSET_KEY = "native";
 /**
@@ -6,6 +6,8 @@ export const NATIVE_ASSET_KEY = "native";
  * this cap only stops a payload far above that.
  */
 export const MAX_LOGO_DATA_URL_CHARS = 120_000;
+/** Custom logos kept at most; asset keys are any token address, so the file is capped. */
+export const MAX_LOGO_ENTRIES = 250;
 const LOGO_DATA_URL = /^data:image\/(png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
 const CONTRACT_ADDRESS = /^0x[0-9a-f]{40}$/;
 const LOGOS_KEY = "logos";
@@ -33,6 +35,15 @@ export function isLogoDataUrl(value: unknown): value is string {
   );
 }
 
+/** Saving a logo for a new asset would exceed MAX_LOGO_ENTRIES. */
+export class AssetLogoLimitError extends Error {
+  override readonly name = "AssetLogoLimitError";
+  constructor() {
+    // The message is the code: Electron passes only the message to the renderer.
+    super(IpcErrorCode.ASSET_LOGO_LIMIT_REACHED);
+  }
+}
+
 /**
  * Custom asset logos, kept locally in their own electron-store file and
  * never sent anywhere. Every write is validated here, not trusted from the renderer.
@@ -50,13 +61,20 @@ export class AssetLogoStore {
     );
   }
 
-  /** @throws {TypeError} On an unknown key or an invalid data URL. */
+  /**
+   * @throws {TypeError} On an unknown key or an invalid data URL.
+   * @throws {AssetLogoLimitError} On a new key when MAX_LOGO_ENTRIES are stored.
+   */
   set(key: unknown, dataUrl: unknown): void {
     if (!isAssetKey(key)) throw new TypeError("asset logo: invalid asset key");
     if (!isLogoDataUrl(dataUrl)) {
       throw new TypeError("asset logo: expected a PNG/WebP data URL");
     }
-    this.store.set(LOGOS_KEY, { ...this.getAll(), [key]: dataUrl });
+    const logos = this.getAll();
+    if (!(key in logos) && Object.keys(logos).length >= MAX_LOGO_ENTRIES) {
+      throw new AssetLogoLimitError();
+    }
+    this.store.set(LOGOS_KEY, { ...logos, [key]: dataUrl });
   }
 
   /** @throws {TypeError} On an unknown key. */

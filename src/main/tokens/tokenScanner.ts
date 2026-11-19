@@ -1,4 +1,8 @@
-import type { DetectedTokens } from "../../bridge/types";
+import type {
+  DetectedNfts,
+  DetectedTokens,
+  TokenScanProgress,
+} from "../../bridge/types";
 import {
   ERC20_TRANSFER_TOPIC_COUNT,
   readTokenBalance,
@@ -6,6 +10,13 @@ import {
   type EthCall,
   type TokenMeta,
 } from "./erc20Calls";
+import {
+  erc721Keys,
+  ownedNfts,
+  readNftOwnership,
+  trackNfts,
+  type NftOwnership,
+} from "./nftOwnership";
 
 /** Blocks per eth_getLogs query, as the NFT discovery uses. */
 export const LOG_BATCH_BLOCKS = 5_000;
@@ -13,6 +24,11 @@ export const LOG_BATCH_BLOCKS = 5_000;
 export const MAX_TOKENS_PER_ACCOUNT = 200;
 /** After a reorg or chain reset, rescan from this many blocks below the last known head. */
 export const REORG_SAFE_DEPTH = 128;
+/**
+ * Every this many blocks all balances are read again, for tokens whose
+ * balance changes without a Transfer log (rebasing, non-standard mint/burn).
+ */
+export const FULL_REFRESH_INTERVAL_BLOCKS = 100;
 const NOT_STARTED = -1;
 
 /** Whether a step did work (step again soon) or found nothing to do. */
@@ -32,6 +48,12 @@ export interface TokenScanRpc {
   blockHash(blockNumber: number): Promise<string>;
   /** Transfer logs whose recipient (topic2) is the account, inclusive range. */
   transferLogsTo(account: string, from: number, to: number): Promise<RawLog[]>;
+  /** Transfer logs whose sender (topic1) is the account, inclusive range. */
+  transferLogsFrom(
+    account: string,
+    from: number,
+    to: number,
+  ): Promise<RawLog[]>;
   call: EthCall;
 }
 
@@ -42,8 +64,14 @@ export interface AccountScan {
   contracts: string[];
   /** Raw balances (decimal strings) by contract. */
   balances: Record<string, string>;
-  /** Head at which balances were last read; -1 forces a refresh. */
+  /** Head of the last full balance refresh; -1 forces one. */
   balancesAt: number;
+  /** Contracts with a Transfer to or from the account since balances were last read. */
+  touched?: string[];
+  /** ERC-721 tokens seen in Transfer logs; absent in state saved before NFT tracking. */
+  nfts?: NftOwnership;
+  /** NFT keys with a Transfer to or from the account since ownership was last read. */
+  touchedNfts?: string[];
 }
 
 /** Persisted scanner state, one per network. */
@@ -66,6 +94,9 @@ const newAccountScan = (): AccountScan => ({
   contracts: [],
   balances: {},
   balancesAt: NOT_STARTED,
+  touched: [],
+  nfts: {},
+  touchedNfts: [],
 });
 
 /**
@@ -79,12 +110,14 @@ export function erc20Contracts(logs: readonly RawLog[]): string[] {
 }
 
 /**
- * Finds the ERC-20 tokens each wallet account has ever received by scanning
+ * Finds the ERC-20 tokens and ERC-721 NFTs each wallet account has ever received by scanning
  * Transfer logs to it, from genesis in LOG_BATCH_BLOCKS batches and then
  * following new blocks. Progress lives in the state, so a restart resumes.
  * A reorg or chain reset moves cursors back REORG_SAFE_DEPTH blocks below the
- * last known head; a new genesis starts over. Balances are read once the
- * account is caught up, and again on every new head.
+ * last known head; a new genesis starts over. All balances are read once
+ * the account is caught up (startup, new account, reorg) and every
+ * FULL_REFRESH_INTERVAL_BLOCKS; in between, a new head re-reads only the
+ * contracts with a Transfer to or from the account in the new blocks.
  */
 export class TokenScanner {
   private headBlock: number | null = null;
@@ -93,7 +126,17 @@ export class TokenScanner {
   constructor(
     private readonly rpc: TokenScanRpc,
     private readonly state: TokenScanState,
-  ) {}
+  ) {
+    // Balances may have moved while the app was closed.
+    for (const scan of Object.values(state.accounts)) {
+      scan.balancesAt = NOT_STARTED;
+      // State from before NFT tracking: rescan from genesis to find them.
+      if (scan.nfts === undefined) {
+        scan.cursor = NOT_STARTED;
+        scan.nfts = {};
+      }
+    }
+  }
 
   /** Adds new accounts (scanned from genesis) and drops removed ones. */
   setAccounts(addresses: readonly string[]): void {
@@ -118,8 +161,7 @@ export class TokenScanner {
     for (const [account, scan] of Object.entries(this.state.accounts)) {
       if (scan.cursor < head) await this.scanBatch(account, scan, head);
       if (scan.cursor < head) isBusy = true;
-      else if (scan.balancesAt !== head)
-        await this.refreshBalances(account, scan, head);
+      else await this.refreshBalances(account, scan, head);
     }
     this.state.head = { number: head, hash: await this.rpc.blockHash(head) };
     return isBusy ? ScanOutcome.BUSY : ScanOutcome.IDLE;
@@ -131,12 +173,7 @@ export class TokenScanner {
    */
   snapshot(account: string): DetectedTokens {
     const scan = this.state.accounts[account.toLowerCase()];
-    const head = this.headBlock;
-    const progress = {
-      scannedBlock: Math.max(0, scan?.cursor ?? 0),
-      headBlock: head,
-      isComplete: scan !== undefined && head !== null && scan.cursor >= head,
-    };
+    const progress = this.progress(scan);
     if (scan === undefined) return { tokens: [], scan: progress };
     const tokens = scan.contracts.flatMap((address) => {
       const meta = this.state.meta[address];
@@ -146,6 +183,24 @@ export class TokenScanner {
         : [];
     });
     return { tokens, scan: progress };
+  }
+
+  /**
+   * @param account - A wallet account.
+   * @returns The ERC-721 tokens it owns, as last confirmed by ownerOf, and its scan progress.
+   */
+  nftSnapshot(account: string): DetectedNfts {
+    const scan = this.state.accounts[account.toLowerCase()];
+    return { nfts: ownedNfts(scan?.nfts ?? {}), scan: this.progress(scan) };
+  }
+
+  private progress(scan: AccountScan | undefined): TokenScanProgress {
+    const head = this.headBlock;
+    return {
+      scannedBlock: Math.max(0, scan?.cursor ?? 0),
+      headBlock: head,
+      isComplete: scan !== undefined && head !== null && scan.cursor >= head,
+    };
   }
 
   /** @returns The metadata of a detected contract, if any account received it. */
@@ -196,9 +251,31 @@ export class TokenScanner {
     const from = scan.cursor + 1;
     const to = Math.min(scan.cursor + LOG_BATCH_BLOCKS, head);
     const logs = await this.rpc.transferLogsTo(account, from, to);
-    for (const contract of erc20Contracts(logs)) {
+    const inbound = erc20Contracts(logs);
+    const nfts = (scan.nfts ??= {});
+    const inboundNfts = trackNfts(nfts, erc721Keys(logs));
+    for (const contract of inbound) {
       if (scan.contracts.length >= MAX_TOKENS_PER_ACCOUNT) break;
       if (!scan.contracts.includes(contract)) scan.contracts.push(contract);
+    }
+    // A pending full refresh reads every balance anyway; skip the outbound query.
+    if (scan.balancesAt !== NOT_STARTED) {
+      const outLogs = await this.rpc.transferLogsFrom(account, from, to);
+      const outbound = erc20Contracts(outLogs);
+      const touched = new Set([
+        ...(scan.touched ?? []),
+        ...inbound,
+        ...outbound,
+      ]);
+      scan.touched = [...touched].filter((c) => scan.contracts.includes(c));
+      const outboundNfts = erc721Keys(outLogs).filter((key) => key in nfts);
+      scan.touchedNfts = [
+        ...new Set([
+          ...(scan.touchedNfts ?? []),
+          ...inboundNfts,
+          ...outboundNfts,
+        ]),
+      ];
     }
     scan.cursor = to;
     const startedMs = this.scanStartedMs.get(account);
@@ -210,25 +287,46 @@ export class TokenScanner {
     }
   }
 
+  /**
+   * Reads all balances and NFT owners when a full refresh is due, else only
+   * the touched ones.
+   */
   private async refreshBalances(
     account: string,
     scan: AccountScan,
     head: number,
   ): Promise<void> {
-    for (const contract of scan.contracts) {
+    const isFull =
+      scan.balancesAt === NOT_STARTED ||
+      head - scan.balancesAt >= FULL_REFRESH_INTERVAL_BLOCKS;
+    const contracts = isFull ? scan.contracts : (scan.touched ?? []);
+    for (const contract of contracts) {
       this.state.meta[contract] ??= await readTokenMeta(
         this.rpc.call,
         contract,
       );
     }
     const balances = await Promise.all(
-      scan.contracts.map((contract) =>
+      contracts.map((contract) =>
         readTokenBalance(this.rpc.call, contract, account),
       ),
     );
-    scan.balances = Object.fromEntries(
-      scan.contracts.map((contract, i) => [contract, balances[i]]),
+    const read = Object.fromEntries(
+      contracts.map((contract, i) => [contract, balances[i]]),
     );
-    scan.balancesAt = head;
+    scan.balances = isFull ? read : { ...scan.balances, ...read };
+    scan.touched = [];
+    const nfts = scan.nfts ?? {};
+    const nftKeys = isFull ? Object.keys(nfts) : (scan.touchedNfts ?? []);
+    scan.nfts = {
+      ...nfts,
+      ...(await readNftOwnership(
+        this.rpc.call,
+        account,
+        nftKeys.filter((key) => key in nfts),
+      )),
+    };
+    scan.touchedNfts = [];
+    if (isFull) scan.balancesAt = head;
   }
 }

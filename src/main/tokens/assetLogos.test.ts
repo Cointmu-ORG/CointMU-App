@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { IpcErrorCode } from "../../bridge/types";
 import {
+  AssetLogoLimitError,
   AssetLogoStore,
   MAX_LOGO_DATA_URL_CHARS,
+  MAX_LOGO_ENTRIES,
   isLogoDataUrl,
 } from "./assetLogos";
 
@@ -52,5 +55,22 @@ describe("AssetLogoStore", () => {
       logos.set(TOKEN, "data:image/svg+xml;base64,PHN2Zz4="),
     ).toThrow(TypeError);
     expect(logos.getAll()).toEqual({});
+  });
+
+  it(`refuses a new key beyond ${MAX_LOGO_ENTRIES} entries but replaces an existing one`, () => {
+    const logos = new AssetLogoStore(memoryStore());
+    const keyOf = (i: number): string =>
+      "0x" + i.toString(16).padStart(40, "0");
+    for (let i = 0; i < MAX_LOGO_ENTRIES; i++) logos.set(keyOf(i), PNG);
+    const other = "data:image/webp;base64,UklGRg==";
+
+    expect(() => logos.set(TOKEN, PNG)).toThrow(AssetLogoLimitError);
+    expect(() => logos.set(TOKEN, PNG)).toThrow(
+      IpcErrorCode.ASSET_LOGO_LIMIT_REACHED,
+    );
+    logos.set(keyOf(0), other);
+
+    expect(Object.keys(logos.getAll())).toHaveLength(MAX_LOGO_ENTRIES);
+    expect(logos.getAll()[keyOf(0)]).toBe(other);
   });
 });

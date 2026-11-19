@@ -6,11 +6,12 @@ import { getRpcPort } from "../geth/process/ports";
 import { callGethRpcRaw } from "../geth/rpc/rpcUtils";
 import type { AppStore } from "../store/appStore";
 import { setActiveScanner } from "./detectedTokens";
-import { TRANSFER_TOPIC } from "./erc20Calls";
+import { TRANSFER_TOPIC, type EthCall } from "./erc20Calls";
 import {
   ScanOutcome,
   TokenScanner,
   emptyScanState,
+  type RawLog,
   type TokenScanRpc,
   type TokenScanState,
 } from "./tokenScanner";
@@ -47,6 +48,18 @@ const toQuantity = (n: number): string => "0x" + n.toString(HEX_RADIX);
 const toTopic = (address: string): string =>
   "0x" + address.slice(2).toLowerCase().padStart(TOPIC_HEX_CHARS, "0");
 
+async function transferLogs(
+  topics: Array<string | null>,
+  from: number,
+  to: number,
+): Promise<RawLog[]> {
+  const logs = await rpcResult("eth_getLogs", [
+    { fromBlock: toQuantity(from), toBlock: toQuantity(to), topics },
+  ]);
+  if (!Array.isArray(logs)) throw new TokenRpcError("invalid logs");
+  return logs;
+}
+
 /** The scanner's view of the local node, over its HTTP JSON-RPC endpoint. */
 const nodeRpc: TokenScanRpc = {
   async blockNumber() {
@@ -65,17 +78,10 @@ const nodeRpc: TokenScanRpc = {
     }
     return hash;
   },
-  async transferLogsTo(account, from, to) {
-    const logs = await rpcResult("eth_getLogs", [
-      {
-        fromBlock: toQuantity(from),
-        toBlock: toQuantity(to),
-        topics: [TRANSFER_TOPIC, null, toTopic(account)],
-      },
-    ]);
-    if (!Array.isArray(logs)) throw new TokenRpcError("invalid logs");
-    return logs;
-  },
+  transferLogsTo: (account, from, to) =>
+    transferLogs([TRANSFER_TOPIC, null, toTopic(account)], from, to),
+  transferLogsFrom: (account, from, to) =>
+    transferLogs([TRANSFER_TOPIC, toTopic(account)], from, to),
   async call(to, data) {
     const envelope = await callGethRpcRaw(
       getRpcPort(),
@@ -157,5 +163,8 @@ export async function startTokenScan(store: AppStore): Promise<void> {
 export function stopTokenScan(): void {
   stopController.abort();
 }
+
+/** eth_call against the local node; null on a revert or node error. */
+export const nodeEthCall: EthCall = nodeRpc.call;
 
 export { isAddress };

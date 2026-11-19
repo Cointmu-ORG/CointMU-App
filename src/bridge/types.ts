@@ -195,6 +195,7 @@ export const IpcErrorCode = {
   WALLET_UNSUPPORTED_FORMAT: "WALLET_UNSUPPORTED_FORMAT",
   WALLET_INCORRECT_PASSWORD: "WALLET_INCORRECT_PASSWORD",
   MINING_NO_REWARD_ADDRESS: "MINING_NO_REWARD_ADDRESS",
+  ASSET_LOGO_LIMIT_REACHED: "ASSET_LOGO_LIMIT_REACHED",
 } as const;
 
 export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
@@ -425,6 +426,27 @@ export interface TokenScanProgress {
 
 export interface DetectedTokens {
   readonly tokens: readonly DetectedToken[];
+  readonly scan: TokenScanProgress;
+}
+
+/** An ERC-721 token the account owns, found by the Transfer log scan. */
+export interface DetectedNft {
+  /** Lowercase contract address. */
+  readonly contract: string;
+  /** Decimal token id. */
+  readonly tokenId: string;
+}
+
+/** An NFT's metadata, fetched and checked in main. */
+export interface NftMedia {
+  readonly name: string;
+  readonly description: string;
+  /** A data: URL of a PNG, JPEG, GIF, WebP or SVG image, or "" when there is none. */
+  readonly image: string;
+}
+
+export interface DetectedNfts {
+  readonly nfts: readonly DetectedNft[];
   readonly scan: TokenScanProgress;
 }
 
