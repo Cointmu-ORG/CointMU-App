@@ -6,6 +6,8 @@ import type { EthCall } from "./erc20Calls";
 export const ERC721_TRANSFER_TOPIC_COUNT = 4;
 /** NFTs kept per account; when full, a token no longer owned makes room. */
 export const MAX_NFTS_PER_ACCOUNT = 500;
+/** NFTs kept per contract, so one spam contract (an ERC-1155 batch of hundreds of ids) cannot fill the account limit. */
+export const MAX_NFTS_PER_CONTRACT = 50;
 const TOKEN_ID_TOPIC = 3;
 const KEY_SEPARATOR = ":";
 
@@ -35,9 +37,27 @@ export function erc721Keys(
 }
 
 /**
- * Adds keys not yet known, as not owned until ownerOf confirms. At the cap a
- * token not confirmed as owned (sent away, or not checked yet during catch-up)
- * is dropped to make room; with none, the key is ignored.
+ * Makes room among the given keys when they are at the limit by dropping one
+ * not confirmed as owned; owned tokens are never dropped.
+ * @returns False when the keys are at the limit and all are owned.
+ */
+function makeRoom(
+  nfts: NftOwnership,
+  keys: readonly string[],
+  limit: number,
+): boolean {
+  if (keys.length < limit) return true;
+  const gone = keys.find((known) => !nfts[known]);
+  if (gone === undefined) return false;
+  delete nfts[gone];
+  return true;
+}
+
+/**
+ * Adds keys not yet known, as not owned until ownerOf or balanceOf confirms.
+ * At the per-contract limit, then at the account limit, a token not
+ * confirmed as owned (sent away, or not checked yet during catch-up) is
+ * dropped to make room; with none, the key is ignored.
  * @returns The keys that are now tracked.
  */
 export function trackNfts(
@@ -46,11 +66,12 @@ export function trackNfts(
 ): string[] {
   return keys.filter((key) => {
     if (key in nfts) return true;
-    if (Object.keys(nfts).length >= MAX_NFTS_PER_ACCOUNT) {
-      const gone = Object.keys(nfts).find((known) => !nfts[known]);
-      if (gone === undefined) return false;
-      delete nfts[gone];
-    }
+    const prefix = key.slice(0, key.indexOf(KEY_SEPARATOR) + 1);
+    const sameContract = Object.keys(nfts).filter((known) =>
+      known.startsWith(prefix),
+    );
+    if (!makeRoom(nfts, sameContract, MAX_NFTS_PER_CONTRACT)) return false;
+    if (!makeRoom(nfts, Object.keys(nfts), MAX_NFTS_PER_ACCOUNT)) return false;
     nfts[key] = false;
     return true;
   });

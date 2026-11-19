@@ -2,7 +2,7 @@ import { Interface } from "ethers";
 import { describe, expect, it } from "vitest";
 import { TRANSFER_TOPIC, sanitizeTokenText } from "./erc20Calls";
 import { TRANSFER_BATCH_TOPIC, TRANSFER_SINGLE_TOPIC } from "./erc1155";
-import { MAX_NFTS_PER_ACCOUNT } from "./nftOwnership";
+import { MAX_NFTS_PER_ACCOUNT, MAX_NFTS_PER_CONTRACT } from "./nftOwnership";
 import {
   FULL_REFRESH_INTERVAL_BLOCKS,
   LOG_BATCH_BLOCKS,
@@ -435,9 +435,34 @@ describe("TokenScanner NFTs", () => {
     expect(restarted.nftSnapshot(ME).nfts).toHaveLength(1);
   });
 
-  it(`keeps at most ${MAX_NFTS_PER_ACCOUNT} NFTs, replacing ones no longer owned`, async () => {
+  it(`keeps at most ${MAX_NFTS_PER_ACCOUNT} NFTs and never drops owned ones for a new contract`, async () => {
     const { node, rpc } = fakeNode(10);
+    const contractOf = (id: number): string =>
+      "0x" +
+      Math.floor(id / MAX_NFTS_PER_CONTRACT)
+        .toString(16)
+        .padStart(40, "0");
     for (let id = 0; id < MAX_NFTS_PER_ACCOUNT + 5; id++) {
+      node.logs.push(erc721Log(contractOf(id), ME, 1, OTHER, id));
+      node.owners.set(`${contractOf(id)}:${id}`, ME);
+    }
+    const scanner = new TokenScanner(rpc, emptyScanState());
+    scanner.setAccounts([ME]);
+    await runUntilIdle(scanner);
+    const owned = scanner.nftSnapshot(ME).nfts;
+
+    node.head = 11;
+    node.logs.push(erc721Log(NFT, ME, 11));
+    node.owners.set(`${NFT}:1`, ME);
+    await runUntilIdle(scanner);
+
+    expect(owned).toHaveLength(MAX_NFTS_PER_ACCOUNT);
+    expect(scanner.nftSnapshot(ME).nfts).toEqual(owned);
+  });
+
+  it(`keeps at most ${MAX_NFTS_PER_CONTRACT} NFTs of one contract`, async () => {
+    const { node, rpc } = fakeNode(10);
+    for (let id = 0; id < MAX_NFTS_PER_CONTRACT + 5; id++) {
       node.logs.push(erc721Log(NFT, ME, 1, OTHER, id));
       node.owners.set(`${NFT}:${id}`, ME);
     }
@@ -446,7 +471,7 @@ describe("TokenScanner NFTs", () => {
 
     await runUntilIdle(scanner);
 
-    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_ACCOUNT);
+    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_CONTRACT);
   });
 });
 
@@ -537,6 +562,29 @@ describe("TokenScanner ERC-1155", () => {
 
     expect(node.logQueries).toEqual([[ME, 0, 10]]);
     expect(restarted.nftSnapshot(ME).nfts).toHaveLength(1);
+  });
+
+  it("tracks a real NFT received after a huge held TransferBatch", async () => {
+    const spamIds = Array.from({ length: MAX_NFTS_PER_ACCOUNT + 100 }, (_, i) =>
+      BigInt(i),
+    );
+    const { node, scanner } = await scannerHolding(
+      multiLog("TransferBatch", [spamIds, spamIds.map(() => 1n)]),
+    );
+    for (const id of spamIds) node.multiBalances.set(`${MULTI}:${id}`, 1n);
+    node.head = 10 + FULL_REFRESH_INTERVAL_BLOCKS;
+    await runUntilIdle(scanner);
+    expect(scanner.nftSnapshot(ME).nfts).toHaveLength(MAX_NFTS_PER_CONTRACT);
+
+    node.head += 1;
+    node.logs.push(erc721Log(NFT, ME, node.head));
+    node.owners.set(`${NFT}:1`, ME);
+    await runUntilIdle(scanner);
+
+    expect(scanner.nftSnapshot(ME).nfts).toContainEqual({
+      contract: NFT,
+      tokenId: "1",
+    });
   });
 
   it("skips a log whose data does not decode", async () => {
