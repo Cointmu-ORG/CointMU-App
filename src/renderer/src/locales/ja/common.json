@@ -91,7 +91,8 @@
     "quitConfirmNeverAsk": "今後確認しない",
     "autoStartTitle": "{{seconds}} 秒後にマイニングを開始します",
     "autoStartBody": "「起動時にマイニングを開始」がオンです。このセッションで取り消すには CointMU を開いてください。",
-    "autoStartCancel": "キャンセル"
+    "autoStartCancel": "キャンセル",
+    "trayStopWaiting": "ノードがデータを修復中です。安全に停止できるまで待機しています"
   },
   "update": {
     "readyTitle": "アップデートの準備完了",
@@ -103,5 +104,10 @@
     "hideAmounts": "残高を隠す",
     "showAmounts": "残高を表示",
     "hiddenAmount": "非表示の金額"
+  },
+  "nodeStopWait": {
+    "title": "ノードがデータを修復中です。安全に停止できるまで待機しています…",
+    "body": "アプリを強制終了しないでください。今ノードを止めるとチェーンが巻き戻ります。",
+    "elapsed": "待機中 {{elapsed}}（最大 {{max}}）"
   }
 }

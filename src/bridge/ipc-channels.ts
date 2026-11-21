@@ -6,6 +6,7 @@ export const NODE_CHANNELS = {
   GET_PEER_HINT: "node:get-peer-hint",
   SYNC_STALL: "node:sync-stall",
   GET_SYNC_STALL: "node:get-sync-stall",
+  STOP_WAIT: "node:stop-wait",
 } as const;
 
 export const BOOTNODE_CHANNELS = {

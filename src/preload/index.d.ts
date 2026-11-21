@@ -22,6 +22,7 @@ import type {
   MiningAutoStartState,
   NodePeerHint,
   SyncStallStep,
+  NodeStopWait,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -220,6 +221,8 @@ interface CointmuAPI {
     getPeerHint: () => Promise<NodePeerHint | null>;
     onSyncStall: (callback: (step: SyncStallStep | null) => void) => () => void;
     getSyncStall: () => Promise<SyncStallStep | null>;
+    /** A quit, restart or update waiting for geth's startup repair; null once it is over. */
+    onStopWait: (callback: (wait: NodeStopWait | null) => void) => () => void;
   };
   maintenance: {
     clearCache: () => Promise<void>;

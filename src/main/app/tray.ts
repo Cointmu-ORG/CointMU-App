@@ -78,6 +78,8 @@ export function buildTrayMenuTemplate(
 let tray: Tray | null = null;
 let refreshTimer: NodeJS.Timeout | null = null;
 let stopTextListener: (() => void) | null = null;
+let activeActions: TrayActions | null = null;
+let isStopWaiting = false;
 let lastStatus: NodeStatus = {
   isOnline: false,
   syncPercent: null,
@@ -95,7 +97,9 @@ function trayIcon(): Electron.NativeImage {
 function render(actions: TrayActions): void {
   if (!tray) return;
   const text = getShellText();
-  const lines = describeTrayStatus(lastStatus, text);
+  const lines = isStopWaiting
+    ? [text.trayStopWaiting]
+    : describeTrayStatus(lastStatus, text);
   tray.setToolTip(["CointMU", ...lines].join("\n"));
   tray.setContextMenu(
     Menu.buildFromTemplate(buildTrayMenuTemplate(lines, text, actions)),
@@ -119,6 +123,7 @@ async function refresh(actions: TrayActions): Promise<void> {
 export function showTray(actions: TrayActions): void {
   if (tray) return;
   tray = new Tray(trayIcon());
+  activeActions = actions;
   tray.on("click", actions.showWindow);
   stopTextListener = onShellTextChange(() => render(actions));
   render(actions);
@@ -134,6 +139,16 @@ export function hideTray(): void {
   stopTextListener = null;
   tray?.destroy();
   tray = null;
+  activeActions = null;
+}
+
+/**
+ * @param isWaiting - True while a stop waits for geth (gethStopWait.ts); the
+ *   tray then shows that instead of the node status.
+ */
+export function setTrayStopWaiting(isWaiting: boolean): void {
+  isStopWaiting = isWaiting;
+  if (activeActions) render(activeActions);
 }
 
 /** @returns True while the tray icon is shown. */

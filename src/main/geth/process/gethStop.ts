@@ -4,6 +4,7 @@ import {
   GETH_READY_WAIT_MS,
   type GethReadiness,
 } from "./gethReadiness";
+import { reportStopWait } from "./gethStopWait";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
   SUPERVISOR_EXIT_MARGIN_MS,
@@ -19,7 +20,7 @@ export function stopProcess(
   proc: ChildProcess,
   readiness: GethReadiness,
 ): Promise<void> {
-  return new Promise<void>((resolve) => {
+  const stopped = new Promise<void>((resolve) => {
     let settled = false;
     let killTimer: NodeJS.Timeout | undefined;
 
@@ -71,4 +72,6 @@ export function stopProcess(
       }
     });
   });
+  reportStopWait(readiness, stopped);
+  return stopped;
 }

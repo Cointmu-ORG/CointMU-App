@@ -361,6 +361,19 @@ export interface ShellText {
   readonly autoStartTitle: string;
   readonly autoStartBody: string;
   readonly autoStartCancel: string;
+  /** The tray status while a stop waits for geth (NodeStopWait). */
+  readonly trayStopWaiting: string;
+}
+
+/**
+ * A stop (quit, restart, update) waiting for geth to finish its startup
+ * repair before it can be interrupted safely (#101).
+ */
+export interface NodeStopWait {
+  /** Epoch ms when the stop began. */
+  readonly startedAt: number;
+  /** After this long the stop interrupts geth anyway. */
+  readonly maxWaitMs: number;
 }
 
 /** What the desktop shell supports on this OS and desktop environment. */

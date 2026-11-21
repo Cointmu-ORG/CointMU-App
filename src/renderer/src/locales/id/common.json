@@ -91,7 +91,8 @@
     "quitConfirmNeverAsk": "Jangan tanya lagi",
     "autoStartTitle": "Mining akan dimulai dalam {{seconds}} detik",
     "autoStartBody": "Mulai mining saat dibuka sedang aktif. Buka CointMU untuk membatalkannya di sesi ini.",
-    "autoStartCancel": "Batalkan"
+    "autoStartCancel": "Batalkan",
+    "trayStopWaiting": "Node memperbaiki data; menunggu agar bisa berhenti dengan aman"
   },
   "update": {
     "readyTitle": "Pembaruan siap",
@@ -103,5 +104,10 @@
     "hideAmounts": "Sembunyikan saldo",
     "showAmounts": "Tampilkan saldo",
     "hiddenAmount": "Jumlah disembunyikan"
+  },
+  "nodeStopWait": {
+    "title": "Node sedang memperbaiki data, menunggu agar bisa berhenti dengan aman…",
+    "body": "Jangan tutup paksa aplikasi: menghentikan node sekarang akan memundurkan rantai.",
+    "elapsed": "Menunggu {{elapsed}} (maks. {{max}})"
   }
 }
