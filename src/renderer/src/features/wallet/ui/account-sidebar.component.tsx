@@ -13,6 +13,7 @@ interface AccountSidebarProps {
   onDeriveAccount: () => void;
   onImportWallet: () => void;
   onManageHidden: () => void;
+  onManageAddressNames: () => void;
 }
 
 /**
@@ -30,6 +31,7 @@ function AccountSidebar({
   onDeriveAccount,
   onImportWallet,
   onManageHidden,
+  onManageAddressNames,
 }: AccountSidebarProps): JSX.Element {
   const { t } = useTranslation();
 
@@ -118,6 +120,12 @@ function AccountSidebar({
         className="w-full text-center text-[10px] font-medium text-slate-400 hover:text-slate-600 transition-colors py-1"
       >
         {t("wallet:sidebar.manageHidden")}
+      </button>
+      <button
+        onClick={onManageAddressNames}
+        className="w-full text-center text-[10px] font-medium text-slate-400 hover:text-slate-600 transition-colors py-1"
+      >
+        {t("wallet:sidebar.addressNames")}
       </button>
     </div>
   );

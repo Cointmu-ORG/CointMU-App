@@ -8,7 +8,8 @@
     "accounts": "Accounts",
     "importWallet": "+ Import wallet",
     "manageHidden": "Manage hidden accounts",
-    "hideAccount": "Hide account"
+    "hideAccount": "Hide account",
+    "addressNames": "Address names"
   },
   "activity": {
     "pending": "Pending"
@@ -152,6 +153,22 @@
           "unreadable": "This image could not be read.",
           "saveFailed": "The logo could not be saved. Try again."
         }
+      }
+    },
+    "addressNames": {
+      "title": "Address names",
+      "subtitle": "Give addresses a name you recognize. Names are labels on this device only: a send always goes to the full address.",
+      "addressLabel": "Address",
+      "nameLabel": "Name",
+      "save": "Save name",
+      "empty": "No saved names yet.",
+      "edit": "Edit {{name}}",
+      "remove": "Remove {{name}}",
+      "errors": {
+        "invalidAddress": "Enter a valid 0x address.",
+        "invalidName": "Enter a name of 1 to 32 characters.",
+        "ownAccount": "This is one of your accounts. Rename it on the account card.",
+        "saveFailed": "The name could not be saved. Try again."
       }
     }
   },

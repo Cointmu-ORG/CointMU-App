@@ -8,7 +8,8 @@
     "accounts": "Cuentas",
     "importWallet": "+ Importar billetera",
     "manageHidden": "Gestionar cuentas ocultas",
-    "hideAccount": "Ocultar cuenta"
+    "hideAccount": "Ocultar cuenta",
+    "addressNames": "Nombres de direcciones"
   },
   "activity": {
     "pending": "Pendiente"
@@ -152,6 +153,22 @@
           "unreadable": "No se pudo leer esta imagen.",
           "saveFailed": "No se pudo guardar el logo. Inténtalo de nuevo."
         }
+      }
+    },
+    "addressNames": {
+      "title": "Nombres de direcciones",
+      "subtitle": "Pon a las direcciones un nombre que reconozcas. Los nombres son solo etiquetas en este dispositivo: un envío siempre va a la dirección completa.",
+      "addressLabel": "Dirección",
+      "nameLabel": "Nombre",
+      "save": "Guardar nombre",
+      "empty": "Aún no hay nombres guardados.",
+      "edit": "Editar {{name}}",
+      "remove": "Quitar {{name}}",
+      "errors": {
+        "invalidAddress": "Introduce una dirección 0x válida.",
+        "invalidName": "Introduce un nombre de 1 a 32 caracteres.",
+        "ownAccount": "Es una de tus cuentas. Cámbiale el nombre en la tarjeta de la cuenta.",
+        "saveFailed": "No se pudo guardar el nombre. Inténtalo de nuevo."
       }
     }
   },

@@ -8,7 +8,8 @@
     "accounts": "Akun",
     "importWallet": "+ Impor dompet",
     "manageHidden": "Kelola akun tersembunyi",
-    "hideAccount": "Sembunyikan akun"
+    "hideAccount": "Sembunyikan akun",
+    "addressNames": "Nama alamat"
   },
   "activity": {
     "pending": "Tertunda"
@@ -152,6 +153,22 @@
           "unreadable": "Gambar ini tidak dapat dibaca.",
           "saveFailed": "Logo tidak dapat disimpan. Coba lagi."
         }
+      }
+    },
+    "addressNames": {
+      "title": "Nama alamat",
+      "subtitle": "Beri nama yang mudah dikenali untuk alamat. Nama hanya label di perangkat ini: pengiriman selalu ke alamat lengkap.",
+      "addressLabel": "Alamat",
+      "nameLabel": "Nama",
+      "save": "Simpan nama",
+      "empty": "Belum ada nama tersimpan.",
+      "edit": "Ubah {{name}}",
+      "remove": "Hapus {{name}}",
+      "errors": {
+        "invalidAddress": "Masukkan alamat 0x yang valid.",
+        "invalidName": "Masukkan nama 1 sampai 32 karakter.",
+        "ownAccount": "Ini salah satu akun Anda. Ganti namanya di kartu akun.",
+        "saveFailed": "Nama tidak dapat disimpan. Coba lagi."
       }
     }
   },

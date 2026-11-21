@@ -8,7 +8,8 @@
     "accounts": "アカウント",
     "importWallet": "+ ウォレットをインポート",
     "manageHidden": "非表示アカウントの管理",
-    "hideAccount": "アカウントを非表示"
+    "hideAccount": "アカウントを非表示",
+    "addressNames": "アドレス名"
   },
   "activity": {
     "pending": "保留中"
@@ -152,6 +153,22 @@
           "unreadable": "この画像を読み込めませんでした。",
           "saveFailed": "ロゴを保存できませんでした。もう一度お試しください。"
         }
+      }
+    },
+    "addressNames": {
+      "title": "アドレス名",
+      "subtitle": "アドレスに分かりやすい名前を付けます。名前はこのデバイス上のラベルにすぎず、送金は常に完全なアドレス宛てに行われます。",
+      "addressLabel": "アドレス",
+      "nameLabel": "名前",
+      "save": "名前を保存",
+      "empty": "保存された名前はまだありません。",
+      "edit": "{{name}} を編集",
+      "remove": "{{name}} を削除",
+      "errors": {
+        "invalidAddress": "有効な 0x アドレスを入力してください。",
+        "invalidName": "1〜32 文字の名前を入力してください。",
+        "ownAccount": "これはあなたのアカウントです。アカウントカードで名前を変更してください。",
+        "saveFailed": "名前を保存できませんでした。もう一度お試しください。"
       }
     }
   },

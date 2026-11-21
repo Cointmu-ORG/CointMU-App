@@ -273,6 +273,7 @@ function WalletPage({
               useWalletUiStore.getState().setAddAccountType("IMPORT_PK");
             }}
             onManageHidden={() => setModalState("MANAGE_HIDDEN")}
+            onManageAddressNames={() => setModalState("ADDRESS_NAMES")}
           />
 
           <div className="flex-1 min-w-0 space-y-5">

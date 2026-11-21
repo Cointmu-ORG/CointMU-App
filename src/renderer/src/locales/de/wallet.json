@@ -8,7 +8,8 @@
     "accounts": "Konten",
     "importWallet": "+ Wallet importieren",
     "manageHidden": "Versteckte Konten verwalten",
-    "hideAccount": "Konto ausblenden"
+    "hideAccount": "Konto ausblenden",
+    "addressNames": "Adressnamen"
   },
   "activity": {
     "pending": "Ausstehend"
@@ -152,6 +153,22 @@
           "unreadable": "Dieses Bild konnte nicht gelesen werden.",
           "saveFailed": "Das Logo konnte nicht gespeichert werden. Versuche es erneut."
         }
+      }
+    },
+    "addressNames": {
+      "title": "Adressnamen",
+      "subtitle": "Gib Adressen einen Namen, den du wiedererkennst. Namen sind nur Bezeichnungen auf diesem Gerät: Gesendet wird immer an die vollständige Adresse.",
+      "addressLabel": "Adresse",
+      "nameLabel": "Name",
+      "save": "Name speichern",
+      "empty": "Noch keine gespeicherten Namen.",
+      "edit": "{{name}} bearbeiten",
+      "remove": "{{name}} entfernen",
+      "errors": {
+        "invalidAddress": "Gib eine gültige 0x-Adresse ein.",
+        "invalidName": "Gib einen Namen mit 1 bis 32 Zeichen ein.",
+        "ownAccount": "Das ist eines deiner Konten. Benenne es auf der Kontokarte um.",
+        "saveFailed": "Der Name konnte nicht gespeichert werden. Versuche es erneut."
       }
     }
   },
