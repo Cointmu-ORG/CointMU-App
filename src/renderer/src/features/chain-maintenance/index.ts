@@ -11,3 +11,4 @@ export { useConfirmedAction } from "./lib/confirmed-action.hook";
 export type { ConfirmedAction } from "./lib/confirmed-action.hook";
 export { KeptAndRemovedList } from "./ui/kept-and-removed-list.component";
 export { NodeStopWaitOverlay } from "./ui/node-stop-wait-overlay.component";
+export { useIsNodeStarting } from "./lib/node-starting.hook";

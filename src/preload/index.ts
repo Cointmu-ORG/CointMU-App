@@ -355,6 +355,14 @@ const api = {
     },
     getStopWait: (): Promise<NodeStopWait | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_STOP_WAIT),
+    isStarting: (): Promise<boolean> =>
+      ipcRenderer.invoke(NODE_CHANNELS.IS_STARTING),
+    onStartupDone: (callback: () => void) => {
+      const handler = (): void => callback();
+      ipcRenderer.on(NODE_CHANNELS.STARTUP_DONE, handler);
+      return () =>
+        ipcRenderer.removeListener(NODE_CHANNELS.STARTUP_DONE, handler);
+    },
   },
   maintenance: {
     clearCache: (): Promise<void> =>

@@ -79,6 +79,28 @@ describe("MiningAutoStart", () => {
     vi.useRealTimers();
   });
 
+  it("waits quietly while geth is not up yet, then starts once it is (#158)", async () => {
+    const { world, autoStart, startMining, publish } = setup();
+    world.node = {
+      isOnline: false,
+      syncPercent: null,
+      isMining: false,
+      peers: null,
+    };
+
+    autoStart.begin();
+    await vi.advanceTimersByTimeAsync(LONG_WAIT_MS);
+
+    expect(autoStart.getState().phase).toBe(MiningAutoStartPhase.WAITING);
+    expect(publish).not.toHaveBeenCalled();
+
+    world.node = { ...READY_NODE };
+    await vi.advanceTimersByTimeAsync(AUTO_START_POLL_MS + AUTO_START_DELAY_MS);
+
+    expect(startMining).toHaveBeenCalledOnce();
+    expect(autoStart.getState().phase).toBe(MiningAutoStartPhase.DONE);
+  });
+
   it("does not start while a condition is unmet", async () => {
     const { world, autoStart, startMining } = setup();
     world.node = { ...READY_NODE, peers: 0 };

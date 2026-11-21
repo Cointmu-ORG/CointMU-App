@@ -8,6 +8,8 @@ export const NODE_CHANNELS = {
   GET_SYNC_STALL: "node:get-sync-stall",
   STOP_WAIT: "node:stop-wait",
   GET_STOP_WAIT: "node:get-stop-wait",
+  IS_STARTING: "node:is-starting",
+  STARTUP_DONE: "node:startup-done",
 } as const;
 
 export const BOOTNODE_CHANNELS = {

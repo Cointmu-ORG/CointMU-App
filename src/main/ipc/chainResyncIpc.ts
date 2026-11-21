@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import { CHAINDATA_CHANNELS } from "../../bridge/ipc-channels";
+import { assertNodeStarted } from "../geth/process/nodeStartup";
 import {
   ChainResyncError,
   type ChainResyncInfo,
@@ -113,6 +114,7 @@ export function registerChainResyncHandlers(store: AppStore): void {
     CHAINDATA_CHANNELS.DELETE_BACKUP,
     async (_, ...args: unknown[]): Promise<void> => {
       assertNoArgs(CHAINDATA_CHANNELS.DELETE_BACKUP, args);
+      assertNodeStarted();
       if (isResyncInProgress()) throw new Error("A resync is running");
       await removeChainDataBackups(resolveDataDir());
       saveBackupHead(null);

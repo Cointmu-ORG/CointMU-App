@@ -4,6 +4,7 @@ import type { DagInfo } from "../../bridge/types";
 import { clearAppCache } from "../app/appCache";
 import { requestIndexRebuild } from "../explorerIndex/explorerIndexService";
 import { getRpcPort } from "../geth/process/ports";
+import { assertNodeStarted } from "../geth/process/nodeStartup";
 import { callGethRpc } from "../geth/rpc/rpcUtils";
 import {
   dagSizeBytes,
@@ -72,6 +73,7 @@ export function registerMaintenanceHandlers(): void {
     MAINTENANCE_CHANNELS.DELETE_DAG,
     async (_, ...args: unknown[]): Promise<void> => {
       assertNoArgs(MAINTENANCE_CHANNELS.DELETE_DAG, args);
+      assertNodeStarted();
       if (await isMining())
         throw new Error("Stop mining before deleting the DAG");
       await deleteDagFiles(dagDir());

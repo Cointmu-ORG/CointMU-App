@@ -227,6 +227,9 @@ interface CointmuAPI {
      */
     onStopWait: (callback: (wait: NodeStopWait | null) => void) => () => void;
     getStopWait: () => Promise<NodeStopWait | null>;
+    /** True while the launch-time node startup runs (stop a leftover geth, spawn). */
+    isStarting: () => Promise<boolean>;
+    onStartupDone: (callback: () => void) => () => void;
   };
   maintenance: {
     clearCache: () => Promise<void>;

@@ -28,6 +28,8 @@ import { createWindow } from "./window";
 import { syncLoginItemFromOs } from "./loginItem";
 import { createAppStore } from "../store/appStore";
 import { prepareGethIpcEndpoint } from "../geth/process/ipcEndpointLifecycle";
+import { runNodeStartup } from "../geth/process/nodeStartup";
+import { NODE_CHANNELS } from "../../bridge/ipc-channels";
 import {
   attachNodeRecovery,
   spawnGethProcess,
@@ -137,7 +139,6 @@ app.whenReady().then(async () => {
   showGethStopWait(win);
   initUpdater(win, store);
   miningController.setWindow(win);
-  miningController.beginAutoStart();
   registerShellHandlers(setupTray(store, win, miningController));
   setQuitConfirmation(createQuitConfirmation(store, win, getRpcPort));
 
@@ -155,26 +156,28 @@ app.whenReady().then(async () => {
   });
 
   // After the window and every handler: the orphan stop can wait minutes for
-  // a geth still repairing, and the window shows that wait (#158).
+  // a geth still repairing, and the window shows that wait (#158). Restarts,
+  // moves, resyncs and cache clears wait for this (nodeStartup.ts).
   try {
-    await stopOrphanedGeth(
-      resolveDataRoot(),
-      GETH_GRACEFUL_TIMEOUT_MS,
-      supervisorFor(resolveGethBinaryPath()),
-    );
-  } catch (err) {
-    console.error("[geth:orphan] Could not stop a leftover geth:", err);
+    await runNodeStartup({
+      stopOrphan: () =>
+        stopOrphanedGeth(
+          resolveDataRoot(),
+          GETH_GRACEFUL_TIMEOUT_MS,
+          supervisorFor(resolveGethBinaryPath()),
+        ),
+      initGenesis: () => initGethIfNeeded(resolveDataDir()),
+      prepareIpc: () => prepareGethIpcEndpoint(store),
+      spawn: async () => {
+        watchGethPriority(store, () => restartNodeByUser(store));
+        await spawnGethProcess(store);
+      },
+    });
+  } finally {
+    if (!win.isDestroyed()) win.webContents.send(NODE_CHANNELS.STARTUP_DONE);
+    // Only now: before the spawn its node polls would fail and log for minutes.
+    miningController.beginAutoStart();
   }
-
-  try {
-    await initGethIfNeeded(resolveDataDir());
-  } catch (err) {
-    console.error("[geth:init] Fatal error during genesis init:", err);
-  }
-
-  await prepareGethIpcEndpoint(store);
-  watchGethPriority(store, () => restartNodeByUser(store));
-  await spawnGethProcess(store);
 
   void startTokenScan(store);
 });

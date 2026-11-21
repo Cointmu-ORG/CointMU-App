@@ -46,7 +46,8 @@
       "COPY_FAILED": "Copying failed. The node keeps using the current folder; nothing was lost.",
       "VERIFY_FAILED": "The copy did not match. The node keeps using the current folder; nothing was lost.",
       "BUSY": "A move is already running.",
-      "UNKNOWN": "Something went wrong. The chain data was not moved."
+      "UNKNOWN": "Something went wrong. The chain data was not moved.",
+      "NODE_STARTING": "The node is still starting. Try again once it is running."
     },
     "troubleshooting": "Troubleshooting",
     "logsTitle": "Logs",
@@ -512,7 +513,8 @@
     "resyncError": {
       "BUSY": "The node is busy with a recovery or a data move. Try again when it finishes.",
       "NODE_STILL_RUNNING": "The node did not stop, so nothing was deleted. Try again.",
-      "FAILED": "The resync failed. Nothing in your wallet was changed; see the logs for details."
+      "FAILED": "The resync failed. Nothing in your wallet was changed; see the logs for details.",
+      "NODE_STARTING": "The node is still starting. Try again once it is running."
     },
     "backupTitle": "Chain data backup",
     "backupDesc": "Old chain data kept after a resync or a repair ({{size}}).",

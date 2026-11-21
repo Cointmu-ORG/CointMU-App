@@ -208,6 +208,8 @@ export const IpcErrorCode = {
   WALLET_INCORRECT_PASSWORD: "WALLET_INCORRECT_PASSWORD",
   MINING_NO_REWARD_ADDRESS: "MINING_NO_REWARD_ADDRESS",
   ASSET_LOGO_LIMIT_REACHED: "ASSET_LOGO_LIMIT_REACHED",
+  /** The launch-time node startup still runs (nodeStartup.ts). */
+  NODE_STARTING: "NODE_STARTING",
 } as const;
 
 export type IpcErrorCode = (typeof IpcErrorCode)[keyof typeof IpcErrorCode];
@@ -392,6 +394,8 @@ export const ChainDataMoveError = {
   COPY_FAILED: "COPY_FAILED",
   VERIFY_FAILED: "VERIFY_FAILED",
   BUSY: "BUSY",
+  /** The launch-time node startup still runs. */
+  NODE_STARTING: "NODE_STARTING",
 } as const;
 
 export type ChainDataMoveError =
@@ -405,6 +409,8 @@ export const ChainResyncError = {
   /** Geth's exit was not observed; the chain data was left alone. */
   NODE_STILL_RUNNING: "NODE_STILL_RUNNING",
   FAILED: "FAILED",
+  /** The launch-time node startup still runs. */
+  NODE_STARTING: "NODE_STARTING",
 } as const;
 
 export type ChainResyncError =

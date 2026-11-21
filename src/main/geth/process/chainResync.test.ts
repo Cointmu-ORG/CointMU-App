@@ -15,6 +15,15 @@ import {
   type ChainResyncDeps,
 } from "./chainResync";
 
+// The launch-time startup is over unless a test says otherwise.
+const startup = vi.hoisted(() => ({ isInProgress: false }));
+vi.mock("./nodeStartup", () => ({
+  isStartupInProgress: () => startup.isInProgress,
+  assertNodeStarted: () => {
+    if (startup.isInProgress) throw new Error("NODE_STARTING");
+  },
+}));
+
 const OLD_HEAD = 330_000;
 let dataDir = "";
 
@@ -82,6 +91,21 @@ describe("resyncFromGenesis", () => {
     });
     expect(existsSync(join(dataDir, "geth", "chaindata"))).toBe(true);
     expect(calls).toContain("start");
+  });
+
+  it("refuses while the launch-time startup runs, touching nothing", async () => {
+    startup.isInProgress = true;
+    const { deps, calls } = createDeps();
+
+    const result = await resyncFromGenesis(deps);
+    startup.isInProgress = false;
+
+    expect(result).toEqual({
+      ok: false,
+      error: ChainResyncError.NODE_STARTING,
+    });
+    expect(calls).toEqual([]);
+    expect(await listChainDataBackups(dataDir)).toEqual([]);
   });
 
   it("refuses a second resync while one runs", async () => {

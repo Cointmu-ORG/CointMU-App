@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   ChainResyncDialogs,
   useChainResync,
+  useIsNodeStarting,
 } from "@/features/chain-maintenance";
 import { formatBytes } from "@/shared/lib";
 import {
@@ -22,6 +23,7 @@ import { MiningDagRow } from "./mining-dag-row.component";
 export function DataMaintenanceSettings(): JSX.Element {
   const { t } = useTranslation();
   const resync = useChainResync();
+  const isNodeStarting = useIsNodeStarting();
   const { refresh } = resync;
   useEffect(() => {
     void refresh();
@@ -30,11 +32,20 @@ export function DataMaintenanceSettings(): JSX.Element {
 
   return (
     <SettingsGroup title={t("settings:maintenance.title")}>
+      {isNodeStarting && (
+        <p role="status" className="text-xs text-amber-700 dark:text-amber-400">
+          {t("common:errors.NODE_STARTING")}
+        </p>
+      )}
       <SettingRow
         title={t("settings:maintenance.resyncTitle")}
         description={t("settings:maintenance.resyncDesc")}
       >
-        <SettingButton tone="danger" onClick={resync.open}>
+        <SettingButton
+          tone="danger"
+          isDisabled={isNodeStarting}
+          onClick={resync.open}
+        >
           {t("settings:maintenance.resyncButton")}
         </SettingButton>
       </SettingRow>
@@ -58,7 +69,7 @@ export function DataMaintenanceSettings(): JSX.Element {
           }
         >
           <SettingButton
-            isDisabled={resync.isDeletingBackup}
+            isDisabled={resync.isDeletingBackup || isNodeStarting}
             onClick={() => void resync.deleteBackup()}
           >
             {t("settings:maintenance.backupDelete", {
@@ -67,8 +78,8 @@ export function DataMaintenanceSettings(): JSX.Element {
           </SettingButton>
         </SettingRow>
       )}
-      <ClearCacheRow />
-      <MiningDagRow />
+      <ClearCacheRow isNodeStarting={isNodeStarting} />
+      <MiningDagRow isNodeStarting={isNodeStarting} />
       <ChainResyncDialogs resync={resync} />
     </SettingsGroup>
   );

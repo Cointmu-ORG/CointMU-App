@@ -71,7 +71,8 @@
     "WALLET_INCORRECT_PASSWORD": "Incorrect password.",
     "MINING_NO_REWARD_ADDRESS": "No mining reward address configured. Set one in Mining Settings.",
     "ASSET_LOGO_LIMIT_REACHED": "You can keep custom logos for up to 250 assets. Reset one before adding another.",
-    "decryptFailed": "Could not decrypt the wallet."
+    "decryptFailed": "Could not decrypt the wallet.",
+    "NODE_STARTING": "The node is still starting. Please wait."
   },
   "shell": {
     "trayOpen": "Open CointMU",

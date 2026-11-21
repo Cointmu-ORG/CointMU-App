@@ -70,7 +70,8 @@
     "WALLET_INCORRECT_PASSWORD": "パスワードが正しくありません。",
     "MINING_NO_REWARD_ADDRESS": "マイニングの報酬アドレスが設定されていません。マイニング設定で設定してください。",
     "ASSET_LOGO_LIMIT_REACHED": "カスタムロゴは最大 250 件のアセットまで保存できます。新しく追加する前に、いずれかをリセットしてください。",
-    "decryptFailed": "ウォレットを復号できませんでした。"
+    "decryptFailed": "ウォレットを復号できませんでした。",
+    "NODE_STARTING": "ノードはまだ起動中です。しばらくお待ちください。"
   },
   "shell": {
     "trayOpen": "CointMU を開く",

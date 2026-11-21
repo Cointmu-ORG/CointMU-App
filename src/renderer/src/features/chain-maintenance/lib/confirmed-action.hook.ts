@@ -5,6 +5,8 @@ export type ConfirmedActionStatus =
 
 export interface ConfirmedAction {
   readonly status: ConfirmedActionStatus;
+  /** What the last failed run threw, for a typed message. */
+  readonly error: unknown;
   readonly ask: () => void;
   readonly cancel: () => void;
   readonly run: () => Promise<void>;
@@ -21,14 +23,17 @@ export function useConfirmedAction(
   onSettled?: () => void,
 ): ConfirmedAction {
   const [status, setStatus] = useState<ConfirmedActionStatus>("idle");
+  const [error, setError] = useState<unknown>(null);
 
   const run = useCallback(async (): Promise<void> => {
     setStatus("busy");
+    setError(null);
     try {
       await action();
       setStatus("done");
     } catch (err) {
       console.error("[maintenance] Action failed", err);
+      setError(err);
       setStatus("failed");
     }
     onSettled?.();
@@ -36,6 +41,7 @@ export function useConfirmedAction(
 
   return {
     status,
+    error,
     ask: () => setStatus("confirm"),
     cancel: () => setStatus("idle"),
     run,
