@@ -18,11 +18,16 @@ import { getGethIpcPath } from "./ipcEndpointLifecycle";
 import { resolveGethLaunch } from "./gethInit";
 import {
   GETH_GRACEFUL_TIMEOUT_MS,
-  SUPERVISOR_EXIT_MARGIN_MS,
   removeGethPidFile,
   writeGethPidFile,
 } from "./orphanedGeth";
-import { startGethWatcher } from "./gethWatcherProcess";
+import { reportGethReady, startGethWatcher } from "./gethWatcherProcess";
+import {
+  GETH_READY_WAIT_MS,
+  createGethReadiness,
+  type GethReadiness,
+} from "./gethReadiness";
+import { stopProcess } from "./gethStop";
 import { applyPriorityOnSpawn } from "./gethPrioritySetup";
 import { gethLaunchCommand } from "./gethSupervisor";
 import { parseGethLogChunk } from "../recovery/gethLogParser";
@@ -45,6 +50,7 @@ let gethRestartTimer: NodeJS.Timeout | null = null;
 let gethProcess: ChildProcess | null = null;
 // Kept after gethProcess is cleared so recovery can confirm the exit event fired.
 let lastSpawnedGeth: ChildProcess | null = null;
+let gethReadiness: GethReadiness = createGethReadiness();
 let nodeRecovery: GethRecovery | null = null;
 
 /** Wires in recovery; a setter because recovery itself needs spawn/kill. */
@@ -143,6 +149,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     gethArgs: args,
     platform: process.platform,
     graceMs: GETH_GRACEFUL_TIMEOUT_MS,
+    readyWaitMs: GETH_READY_WAIT_MS,
   });
   if (process.platform === "win32" && !launch.isSupervised) {
     console.warn(
@@ -161,6 +168,9 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       env,
     });
     lastSpawnedGeth = gethProcess;
+    let watcher: ChildProcess | null = null;
+    const readiness = createGethReadiness(() => reportGethReady(watcher));
+    gethReadiness = readiness;
     startExplorerIndex();
     const spawnedPid = gethProcess.pid;
     if (spawnedPid !== undefined) {
@@ -201,6 +211,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
       const complete = combined.slice(0, newlineIndex);
       complete.split("\n").forEach((line) => {
         gethLog.info(line);
+        readiness.observe(line);
         recordGethLine(line);
         nodeRecovery?.handleLogLine(line);
       });
@@ -232,7 +243,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
     gethProcess.stderr?.on("data", handleGethStderr);
     // Windows has no watcher: libuv terminates every non-detached child with
     // this process (see gethWatcherProcess.ts).
-    if (process.platform !== "win32") startGethWatcher(gethProcess);
+    if (process.platform !== "win32") watcher = startGethWatcher(gethProcess);
 
     gethProcess.on("error", (err: Error) => {
       console.error(
@@ -248,6 +259,7 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 
     gethProcess.on("close", (code: number | null) => {
       console.log(`[geth:close] Process exited with code ${code}`);
+      readiness.release();
       if (spawnedPid !== undefined) {
         removeGethPidFile(resolveDataRoot(), spawnedPid);
       }
@@ -269,8 +281,10 @@ export async function spawnGethProcess(store: AppStore): Promise<void> {
 
 /**
  * Sends SIGINT to the geth child process and returns a promise that resolves
- * once the process has fully terminated. A hard SIGKILL is dispatched if the
- * process does not exit within GETH_GRACEFUL_TIMEOUT_MS. On Windows, where
+ * once the process has fully terminated. A geth still starting gets SIGINT
+ * only once it can take it (see gethReadiness.ts). A hard SIGKILL is
+ * dispatched if the process does not exit within GETH_GRACEFUL_TIMEOUT_MS
+ * after SIGINT. On Windows, where
  * SIGINT terminates outright, closing geth-supervisor.exe's stdin makes it
  * interrupt geth (see gethLaunchCommand); its own kill comes first, this
  * SIGKILL of the supervisor follows SUPERVISOR_EXIT_MARGIN_MS later and takes
@@ -298,50 +312,7 @@ function stopGethChild(): Promise<void> {
 
   const proc = gethProcess;
   gethProcess = null;
-
-  return new Promise<void>((resolve) => {
-    let settled = false;
-
-    const onExit = (): void => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(killTimer);
-      resolve();
-    };
-
-    const forceKill = (): void => {
-      if (settled) return;
-      try {
-        proc.kill("SIGKILL");
-      } catch {}
-    };
-
-    // Only the supervisor gets a stdin pipe.
-    const supervisorStdin = proc.stdin;
-    const killTimer = setTimeout(
-      forceKill,
-      supervisorStdin
-        ? GETH_GRACEFUL_TIMEOUT_MS + SUPERVISOR_EXIT_MARGIN_MS
-        : GETH_GRACEFUL_TIMEOUT_MS,
-    );
-
-    proc.once("close", onExit);
-    proc.once("exit", onExit);
-
-    if (process.platform === "win32") {
-      // destroy, not end: nothing is written, so a supervisor already gone
-      // cannot raise EPIPE.
-      if (supervisorStdin) supervisorStdin.destroy();
-      else forceKill();
-      return;
-    }
-
-    try {
-      proc.kill("SIGINT");
-    } catch {
-      onExit();
-    }
-  });
+  return stopProcess(proc, gethReadiness);
 }
 
 /**

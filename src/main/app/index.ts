@@ -61,6 +61,7 @@ import { startTokenScan, stopTokenScan } from "../tokens/tokenScanService";
 import { registerQuitHandler, setQuitConfirmation } from "./appQuit";
 import { createQuitConfirmation } from "./quitConfirmation";
 import { setupTray } from "./traySetup";
+import { showGethStopWait } from "./gethStopNotice";
 import { applyStoredZoom } from "./windowZoom";
 import {
   queryIndexStatus,
@@ -155,6 +156,7 @@ app.whenReady().then(async () => {
   applyContentSecurityPolicy(session.defaultSession, app.isPackaged);
   const win = createWindow();
   applyStoredZoom(store, win);
+  showGethStopWait(win);
   initUpdater(win, store);
   miningController.setWindow(win);
   miningController.beginAutoStart();

@@ -91,7 +91,8 @@
     "quitConfirmNeverAsk": "不再询问",
     "autoStartTitle": "{{seconds}} 秒后开始挖矿",
     "autoStartBody": "已开启“启动时开始挖矿”。打开 CointMU 可在本次会话中取消。",
-    "autoStartCancel": "取消"
+    "autoStartCancel": "取消",
+    "trayStopWaiting": "节点正在修复数据，等待安全停止"
   },
   "update": {
     "readyTitle": "更新已就绪",
@@ -103,5 +104,10 @@
     "hideAmounts": "隐藏余额",
     "showAmounts": "显示余额",
     "hiddenAmount": "金额已隐藏"
+  },
+  "nodeStopWait": {
+    "title": "节点正在修复数据，正在等待可以安全停止…",
+    "body": "请勿强制关闭应用：现在停止节点会导致链回滚。",
+    "elapsed": "已等待 {{elapsed}}（最长 {{max}}）"
   }
 }

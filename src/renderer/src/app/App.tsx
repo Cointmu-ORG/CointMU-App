@@ -26,6 +26,7 @@ import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "./lib/auto-lock.hook";
 import { useShellText } from "./lib/shell-text.hook";
 import { FirstRunNotice } from "@/features/error-reporting";
+import { NodeStopWaitOverlay } from "@/features/chain-maintenance";
 
 const Miner = lazy(() =>
   import("@/pages/mining").then((m) => ({ default: m.MiningPage })),
@@ -185,6 +186,7 @@ function App(): JSX.Element {
         <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
         <FirstRunNotice />
         <MiningAutoStartBanner />
+        <NodeStopWaitOverlay />
       </Suspense>
     );
   }
@@ -198,6 +200,7 @@ function App(): JSX.Element {
         <UpdateReadyBanner updater={updater} />
         <MiningAutoStartBanner />
         <FirstRunNotice />
+        <NodeStopWaitOverlay />
         <Sidebar
           accounts={accounts}
           activeWalletAddress={activeWalletAddress}

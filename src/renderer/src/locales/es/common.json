@@ -93,7 +93,8 @@
     "quitConfirmNeverAsk": "No volver a preguntar",
     "autoStartTitle": "La minería empieza en {{seconds}} segundos",
     "autoStartBody": "«Minar al iniciar» está activado. Abre CointMU para cancelarlo en esta sesión.",
-    "autoStartCancel": "Cancelar"
+    "autoStartCancel": "Cancelar",
+    "trayStopWaiting": "El nodo está reparando datos; esperando para detenerse con seguridad"
   },
   "update": {
     "readyTitle": "Actualización lista",
@@ -105,5 +106,10 @@
     "hideAmounts": "Ocultar saldos",
     "showAmounts": "Mostrar saldos",
     "hiddenAmount": "Importe oculto"
+  },
+  "nodeStopWait": {
+    "title": "El nodo está reparando sus datos y espera hasta poder detenerse con seguridad…",
+    "body": "No fuerces el cierre de la aplicación: detener el nodo ahora haría retroceder la cadena.",
+    "elapsed": "Esperando {{elapsed}} (máx. {{max}})"
   }
 }
