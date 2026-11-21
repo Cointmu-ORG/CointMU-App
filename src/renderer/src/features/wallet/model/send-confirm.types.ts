@@ -3,6 +3,8 @@ interface SendSummary {
   fromLabel: string;
   fromAddress: string;
   toAddress: string;
+  /** The user's name for the recipient; a label only, never sent anywhere. */
+  toName?: string;
   amount: string;
   symbol: string;
   tokenAddress: string;

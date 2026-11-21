@@ -97,7 +97,8 @@
       "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认",
       "passwordLabel": "钱包密码",
       "passwordRequired": "请输入钱包密码后再发送。",
-      "continueBtn": "继续"
+      "continueBtn": "继续",
+      "recipientName": "已保存为 {{name}}"
     },
     "sendConfirm": {
       "title": "确认发送",

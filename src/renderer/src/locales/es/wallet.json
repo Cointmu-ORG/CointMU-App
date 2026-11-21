@@ -97,7 +97,8 @@
       "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada",
       "passwordLabel": "Contraseña de la billetera",
       "passwordRequired": "Introduce la contraseña de la billetera para enviar.",
-      "continueBtn": "Continuar"
+      "continueBtn": "Continuar",
+      "recipientName": "Guardado como {{name}}"
     },
     "sendConfirm": {
       "title": "Confirmar envío",

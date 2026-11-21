@@ -97,7 +97,8 @@
       "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi",
       "passwordLabel": "Password wallet",
       "passwordRequired": "Masukkan password wallet untuk mengirim.",
-      "continueBtn": "Lanjut"
+      "continueBtn": "Lanjut",
+      "recipientName": "Tersimpan sebagai {{name}}"
     },
     "sendConfirm": {
       "title": "Konfirmasi pengiriman",

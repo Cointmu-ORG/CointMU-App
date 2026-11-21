@@ -97,7 +97,8 @@
       "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした",
       "passwordLabel": "ウォレットのパスワード",
       "passwordRequired": "送金するにはウォレットのパスワードを入力してください。",
-      "continueBtn": "次へ"
+      "continueBtn": "次へ",
+      "recipientName": "{{name}} として保存済み"
     },
     "sendConfirm": {
       "title": "送金の確認",

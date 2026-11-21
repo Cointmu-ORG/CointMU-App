@@ -97,7 +97,8 @@
       "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed",
       "passwordLabel": "Wallet password",
       "passwordRequired": "Enter your wallet password to send.",
-      "continueBtn": "Continue"
+      "continueBtn": "Continue",
+      "recipientName": "Saved as {{name}}"
     },
     "sendConfirm": {
       "title": "Confirm send",
