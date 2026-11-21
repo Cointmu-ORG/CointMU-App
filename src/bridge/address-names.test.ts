@@ -22,6 +22,23 @@ describe("normalizeAddressName", () => {
     expect(normalizeAddressName("Ali\u0000ce")).toBeNull();
   });
 
+  it.each([
+    ["right-to-left override", "Alice\u202Eecila"],
+    ["left-to-right isolate", "Ali\u2066ce"],
+    ["zero-width space", "Ali\u200Bce"],
+    ["byte order mark", "\uFEFFAlice"],
+  ])("returns null for a name with a %s", (_, name) => {
+    expect(normalizeAddressName(name)).toBeNull();
+  });
+
+  it("accepts emoji, ZWJ emoji and CJK names", () => {
+    expect(normalizeAddressName("Bob 🚀")).toBe("Bob 🚀");
+    expect(normalizeAddressName("👨\u200D👩\u200D👧 Family")).toBe(
+      "👨\u200D👩\u200D👧 Family",
+    );
+    expect(normalizeAddressName("田中さん")).toBe("田中さん");
+  });
+
   it("accepts a name at the length cap", () => {
     const name = "a".repeat(MAX_ADDRESS_NAME_LENGTH);
     expect(normalizeAddressName(name)).toBe(name);

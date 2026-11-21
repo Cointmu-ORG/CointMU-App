@@ -16,15 +16,20 @@ const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
 const LOWERCASE_ADDRESS = /^0x[0-9a-f]{40}$/;
 // Names are single-line display text: tabs and newlines become spaces, other control characters are refused.
 const CONTROL_CHARACTER = /\p{Cc}/u;
+// Invisible format characters (bidi overrides and isolates, zero-width space,
+// BOM) can disguise a name. ZWJ (U+200D) stays allowed: emoji such as 👨‍👩‍👧 need it.
+const FORMAT_CHARACTER = /(?!\u200D)\p{Cf}/u;
 const WHITESPACE_RUN = /\s+/g;
 
 /**
  * @param input - What the user typed.
  * @returns The trimmed name with inner spaces collapsed, or null when it is
- *   empty, longer than MAX_ADDRESS_NAME_LENGTH or holds a control character.
+ *   empty, longer than MAX_ADDRESS_NAME_LENGTH or holds a control character
+ *   or an invisible format character other than ZWJ.
  */
 export function normalizeAddressName(input: string): string | null {
   if (CONTROL_CHARACTER.test(input.replace(WHITESPACE_RUN, " "))) return null;
+  if (FORMAT_CHARACTER.test(input)) return null;
   const name = input.trim().replace(WHITESPACE_RUN, " ");
   if (name === "" || name.length > MAX_ADDRESS_NAME_LENGTH) return null;
   return name;
