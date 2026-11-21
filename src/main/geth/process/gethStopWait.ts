@@ -21,8 +21,16 @@ export function onGethStopWait(listener: StopWaitListener): () => void {
   };
 }
 
+let shownWait: NodeStopWait | null = null;
+
 function emit(wait: NodeStopWait | null): void {
+  shownWait = wait;
   listeners.forEach((listener) => listener(wait));
+}
+
+/** @returns The wait shown now, for a window that opens during it. */
+export function getGethStopWait(): NodeStopWait | null {
+  return shownWait;
 }
 
 /**
@@ -35,6 +43,18 @@ export function reportStopWait(
   stopped: Promise<void>,
 ): void {
   if (readiness.isReady()) return;
+  reportInterruptibleWait(
+    Promise.race([readiness.untilInterruptible(), stopped]),
+  );
+}
+
+/**
+ * Tells the listeners about any wait for geth to become interruptible, such
+ * as the startup stop of an orphaned geth (orphanReadiness.ts).
+ * @param interruptible - Resolves once geth can be interrupted or has exited;
+ *   must not reject.
+ */
+export function reportInterruptibleWait(interruptible: Promise<void>): void {
   const wait: NodeStopWait = {
     startedAt: Date.now(),
     maxWaitMs: GETH_READY_WAIT_MS,
@@ -44,7 +64,7 @@ export function reportStopWait(
     isShown = true;
     emit(wait);
   }, STOP_WAIT_NOTICE_DELAY_MS);
-  void Promise.race([readiness.untilInterruptible(), stopped]).then(() => {
+  void interruptible.then(() => {
     clearTimeout(timer);
     if (isShown) emit(null);
   });

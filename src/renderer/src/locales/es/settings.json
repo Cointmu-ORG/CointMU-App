@@ -46,7 +46,8 @@
       "COPY_FAILED": "La copia falló. El nodo sigue usando la carpeta actual; no se perdió nada.",
       "VERIFY_FAILED": "La copia no coincide. El nodo sigue usando la carpeta actual; no se perdió nada.",
       "BUSY": "Ya hay un traslado en curso.",
-      "UNKNOWN": "Algo salió mal. Los datos no se movieron."
+      "UNKNOWN": "Algo salió mal. Los datos no se movieron.",
+      "NODE_STARTING": "El nodo todavía se está iniciando. Inténtalo de nuevo cuando esté en marcha."
     },
     "troubleshooting": "Solución de problemas",
     "logsTitle": "Registros",
@@ -517,7 +518,8 @@
     "resyncError": {
       "BUSY": "El nodo está ocupado con una recuperación o un traslado de datos. Inténtalo cuando termine.",
       "NODE_STILL_RUNNING": "El nodo no se detuvo, así que no se eliminó nada. Inténtalo de nuevo.",
-      "FAILED": "La resincronización falló. Tu billetera no cambió; revisa los registros."
+      "FAILED": "La resincronización falló. Tu billetera no cambió; revisa los registros.",
+      "NODE_STARTING": "El nodo todavía se está iniciando. Inténtalo de nuevo cuando esté en marcha."
     },
     "backupTitle": "Copia de seguridad de la cadena",
     "backupDesc": "Datos antiguos guardados tras una resincronización o reparación ({{size}}).",

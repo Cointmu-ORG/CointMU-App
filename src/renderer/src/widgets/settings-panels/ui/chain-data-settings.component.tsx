@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useChainDataMove, type ChainDataMoveState } from "@/features/settings";
+import { useIsNodeStarting } from "@/features/chain-maintenance";
 import { formatBytes } from "@/shared/lib";
 import {
   SettingButton,
@@ -111,6 +112,7 @@ function ChainDataMoveDialogs({
 export function ChainDataSettings(): JSX.Element {
   const { t } = useTranslation();
   const move = useChainDataMove();
+  const isNodeStarting = useIsNodeStarting();
   const title = t("settings:general.chainDataTitle");
 
   return (
@@ -125,6 +127,14 @@ export function ChainDataSettings(): JSX.Element {
             {move.info && (
               <span className="block mt-1">
                 {formatBytes(move.info.sizeBytes)}
+              </span>
+            )}
+            {isNodeStarting && (
+              <span
+                role="status"
+                className="block mt-2 text-amber-700 dark:text-amber-400"
+              >
+                {t("common:errors.NODE_STARTING")}
               </span>
             )}
             {move.problem && (
@@ -142,7 +152,10 @@ export function ChainDataSettings(): JSX.Element {
           <SettingButton onClick={() => void window.api.openDataFolder()}>
             {t("settings:general.chainDataOpen")}
           </SettingButton>
-          <SettingButton onClick={() => void move.pickTarget()}>
+          <SettingButton
+            isDisabled={isNodeStarting}
+            onClick={() => void move.pickTarget()}
+          >
             {t("settings:general.chainDataMove")}
           </SettingButton>
         </div>

@@ -15,6 +15,7 @@ import {
   requiredFreeBytes,
   treeStats,
 } from "./chainDataCopy";
+import { isStartupInProgress } from "./nodeStartup";
 
 /** What a move needs from the app; tests pass fakes. */
 export interface ChainDataMoveDeps {
@@ -101,6 +102,9 @@ export async function moveChainData(
   target: string,
   deps: ChainDataMoveDeps,
 ): Promise<ChainDataMoveResult> {
+  if (isStartupInProgress()) {
+    return { ok: false, error: ChainDataMoveError.NODE_STARTING };
+  }
   if (isMoving) return { ok: false, error: ChainDataMoveError.BUSY };
   const from = deps.currentRoot();
   const to = resolve(target);

@@ -71,7 +71,8 @@
     "WALLET_INCORRECT_PASSWORD": "Falsches Passwort.",
     "MINING_NO_REWARD_ADDRESS": "Keine Belohnungsadresse für das Mining festgelegt. Lege eine in den Mining-Einstellungen fest.",
     "ASSET_LOGO_LIMIT_REACHED": "Eigene Logos lassen sich für höchstens 250 Assets speichern. Setze eines zurück, bevor du ein weiteres hinzufügst.",
-    "decryptFailed": "Die Wallet konnte nicht entschlüsselt werden."
+    "decryptFailed": "Die Wallet konnte nicht entschlüsselt werden.",
+    "NODE_STARTING": "Der Node startet noch. Bitte warten."
   },
   "shell": {
     "trayOpen": "CointMU öffnen",

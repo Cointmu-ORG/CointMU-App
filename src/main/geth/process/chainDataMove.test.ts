@@ -11,6 +11,15 @@ import {
 } from "./chainDataMove";
 import { checkTarget, treeStats } from "./chainDataCopy";
 
+// The launch-time startup is over unless a test says otherwise.
+const startup = vi.hoisted(() => ({ isInProgress: false }));
+vi.mock("./nodeStartup", () => ({
+  isStartupInProgress: () => startup.isInProgress,
+  assertNodeStarted: () => {
+    if (startup.isInProgress) throw new Error("NODE_STARTING");
+  },
+}));
+
 let base: string;
 let oldRoot: string;
 
@@ -72,6 +81,19 @@ describe("moveChainData", () => {
     ).toBe("key");
     // The old data stays until the user deletes it.
     expect(existsSync(join(oldRoot, "19129", "geth", "nodekey"))).toBe(true);
+  });
+
+  it("refuses while the launch-time startup runs, before stopping anything", async () => {
+    startup.isInProgress = true;
+    const hooks = deps();
+
+    const result = await moveChainData(join(base, "new"), hooks);
+    startup.isInProgress = false;
+
+    expect(result).toEqual({ ok: false, error: "NODE_STARTING" });
+    expect(hooks.stopNode).not.toHaveBeenCalled();
+    expect(hooks.startNode).not.toHaveBeenCalled();
+    expect(existsSync(join(base, "new"))).toBe(false);
   });
 
   it("refuses a target without room, before stopping anything", async () => {

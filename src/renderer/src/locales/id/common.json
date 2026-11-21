@@ -70,7 +70,8 @@
     "WALLET_INCORRECT_PASSWORD": "Kata sandi salah.",
     "MINING_NO_REWARD_ADDRESS": "Alamat hadiah mining belum diatur. Atur di Pengaturan Mining.",
     "ASSET_LOGO_LIMIT_REACHED": "Logo kustom bisa disimpan untuk maksimal 250 aset. Reset salah satu sebelum menambah yang baru.",
-    "decryptFailed": "Dompet tidak dapat didekripsi."
+    "decryptFailed": "Dompet tidak dapat didekripsi.",
+    "NODE_STARTING": "Node masih memulai. Mohon tunggu."
   },
   "shell": {
     "trayOpen": "Buka CointMU",

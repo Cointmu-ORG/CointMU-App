@@ -5,6 +5,7 @@ import {
   clearAllCaches,
   useConfirmedAction,
 } from "@/features/chain-maintenance";
+import { localizeIpcError } from "@/shared/lib";
 import { DIALOG_BUTTON_CLASS, SettingsDialog } from "@/shared/ui";
 import { SettingButton, SettingRow } from "./setting-controls.component";
 
@@ -15,9 +16,14 @@ const KEPT_KEYS = ["wallets", "settings", "logos", "chain"];
  * Settings → Advanced → Data maintenance → Clear cache: drops everything the
  * app rebuilds from the node, after a confirmation listing what goes and
  * what stays.
+ * @param props.isNodeStarting - True while the node starts; main refuses then.
  * @returns The row and its confirmation.
  */
-export function ClearCacheRow(): JSX.Element {
+export function ClearCacheRow({
+  isNodeStarting,
+}: {
+  readonly isNodeStarting: boolean;
+}): JSX.Element {
   const { t } = useTranslation();
   const action = useConfirmedAction(clearAllCaches);
   const isSettled = action.status === "done" || action.status === "failed";
@@ -36,14 +42,17 @@ export function ClearCacheRow(): JSX.Element {
               >
                 {action.status === "done"
                   ? t("settings:maintenance.cacheDone")
-                  : t("settings:maintenance.cacheFailed")}
+                  : localizeIpcError(
+                      action.error,
+                      "settings:maintenance.cacheFailed",
+                    )}
               </span>
             )}
           </>
         }
       >
         <SettingButton
-          isDisabled={action.status === "busy"}
+          isDisabled={action.status === "busy" || isNodeStarting}
           onClick={action.ask}
         >
           {t("settings:maintenance.cacheButton")}

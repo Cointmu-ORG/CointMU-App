@@ -72,7 +72,8 @@
     "WALLET_INCORRECT_PASSWORD": "Contraseña incorrecta.",
     "MINING_NO_REWARD_ADDRESS": "No hay una dirección de recompensa de minería configurada. Establece una en los ajustes de minería.",
     "ASSET_LOGO_LIMIT_REACHED": "Puedes guardar logotipos personalizados para un máximo de 250 activos. Restablece uno antes de añadir otro.",
-    "decryptFailed": "No se pudo descifrar la billetera."
+    "decryptFailed": "No se pudo descifrar la billetera.",
+    "NODE_STARTING": "El nodo todavía se está iniciando. Espera, por favor."
   },
   "shell": {
     "trayOpen": "Abrir CointMU",

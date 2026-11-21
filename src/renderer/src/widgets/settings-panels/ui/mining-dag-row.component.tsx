@@ -6,16 +6,21 @@ import {
   getDagInfo,
   useConfirmedAction,
 } from "@/features/chain-maintenance";
-import { formatBytes } from "@/shared/lib";
+import { formatBytes, localizeIpcError } from "@/shared/lib";
 import { DIALOG_BUTTON_CLASS, SettingsDialog } from "@/shared/ui";
 import { SettingButton, SettingRow } from "./setting-controls.component";
 
 /**
  * Settings → Advanced → Data maintenance → Mining DAG: its size and a
  * delete, disabled while mining (geth regenerates it on the next start).
+ * @param props.isNodeStarting - True while the node starts; main refuses then.
  * @returns The row and its confirmation.
  */
-export function MiningDagRow(): JSX.Element {
+export function MiningDagRow({
+  isNodeStarting,
+}: {
+  readonly isNodeStarting: boolean;
+}): JSX.Element {
   const { t } = useTranslation();
   const [info, setInfo] = useState<DagInfo | null>(null);
 
@@ -31,7 +36,11 @@ export function MiningDagRow(): JSX.Element {
 
   const size = formatBytes(info?.sizeBytes ?? 0);
   const isDisabled =
-    !info || info.isMining || info.sizeBytes === 0 || action.status === "busy";
+    !info ||
+    info.isMining ||
+    info.sizeBytes === 0 ||
+    action.status === "busy" ||
+    isNodeStarting;
 
   return (
     <>
@@ -50,7 +59,10 @@ export function MiningDagRow(): JSX.Element {
                 role="status"
                 className="block mt-1 text-red-600 dark:text-red-400"
               >
-                {t("settings:maintenance.dagFailed")}
+                {localizeIpcError(
+                  action.error,
+                  "settings:maintenance.dagFailed",
+                )}
               </span>
             )}
           </>

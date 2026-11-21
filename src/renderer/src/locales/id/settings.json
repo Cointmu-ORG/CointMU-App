@@ -46,7 +46,8 @@
       "COPY_FAILED": "Penyalinan gagal. Node tetap memakai folder saat ini; tidak ada data yang hilang.",
       "VERIFY_FAILED": "Salinan tidak cocok. Node tetap memakai folder saat ini; tidak ada data yang hilang.",
       "BUSY": "Pemindahan sedang berjalan.",
-      "UNKNOWN": "Terjadi kesalahan. Data chain tidak dipindahkan."
+      "UNKNOWN": "Terjadi kesalahan. Data chain tidak dipindahkan.",
+      "NODE_STARTING": "Node masih memulai. Coba lagi setelah node berjalan."
     },
     "troubleshooting": "Pemecahan masalah",
     "logsTitle": "Log",
@@ -507,7 +508,8 @@
     "resyncError": {
       "BUSY": "Node sedang menjalankan pemulihan atau pemindahan data. Coba lagi setelah selesai.",
       "NODE_STILL_RUNNING": "Node tidak berhenti, jadi tidak ada yang dihapus. Coba lagi.",
-      "FAILED": "Sinkron ulang gagal. Wallet Anda tidak berubah; lihat log untuk detailnya."
+      "FAILED": "Sinkron ulang gagal. Wallet Anda tidak berubah; lihat log untuk detailnya.",
+      "NODE_STARTING": "Node masih memulai. Coba lagi setelah node berjalan."
     },
     "backupTitle": "Cadangan data chain",
     "backupDesc": "Data chain lama yang disimpan setelah sinkron ulang atau perbaikan ({{size}}).",

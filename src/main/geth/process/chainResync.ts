@@ -4,6 +4,7 @@ import {
 } from "../../../bridge/types";
 import { quarantineChainData } from "../recovery/chaindataQuarantine";
 import { isChainDataMoveInProgress } from "./chainDataMove";
+import { isStartupInProgress } from "./nodeStartup";
 
 /** What a resync needs from the app; tests pass fakes. */
 export interface ChainResyncDeps {
@@ -41,6 +42,9 @@ export function isResyncInProgress(): boolean {
 export async function resyncFromGenesis(
   deps: ChainResyncDeps,
 ): Promise<ChainResyncResult> {
+  if (isStartupInProgress()) {
+    return { ok: false, error: ChainResyncError.NODE_STARTING };
+  }
   if (isResyncing || isChainDataMoveInProgress()) {
     return { ok: false, error: ChainResyncError.BUSY };
   }

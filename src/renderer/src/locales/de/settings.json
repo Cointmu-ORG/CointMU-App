@@ -46,7 +46,8 @@
       "COPY_FAILED": "Kopieren fehlgeschlagen. Der Node nutzt weiter den aktuellen Ordner; nichts ging verloren.",
       "VERIFY_FAILED": "Die Kopie stimmt nicht überein. Der Node nutzt weiter den aktuellen Ordner; nichts ging verloren.",
       "BUSY": "Es läuft bereits ein Verschiebevorgang.",
-      "UNKNOWN": "Etwas ist schiefgelaufen. Die Chain-Daten wurden nicht verschoben."
+      "UNKNOWN": "Etwas ist schiefgelaufen. Die Chain-Daten wurden nicht verschoben.",
+      "NODE_STARTING": "Der Node startet noch. Versuche es erneut, sobald er läuft."
     },
     "troubleshooting": "Fehlerbehebung",
     "logsTitle": "Protokolle",
@@ -512,7 +513,8 @@
     "resyncError": {
       "BUSY": "Der Node führt gerade eine Wiederherstellung oder einen Datenumzug aus. Bitte danach erneut versuchen.",
       "NODE_STILL_RUNNING": "Der Node wurde nicht beendet, daher wurde nichts gelöscht. Bitte erneut versuchen.",
-      "FAILED": "Die Neusynchronisierung ist fehlgeschlagen. Dein Wallet wurde nicht verändert; Details stehen in den Logs."
+      "FAILED": "Die Neusynchronisierung ist fehlgeschlagen. Dein Wallet wurde nicht verändert; Details stehen in den Logs.",
+      "NODE_STARTING": "Der Node startet noch. Versuche es erneut, sobald er läuft."
     },
     "backupTitle": "Sicherung der Chain-Daten",
     "backupDesc": "Alte Chain-Daten nach einer Neusynchronisierung oder Reparatur ({{size}}).",

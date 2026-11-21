@@ -6,6 +6,8 @@ import { getNodeRecovery, isGethRunning } from "../geth/process/gethProcess";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { isSessionValid } from "../app/session";
 import { getSyncStallStep, peerWatchdog } from "../geth/recovery/nodeRecovery";
+import { getGethStopWait } from "../geth/process/gethStopWait";
+import { isStartupInProgress } from "../geth/process/nodeStartup";
 import type { AppStore } from "../store/appStore";
 
 /**
@@ -23,6 +25,8 @@ export function registerNodeStatusHandlers(): void {
   }));
   ipcMain.handle(NODE_CHANNELS.GET_PEER_HINT, () => peerWatchdog.getHint());
   ipcMain.handle(NODE_CHANNELS.GET_SYNC_STALL, () => getSyncStallStep());
+  ipcMain.handle(NODE_CHANNELS.GET_STOP_WAIT, () => getGethStopWait());
+  ipcMain.handle(NODE_CHANNELS.IS_STARTING, () => isStartupInProgress());
 }
 
 /**

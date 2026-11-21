@@ -10,3 +10,8 @@ export function subscribeNodeStopWait(
 ): () => void {
   return window.api.node.onStopWait(callback);
 }
+
+/** @returns The wait under way, for a window that opens during it. */
+export function getNodeStopWait(): Promise<NodeStopWait | null> {
+  return window.api.node.getStopWait();
+}

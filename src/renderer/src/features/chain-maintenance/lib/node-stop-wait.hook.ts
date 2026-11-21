@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { NodeStopWait } from "@bridge/types";
-import { subscribeNodeStopWait } from "../api/node-stop-wait.service";
+import {
+  getNodeStopWait,
+  subscribeNodeStopWait,
+} from "../api/node-stop-wait.service";
 
 const TICK_MS = 1_000;
 
@@ -18,14 +21,29 @@ export function useNodeStopWait(): NodeStopWaitView | null {
   const [wait, setWait] = useState<NodeStopWait | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
-  useEffect(
-    () =>
-      subscribeNodeStopWait((next) => {
-        setWait(next);
+  useEffect(() => {
+    let isSubscribed = true;
+    let hasEvent = false;
+    // The startup stop of a leftover geth can begin before this mounts.
+    getNodeStopWait()
+      .then((initial) => {
+        if (!isSubscribed || hasEvent) return;
+        setWait(initial);
         setNow(Date.now());
-      }),
-    [],
-  );
+      })
+      .catch((err: unknown) => {
+        console.error("[node-stop-wait] Failed to load the stop wait", err);
+      });
+    const unsubscribe = subscribeNodeStopWait((next) => {
+      hasEvent = true;
+      setWait(next);
+      setNow(Date.now());
+    });
+    return () => {
+      isSubscribed = false;
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (!wait) return;

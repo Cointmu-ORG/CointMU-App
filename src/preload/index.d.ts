@@ -221,8 +221,15 @@ interface CointmuAPI {
     getPeerHint: () => Promise<NodePeerHint | null>;
     onSyncStall: (callback: (step: SyncStallStep | null) => void) => () => void;
     getSyncStall: () => Promise<SyncStallStep | null>;
-    /** A quit, restart or update waiting for geth's startup repair; null once it is over. */
+    /**
+     * A quit, restart, update or the startup stop of a leftover geth waiting
+     * for geth's startup repair; null once it is over.
+     */
     onStopWait: (callback: (wait: NodeStopWait | null) => void) => () => void;
+    getStopWait: () => Promise<NodeStopWait | null>;
+    /** True while the launch-time node startup runs (stop a leftover geth, spawn). */
+    isStarting: () => Promise<boolean>;
+    onStartupDone: (callback: () => void) => () => void;
   };
   maintenance: {
     clearCache: () => Promise<void>;

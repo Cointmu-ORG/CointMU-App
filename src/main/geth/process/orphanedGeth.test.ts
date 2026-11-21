@@ -280,6 +280,38 @@ describe.runIf(process.platform === "linux")("stopOrphanedGeth", () => {
     expect(existsSync(join(root, "geth.pid"))).toBe(false);
   });
 
+  it("waits for a repairing geth to open IPC before SIGINT (#156)", async () => {
+    // Like geth 1.10.26: no SIGINT handler until stack.Start opens IPC.
+    const ipcPath = join(root, "geth.ipc");
+    const script = join(root, "repairing-geth.js");
+    await writeFile(
+      script,
+      `const net = require("node:net");
+       setInterval(() => {}, 1000);
+       process.stdout.write("started");
+       setTimeout(() => {
+         process.on("SIGINT", () => process.exit(0));
+         net.createServer((s) => s.on("data", (c) => s.write(JSON.stringify(
+           { jsonrpc: "2.0", id: JSON.parse(String(c)).id, result: {} }) + "\\n")))
+           .listen(${JSON.stringify(ipcPath)});
+       }, 1500);`,
+    );
+    const geth = spawn(
+      join(root, "geth"),
+      [script, "--datadir", join(root, "1912"), "--ipcpath", ipcPath],
+      { stdio: ["ignore", "pipe", "ignore"] },
+    );
+    children.push(geth);
+    await new Promise((resolve) => geth.stdout?.once("data", resolve));
+    const exited = exitSignal(geth);
+    writeGethPidFile(root, geth.pid ?? -1);
+
+    await stopOrphanedGeth(root, SHORT_GRACE_MS);
+
+    expect(await exited).toBeNull();
+    expect(geth.exitCode).toBe(0);
+  });
+
   it("does nothing without a record", async () => {
     await expect(stopOrphanedGeth(root)).resolves.toBeUndefined();
   });

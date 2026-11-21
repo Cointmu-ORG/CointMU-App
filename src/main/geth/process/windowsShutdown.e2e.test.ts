@@ -150,6 +150,29 @@ async function expectReadyAndIsolated(from: number): Promise<void> {
   expect(peers).toEqual([]);
 }
 
+/**
+ * Ends the app's launch-time startup (#158), which gates restartNodeByUser.
+ * A glob, not an import: main lacks nodeStartup.ts, and there the glob is
+ * empty and restarts are not gated.
+ */
+async function openStartupGate(): Promise<void> {
+  const [load] = Object.values(
+    import.meta.glob<{
+      runNodeStartup: (
+        steps: Record<string, () => Promise<void>>,
+      ) => Promise<void>;
+    }>("./nodeStartup.ts"),
+  );
+  const startup = load ? await load() : null;
+  const skip = async (): Promise<void> => undefined;
+  await startup?.runNodeStartup({
+    stopOrphan: skip,
+    initGenesis: skip,
+    prepareIpc: skip,
+    spawn: skip,
+  });
+}
+
 async function startFreshChain(): Promise<void> {
   process.env.GETH_NETWORK_ID = String(TEST_CHAIN_BASE + chainIndex++);
   loadNetworkId();
@@ -303,6 +326,7 @@ describe.runIf(IS_ENABLED)("geth shutdown", () => {
   beforeAll(async () => {
     await mkdir(EVIDENCE_DIR, { recursive: true });
     await prepareGethIpcEndpoint(store);
+    await openStartupGate();
   });
 
   afterAll(async () => {
