@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { interruptGethOnWindows } from "./gethSupervisor";
 import { GETH_READY_MARGIN_MS, GETH_READY_WAIT_MS } from "./gethReadiness";
+import { awaitOrphanInterruptible, orphanIpcPath } from "./orphanReadiness";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
 export const GETH_GRACEFUL_TIMEOUT_MS = 15_000;
@@ -221,6 +222,7 @@ async function waitForExit(pid: number, timeoutMs: number): Promise<boolean> {
 
 /**
  * @param pid - Our orphaned geth or its supervisor.
+ * @param commandLine - Its command line, which names its IPC endpoint.
  * @param method - See orphanStopMethod.
  * @param supervisor - geth-supervisor.exe, for the interrupt method.
  * @returns False when the orphan could not be stopped cleanly and must be
@@ -228,10 +230,16 @@ async function waitForExit(pid: number, timeoutMs: number): Promise<boolean> {
  */
 async function beginOrphanStop(
   pid: number,
+  commandLine: string,
   method: OrphanStopMethod,
   supervisor: string | undefined,
 ): Promise<boolean> {
   if (method === "signal") {
+    // Its watcher may have died with the app: SIGINT only once it is ready.
+    const ipcPath = orphanIpcPath(commandLine, process.platform);
+    if (ipcPath !== null) {
+      await awaitOrphanInterruptible({ ipcPath, isAlive: () => isAlive(pid) });
+    }
     signalProcess(pid, "SIGINT");
     return true;
   }
@@ -274,7 +282,12 @@ export async function stopOrphanedGeth(
   ) {
     console.warn(`[geth:orphan] Stopping geth ${pid} left by a previous run`);
     const method = orphanStopMethod(commandLine, process.platform);
-    const isStopping = await beginOrphanStop(pid, method, supervisor);
+    const isStopping = await beginOrphanStop(
+      pid,
+      commandLine,
+      method,
+      supervisor,
+    );
     const waitMs =
       method === "await-supervisor"
         ? GETH_READY_WAIT_MS +
