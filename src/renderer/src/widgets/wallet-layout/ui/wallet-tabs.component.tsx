@@ -1,8 +1,10 @@
 import {
+  type AddressNameOf,
+  displayAddress,
   getTransactions,
-  shortenAddress,
   toActivityRow,
 } from "@/entities/transaction";
+import { useAddressNameOf } from "@/entities/address-name";
 import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
@@ -56,6 +58,7 @@ function mapPendingToActivity(
   tx: PendingTransaction,
   t: TFunction,
   locale: string,
+  nameOf: AddressNameOf,
 ): ActivityData {
   return {
     id: tx.hash,
@@ -64,7 +67,9 @@ function mapPendingToActivity(
     title: tx.token
       ? t("common:activity.sentToken", { symbol: tx.token.symbol })
       : t("common:activity.sentCmu"),
-    subtitle: t("common:activity.to", { address: shortenAddress(tx.to) }),
+    subtitle: t("common:activity.to", {
+      address: displayAddress(tx.to, nameOf),
+    }),
     amount: tx.amount.toLocaleString("en-US", { maximumFractionDigits: 4 }),
     timestamp: tx.timestamp,
     timestampStr: formatDateTime(tx.timestamp, locale),
@@ -129,13 +134,14 @@ function WalletTabs({
     activeTab === "nfts" ? activeWalletAddress : null,
   );
   const { t, i18n } = useTranslation();
+  const nameOf = useAddressNameOf();
 
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
-    .map((tx) => mapPendingToActivity(tx, t, i18n.language));
+    .map((tx) => mapPendingToActivity(tx, t, i18n.language, nameOf));
   const activities = [
     ...pendingActivities,
-    ...transactions.map((tx) => toActivityRow(tx, t, i18n.language)),
+    ...transactions.map((tx) => toActivityRow(tx, t, i18n.language, nameOf)),
   ];
 
   const itemsPerPage = 10;

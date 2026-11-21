@@ -62,6 +62,23 @@ describe("toActivityRow", () => {
     }
   });
 
+  it("shows a saved name next to the short counterparty address", () => {
+    const nameOf = (address: string): string | undefined =>
+      address === OTHER ? "Alice" : undefined;
+
+    const sent = toActivityRow(BASE, t, "en", nameOf);
+    const received = toActivityRow(
+      { ...BASE, kind: ActivityKind.RECEIVE, from: OTHER, to: ME },
+      t,
+      "en",
+      nameOf,
+    );
+
+    expect(sent.subtitle).toContain('"address":"Alice (0x2222...2222)"');
+    expect(received.subtitle).toContain('"address":"Alice (0x2222...2222)"');
+    expect(sent.to).toBe(OTHER);
+  });
+
   it("puts the age and pluralized confirmations in timestampStr", () => {
     const row = toActivityRow(BASE, t, "en");
 

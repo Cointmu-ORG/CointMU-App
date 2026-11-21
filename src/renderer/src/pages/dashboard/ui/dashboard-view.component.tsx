@@ -1,4 +1,5 @@
 import { getTransactions, toActivityRow } from "@/entities/transaction";
+import { useAddressNameOf } from "@/entities/address-name";
 import type { DerivedAccount } from "@/entities/account";
 import {
   DASHBOARD_TICK_INTERVAL_MS,
@@ -65,6 +66,7 @@ function DashboardPage({
   const balance = useAppStore((s) => s.balance);
   const recentBlocks = useRecentBlocks(blockHeight, isConnected);
   const { t, i18n } = useTranslation(["common", "dashboard"]);
+  const nameOf = useAddressNameOf();
 
   const { config } = useMiningControls();
   const telemetry = useMiningStats(config.cpuThreads);
@@ -106,7 +108,7 @@ function DashboardPage({
 
   // Built every render: the dashboard tick keeps the ages current.
   const activityRows = activity.map((item) =>
-    toActivityRow(item, t, i18n.language),
+    toActivityRow(item, t, i18n.language, nameOf),
   );
   const activityPagination = usePagination(activityRows, ACTIVITY_PAGE_SIZE);
 
