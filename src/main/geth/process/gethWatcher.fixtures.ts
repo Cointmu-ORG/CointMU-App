@@ -3,6 +3,7 @@
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { GETH_READY_LOG } from "./gethReadiness";
 
 // Room for the sh watcher's 1 s poll plus its drain, which restarts cat every
 // 0.1 s on macOS's small socket buffers. Below the per-test timeout, so a stuck
@@ -10,38 +11,53 @@ import { join } from "node:path";
 export const EXIT_TIMEOUT_MS = 8000;
 const POLL_MS = 100;
 
+// Like geth, it takes SIGINT only once it has logged GETH_READY_LOG, after
+// readyDelayMs ("never": it does not); a SIGINT before that ends it at once.
 // On SIGINT it logs 256 KB, more than geth's output socket holds (about 120 KB
 // on Linux, 8-16 KB on macOS), like geth's shutdown log, then records a clean
 // stop. Without a reader on its stderr the write fails (EPIPE here, SIGPIPE
 // for geth) or blocks, and the marker never appears.
 const FAKE_GETH = `
 const fs = require("node:fs");
-const [marker, ignoreSigint] = process.argv.slice(2);
-process.on("SIGINT", () => {
-  if (ignoreSigint === "1") return;
-  const line = Buffer.alloc(1024, "x");
-  for (let i = 0; i < 256; i++) fs.writeSync(2, line);
-  fs.writeFileSync(marker, "clean");
-  process.exit(0);
-});
+const [marker, ignoreSigint, readyDelayMs] = process.argv.slice(2);
+function becomeReady() {
+  fs.writeSync(2, "INFO ${GETH_READY_LOG}\\n");
+  process.on("SIGINT", () => {
+    if (ignoreSigint === "1") return;
+    const line = Buffer.alloc(1024, "x");
+    for (let i = 0; i < 256; i++) fs.writeSync(2, line);
+    fs.writeFileSync(marker, "clean");
+    process.exit(0);
+  });
+}
+if (readyDelayMs === "0") becomeReady();
+else if (readyDelayMs !== "never") setTimeout(becomeReady, Number(readyDelayMs));
 setInterval(() => {}, 1000);
 process.stdout.write("ready");
 `;
 
 // Plays the app's main process: spawns geth with piped output it reads, and
-// the watcher with the same stdio layout as startGethWatcher (watcherStdio).
+// the watcher with the same stdio layout as startGethWatcher (watcherStdio),
+// and reports geth ready to it like reportGethReady.
 const FAKE_MAIN = `
 const { spawn } = require("node:child_process");
-const [command, fakeGeth, marker, graceMs] = process.argv.slice(2);
+const [command, fakeGeth, marker, graceMs, readyWaitMs] = process.argv.slice(2);
 const { file, args, env } = JSON.parse(command);
-const geth = spawn(process.execPath, [fakeGeth, marker, "0"], { stdio: ["ignore", "pipe", "pipe"] });
-geth.stderr.resume();
+const geth = spawn(process.execPath, [fakeGeth, marker, "0", "0"], { stdio: ["ignore", "pipe", "pipe"] });
+let isReady = false;
+let watcher = null;
+geth.stderr.on("data", (data) => {
+  if (isReady || !data.includes("${GETH_READY_LOG}")) return;
+  isReady = true;
+  watcher?.stdin.write("\\n");
+});
 geth.stdout.once("data", () => {
   geth.stdout.resume();
-  spawn(file, [...args, String(geth.pid), graceMs], {
+  watcher = spawn(file, [...args, String(geth.pid), graceMs, readyWaitMs], {
     env,
     stdio: ["pipe", "ignore", "ignore", geth.stdout, geth.stderr],
   });
+  if (isReady) watcher.stdin.write("\\n");
   process.stdout.write(String(geth.pid));
 });
 setInterval(() => {}, 1000);

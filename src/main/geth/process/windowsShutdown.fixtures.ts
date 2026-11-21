@@ -42,6 +42,7 @@ export interface FakeMainLaunch {
   /** Outside Windows: the sh watcher the app starts next to geth. */
   watcher: { file: string; args: string[]; env: NodeJS.ProcessEnv } | null;
   graceMs: number;
+  readyWaitMs: number;
 }
 
 interface LaunchModule {
@@ -50,6 +51,7 @@ interface LaunchModule {
     gethArgs: string[];
     platform: NodeJS.Platform;
     graceMs: number;
+    readyWaitMs: number;
   }) => { file: string; args: string[]; isSupervised: boolean };
 }
 
@@ -60,13 +62,15 @@ interface LaunchModule {
  * @param binaryPath - geth.
  * @param gethArgs - Its arguments.
  * @param graceMs - The grace period.
+ * @param readyWaitMs - The ready wait (gethReadiness.ts); main ignores it.
  * @returns How to start geth.
  */
 export async function appLaunch(
   binaryPath: string,
   gethArgs: string[],
   graceMs: number,
-): Promise<Omit<FakeMainLaunch, "watcher" | "graceMs">> {
+  readyWaitMs: number,
+): Promise<Omit<FakeMainLaunch, "watcher" | "graceMs" | "readyWaitMs">> {
   if (!existsSync(join(__dirname, "gethSupervisor.ts"))) {
     return { file: binaryPath, args: gethArgs, isSupervised: false };
   }
@@ -77,13 +81,16 @@ export async function appLaunch(
     gethArgs,
     platform: process.platform,
     graceMs,
+    readyWaitMs,
   });
 }
 
 // Plays the app's main process: spawns geth (or the supervisor) like
 // spawnGethProcess, and the sh watcher outside Windows. Their output is fd 3,
 // a pipe the test reads, so geth's shutdown log is still captured once this
-// process is gone.
+// process is gone. The test ends it only once geth is ready, so it reports
+// geth ready to the watcher (reportGethReady) at once; main's watcher ignores
+// that line and the extra argument.
 export const FAKE_MAIN = `
 const { spawn } = require("node:child_process");
 const plan = JSON.parse(process.argv[2]);
@@ -94,10 +101,12 @@ const child = spawn(plan.file, plan.args, {
   env: process.env,
 });
 if (plan.watcher) {
-  spawn(plan.watcher.file, [...plan.watcher.args, String(child.pid), String(plan.graceMs)], {
-    env: plan.watcher.env,
-    stdio: ["pipe", "ignore", "ignore", 3, 3],
-  });
+  const watcher = spawn(
+    plan.watcher.file,
+    [...plan.watcher.args, String(child.pid), String(plan.graceMs), String(plan.readyWaitMs)],
+    { env: plan.watcher.env, stdio: ["pipe", "ignore", "ignore", 3, 3] },
+  );
+  watcher.stdin.write("\\n");
 }
 process.stdout.write(String(child.pid));
 setInterval(() => {}, 1000);

@@ -12,7 +12,7 @@ const CLOSE_ACTION_KEY = "general.closeAction";
 /**
  * @param win - The main window.
  */
-function showWindow(win: BrowserWindow): void {
+export function showWindow(win: BrowserWindow): void {
   if (win.isDestroyed()) return;
   if (win.isMinimized()) win.restore();
   win.show();

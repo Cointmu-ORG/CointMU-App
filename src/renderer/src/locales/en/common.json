@@ -92,7 +92,8 @@
     "quitConfirmNeverAsk": "Don't ask again",
     "autoStartTitle": "Mining starts in {{seconds}} seconds",
     "autoStartBody": "Start mining at launch is on. Open CointMU to cancel it for this session.",
-    "autoStartCancel": "Cancel"
+    "autoStartCancel": "Cancel",
+    "trayStopWaiting": "Node is repairing data; waiting to stop safely"
   },
   "update": {
     "readyTitle": "Update ready",
@@ -104,5 +105,10 @@
     "hideAmounts": "Hide balances",
     "showAmounts": "Show balances",
     "hiddenAmount": "Hidden amount"
+  },
+  "nodeStopWait": {
+    "title": "The node is repairing its data and is waiting until it can stop safely…",
+    "body": "Don't force-close the app: stopping the node now would rewind the chain.",
+    "elapsed": "Waiting {{elapsed}} (max {{max}})"
   }
 }

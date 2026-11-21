@@ -8,12 +8,14 @@ import (
 
 func TestParseRun(t *testing.T) {
 	got, err := parseArgs([]string{
-		"run", "--grace-ms", "15000", "--", `C:\a b\geth.exe`, "--datadir", `C:\d`,
+		"run", "--grace-ms", "15000", "--ready-wait-ms", "300000",
+		"--", `C:\a b\geth.exe`, "--datadir", `C:\d`,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if got.name != commandRun || got.grace != 15*time.Second ||
+		got.readyWait != 5*time.Minute ||
 		!slices.Equal(got.argv, []string{`C:\a b\geth.exe`, "--datadir", `C:\d`}) {
 		t.Errorf("got %+v", got)
 	}
@@ -37,9 +39,11 @@ func TestParseRejects(t *testing.T) {
 		{"interrupt", "0"},
 		{"interrupt", "-1"},
 		{"interrupt", "12", "13"},
-		{"run", "--grace-ms", "15000", "--"},
-		{"run", "--grace-ms", "15000", "geth.exe"},
-		{"run", "--grace-ms", "soon", "--", "geth.exe"},
+		{"run", "--grace-ms", "15000", "--ready-wait-ms", "1", "--"},
+		{"run", "--grace-ms", "15000", "--ready-wait-ms", "1", "geth.exe"},
+		{"run", "--grace-ms", "soon", "--ready-wait-ms", "1", "--", "geth.exe"},
+		{"run", "--grace-ms", "15000", "--ready-wait-ms", "soon", "--", "geth.exe"},
+		{"run", "--grace-ms", "15000", "--", "geth.exe"},
 		{"run", "--", "geth.exe"},
 	}
 	for _, args := range cases {
