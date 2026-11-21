@@ -8,7 +8,8 @@
     "accounts": "Konten",
     "importWallet": "+ Wallet importieren",
     "manageHidden": "Versteckte Konten verwalten",
-    "hideAccount": "Konto ausblenden"
+    "hideAccount": "Konto ausblenden",
+    "addressNames": "Adressnamen"
   },
   "activity": {
     "pending": "Ausstehend"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "Übertragung von {{asset}} an {{to}} konnte nicht bestätigt werden",
       "passwordLabel": "Wallet-Passwort",
       "passwordRequired": "Gib dein Wallet-Passwort ein, um zu senden.",
-      "continueBtn": "Weiter"
+      "continueBtn": "Weiter",
+      "recipientName": "Gespeichert als {{name}}"
     },
     "sendConfirm": {
       "title": "Senden bestätigen",
@@ -152,6 +154,22 @@
           "saveFailed": "Das Logo konnte nicht gespeichert werden. Versuche es erneut."
         }
       }
+    },
+    "addressNames": {
+      "title": "Adressnamen",
+      "subtitle": "Gib Adressen einen Namen, den du wiedererkennst. Namen sind nur Bezeichnungen auf diesem Gerät: Gesendet wird immer an die vollständige Adresse.",
+      "addressLabel": "Adresse",
+      "nameLabel": "Name",
+      "save": "Name speichern",
+      "empty": "Noch keine gespeicherten Namen.",
+      "edit": "{{name}} bearbeiten",
+      "remove": "{{name}} entfernen",
+      "errors": {
+        "invalidAddress": "Gib eine gültige 0x-Adresse ein.",
+        "invalidName": "Gib einen Namen mit 1 bis 32 Zeichen ein.",
+        "ownAccount": "Das ist eines deiner Konten. Benenne es auf der Kontokarte um.",
+        "saveFailed": "Der Name konnte nicht gespeichert werden. Versuche es erneut."
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "Die Transaktion wurde vom Contract rückgängig gemacht.",
     "rejected": "Transaktion abgelehnt.",
     "nodeRejected": "Der Node hat die Transaktion abgelehnt. Prüfe die Empfängeradresse."
+  },
+  "accountLabel": {
+    "edit": "Konto umbenennen",
+    "inputLabel": "Kontoname",
+    "save": "Name speichern",
+    "cancel": "Abbrechen",
+    "invalid": "Gib einen Namen mit 1 bis 32 Zeichen ein.",
+    "saveFailed": "Der Name konnte nicht gespeichert werden. Versuche es erneut."
   }
 }

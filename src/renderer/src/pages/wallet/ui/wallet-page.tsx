@@ -111,6 +111,17 @@ function WalletPage({
     setAccounts(updatedAccounts);
   };
 
+  const handleRenameAccount = async (
+    address: string,
+    label: string,
+  ): Promise<void> => {
+    const updatedAccounts = accounts.map((acc) =>
+      acc.address === address ? { ...acc, label } : acc,
+    );
+    await setSetting("accounts", updatedAccounts);
+    setAccounts(updatedAccounts);
+  };
+
   const handleDeleteAccount = async (address: string): Promise<void> => {
     const updatedAccounts = accounts.filter((acc) => acc.address !== address);
     await setSetting("accounts", updatedAccounts);
@@ -273,6 +284,7 @@ function WalletPage({
               useWalletUiStore.getState().setAddAccountType("IMPORT_PK");
             }}
             onManageHidden={() => setModalState("MANAGE_HIDDEN")}
+            onManageAddressNames={() => setModalState("ADDRESS_NAMES")}
           />
 
           <div className="flex-1 min-w-0 space-y-5">
@@ -283,6 +295,7 @@ function WalletPage({
               onReceive={() => setModalState("RECEIVE")}
               onSend={() => setModalState("SEND")}
               onCopy={handleCopy}
+              onRename={handleRenameAccount}
             />
 
             <WalletTabs

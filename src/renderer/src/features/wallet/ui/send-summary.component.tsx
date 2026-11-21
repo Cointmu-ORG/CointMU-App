@@ -38,7 +38,7 @@ function formatTotal(summary: SendSummaryData): string {
 
 /**
  * Read-only review of a send: sender, full recipient address with its
- * identicon, amount, asset, fee and total. Amounts are never masked by
+ * identicon and saved name, amount, asset, fee and total. Amounts are never masked by
  * privacy mode, so the user can verify exactly what will be signed.
  * @param props.summary - The values copied from the send form.
  * @returns The summary block.
@@ -70,9 +70,16 @@ function SendSummary({ summary }: { summary: SendSummaryData }): JSX.Element {
           <span className="shrink-0 rounded-full overflow-hidden">
             <AccountIcon address={summary.toAddress} size={RECIPIENT_ICON_PX} />
           </span>
-          <p className="text-xs font-mono font-semibold text-slate-800 dark:text-gray-100 break-all leading-relaxed">
-            {summary.toAddress}
-          </p>
+          <div className="min-w-0">
+            {summary.toName !== undefined && (
+              <p className="text-sm font-bold text-slate-800 dark:text-gray-100 truncate">
+                {summary.toName}
+              </p>
+            )}
+            <p className="text-xs font-mono font-semibold text-slate-800 dark:text-gray-100 break-all leading-relaxed">
+              {summary.toAddress}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -8,7 +8,8 @@
     "accounts": "Akun",
     "importWallet": "+ Impor dompet",
     "manageHidden": "Kelola akun tersembunyi",
-    "hideAccount": "Sembunyikan akun"
+    "hideAccount": "Sembunyikan akun",
+    "addressNames": "Nama alamat"
   },
   "activity": {
     "pending": "Tertunda"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi",
       "passwordLabel": "Password wallet",
       "passwordRequired": "Masukkan password wallet untuk mengirim.",
-      "continueBtn": "Lanjut"
+      "continueBtn": "Lanjut",
+      "recipientName": "Tersimpan sebagai {{name}}"
     },
     "sendConfirm": {
       "title": "Konfirmasi pengiriman",
@@ -152,6 +154,22 @@
           "saveFailed": "Logo tidak dapat disimpan. Coba lagi."
         }
       }
+    },
+    "addressNames": {
+      "title": "Nama alamat",
+      "subtitle": "Beri nama yang mudah dikenali untuk alamat. Nama hanya label di perangkat ini: pengiriman selalu ke alamat lengkap.",
+      "addressLabel": "Alamat",
+      "nameLabel": "Nama",
+      "save": "Simpan nama",
+      "empty": "Belum ada nama tersimpan.",
+      "edit": "Ubah {{name}}",
+      "remove": "Hapus {{name}}",
+      "errors": {
+        "invalidAddress": "Masukkan alamat 0x yang valid.",
+        "invalidName": "Masukkan nama 1 sampai 32 karakter.",
+        "ownAccount": "Ini salah satu akun Anda. Ganti namanya di kartu akun.",
+        "saveFailed": "Nama tidak dapat disimpan. Coba lagi."
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "Transaksi dibatalkan (revert) oleh kontrak.",
     "rejected": "Transaksi ditolak.",
     "nodeRejected": "Node menolak transaksi. Periksa alamat penerima."
+  },
+  "accountLabel": {
+    "edit": "Ganti nama akun",
+    "inputLabel": "Nama akun",
+    "save": "Simpan nama",
+    "cancel": "Batal",
+    "invalid": "Masukkan nama 1 sampai 32 karakter.",
+    "saveFailed": "Nama tidak dapat disimpan. Coba lagi."
   }
 }

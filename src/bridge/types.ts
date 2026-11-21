@@ -512,5 +512,5 @@ export interface DetectedNfts {
   readonly scan: TokenScanProgress;
 }
 
-/** Custom logos by asset key: "native" or a lowercase contract address. */
+/** Custom logos by lowercase contract address; the native CMU logo is fixed. */
 export type AssetLogos = Readonly<Record<string, string>>;

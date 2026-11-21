@@ -19,7 +19,8 @@ interface TokenDetailModalProps {
 /**
  * Details of one asset: name, symbol, contract and balance. Tokens carry a
  * light warning that anyone can deploy one and copy another's name, and can
- * be hidden from here. Every asset, CMU included, can get a custom logo. Contract text is rendered as plain text only.
+ * be hidden from here and get a custom logo; CMU keeps the official logo.
+ * Contract text is rendered as plain text only.
  * @param props - The asset and the modal actions.
  * @returns The modal.
  */
@@ -118,7 +119,9 @@ function TokenDetailModal({
             </div>
           )}
 
-          <AssetLogoEditor assetKey={asset.address} symbol={asset.symbol} />
+          {!isNative && (
+            <AssetLogoEditor assetKey={asset.address} symbol={asset.symbol} />
+          )}
 
           {!isNative && (
             <button

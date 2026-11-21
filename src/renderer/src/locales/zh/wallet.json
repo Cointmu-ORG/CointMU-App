@@ -8,7 +8,8 @@
     "accounts": "账户",
     "importWallet": "+ 导入钱包",
     "manageHidden": "管理隐藏账户",
-    "hideAccount": "隐藏账户"
+    "hideAccount": "隐藏账户",
+    "addressNames": "地址名称"
   },
   "activity": {
     "pending": "待处理"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认",
       "passwordLabel": "钱包密码",
       "passwordRequired": "请输入钱包密码后再发送。",
-      "continueBtn": "继续"
+      "continueBtn": "继续",
+      "recipientName": "已保存为 {{name}}"
     },
     "sendConfirm": {
       "title": "确认发送",
@@ -152,6 +154,22 @@
           "saveFailed": "无法保存标志,请重试。"
         }
       }
+    },
+    "addressNames": {
+      "title": "地址名称",
+      "subtitle": "为地址设置易于识别的名称。名称仅是本设备上的标签：转账始终发送到完整地址。",
+      "addressLabel": "地址",
+      "nameLabel": "名称",
+      "save": "保存名称",
+      "empty": "尚无已保存的名称。",
+      "edit": "编辑 {{name}}",
+      "remove": "删除 {{name}}",
+      "errors": {
+        "invalidAddress": "请输入有效的 0x 地址。",
+        "invalidName": "请输入 1 到 32 个字符的名称。",
+        "ownAccount": "这是你的账户之一。请在账户卡片上重命名。",
+        "saveFailed": "无法保存名称。请重试。"
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "交易被合约回滚。",
     "rejected": "交易已被拒绝。",
     "nodeRejected": "节点拒绝了交易。请检查收款地址。"
+  },
+  "accountLabel": {
+    "edit": "重命名账户",
+    "inputLabel": "账户名称",
+    "save": "保存名称",
+    "cancel": "取消",
+    "invalid": "请输入 1 到 32 个字符的名称。",
+    "saveFailed": "无法保存名称。请重试。"
   }
 }

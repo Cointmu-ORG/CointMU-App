@@ -8,7 +8,8 @@
     "accounts": "アカウント",
     "importWallet": "+ ウォレットをインポート",
     "manageHidden": "非表示アカウントの管理",
-    "hideAccount": "アカウントを非表示"
+    "hideAccount": "アカウントを非表示",
+    "addressNames": "アドレス名"
   },
   "activity": {
     "pending": "保留中"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした",
       "passwordLabel": "ウォレットのパスワード",
       "passwordRequired": "送金するにはウォレットのパスワードを入力してください。",
-      "continueBtn": "次へ"
+      "continueBtn": "次へ",
+      "recipientName": "{{name}} として保存済み"
     },
     "sendConfirm": {
       "title": "送金の確認",
@@ -152,6 +154,22 @@
           "saveFailed": "ロゴを保存できませんでした。もう一度お試しください。"
         }
       }
+    },
+    "addressNames": {
+      "title": "アドレス名",
+      "subtitle": "アドレスに分かりやすい名前を付けます。名前はこのデバイス上のラベルにすぎず、送金は常に完全なアドレス宛てに行われます。",
+      "addressLabel": "アドレス",
+      "nameLabel": "名前",
+      "save": "名前を保存",
+      "empty": "保存された名前はまだありません。",
+      "edit": "{{name}} を編集",
+      "remove": "{{name}} を削除",
+      "errors": {
+        "invalidAddress": "有効な 0x アドレスを入力してください。",
+        "invalidName": "1〜32 文字の名前を入力してください。",
+        "ownAccount": "これはあなたのアカウントです。アカウントカードで名前を変更してください。",
+        "saveFailed": "名前を保存できませんでした。もう一度お試しください。"
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "トランザクションはコントラクトによってリバートされました。",
     "rejected": "トランザクションは拒否されました。",
     "nodeRejected": "ノードがトランザクションを拒否しました。受取人アドレスを確認してください。"
+  },
+  "accountLabel": {
+    "edit": "アカウント名を変更",
+    "inputLabel": "アカウント名",
+    "save": "名前を保存",
+    "cancel": "キャンセル",
+    "invalid": "1〜32 文字の名前を入力してください。",
+    "saveFailed": "名前を保存できませんでした。もう一度お試しください。"
   }
 }

@@ -1,5 +1,6 @@
 import { dispatchNotification } from "@/entities/notification";
 import type { DerivedAccount } from "@/entities/account";
+import { useAddressNameOf } from "@/entities/address-name";
 import {
   GAS_ESTIMATION_DEBOUNCE_MS,
   GAS_BUFFER_MULTIPLIER,
@@ -70,6 +71,19 @@ function formatGasFee(gasLimit: bigint, gasPriceHex: string): string {
 }
 
 /**
+ * @returns The wallet's own label for the recipient, else its saved name.
+ */
+function nameRecipient(
+  recipient: string,
+  accounts: readonly DerivedAccount[],
+  nameOf: (address: string) => string | undefined,
+): string | undefined {
+  const key = recipient.trim().toLowerCase();
+  const own = accounts.find((a) => a.address.toLowerCase() === key);
+  return own ? own.label : nameOf(key);
+}
+
+/**
  * Applies a 20% buffer to a gas estimate to reduce the risk of out-of-gas errors.
  * @param estimate - The raw gas estimate from the provider.
  * @returns The buffered gas limit as a bigint.
@@ -114,6 +128,9 @@ function SendModal({
     (s) => s.removePendingTransaction,
   );
   const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats);
+  // A label only: the send below still goes to the address typed in.
+  const nameOf = useAddressNameOf();
+  const recipientName = nameRecipient(sendTo, accounts, nameOf);
 
   const { assets } = useWalletAssets(activeWalletAddress);
   // Settings → Security; on (the default) until the stored value says off.
@@ -436,6 +453,7 @@ function SendModal({
           fromLabel: activeAccount.label,
           fromAddress: activeAccount.address,
           toAddress: sendTo,
+          toName: recipientName,
           amount: sendAmount,
           symbol: selectedToken ? assetLabel(selectedToken) : "CMU",
           tokenAddress: selectedToken?.address ?? NATIVE_ASSET_ADDRESS,
@@ -566,6 +584,11 @@ function SendModal({
             placeholder="0x..."
             className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white dark:focus:bg-gray-900 dark:text-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           />
+          {recipientName !== undefined && (
+            <p className="mt-1.5 text-xs font-semibold text-slate-500 dark:text-gray-400 truncate">
+              {t("wallet:modals.send.recipientName", { name: recipientName })}
+            </p>
+          )}
         </div>
 
         <div>

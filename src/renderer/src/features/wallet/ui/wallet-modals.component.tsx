@@ -6,6 +6,7 @@ import { ReceiveModal } from "./receive-modal.component";
 import { SendModal } from "./send-modal.component";
 import { AddAccountModal } from "./add-account-modal.component";
 import { ManageHiddenModal } from "./manage-hidden-modal.component";
+import { AddressNamesModal } from "./address-names-modal.component";
 
 interface WalletModalsProps {
   accounts: DerivedAccount[];
@@ -90,6 +91,10 @@ function WalletModals({
             onUnhideAccount={onUnhideAccount}
             onDeleteAccount={onDeleteAccount}
           />
+        )}
+
+        {modalState === "ADDRESS_NAMES" && (
+          <AddressNamesModal ownAddresses={accounts.map((a) => a.address)} />
         )}
       </div>
     </div>

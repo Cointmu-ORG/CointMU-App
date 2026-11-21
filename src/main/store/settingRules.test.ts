@@ -17,6 +17,16 @@ describe("findInvalidSetting", () => {
     );
   });
 
+  it("validates the whole address name map", () => {
+    const address = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    expect(
+      findInvalidSetting("addressNames", { [address]: "Alice" }),
+    ).toBeNull();
+    expect(findInvalidSetting("addressNames", { [address]: "" })).toBe(
+      "addressNames",
+    );
+  });
+
   it("ignores keys a section write leaves out, and unruled keys", () => {
     expect(findInvalidSetting("general", { currency: "usd" })).toBeNull();
     expect(findInvalidSetting("network.maxPeers", "anything")).toBeNull();

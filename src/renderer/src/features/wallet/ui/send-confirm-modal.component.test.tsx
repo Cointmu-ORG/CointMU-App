@@ -34,12 +34,14 @@ let container: HTMLDivElement;
 let root: Root;
 
 interface RenderOptions {
+  summary?: SendSummary;
   isPasswordRequired: boolean;
   onConfirm: (password: string) => Promise<SendConfirmResult>;
   onBack?: () => void;
 }
 
 function render({
+  summary = SUMMARY,
   isPasswordRequired,
   onConfirm,
   onBack,
@@ -47,7 +49,7 @@ function render({
   act(() => {
     root.render(
       <SendConfirmModal
-        summary={SUMMARY}
+        summary={summary}
         isPasswordRequired={isPasswordRequired}
         onBack={onBack ?? vi.fn()}
         onConfirm={onConfirm}
@@ -105,6 +107,16 @@ describe("SendConfirmModal", () => {
     expect(container.textContent).toContain(SUMMARY.toAddress);
     expect(container.textContent).toContain("1.5");
     expect(container.textContent).toContain("1.500021 CMU");
+  });
+
+  it("shows the saved recipient name above the full address", () => {
+    render({
+      summary: { ...SUMMARY, toName: "Alice" },
+      isPasswordRequired: false,
+      onConfirm: vi.fn(),
+    });
+
+    expect(container.textContent).toContain(`Alice${SUMMARY.toAddress}`);
   });
 
   it("has no password field when the setting is off, and focuses confirm", () => {

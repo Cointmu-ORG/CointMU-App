@@ -5,6 +5,7 @@ import {
   AUTO_LOCK_MINUTE_OPTIONS,
   CLIPBOARD_CLEAR_SECOND_OPTIONS,
 } from "../../bridge/setting-values";
+import { ADDRESS_NAMES_KEY, isAddressNames } from "../../bridge/address-names";
 
 /** Where the chain data lives; "" is the default folder. Only the move writes it. */
 export const CHAIN_DATA_ROOT_KEY = "chainDataRoot";
@@ -78,6 +79,7 @@ export const SETTING_RULES: Readonly<Record<string, SettingRule>> = {
     fallback: 100,
     isValid: isOneOf(ZOOM_PERCENT_OPTIONS),
   },
+  [ADDRESS_NAMES_KEY]: { fallback: {}, isValid: isAddressNames },
   [CHAIN_DATA_ROOT_KEY]: {
     fallback: "",
     isValid: (value) => typeof value === "string",

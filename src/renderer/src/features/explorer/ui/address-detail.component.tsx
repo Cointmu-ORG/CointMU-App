@@ -1,4 +1,5 @@
 import { getTransactions, toActivityRow } from "@/entities/transaction";
+import { useAddressNameOf } from "@/entities/address-name";
 import { AccountIcon, type DerivedAccount } from "@/entities/account";
 import {
   ADDRESS_TX_PAGE_SIZE,
@@ -68,9 +69,10 @@ function AddressDetail({
     };
   }, [address]);
 
+  const nameOf = useAddressNameOf();
   const transactions = useMemo(
-    () => activity.map((tx) => toActivityRow(tx, t, i18n.language)),
-    [activity, t, i18n.language],
+    () => activity.map((tx) => toActivityRow(tx, t, i18n.language, nameOf)),
+    [activity, t, i18n.language, nameOf],
   );
 
   const chartData = useMemo(() => {

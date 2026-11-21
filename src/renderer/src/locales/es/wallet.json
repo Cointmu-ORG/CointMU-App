@@ -8,7 +8,8 @@
     "accounts": "Cuentas",
     "importWallet": "+ Importar billetera",
     "manageHidden": "Gestionar cuentas ocultas",
-    "hideAccount": "Ocultar cuenta"
+    "hideAccount": "Ocultar cuenta",
+    "addressNames": "Nombres de direcciones"
   },
   "activity": {
     "pending": "Pendiente"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada",
       "passwordLabel": "Contraseña de la billetera",
       "passwordRequired": "Introduce la contraseña de la billetera para enviar.",
-      "continueBtn": "Continuar"
+      "continueBtn": "Continuar",
+      "recipientName": "Guardado como {{name}}"
     },
     "sendConfirm": {
       "title": "Confirmar envío",
@@ -152,6 +154,22 @@
           "saveFailed": "No se pudo guardar el logo. Inténtalo de nuevo."
         }
       }
+    },
+    "addressNames": {
+      "title": "Nombres de direcciones",
+      "subtitle": "Pon a las direcciones un nombre que reconozcas. Los nombres son solo etiquetas en este dispositivo: un envío siempre va a la dirección completa.",
+      "addressLabel": "Dirección",
+      "nameLabel": "Nombre",
+      "save": "Guardar nombre",
+      "empty": "Aún no hay nombres guardados.",
+      "edit": "Editar {{name}}",
+      "remove": "Quitar {{name}}",
+      "errors": {
+        "invalidAddress": "Introduce una dirección 0x válida.",
+        "invalidName": "Introduce un nombre de 1 a 32 caracteres.",
+        "ownAccount": "Es una de tus cuentas. Cámbiale el nombre en la tarjeta de la cuenta.",
+        "saveFailed": "No se pudo guardar el nombre. Inténtalo de nuevo."
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "El contrato revirtió la transacción.",
     "rejected": "Transacción rechazada.",
     "nodeRejected": "El nodo rechazó la transacción. Revisa la dirección del destinatario."
+  },
+  "accountLabel": {
+    "edit": "Cambiar nombre de la cuenta",
+    "inputLabel": "Nombre de la cuenta",
+    "save": "Guardar nombre",
+    "cancel": "Cancelar",
+    "invalid": "Introduce un nombre de 1 a 32 caracteres.",
+    "saveFailed": "No se pudo guardar el nombre. Inténtalo de nuevo."
   }
 }

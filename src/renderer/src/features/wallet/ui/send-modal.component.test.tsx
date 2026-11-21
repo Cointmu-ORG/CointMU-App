@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { GAS_ESTIMATION_DEBOUNCE_MS } from "../config/wallet.constants";
 import { useWalletUiStore } from "../model/wallet-ui.store";
+import { useAddressNameStore } from "@/entities/address-name";
 import { SendModal } from "./send-modal.component";
 
 const wallet = vi.hoisted(() => ({
@@ -144,6 +145,7 @@ beforeEach(() => {
   wallet.getSetting.mockResolvedValue(undefined);
   useWalletUiStore.getState().resetSendForm();
   useWalletUiStore.setState({ sendGasPrice: GAS_PRICE_HEX });
+  useAddressNameStore.setState({ isLoaded: true, names: {} });
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
@@ -202,6 +204,32 @@ describe("SendModal two-step flow", () => {
     expect(wallet.executeNativeTransfer).not.toHaveBeenCalled();
     expect(useWalletUiStore.getState().sendLoading).toBe(false);
     expect(useWalletUiStore.getState().sendTo).toBe(RECIPIENT);
+  });
+
+  it("labels a named recipient but sends to its exact address", async () => {
+    wallet.getSetting.mockResolvedValue(false);
+    wallet.resolveWallet.mockResolvedValue({});
+    wallet.executeNativeTransfer.mockResolvedValue("0xhash");
+    useAddressNameStore.setState({
+      isLoaded: true,
+      names: { [RECIPIENT]: "Alice" },
+    });
+    await renderFilledForm();
+
+    expect(container.textContent).toContain("wallet:modals.send.recipientName");
+    click(buttonByText("wallet:modals.send.continueBtn"));
+    expect(dialog()!.textContent).toContain(`Alice${RECIPIENT}`);
+    await act(async () => dialog()!.requestSubmit());
+
+    expect(wallet.executeNativeTransfer).toHaveBeenCalledWith(
+      expect.anything(),
+      RECIPIENT,
+      "1.5",
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
   });
 
   it("skips the password field when the setting is off", async () => {

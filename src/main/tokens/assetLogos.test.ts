@@ -5,6 +5,7 @@ import {
   AssetLogoStore,
   MAX_LOGO_DATA_URL_CHARS,
   MAX_LOGO_ENTRIES,
+  NATIVE_ASSET_KEY,
   isLogoDataUrl,
 } from "./assetLogos";
 
@@ -39,11 +40,27 @@ describe("AssetLogoStore", () => {
   it("stores, lists and resets a logo per asset key", () => {
     const logos = new AssetLogoStore(memoryStore());
 
+    const other = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
     logos.set(TOKEN, PNG);
-    logos.set("native", PNG);
+    logos.set(other, PNG);
     logos.reset(TOKEN);
 
-    expect(logos.getAll()).toEqual({ native: PNG });
+    expect(logos.getAll()).toEqual({ [other]: PNG });
+  });
+
+  it("refuses to save or reset the native CMU logo", () => {
+    const logos = new AssetLogoStore(memoryStore());
+
+    expect(() => logos.set(NATIVE_ASSET_KEY, PNG)).toThrow(TypeError);
+    expect(() => logos.reset(NATIVE_ASSET_KEY)).toThrow(TypeError);
+    expect(logos.getAll()).toEqual({});
+  });
+
+  it("drops a native logo stored before it was locked", () => {
+    const store = memoryStore();
+    store.set("logos", { [NATIVE_ASSET_KEY]: PNG, [TOKEN]: PNG });
+
+    expect(new AssetLogoStore(store).getAll()).toEqual({ [TOKEN]: PNG });
   });
 
   it("refuses unknown keys and invalid images", () => {

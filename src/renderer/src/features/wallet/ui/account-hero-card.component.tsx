@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowUp, ArrowDown, Check, Copy } from "lucide-react";
 import { PrivateAmount } from "@/shared/ui";
+import { AccountLabelEditor } from "./account-label-editor.component";
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined;
@@ -12,6 +13,7 @@ interface AccountHeroCardProps {
   onReceive: () => void;
   onSend: () => void;
   onCopy: () => void;
+  onRename: (address: string, label: string) => Promise<void>;
 }
 
 /**
@@ -27,6 +29,7 @@ function AccountHeroCard({
   onReceive,
   onSend,
   onCopy,
+  onRename,
 }: AccountHeroCardProps): JSX.Element {
   const { t } = useTranslation();
 
@@ -42,9 +45,13 @@ function AccountHeroCard({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-white">
-                  {activeAccount?.label}
-                </p>
+                {activeAccount && (
+                  <AccountLabelEditor
+                    key={activeAccount.address}
+                    label={activeAccount.label}
+                    onRename={(label) => onRename(activeAccount.address, label)}
+                  />
+                )}
                 <span className="text-[9px] font-semibold tracking-wider uppercase text-white/50 bg-white/10 px-1.5 py-0.5 rounded">
                   EOA
                 </span>

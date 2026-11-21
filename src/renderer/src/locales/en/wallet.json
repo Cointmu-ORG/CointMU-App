@@ -8,7 +8,8 @@
     "accounts": "Accounts",
     "importWallet": "+ Import wallet",
     "manageHidden": "Manage hidden accounts",
-    "hideAccount": "Hide account"
+    "hideAccount": "Hide account",
+    "addressNames": "Address names"
   },
   "activity": {
     "pending": "Pending"
@@ -97,7 +98,8 @@
       "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed",
       "passwordLabel": "Wallet password",
       "passwordRequired": "Enter your wallet password to send.",
-      "continueBtn": "Continue"
+      "continueBtn": "Continue",
+      "recipientName": "Saved as {{name}}"
     },
     "sendConfirm": {
       "title": "Confirm send",
@@ -152,6 +154,22 @@
           "saveFailed": "The logo could not be saved. Try again."
         }
       }
+    },
+    "addressNames": {
+      "title": "Address names",
+      "subtitle": "Give addresses a name you recognize. Names are labels on this device only: a send always goes to the full address.",
+      "addressLabel": "Address",
+      "nameLabel": "Name",
+      "save": "Save name",
+      "empty": "No saved names yet.",
+      "edit": "Edit {{name}}",
+      "remove": "Remove {{name}}",
+      "errors": {
+        "invalidAddress": "Enter a valid 0x address.",
+        "invalidName": "Enter a name of 1 to 32 characters.",
+        "ownAccount": "This is one of your accounts. Rename it on the account card.",
+        "saveFailed": "The name could not be saved. Try again."
+      }
     }
   },
   "historyFilter": {
@@ -167,5 +185,13 @@
     "reverted": "Transaction reverted by the contract.",
     "rejected": "Transaction rejected.",
     "nodeRejected": "Node rejected the transaction. Check the recipient address."
+  },
+  "accountLabel": {
+    "edit": "Rename account",
+    "inputLabel": "Account name",
+    "save": "Save name",
+    "cancel": "Cancel",
+    "invalid": "Enter a name of 1 to 32 characters.",
+    "saveFailed": "The name could not be saved. Try again."
   }
 }
