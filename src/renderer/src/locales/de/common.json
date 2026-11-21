@@ -92,7 +92,8 @@
     "quitConfirmNeverAsk": "Nicht mehr fragen",
     "autoStartTitle": "Mining startet in {{seconds}} Sekunden",
     "autoStartBody": "„Mining beim Start“ ist an. Öffne CointMU, um es für diese Sitzung abzubrechen.",
-    "autoStartCancel": "Abbrechen"
+    "autoStartCancel": "Abbrechen",
+    "trayStopWaiting": "Node repariert Daten; wartet auf sicheres Beenden"
   },
   "update": {
     "readyTitle": "Update bereit",
@@ -104,5 +105,10 @@
     "hideAmounts": "Guthaben ausblenden",
     "showAmounts": "Guthaben anzeigen",
     "hiddenAmount": "Ausgeblendeter Betrag"
+  },
+  "nodeStopWait": {
+    "title": "Der Node repariert seine Daten und wartet, bis er sicher beendet werden kann…",
+    "body": "Beende die App nicht gewaltsam: Ein Abbruch jetzt würde die Chain zurücksetzen.",
+    "elapsed": "Wartet {{elapsed}} (max. {{max}})"
   }
 }

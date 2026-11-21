@@ -36,6 +36,7 @@ function buildShellText(t: TFunction): ShellText {
     }),
     autoStartBody: t("common:shell.autoStartBody"),
     autoStartCancel: t("common:shell.autoStartCancel"),
+    trayStopWaiting: t("common:shell.trayStopWaiting"),
   };
 }
 

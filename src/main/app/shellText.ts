@@ -25,6 +25,7 @@ const DEFAULT_SHELL_TEXT: ShellText = {
   autoStartBody:
     "Start mining at launch is on. Open CointMU to cancel it for this session.",
   autoStartCancel: "Cancel",
+  trayStopWaiting: "Node is repairing data; waiting to stop safely",
 };
 
 let current: ShellText = DEFAULT_SHELL_TEXT;

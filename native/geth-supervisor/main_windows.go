@@ -8,11 +8,13 @@
 // spawns this supervisor detached (outside that job), and it runs geth.
 //
 // run: starts geth with a hidden console of its own (CREATE_NO_WINDOW) and
-// the supervisor's stdout and stderr, which are the app's pipes, so the app
-// reads geth's output directly. stdin is a pipe the app holds. When it closes
-// (the app stops geth, or the app is gone), the supervisor raises CTRL_BREAK
-// on geth's console, which Go maps to os.Interrupt, so geth shuts down; after
-// the grace period it terminates geth. geth runs in a KILL_ON_JOB_CLOSE job of
+// the supervisor's stdout, which is the app's pipe. geth's stderr (its log)
+// passes through the supervisor on to the app; the supervisor reads it to
+// tell when geth is ready (readiness.go). stdin is a pipe the app holds. When it closes (the
+// app stops geth, or the app is gone), the supervisor waits until geth is
+// ready (at most the ready wait), then raises CTRL_BREAK on geth's console,
+// which Go maps to os.Interrupt, so geth shuts down; after the grace period it
+// terminates geth. geth runs in a KILL_ON_JOB_CLOSE job of
 // the supervisor's, so it never outlives it. The supervisor exits with geth's
 // exit code once geth is gone.
 //
@@ -22,7 +24,7 @@
 // CTRL_BREAK rather than CTRL_C because a process can inherit "ignore CTRL_C"
 // from its parent, and nothing disables CTRL_BREAK.
 //
-// usage: geth-supervisor run --grace-ms <ms> -- <geth> [args...]
+// usage: geth-supervisor run --grace-ms <ms> --ready-wait-ms <ms> -- <geth> [args...]
 //
 //	geth-supervisor interrupt <gethPid>
 //
@@ -89,21 +91,32 @@ func interrupt(gethPid uint32) int {
 	return 0
 }
 
-func run(c command) int {
-	geth := exec.Command(c.argv[0], c.argv[1:]...)
-	geth.Stdout, geth.Stderr = os.Stdout, os.Stderr
+// startGeth starts geth in a job it cannot outlive; see run.
+func startGeth(argv []string, onReady func()) (*exec.Cmd, error) {
+	geth := exec.Command(argv[0], argv[1:]...)
+	geth.Stdout = os.Stdout
+	geth.Stderr = &readyWriter{out: os.Stderr, onReady: onReady}
 	geth.SysProcAttr = &syscall.SysProcAttr{
 		CreationFlags: createNoWindow,
 		HideWindow:    true,
 	}
 	if err := geth.Start(); err != nil {
+		return nil, err
+	}
+	if err := dieWithThisProcess(uint32(geth.Process.Pid)); err != nil {
+		warn("%v; geth can outlive the supervisor", err)
+	}
+	return geth, nil
+}
+
+func run(c command) int {
+	ready, markReady := newReadySignal()
+	geth, err := startGeth(c.argv, markReady)
+	if err != nil {
 		warn("cannot start geth: %v", err)
 		return exitStart
 	}
 	gethPid := uint32(geth.Process.Pid)
-	if err := dieWithThisProcess(gethPid); err != nil {
-		warn("%v; geth can outlive the supervisor", err)
-	}
 
 	exitCode := make(chan int, 1)
 	gone := make(chan struct{})
@@ -134,6 +147,14 @@ func run(c command) int {
 	case code := <-exitCode:
 		return code
 	case <-stop:
+	}
+	if !awaitReady(ready, gone, c.readyWait) {
+		warn("geth is not ready after %v; interrupting it anyway", c.readyWait)
+	}
+	select {
+	case code := <-exitCode:
+		return code
+	default:
 	}
 	stopGeth(geth, gethPid, canInterrupt, ownEvent)
 	select {

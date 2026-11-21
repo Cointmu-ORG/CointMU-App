@@ -1,4 +1,4 @@
-import { BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import { join } from "path";
 import { is } from "@electron-toolkit/utils";
 import { wasOpenedInBackground } from "./loginItem";
@@ -44,12 +44,19 @@ export function createWindow(): BrowserWindow {
     else mainWindow.show();
   });
 
-  // Close hides to the tray while it is shown (Settings → General); a quit
-  // from anywhere still closes the window.
+  // Close hides to the tray while it is shown (Settings → General). Without
+  // the tray it quits with the window kept open, so the window can show a stop
+  // that waits for geth (gethStopNotice.ts); app.exit closes it at the end.
   mainWindow.on("close", (event) => {
-    if (!isTrayShown() || isQuitInProgress()) return;
+    if (isQuitInProgress()) return;
+    if (isTrayShown()) {
+      event.preventDefault();
+      mainWindow.hide();
+      return;
+    }
+    if (process.platform === "darwin") return;
     event.preventDefault();
-    mainWindow.hide();
+    app.quit();
   });
 
   // Windows: shutdown, restart or log off.

@@ -40,6 +40,7 @@ import type {
   MiningAutoStartState,
   NodePeerHint,
   SyncStallStep,
+  NodeStopWait,
   NodeRecoveryEvent,
   QueuedReport,
   ShellCapabilities,
@@ -346,6 +347,12 @@ const api = {
     },
     getSyncStall: (): Promise<SyncStallStep | null> =>
       ipcRenderer.invoke(NODE_CHANNELS.GET_SYNC_STALL),
+    onStopWait: (callback: (wait: NodeStopWait | null) => void) => {
+      const handler = (_: unknown, wait: NodeStopWait | null): void =>
+        callback(wait);
+      ipcRenderer.on(NODE_CHANNELS.STOP_WAIT, handler);
+      return () => ipcRenderer.removeListener(NODE_CHANNELS.STOP_WAIT, handler);
+    },
   },
   maintenance: {
     clearCache: (): Promise<void> =>

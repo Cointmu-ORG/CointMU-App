@@ -85,6 +85,8 @@ const READY_LINE = "Started P2P networking";
 const INTERRUPT_LINE = "Got interrupt, shutting down";
 const UNCLEAN_LINE = "Unclean shutdown detected";
 const READY_TIMEOUT_MS = 90_000;
+// GETH_READY_WAIT_MS, not imported: main lacks gethReadiness.ts.
+const READY_WAIT_MS = 300_000;
 const SCENARIO_TIMEOUT_MS = 240_000;
 const POLL_MS = 200;
 const DEFAULT_P2P_PORT = 30303;
@@ -236,11 +238,13 @@ async function startFakeMain(isDetached: boolean): Promise<FakeMain> {
     resolveGethBinaryPath(),
     await gethArgs(),
     GETH_GRACEFUL_TIMEOUT_MS,
+    READY_WAIT_MS,
   );
   const plan: FakeMainLaunch = {
     ...launch,
     watcher: IS_WINDOWS ? null : watcherCommand(),
     graceMs: GETH_GRACEFUL_TIMEOUT_MS,
+    readyWaitMs: READY_WAIT_MS,
   };
   const dir = join(sink.root, "fake-main");
   await mkdir(dir, { recursive: true });

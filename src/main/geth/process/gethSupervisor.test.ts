@@ -10,6 +10,7 @@ import {
 
 const GETH_PID = 4242;
 const GRACE_MS = 15_000;
+const READY_WAIT_MS = 300_000;
 const BIN = join("C:", "app", "bin", "win");
 const GETH = join(BIN, "geth.exe");
 const GETH_ARGS = ["--networkid", "1912", "--datadir", "C:\\a b\\1912"];
@@ -21,12 +22,22 @@ describe("gethLaunchCommand", () => {
       gethArgs: GETH_ARGS,
       platform: "win32",
       graceMs: GRACE_MS,
+      readyWaitMs: READY_WAIT_MS,
       hasFile: (path) => path === supervisorFor(GETH),
     });
 
     expect(launch).toEqual({
       file: join(BIN, "geth-supervisor.exe"),
-      args: ["run", "--grace-ms", "15000", "--", GETH, ...GETH_ARGS],
+      args: [
+        "run",
+        "--grace-ms",
+        "15000",
+        "--ready-wait-ms",
+        "300000",
+        "--",
+        GETH,
+        ...GETH_ARGS,
+      ],
       isSupervised: true,
     });
   });
@@ -37,6 +48,7 @@ describe("gethLaunchCommand", () => {
       gethArgs: GETH_ARGS,
       platform: "win32",
       graceMs: GRACE_MS,
+      readyWaitMs: READY_WAIT_MS,
       hasFile: () => false,
     });
 
@@ -55,6 +67,7 @@ describe("gethLaunchCommand", () => {
         gethArgs: GETH_ARGS,
         platform,
         graceMs: GRACE_MS,
+        readyWaitMs: READY_WAIT_MS,
         hasFile: () => true,
       });
 

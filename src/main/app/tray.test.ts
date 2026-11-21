@@ -27,6 +27,7 @@ const TEXT: ShellText = {
   autoStartTitle: "Mining in {{seconds}} s",
   autoStartBody: "Open to cancel",
   autoStartCancel: "Cancel",
+  trayStopWaiting: "Waiting to stop",
 };
 
 describe("describeTrayStatus", () => {

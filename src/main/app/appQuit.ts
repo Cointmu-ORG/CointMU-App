@@ -22,6 +22,11 @@ export function isQuitInProgress(): boolean {
   return isQuitting;
 }
 
+/** @returns True while the OS session ends; the OS does not wait for a UI. */
+export function isSessionEnding(): boolean {
+  return reason === QuitReason.SESSION_END;
+}
+
 /**
  * Marks the coming quit as not the user's own, so it is never questioned.
  * Call it right before the quit (quitAndInstall, OS shutdown).
