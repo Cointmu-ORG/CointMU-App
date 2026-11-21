@@ -18,12 +18,13 @@ interface KeyValueStore {
   set(key: string, value: unknown): void;
 }
 
-/** @returns True for "native" or a lowercase contract address. */
+/**
+ * The native CMU logo is the official brand image, so "native" is not a key:
+ * it cannot be saved or reset, and a logo stored for it earlier is dropped.
+ * @returns True for a lowercase contract address.
+ */
 export function isAssetKey(value: unknown): value is string {
-  return (
-    typeof value === "string" &&
-    (value === NATIVE_ASSET_KEY || CONTRACT_ADDRESS.test(value))
-  );
+  return typeof value === "string" && CONTRACT_ADDRESS.test(value);
 }
 
 /** @returns True for a base64 PNG or WebP data URL within the size cap. */

@@ -18,8 +18,8 @@ interface TokenIconProps {
 }
 
 /**
- * Circular token avatar. A logo the user uploaded wins; otherwise CMU shows
- * the CointMU logo and other tokens a gradient with their symbol initials.
+ * Circular token avatar. CMU always shows the official CointMU logo; other
+ * tokens show the logo the user uploaded, or a gradient with their initials.
  * The gradient is derived from the contract address
  * so every token gets a unique, consistent colour without requiring any stored
  * colour metadata.
@@ -31,14 +31,13 @@ function TokenIcon({
   symbol,
   size = "md",
 }: TokenIconProps): JSX.Element {
-  const key =
-    address === NATIVE_ASSET_ADDRESS ? address : address.toLowerCase();
-  const customLogo = useAssetLogoStore((s) => s.logos[key]);
+  const isNative = address === NATIVE_ASSET_ADDRESS;
+  const customLogo = useAssetLogoStore((s) => s.logos[address.toLowerCase()]);
   const ensureLoaded = useAssetLogoStore((s) => s.ensureLoaded);
   useEffect(ensureLoaded, [ensureLoaded]);
 
-  const logo =
-    customLogo ?? (key === NATIVE_ASSET_ADDRESS ? CMU_LOGO_URL : undefined);
+  // CMU always shows the official logo, even if one was stored for it before.
+  const logo = isNative ? CMU_LOGO_URL : customLogo;
   if (logo !== undefined) {
     return (
       <img

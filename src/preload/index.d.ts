@@ -76,7 +76,7 @@ interface CointmuAPI {
     getIndexStatus: () => Promise<ExplorerIndexStatus | null>;
     rebuildIndex: () => Promise<void>;
   };
-  /** Custom asset logos: "native" or a lowercase contract address → PNG/WebP data URL. */
+  /** Custom asset logos: lowercase contract address → PNG/WebP data URL. The native CMU logo is fixed. */
   assetLogos: {
     getAll: () => Promise<AssetLogos>;
     /** Rejects unless the URL is a base64 PNG/WebP data URL within the size cap. */
