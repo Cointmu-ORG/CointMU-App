@@ -185,5 +185,13 @@
     "reverted": "Die Transaktion wurde vom Contract rückgängig gemacht.",
     "rejected": "Transaktion abgelehnt.",
     "nodeRejected": "Der Node hat die Transaktion abgelehnt. Prüfe die Empfängeradresse."
+  },
+  "accountLabel": {
+    "edit": "Konto umbenennen",
+    "inputLabel": "Kontoname",
+    "save": "Name speichern",
+    "cancel": "Abbrechen",
+    "invalid": "Gib einen Namen mit 1 bis 32 Zeichen ein.",
+    "saveFailed": "Der Name konnte nicht gespeichert werden. Versuche es erneut."
   }
 }

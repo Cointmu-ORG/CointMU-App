@@ -111,6 +111,17 @@ function WalletPage({
     setAccounts(updatedAccounts);
   };
 
+  const handleRenameAccount = async (
+    address: string,
+    label: string,
+  ): Promise<void> => {
+    const updatedAccounts = accounts.map((acc) =>
+      acc.address === address ? { ...acc, label } : acc,
+    );
+    await setSetting("accounts", updatedAccounts);
+    setAccounts(updatedAccounts);
+  };
+
   const handleDeleteAccount = async (address: string): Promise<void> => {
     const updatedAccounts = accounts.filter((acc) => acc.address !== address);
     await setSetting("accounts", updatedAccounts);
@@ -284,6 +295,7 @@ function WalletPage({
               onReceive={() => setModalState("RECEIVE")}
               onSend={() => setModalState("SEND")}
               onCopy={handleCopy}
+              onRename={handleRenameAccount}
             />
 
             <WalletTabs

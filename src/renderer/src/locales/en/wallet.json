@@ -185,5 +185,13 @@
     "reverted": "Transaction reverted by the contract.",
     "rejected": "Transaction rejected.",
     "nodeRejected": "Node rejected the transaction. Check the recipient address."
+  },
+  "accountLabel": {
+    "edit": "Rename account",
+    "inputLabel": "Account name",
+    "save": "Save name",
+    "cancel": "Cancel",
+    "invalid": "Enter a name of 1 to 32 characters.",
+    "saveFailed": "The name could not be saved. Try again."
   }
 }

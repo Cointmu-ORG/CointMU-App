@@ -185,5 +185,13 @@
     "reverted": "交易被合约回滚。",
     "rejected": "交易已被拒绝。",
     "nodeRejected": "节点拒绝了交易。请检查收款地址。"
+  },
+  "accountLabel": {
+    "edit": "重命名账户",
+    "inputLabel": "账户名称",
+    "save": "保存名称",
+    "cancel": "取消",
+    "invalid": "请输入 1 到 32 个字符的名称。",
+    "saveFailed": "无法保存名称。请重试。"
   }
 }

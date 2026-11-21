@@ -185,5 +185,13 @@
     "reverted": "Transaksi dibatalkan (revert) oleh kontrak.",
     "rejected": "Transaksi ditolak.",
     "nodeRejected": "Node menolak transaksi. Periksa alamat penerima."
+  },
+  "accountLabel": {
+    "edit": "Ganti nama akun",
+    "inputLabel": "Nama akun",
+    "save": "Simpan nama",
+    "cancel": "Batal",
+    "invalid": "Masukkan nama 1 sampai 32 karakter.",
+    "saveFailed": "Nama tidak dapat disimpan. Coba lagi."
   }
 }

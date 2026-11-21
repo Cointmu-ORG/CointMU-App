@@ -185,5 +185,13 @@
     "reverted": "El contrato revirtió la transacción.",
     "rejected": "Transacción rechazada.",
     "nodeRejected": "El nodo rechazó la transacción. Revisa la dirección del destinatario."
+  },
+  "accountLabel": {
+    "edit": "Cambiar nombre de la cuenta",
+    "inputLabel": "Nombre de la cuenta",
+    "save": "Guardar nombre",
+    "cancel": "Cancelar",
+    "invalid": "Introduce un nombre de 1 a 32 caracteres.",
+    "saveFailed": "No se pudo guardar el nombre. Inténtalo de nuevo."
   }
 }
