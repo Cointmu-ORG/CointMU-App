@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { interruptGethOnWindows } from "./gethSupervisor";
 import { GETH_READY_MARGIN_MS, GETH_READY_WAIT_MS } from "./gethReadiness";
 import { awaitOrphanInterruptible, orphanIpcPath } from "./orphanReadiness";
+import { reportInterruptibleWait } from "./gethStopWait";
 
 /** How long geth gets to close its database after SIGINT before SIGKILL. */
 export const GETH_GRACEFUL_TIMEOUT_MS = 15_000;
@@ -238,7 +239,12 @@ async function beginOrphanStop(
     // Its watcher may have died with the app: SIGINT only once it is ready.
     const ipcPath = orphanIpcPath(commandLine, process.platform);
     if (ipcPath !== null) {
-      await awaitOrphanInterruptible({ ipcPath, isAlive: () => isAlive(pid) });
+      const interruptible = awaitOrphanInterruptible({
+        ipcPath,
+        isAlive: () => isAlive(pid),
+      });
+      reportInterruptibleWait(interruptible);
+      await interruptible;
     }
     signalProcess(pid, "SIGINT");
     return true;

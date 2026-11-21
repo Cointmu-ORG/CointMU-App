@@ -10,7 +10,11 @@ import {
   createGethReadiness,
 } from "../geth/process/gethReadiness";
 import { stopProcess } from "../geth/process/gethStop";
-import { STOP_WAIT_NOTICE_DELAY_MS } from "../geth/process/gethStopWait";
+import {
+  STOP_WAIT_NOTICE_DELAY_MS,
+  getGethStopWait,
+  reportInterruptibleWait,
+} from "../geth/process/gethStopWait";
 import { showGethStopWait } from "./gethStopNotice";
 
 const sessionEnd = vi.hoisted(() => ({ isEnding: false }));
@@ -95,6 +99,28 @@ describe("showGethStopWait", () => {
       null,
     ]);
     expect(setTrayStopWaiting).toHaveBeenLastCalledWith(false);
+  });
+
+  it("shows the startup wait for a leftover geth, also to a window opening during it (#158)", async () => {
+    const { win, send } = fakeWindow(true);
+    stopShowing = showGethStopWait(win);
+    let markInterruptible: () => void = () => undefined;
+    const interruptible = new Promise<void>((resolve) => {
+      markInterruptible = resolve;
+    });
+    const startedAt = Date.now();
+    const wait = { startedAt, maxWaitMs: GETH_READY_WAIT_MS };
+
+    reportInterruptibleWait(interruptible);
+    await vi.advanceTimersByTimeAsync(STOP_WAIT_NOTICE_DELAY_MS);
+    expect(stopWaitEvents(send)).toEqual([wait]);
+    expect(getGethStopWait()).toEqual(wait);
+
+    markInterruptible();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(stopWaitEvents(send)).toEqual([wait, null]);
+    expect(getGethStopWait()).toBeNull();
   });
 
   it("stays quiet when geth is ready before the notice delay", async () => {

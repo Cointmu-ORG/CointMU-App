@@ -128,28 +128,6 @@ app.whenReady().then(async () => {
 
   attachNodeRecovery(createNodeRecovery(store));
 
-  try {
-    await stopOrphanedGeth(
-      resolveDataRoot(),
-      GETH_GRACEFUL_TIMEOUT_MS,
-      supervisorFor(resolveGethBinaryPath()),
-    );
-  } catch (err) {
-    console.error("[geth:orphan] Could not stop a leftover geth:", err);
-  }
-
-  try {
-    await initGethIfNeeded(resolveDataDir());
-  } catch (err) {
-    console.error("[geth:init] Fatal error during genesis init:", err);
-  }
-
-  await prepareGethIpcEndpoint(store);
-  watchGethPriority(store, () => restartNodeByUser(store));
-  await spawnGethProcess(store);
-
-  void startTokenScan(store);
-
   const miningController = new MiningController(getRpcPort(), store);
   registerRendererRpcHandler(getRpcPort);
 
@@ -175,6 +153,30 @@ app.whenReady().then(async () => {
     extSyncServer.close();
     stopTokenScan();
   });
+
+  // After the window and every handler: the orphan stop can wait minutes for
+  // a geth still repairing, and the window shows that wait (#158).
+  try {
+    await stopOrphanedGeth(
+      resolveDataRoot(),
+      GETH_GRACEFUL_TIMEOUT_MS,
+      supervisorFor(resolveGethBinaryPath()),
+    );
+  } catch (err) {
+    console.error("[geth:orphan] Could not stop a leftover geth:", err);
+  }
+
+  try {
+    await initGethIfNeeded(resolveDataDir());
+  } catch (err) {
+    console.error("[geth:init] Fatal error during genesis init:", err);
+  }
+
+  await prepareGethIpcEndpoint(store);
+  watchGethPriority(store, () => restartNodeByUser(store));
+  await spawnGethProcess(store);
+
+  void startTokenScan(store);
 });
 
 registerQuitHandler();
