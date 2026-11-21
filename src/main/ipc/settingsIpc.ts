@@ -5,6 +5,7 @@ import { isBootnodeSettingKey } from "../geth/bootnode/bootnodeSettings";
 import { restartNodeByUser } from "../geth/process/nodeRestart";
 import { applyLoginItem } from "../app/loginItem";
 import type { AppStore } from "../store/appStore";
+import { ADDRESS_NAMES_KEY } from "../../bridge/address-names";
 import { CHAIN_DATA_ROOT_KEY, findInvalidSetting } from "../store/settingRules";
 import { applySettingRules } from "../store/settingsMigration";
 
@@ -51,6 +52,13 @@ export function registerSettingsHandlers(store: AppStore): void {
     if (key === CHAIN_DATA_ROOT_KEY) {
       throw new Error(
         `settings:set cannot write "${key}"; use the chain data move channel`,
+      );
+    }
+    // A one-name write would skip the map check, and the startup rule pass
+    // would then replace the whole invalid map, losing every name.
+    if (key.startsWith(`${ADDRESS_NAMES_KEY}.`)) {
+      throw new TypeError(
+        `settings:set cannot write "${key}"; write the whole ${ADDRESS_NAMES_KEY} map`,
       );
     }
     const invalidKey = findInvalidSetting(key, value);

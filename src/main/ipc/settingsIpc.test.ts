@@ -114,6 +114,20 @@ describe("settings:set", () => {
     });
   });
 
+  it("saves a valid address name map and refuses a single-name write", () => {
+    const address = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const data: Record<string, unknown> = {};
+    const { setHandler, store } = registerSet(data);
+
+    setHandler(null, "addressNames", { [address]: "Alice" });
+    expect(() => setHandler(null, `addressNames.${address}`, "\u0000")).toThrow(
+      /addressNames/,
+    );
+
+    expect(store.set).toHaveBeenCalledTimes(1);
+    expect(data.addressNames).toEqual({ [address]: "Alice" });
+  });
+
   it("refuses the chain data folder, which only the move may write", () => {
     const { setHandler, store } = registerSet();
 
