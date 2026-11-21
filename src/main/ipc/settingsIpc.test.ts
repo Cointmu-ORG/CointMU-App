@@ -128,6 +128,75 @@ describe("settings:set", () => {
     expect(data.addressNames).toEqual({ [address]: "Alice" });
   });
 
+  describe("accounts", () => {
+    const ADDRESS_A = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const ADDRESS_B = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
+    it("saves accounts whose labels are valid names", () => {
+      const data: Record<string, unknown> = {};
+      const { setHandler } = registerSet(data);
+      const accounts = [{ index: 0, address: ADDRESS_A, label: "Main 🚀" }];
+
+      setHandler(null, "accounts", accounts);
+
+      expect(data.accounts).toEqual(accounts);
+    });
+
+    it.each([
+      ["a right-to-left override", "Main\u202E"],
+      ["a control character", "Ma\u0000in"],
+      ["surrounding spaces", " Main"],
+      ["no text", ""],
+      ["a non-string", 7],
+    ])("refuses a new label with %s", (_, label) => {
+      const { setHandler, store } = registerSet();
+
+      expect(() =>
+        setHandler(null, "accounts", [{ index: 0, address: ADDRESS_A, label }]),
+      ).toThrow(/accounts/);
+      expect(store.set).not.toHaveBeenCalled();
+    });
+
+    it("keeps an already stored label that fails the check, so old accounts still save", () => {
+      const oldLabel = "Импортированный аккаунт из Seed-фразы";
+      const data: Record<string, unknown> = {
+        accounts: [{ index: 0, address: ADDRESS_A, label: oldLabel }],
+      };
+      const { setHandler } = registerSet(data);
+      const next = [
+        { index: 0, address: ADDRESS_A, label: oldLabel, isHidden: true },
+        { index: 1, address: ADDRESS_B, label: "Account 2" },
+      ];
+
+      setHandler(null, "accounts", next);
+
+      expect(data.accounts).toEqual(next);
+    });
+
+    it("refuses renaming a stored account to an invalid label", () => {
+      const data: Record<string, unknown> = {
+        accounts: [{ index: 0, address: ADDRESS_A, label: "Main" }],
+      };
+      const { setHandler, store } = registerSet(data);
+
+      expect(() =>
+        setHandler(null, "accounts", [
+          { index: 0, address: ADDRESS_A, label: "Ma\u2066in" },
+        ]),
+      ).toThrow(/accounts/);
+      expect(store.set).not.toHaveBeenCalled();
+    });
+
+    it("refuses a write below accounts, which would skip the label check", () => {
+      const { setHandler, store } = registerSet({ accounts: [] });
+
+      expect(() => setHandler(null, "accounts.0.label", "\u202E")).toThrow(
+        /accounts/,
+      );
+      expect(store.set).not.toHaveBeenCalled();
+    });
+  });
+
   it("refuses the chain data folder, which only the move may write", () => {
     const { setHandler, store } = registerSet();
 

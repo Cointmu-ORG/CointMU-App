@@ -7,6 +7,7 @@ import { applyLoginItem } from "../app/loginItem";
 import type { AppStore } from "../store/appStore";
 import { ADDRESS_NAMES_KEY } from "../../bridge/address-names";
 import { CHAIN_DATA_ROOT_KEY, findInvalidSetting } from "../store/settingRules";
+import { ACCOUNTS_KEY, hasInvalidAccountLabel } from "../store/accountLabels";
 import { applySettingRules } from "../store/settingsMigration";
 
 // Read when geth starts (spawnGethProcess); saving a new value restarts it.
@@ -59,6 +60,20 @@ export function registerSettingsHandlers(store: AppStore): void {
     if (key.startsWith(`${ADDRESS_NAMES_KEY}.`)) {
       throw new TypeError(
         `settings:set cannot write "${key}"; write the whole ${ADDRESS_NAMES_KEY} map`,
+      );
+    }
+    // A write below the list (one account or one label) would skip the label check.
+    if (key.startsWith(`${ACCOUNTS_KEY}.`)) {
+      throw new TypeError(
+        `settings:set cannot write "${key}"; write the whole ${ACCOUNTS_KEY} list`,
+      );
+    }
+    if (
+      key === ACCOUNTS_KEY &&
+      hasInvalidAccountLabel(value, store.get(ACCOUNTS_KEY))
+    ) {
+      throw new TypeError(
+        `settings:set rejected an account label in "${ACCOUNTS_KEY}"`,
       );
     }
     const invalidKey = findInvalidSetting(key, value);
