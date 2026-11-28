@@ -48,7 +48,8 @@ grep -qx "Architecture: arm64" <<<"$version" || fail "expected arm64"
 echo "== geth init"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
-(cd "$repo_root" && npx --no tsx -e \
+# Not through npx: npm 12 takes tsx's -e as its own flag.
+(cd "$repo_root" && ./node_modules/.bin/tsx -e \
   'import { GENESIS_BLOCK } from "./src/main/geth/process/genesis"; process.stdout.write(JSON.stringify(GENESIS_BLOCK));') \
   >"$work/genesis.json"
 "$geth" --log.json --datadir "$work/data" init "$work/genesis.json" \
