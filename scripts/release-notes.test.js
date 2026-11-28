@@ -80,10 +80,35 @@ describe("renderNotes", () => {
     );
   });
 
-  it("shows only the header and changelog link when nothing changed", () => {
-    expect(render([])).toBe(
-      '## CointMU v1.6.17 "Kitsune"\n\n' +
-        "**Full changelog:** https://github.com/owner/repo/compare/v1.6.16...v1.6.17",
+  it("shows only the header, the macOS note and changelog link when nothing changed", () => {
+    const notes = render([]);
+
+    expect(
+      notes.startsWith('## CointMU v1.6.17 "Kitsune"\n\n### 🍎 macOS\n\n'),
+    ).toBe(true);
+    expect(notes.match(/^### /gm)).toEqual(["### "]);
+    expect(
+      notes.endsWith(
+        "\n\n**Full changelog:** https://github.com/owner/repo/compare/v1.6.16...v1.6.17",
+      ),
+    ).toBe(true);
+  });
+
+  it("tells how to open and update the unnotarized macOS app", () => {
+    const notes = render([entry("fix: guard empty input")]);
+
+    expect(notes).toContain("### 🍎 macOS");
+    expect(notes).toContain("**Open Anyway**");
+    expect(notes).toContain(
+      "`xattr -dr com.apple.quarantine /Applications/CointMU.app`",
+    );
+    expect(notes).toContain("updates by hand");
+    expect(notes).toContain("Your wallets and chain data are kept.");
+    expect(notes).toContain(
+      "[Details](https://github.com/owner/repo#installing-on-macos)",
+    );
+    expect(notes.indexOf("### 🐛 Fixes")).toBeLessThan(
+      notes.indexOf("### 🍎 macOS"),
     );
   });
 });

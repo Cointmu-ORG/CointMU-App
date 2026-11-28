@@ -40,6 +40,35 @@ It runs on Windows, Linux, and macOS.
    npm run dev
    ```
 
+## Installing on macOS
+
+The macOS app is for Apple Silicon (M1 and later). It is signed ad hoc and not notarized,
+because the project has no Apple Developer ID, so macOS blocks it the first time.
+
+1. Download `macos-cointmu-desktop-<version>-installer.dmg` from the
+   [latest release](https://github.com/Cointmu-ORG/CointMU-App/releases/latest), open it, and
+   drag CointMU to Applications.
+2. Open CointMU. macOS refuses to open it the first time.
+3. Allow it in one of two ways:
+   - Open System Settings → Privacy & Security, scroll to Security, and click **Open Anyway**
+     next to the message about CointMU. Then open CointMU again and confirm.
+   - Or, in Terminal:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/CointMU.app
+     ```
+
+Right-click → Open no longer skips this check on recent macOS versions (macOS 15 and later),
+so use one of the two ways above.
+
+**Updates are manual on macOS.** The app checks for a newer release and shows a notice with a
+button that opens its release page; it never downloads or installs anything itself. To
+update, download the new dmg, quit CointMU, drag the new app to Applications, choose
+Replace, and allow it again as in step 3.
+
+Your wallets, settings and chain data are kept across manual updates. They live in
+`~/Library/Application Support/CointMU`, not inside the app, so replacing the app does not
+touch them.
+
 ## Building Distributables
 
 The application is packaged with electron-builder. Each command builds the installer for
@@ -78,10 +107,23 @@ Produces Linux packages (such as AppImage or deb) in the `dist/` directory.
 npm run build:mac
 ```
 
-Produces a macOS application and DMG in the `dist/` directory.
+Produces an Apple Silicon (arm64) application, DMG and zip in the `dist/` directory, signed
+ad hoc (`mac.identity: "-"` in `electron-builder.yml`) and not notarized.
+
+go-ethereum publishes no Apple Silicon build of geth 1.10.26, so `npm run build:geth-mac`
+(part of `build:mac`) builds it from the `v1.10.26` tag into `resources/bin/mac/geth`, with
+the Go version in `scripts/mac-geth/.go-version` and the Xcode command line tools. The script
+fails unless the result matches the sha256 pinned in `scripts/mac-geth/build.sh`, which holds
+for the Xcode the release workflow selects. `scripts/mac-geth/check-app.sh <path>/CointMU.app`
+checks a packaged app the way the release workflow does.
+
+The release workflow sets `MAIN_VITE_MAC_NOTARIZED=false`, which makes macOS updates
+notify-only. A notarized build would set it to `true` to get the normal auto-update back.
 
 Continuous integration builds all three platforms automatically through the GitHub Actions
-release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed.
+release workflow (`.github/workflows/release.yml`) whenever a `v*` tag is pushed. Running it
+by hand (Actions → Release → Run workflow) is a dry run: it builds and checks every
+installer, publishes nothing, and keeps the macOS dmg as a workflow artifact.
 
 ## Error Reporting and Logs
 
