@@ -171,12 +171,21 @@ export function AboutSettings(): JSX.Element {
                     })}
                   </p>
                 </div>
-                <button
-                  onClick={() => updater.download()}
-                  className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-                >
-                  {t("settings:about.downloadUpdateBtn")}
-                </button>
+                {updater.isManualInstall ? (
+                  <button
+                    onClick={() => updater.openReleasePage()}
+                    className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                  >
+                    {t("common:update.openReleasePage")}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => updater.download()}
+                    className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                  >
+                    {t("settings:about.downloadUpdateBtn")}
+                  </button>
+                )}
               </div>
             )}
 

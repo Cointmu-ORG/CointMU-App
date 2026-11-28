@@ -9,6 +9,7 @@ import { killGethProcess } from "../geth/process/gethProcess";
 import { UpdateInstallMode } from "../../bridge/setting-values";
 import type { AppStore } from "../store/appStore";
 import { QuitReason, markQuitReason, setQuitFinisher } from "./appQuit";
+import { initMacUpdateNotice } from "./macUpdateNotice";
 
 // If the installer does not end the app, it still has to exit: geth is gone.
 const INSTALL_EXIT_FALLBACK_MS = 10_000;
@@ -71,16 +72,33 @@ function finishQuit(isUpdateReady: boolean, store: AppStore): void {
 }
 
 /**
+ * @returns Whether updates only notify (macOS builds not notarized, #164).
+ *   The build sets MAIN_VITE_MAC_NOTARIZED; only "true" allows auto-update.
+ */
+function isNotifyOnlyUpdates(): boolean {
+  return (
+    process.platform === "darwin" &&
+    import.meta.env.MAIN_VITE_MAC_NOTARIZED !== "true"
+  );
+}
+
+/**
  * Initializes the Electron auto-updater with automatic download enabled and
  * wires its lifecycle events and renderer-facing IPC handlers. A downloaded
  * update waits: it is installed when the user quits (install mode "on quit")
  * or when they choose Restart now (mode "ask" shows that prompt). The check
  * at start runs only while Settings → General → Updates allows it.
+ * A macOS build that is not notarized only notifies (initMacUpdateNotice)
+ * and never touches electron-updater.
  * @param {BrowserWindow} mainWindow - The main BrowserWindow used to forward update events.
  * @param store - The settings store (updates.autoCheck, updates.installMode).
  * @returns {void}
  */
 function initUpdater(mainWindow: BrowserWindow, store: AppStore): void {
+  if (isNotifyOnlyUpdates()) {
+    initMacUpdateNotice(mainWindow, store);
+    return;
+  }
   let isUpdateReady = false;
   setQuitFinisher(() => finishQuit(isUpdateReady, store));
   // The quit sequence installs it itself, after geth has stopped.

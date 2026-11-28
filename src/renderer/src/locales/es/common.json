@@ -101,7 +101,10 @@
     "readyTitle": "Actualización lista",
     "readyBody": "La versión {{version}} ya está descargada. Reinicia para instalarla; primero el nodo se cierra de forma limpia.",
     "restartNow": "Reiniciar ahora",
-    "later": "Más tarde"
+    "later": "Más tarde",
+    "availableTitle": "Actualización disponible",
+    "availableBody": "La versión {{version}} ya está disponible. En macOS, descárgala desde la página de la versión y reemplaza la app; tus billeteras y datos de la cadena se conservan.",
+    "openReleasePage": "Abrir página de la versión"
   },
   "privacy": {
     "hideAmounts": "Ocultar saldos",

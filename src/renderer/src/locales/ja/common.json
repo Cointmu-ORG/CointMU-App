@@ -99,7 +99,10 @@
     "readyTitle": "アップデートの準備完了",
     "readyBody": "バージョン {{version}} をダウンロードしました。再起動するとインストールされます。ノードは先に正常に終了します。",
     "restartNow": "今すぐ再起動",
-    "later": "後で"
+    "later": "後で",
+    "availableTitle": "アップデートがあります",
+    "availableBody": "バージョン {{version}} が公開されました。macOS ではリリースページからダウンロードしてアプリを置き換えてください。ウォレットとチェーンデータはそのまま残ります。",
+    "openReleasePage": "リリースページを開く"
   },
   "privacy": {
     "hideAmounts": "残高を隠す",

@@ -99,7 +99,10 @@
     "readyTitle": "更新已就绪",
     "readyBody": "版本 {{version}} 已下载。重启即可安装；节点会先正常关闭。",
     "restartNow": "立即重启",
-    "later": "稍后"
+    "later": "稍后",
+    "availableTitle": "有可用更新",
+    "availableBody": "版本 {{version}} 已发布。在 macOS 上，请从发布页面下载并替换应用；你的钱包和链数据会保留。",
+    "openReleasePage": "打开发布页面"
   },
   "privacy": {
     "hideAmounts": "隐藏余额",

@@ -99,7 +99,10 @@
     "readyTitle": "Pembaruan siap",
     "readyBody": "Versi {{version}} sudah diunduh. Mulai ulang untuk memasangnya; node dimatikan dengan bersih terlebih dahulu.",
     "restartNow": "Mulai ulang sekarang",
-    "later": "Nanti"
+    "later": "Nanti",
+    "availableTitle": "Pembaruan tersedia",
+    "availableBody": "Versi {{version}} sudah rilis. Di macOS, unduh dari halaman rilis lalu ganti aplikasinya; dompet dan data chain kamu tetap aman.",
+    "openReleasePage": "Buka halaman rilis"
   },
   "privacy": {
     "hideAmounts": "Sembunyikan saldo",
