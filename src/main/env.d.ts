@@ -7,4 +7,6 @@ interface ImportMetaEnv {
   readonly MAIN_VITE_TELEMETRY_PINS?: string;
   /** Bootnode enode baked in at build time; empty uses the built-in one. */
   readonly MAIN_VITE_BOOTNODE_ENODE?: string;
+  /** "true" only for a notarized macOS build: enables macOS auto-update. */
+  readonly MAIN_VITE_MAC_NOTARIZED?: string;
 }

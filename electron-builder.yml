@@ -37,7 +37,24 @@ mac:
   extendInfo:
     - NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
     - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+  # No Apple Developer ID: every macOS build is signed ad hoc and not
+  # notarized (#102). Apple Silicon refuses to run unsigned code.
+  identity: "-"
+  # Hardened runtime only matters for notarization, and with an ad-hoc
+  # signature its library validation refuses Electron's own frameworks.
+  hardenedRuntime: false
   notarize: false
+  target:
+    - target: dmg
+      arch: arm64
+    - target: zip
+      arch: arm64
+  # Built by scripts/mac-geth/build.sh (npm run build:geth-mac).
+  extraResources:
+    - from: resources/bin/mac/
+      to: bin/mac/
+      filter:
+        - geth
 linux:
   artifactName: linux-cointmu-desktop-${version}-installer.${ext}
   icon: resources/icon.png

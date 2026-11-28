@@ -20,7 +20,12 @@ import { useAppStore } from "@/shared/model";
 import { useAuthStore } from "@/features/auth";
 import { lockSession } from "@/entities/wallet";
 
-import { Sidebar, AppHeader, UpdateReadyBanner } from "@/widgets/layout";
+import {
+  Sidebar,
+  AppHeader,
+  UpdateAvailableBanner,
+  UpdateReadyBanner,
+} from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport } from "@/features/notifications";
 import { useAutoLock } from "./lib/auto-lock.hook";
@@ -198,6 +203,7 @@ function App(): JSX.Element {
         <PairingApprovalModal />
         <ToastViewport />
         <UpdateReadyBanner updater={updater} />
+        <UpdateAvailableBanner updater={updater} />
         <MiningAutoStartBanner />
         <FirstRunNotice />
         <NodeStopWaitOverlay />

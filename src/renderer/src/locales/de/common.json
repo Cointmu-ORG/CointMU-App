@@ -100,7 +100,10 @@
     "readyTitle": "Update bereit",
     "readyBody": "Version {{version}} ist heruntergeladen. Starte neu, um sie zu installieren; der Node wird vorher sauber heruntergefahren.",
     "restartNow": "Jetzt neu starten",
-    "later": "Später"
+    "later": "Später",
+    "availableTitle": "Update verfügbar",
+    "availableBody": "Version {{version}} ist erschienen. Lade sie unter macOS von der Release-Seite herunter und ersetze die App; Wallets und Chain-Daten bleiben erhalten.",
+    "openReleasePage": "Release-Seite öffnen"
   },
   "privacy": {
     "hideAmounts": "Guthaben ausblenden",

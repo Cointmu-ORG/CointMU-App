@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - "v*"
+  # Dry run: builds every installer and runs the macOS app check, but
+  # creates, uploads and publishes nothing. The macOS dmg is kept as a
+  # workflow artifact for testing on a real Mac.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,6 +17,7 @@ jobs:
   # GitHub then holds two releases for one tag (as happened with v1.7.0).
   # Creating one draft first makes electron-builder upload into it.
   create-release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,6 +38,8 @@ jobs:
 
   build:
     needs: create-release
+    # create-release is skipped on a dry run.
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ${{ matrix.os }}
     # electron-builder uploads the installers into the draft release.
     permissions:
@@ -98,11 +105,35 @@ jobs:
           npm run build:geth-supervisor
           test -s resources/bin/win/geth-supervisor.exe
 
-      - name: Build and Publish Artifacts
-        run: npm run build && npx electron-builder --publish always
+      # go-ethereum has no darwin-arm64 build of 1.10.26, so the macOS geth
+      # is built from its tag here (#102); the script pins Go and the hash.
+      - name: Setup Go (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version-file: scripts/mac-geth/.go-version
+          cache: false
+
+      - name: Build geth (macOS)
+        if: runner.os == 'macOS'
+        run: npm run build:geth-mac
         env:
+          # The pinned hash holds for this Xcode only; when the runner image
+          # drops it, pick another one here and update the hash.
+          DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+
+      # A dry run (workflow_dispatch) builds the same installers but never
+      # uploads them.
+      - name: Build and Publish Artifacts
+        run: npm run build && npx electron-builder --publish ${{ github.event_name == 'push' && 'always' || 'never' }}
+        env:
+          # The macOS build signs ad hoc (electron-builder.yml mac.identity);
+          # this only stops the search for a Developer ID in the keychain.
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Not notarized, so the app only tells about macOS updates and
+          # never installs them (#164). "true" restores auto-update there.
+          MAIN_VITE_MAC_NOTARIZED: "false"
           # Only MAIN_VITE_* reaches the app (baked in by electron-vite).
           # The enode is public, so a repository variable; empty uses the
           # built-in bootnode.
@@ -112,11 +143,27 @@ jobs:
           MAIN_VITE_TELEMETRY_DSN: ${{ vars.TELEMETRY_DSN }}
           MAIN_VITE_TELEMETRY_PINS: ${{ vars.TELEMETRY_PINS }}
 
+      # Runs after the upload, but a failure here fails the build job, so
+      # release-notes never publishes the draft.
+      - name: Check macOS app
+        if: runner.os == 'macOS'
+        run: bash scripts/mac-geth/check-app.sh dist/mac-arm64/CointMU.app
+
+      - name: Keep the dry-run dmg
+        if: runner.os == 'macOS' && github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: macos-dmg-dry-run
+          path: dist/*.dmg
+          if-no-files-found: error
+          retention-days: 14
+
   # electron-builder never edits the draft's body, so filling it after
   # every OS build has finished cannot be overwritten. Publishing only now
   # keeps the auto-updater from seeing a release with missing installers.
   release-notes:
     needs: build
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write

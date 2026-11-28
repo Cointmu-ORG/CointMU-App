@@ -11,6 +11,8 @@ resources/bin/geth
 resources/bin/geth.exe
 # Built from native/geth-supervisor (npm run build:geth-supervisor).
 resources/bin/win/geth-supervisor.exe
+# Built from go-ethereum v1.10.26 (npm run build:geth-mac).
+resources/bin/mac/geth
 .claude/
 .vscode/
 graphify-out/

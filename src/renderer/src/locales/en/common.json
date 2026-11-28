@@ -100,7 +100,10 @@
     "readyTitle": "Update ready",
     "readyBody": "Version {{version}} is downloaded. Restart to install it; the node shuts down cleanly first.",
     "restartNow": "Restart now",
-    "later": "Later"
+    "later": "Later",
+    "availableTitle": "Update available",
+    "availableBody": "Version {{version}} is out. On macOS, download it from the release page and replace the app; your wallets and chain data stay.",
+    "openReleasePage": "Open release page"
   },
   "privacy": {
     "hideAmounts": "Hide balances",

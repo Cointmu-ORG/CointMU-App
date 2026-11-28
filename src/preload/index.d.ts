@@ -54,6 +54,8 @@ interface UpdaterEvent {
   progress?: UpdaterProgress;
   error?: string;
   shouldAskToInstall?: boolean;
+  /** available only: install by hand from the release page (macOS). */
+  isManualInstall?: boolean;
 }
 
 interface CointmuAPI {
@@ -153,6 +155,8 @@ interface CointmuAPI {
     check: () => Promise<void>;
     download: () => Promise<void>;
     install: () => Promise<void>;
+    /** Opens the newer release's GitHub page (macOS notify-only updates). */
+    openReleasePage: () => Promise<void>;
     onStateChange: (callback: (state: UpdaterEvent) => void) => () => void;
   };
   mining: {

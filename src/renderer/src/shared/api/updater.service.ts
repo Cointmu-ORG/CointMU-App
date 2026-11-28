@@ -22,4 +22,13 @@ async function installUpdate(): Promise<void> {
   await window.api?.updater?.install();
 }
 
-export { checkForUpdates, downloadUpdate, installUpdate };
+/**
+ * Opens the available release's page in the browser, where a macOS build
+ * that cannot update itself is downloaded by hand.
+ * @returns A promise resolving once the page has been handed to the browser.
+ */
+async function openReleasePage(): Promise<void> {
+  await window.api?.updater?.openReleasePage();
+}
+
+export { checkForUpdates, downloadUpdate, installUpdate, openReleasePage };

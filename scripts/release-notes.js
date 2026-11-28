@@ -16,6 +16,14 @@ const CATEGORIES = [
   { title: "⚡ Performance", types: ["perf"] },
 ];
 const EXIT_CODE_USAGE = 2;
+// The macOS build is not notarized (#102, #164); README "Installing on macOS".
+const MACOS_NOTE_TITLE = "🍎 macOS";
+const MACOS_NOTE =
+  "The macOS app (Apple Silicon) is signed ad hoc, not notarized, and updates by hand: " +
+  "download the dmg below and drag CointMU to Applications, replacing the old one. " +
+  "macOS blocks the first launch; allow it in System Settings → Privacy & Security → " +
+  "**Open Anyway**, or run `xattr -dr com.apple.quarantine /Applications/CointMU.app`. " +
+  "Your wallets and chain data are kept.";
 
 /**
  * Turns one raw commit into a release-note entry.
@@ -102,6 +110,12 @@ function renderNotes(release) {
   });
 
   const base = `https://github.com/${release.repository}`;
+  lines.push(
+    `### ${MACOS_NOTE_TITLE}`,
+    "",
+    `${MACOS_NOTE} [Details](${base}#installing-on-macos)`,
+    "",
+  );
   const changelogUrl = release.previousTag
     ? `${base}/compare/${release.previousTag}...${release.tag}`
     : `${base}/commits/${release.tag}`;

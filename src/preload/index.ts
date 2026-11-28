@@ -100,6 +100,8 @@ interface UpdaterEvent {
   progress?: UpdaterProgress;
   error?: string;
   shouldAskToInstall?: boolean;
+  /** available only: install by hand from the release page (macOS). */
+  isManualInstall?: boolean;
 }
 
 const api = {
@@ -212,6 +214,9 @@ const api = {
     check: (): Promise<void> => ipcRenderer.invoke("updater:check"),
     download: (): Promise<void> => ipcRenderer.invoke("updater:download"),
     install: (): Promise<void> => ipcRenderer.invoke("updater:install"),
+    // The main process picks the page; the renderer passes no URL.
+    openReleasePage: (): Promise<void> =>
+      ipcRenderer.invoke("updater:openReleasePage"),
     onStateChange: (callback: (state: UpdaterEvent) => void) => {
       const handler = (_: any, state: UpdaterEvent): void => {
         callback(state);
